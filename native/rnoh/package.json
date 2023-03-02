@@ -1,0 +1,16 @@
+{
+  "name": "@ohos/rnoh",
+  "description": "a npm package which contains arkUI2.0 page",
+  "ohos": {
+    "org": ""
+  },
+  "version": "1.0.0",
+  "main": "index.ets",
+  "types": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/librnoh.so": "file:./src/main/cpp/types/librnoh"
+  }
+}
