@@ -60,8 +60,8 @@ target_compile_options(glog_target PRIVATE
 )
 
 # BOOST
-# download Boost 1.72 if necessary
-set(boost_include_dir "${third_party_dir}/rct_boost/boost_1_72")
+# download Boost 1.76 if necessary https://www.boost.org/users/history/version_1_76_0.html
+set(boost_include_dir "${third_party_dir}/rct_boost/boost_1_76_0")
 
 # FOLLY
 set(folly_include_dir "${third_party_dir}/folly")
