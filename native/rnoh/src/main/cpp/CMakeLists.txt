@@ -102,5 +102,14 @@ target_link_libraries(folly_target PUBLIC
     double_conversion_target
 )
 
-# add_subdirectory(yoga)
 
+add_library(folly_runtime ALIAS folly_target)
+add_library(glog ALIAS glog_target)
+
+# add_subdirectory(rn-core/yoga)
+
+add_subdirectory(rn-core/jsi)
+target_include_directories(jsi PRIVATE
+    "${folly_include_dir}"
+    "${boost_include_dir}"
+)
