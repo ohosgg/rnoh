@@ -67,14 +67,14 @@ set(boost_include_dir "${third_party_dir}/rct_boost/boost_1_76_0")
 set(folly_include_dir "${third_party_dir}/folly")
 set(folly_src_dir "${third_party_dir}/folly/folly")
 add_library(folly_target)
-target_include_directories(folly_target PRIVATE
+target_include_directories(folly_target PUBLIC
     "${folly_include_dir}"
     "${boost_include_dir}"
     "${double_conversion_include_dir}"
     "${glog_include_dir}"
     "${fmt_include_dir}"
 )
-target_compile_options(folly_target PRIVATE
+set(folly_compile_options
     -DFOLLY_NO_CONFIG=1
     -DFOLLY_MOBILE=1
     -DFOLLY_USE_LIBCPP=1
@@ -84,17 +84,22 @@ target_compile_options(folly_target PRIVATE
     -Wno-documentation
     -faligned-new
 )
+target_compile_options(folly_target PRIVATE ${folly_compile_options})
 target_sources(folly_target PRIVATE
     "${folly_src_dir}/SharedMutex.cpp"
     "${folly_src_dir}/concurrency/CacheLocality.cpp"
     "${folly_src_dir}/detail/Futex.cpp"
     "${folly_src_dir}/portability/Malloc.cpp"
     "${folly_src_dir}/synchronization/ParkingLot.cpp"
-
     "${folly_src_dir}/system/ThreadId.cpp"
     "${folly_src_dir}/lang/SafeAssert.cpp"
     "${folly_src_dir}/lang/ToAscii.cpp"
-
+    "${folly_src_dir}/dynamic.cpp"
+    "${folly_src_dir}/hash/SpookyHashV2.cpp"
+    "${folly_src_dir}/json_pointer.cpp"
+    "${folly_src_dir}/Conv.cpp"
+    "${folly_src_dir}/Format.cpp"
+    "${folly_src_dir}/memory/detail/MallocImpl.cpp"
 )
 target_link_libraries(folly_target PUBLIC
     fmt_target
@@ -102,14 +107,16 @@ target_link_libraries(folly_target PUBLIC
     double_conversion_target
 )
 
+# JSI
+ add_library(folly_runtime ALIAS folly_target)
+ add_library(glog ALIAS glog_target)
+ add_subdirectory(rn-core/jsi)
+ target_include_directories(jsi PRIVATE
+     "${folly_include_dir}"
+     "${boost_include_dir}"
+ )
+target_compile_options(jsi PRIVATE ${folly_compile_options})
 
-add_library(folly_runtime ALIAS folly_target)
-add_library(glog ALIAS glog_target)
+ # YOGA
+ add_subdirectory(rn-core/yoga)
 
-# add_subdirectory(rn-core/yoga)
-
-add_subdirectory(rn-core/jsi)
-target_include_directories(jsi PRIVATE
-    "${folly_include_dir}"
-    "${boost_include_dir}"
-)
