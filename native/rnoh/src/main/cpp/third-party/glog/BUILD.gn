@@ -1,0 +1,41 @@
+import("//build/ohos.gni")
+
+# action("macos_configure_glog") {
+#   script = "macos-configure-glog.sh"
+#   args = [
+#     "/" + rebase_path("//foundation/ace/ace_engine/react_native/glog", "/"),
+#     "/" + rebase_path(target_out_dir + "/glog_configured", "/"),
+#   ]
+#   outputs = [ target_out_dir + "/glog_configured" ]
+# }
+
+config("glog_config") {
+  include_dirs = [
+    "src",
+    "src/base",
+  ]
+}
+
+ohos_shared_library("glog") {
+  sources = [
+    "src/demangle.cc",
+    "src/logging.cc",
+    "src/raw_logging.cc",
+    "src/signalhandler.cc",
+    "src/symbolize.cc",
+    "src/utilities.cc",
+    "src/vlog_is_on.cc",
+  ]
+  cflags_cc = [
+    "-Wno-shorten-64-to-32",
+    "-Wno-header-hygiene",
+    "-Wno-deprecated-declarations",
+  ]
+  public_configs = [
+    "//build/config/compiler:rtti",
+    ":glog_config",
+  ]
+
+  # this is unnecessary, since we ship a preconfigured glog source code
+  # deps = [ ":macos_configure_glog" ]
+}
