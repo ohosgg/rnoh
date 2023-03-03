@@ -51,8 +51,9 @@ struct DummySystraceSection {
  public:
   template <typename... ConvertsToStringPiece>
   explicit DummySystraceSection(
-      __unused const char *name,
-      __unused ConvertsToStringPiece &&...args) {}
+    // RNOH: commented out unused attribute to fix error: unknown type name '__unused'
+    /*__unused*/ const char *name,
+    /*__unused*/ ConvertsToStringPiece &&...args) {}
 };
 using SystraceSection = DummySystraceSection;
 #endif
