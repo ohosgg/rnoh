@@ -107,16 +107,31 @@ target_link_libraries(folly_target PUBLIC
     double_conversion_target
 )
 
+# -------- REACT COMMON --------
+set(REACT_COMMON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ReactCommon")
+add_library(folly_runtime ALIAS folly_target)
+add_library(glog ALIAS glog_target)
+
+# REACTPERFLOGGER
+add_subdirectory("${REACT_COMMON_DIR}/reactperflogger")
+
+# RUNTIMEEXECUTOR
+add_subdirectory("${REACT_COMMON_DIR}/runtimeexecutor")
+set_target_properties(runtimeexecutor PROPERTIES LINKER_LANGUAGE CXX)
+
+# CALLINVOKER
+add_subdirectory("${REACT_COMMON_DIR}/callinvoker")
+set_target_properties(runtimeexecutor PROPERTIES LINKER_LANGUAGE CXX)
+
 # JSI
- add_library(folly_runtime ALIAS folly_target)
- add_library(glog ALIAS glog_target)
- add_subdirectory(rn-core/jsi)
- target_include_directories(jsi PRIVATE
-     "${folly_include_dir}"
-     "${boost_include_dir}"
- )
+add_subdirectory("${REACT_COMMON_DIR}/jsi")
+target_include_directories(jsi PRIVATE
+    "${folly_include_dir}"
+    "${boost_include_dir}"
+)
 target_compile_options(jsi PRIVATE ${folly_compile_options})
 
- # YOGA
- add_subdirectory(rn-core/yoga)
+# CXX REACT
+add_subdirectory("${REACT_COMMON_DIR}/cxxreact")
+target_compile_options(reactnative PRIVATE ${folly_compile_options})
 
