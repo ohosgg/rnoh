@@ -6,15 +6,18 @@
 #include <array>
 #include <vector>
 #include "ArkJS.h"
+//#include "RNOHInstance.h"
 
 static napi_ref listener_ref; 
 
+//std::shared_ptr<RNOHInstance> rnohInstance;
 double counter = 1;
 
 static napi_value on_component_descriptor_tree_update(napi_env env, napi_callback_info info) {
     ArkJS ark_js(env);
     auto args = ark_js.get_callback_args(info, 1);
     listener_ref = ark_js.create_reference_value(args[0]);
+//    rnohInstance = std::make_shared<RNOHInstance>([](){});
     return ark_js.get_undefined();
 }
 
@@ -24,6 +27,7 @@ static napi_value simulate_component_descriptor_tree_update(napi_env env, napi_c
     counter++;
     auto listener = ark_js.get_reference_value(listener_ref);
     ark_js.call(listener, component_descriptor_tree);
+//    rnohInstance.simulateComponentDescriptorTreeUpdate();
     return ark_js.get_undefined();
 }
 

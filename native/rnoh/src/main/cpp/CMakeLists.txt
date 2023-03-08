@@ -138,9 +138,16 @@ target_compile_options(jsi PRIVATE ${folly_compile_options})
 add_subdirectory("${REACT_COMMON_DIR}/cxxreact")
 target_compile_options(reactnative PRIVATE ${folly_compile_options})
 
-# NAPI
+# ----------------------------------------------------------------------------------------------------------------------
+
+include_directories(
+    "${CMAKE_CURRENT_SOURCE_DIR}/"
+    "${REACT_COMMON_DIR}/"
+)
+
 add_library(rnoh SHARED
     "${CMAKE_CURRENT_SOURCE_DIR}/rnoh_napi.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ArkJS.cpp"
 )
 target_link_libraries(rnoh PUBLIC libace_napi.z.so)
+
