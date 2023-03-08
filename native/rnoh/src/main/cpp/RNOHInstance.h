@@ -17,6 +17,8 @@ class RNOHInstance {
     
     public:
     void run();
+    void simulateComponentDescriptorTreeUpdate();
+
     
     private:
     std::shared_ptr<facebook::react::Instance> instance;

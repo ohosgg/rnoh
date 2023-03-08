@@ -1,7 +1,6 @@
 #include "RNOHMessageQueueThread.h"
 #include "RNOHInstance.h"
 
-
 void RNOHInstance::run() {
     this->initialize();
     this->runApplication();
@@ -19,6 +18,8 @@ void RNOHInstance::initialize() {
 void RNOHInstance::runApplication() {
     auto runAppArgs = folly::dynamic::array();
     this->instance->callJSFunction("AppRegistry", "runApplication", std::forward<folly::dynamic>(runAppArgs));
-    this->onComponentDescriptorTreeChanged(100);
 }
 
+void RNOHInstance::simulateComponentDescriptorTreeUpdate() {
+    this->onComponentDescriptorTreeChanged(100);
+}
