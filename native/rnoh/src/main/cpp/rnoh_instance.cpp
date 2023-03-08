@@ -1,6 +1,8 @@
 #include "RNOHMessageQueueThread.h"
 #include <memory>
 #include <cxxreact/Instance.h>
+#include <cxxreact/ModuleRegistry.h>
+#include <cxxreact/NativeModule.h>
 #include <folly/dynamic.h>
 #include <utility>
 #include <thread>
@@ -21,12 +23,12 @@ class RNOHInstance {
     std::shared_ptr<facebook::react::Instance> instance;
     
     void initialize() {
-        
+        std::vector<std::unique_ptr<facebook::react::NativeModule>> modules;
         this->instance->initializeBridge(
                     std::make_unique<facebook::react::InstanceCallback>(),
                     nullptr,
                     std::make_shared<RNOHMessageQueueThread>(),
-                    nullptr);
+                    std::make_shared<facebook::react::ModuleRegistry>(modules));
     }
 
     void run_application() {
