@@ -9,8 +9,7 @@
   "description": "example description",
   "repository": {},
   "license": "ISC",
-  "dependencies": {},
-  "devDependencies": {
-    "@types/libentry.so": "file:./src/main/cpp/types/libentry"
+  "dependencies": {
+    "@ohos/rnoh": "file:../rnoh"
   }
 }

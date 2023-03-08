@@ -1,9 +1,12 @@
 
 cmake_minimum_required(VERSION 3.4.1)
-project(rnoh)
+project(rnopenharmony)
 
 set(NATIVERENDER_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 set(third_party_dir "${CMAKE_CURRENT_SOURCE_DIR}/third-party")
+
+include_directories(${NATIVERENDER_ROOT_PATH}
+                    ${NATIVERENDER_ROOT_PATH}/include)
 
 # FMT
 set(fmt_include_dir "${third_party_dir}/fmt/include")
@@ -135,3 +138,9 @@ target_compile_options(jsi PRIVATE ${folly_compile_options})
 add_subdirectory("${REACT_COMMON_DIR}/cxxreact")
 target_compile_options(reactnative PRIVATE ${folly_compile_options})
 
+# NAPI
+add_library(rnoh SHARED
+    "${CMAKE_CURRENT_SOURCE_DIR}/rnoh_napi.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/ArkJS.cpp"
+)
+target_link_libraries(rnoh PUBLIC libace_napi.z.so)

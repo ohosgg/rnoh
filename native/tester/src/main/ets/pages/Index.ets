@@ -1,22 +1,14 @@
-import hilog from '@ohos.hilog';
+import {RNSurface} from '@ohos/rnoh'
 
 @Entry
 @Component
 struct Index {
-  @State message: string = 'Hello World'
-
   build() {
-    Row() {
-      Column() {
-        Text(this.message)
-          .fontSize(50)
-          .fontWeight(FontWeight.Bold)
-          .onClick(() => {
-            hilog.info(0x0000, 'testTag', '2 + 3 = %{public}d', 5);
-          })
-      }
-      .width('100%')
+    Column() {
+      RNSurface()
     }
     .height('100%')
+    .width('100%')
+    .backgroundColor("blue")
   }
 }
