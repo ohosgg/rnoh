@@ -1,10 +1,9 @@
-#include "cxxreact/MessageQueueThread.h"
+#include "RNOHMessageQueueThread.h"
 #include <memory>
 #include <cxxreact/Instance.h>
 #include <folly/dynamic.h>
 #include <utility>
-
-class RNOHTaskQueueThread: public facebook::react::MessageQueueThread {};
+#include <thread>
 
 
 class RNOHInstance {
@@ -22,10 +21,11 @@ class RNOHInstance {
     std::shared_ptr<facebook::react::Instance> instance;
     
     void initialize() {
+        
         this->instance->initializeBridge(
                     std::make_unique<facebook::react::InstanceCallback>(),
                     nullptr,
-                    nullptr,
+                    std::make_shared<RNOHMessageQueueThread>(),
                     nullptr);
     }
 

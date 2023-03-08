@@ -20,7 +20,7 @@ target_sources(fmt_target PRIVATE
     "${fmt_src_dir}/os.cc"
 )
 
-# DOUBLE CONVERSION
+## DOUBLE CONVERSION
 set(double_conversion_include_dir "${third_party_dir}/double-conversion")
 set(double_conversion_src_dir "${third_party_dir}/double-conversion/double-conversion")
 add_library(double_conversion_target)
@@ -139,7 +139,10 @@ add_subdirectory("${REACT_COMMON_DIR}/cxxreact")
 target_compile_options(reactnative PRIVATE ${folly_compile_options})
 
 # ---
-include_directories("${REACT_COMMON_DIR}/")
+include_directories(
+    "${CMAKE_CURRENT_SOURCE_DIR}/"
+    "${REACT_COMMON_DIR}/"
+    )
 
 add_library(rnoh SHARED
     "${CMAKE_CURRENT_SOURCE_DIR}/rnoh_napi.cpp"
