@@ -9,16 +9,15 @@
 
 
 class RNOHInstance {
-    RNOHInstance() {
-        this->instance = std::make_shared<facebook::react::Instance>();
-    }
+    RNOHInstance() 
+        instance(std::make_shared<facebook::react::Instance>())
+    {}
     
-  public:
+    public:
     void run() {
         this->initialize();
-        this->run_application();
+        this->runApplication();
     }
-  
     private:
     std::shared_ptr<facebook::react::Instance> instance;
     
@@ -31,7 +30,7 @@ class RNOHInstance {
                     std::make_shared<facebook::react::ModuleRegistry>(modules));
     }
 
-    void run_application() {
+    void runApplication() {
         auto runAppArgs = folly::dynamic::array();
         this->instance->callJSFunction("AppRegistry", "runApplication", std::forward<folly::dynamic>(runAppArgs));
     }
