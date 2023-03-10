@@ -110,6 +110,15 @@ target_link_libraries(folly_target PUBLIC
     double_conversion_target
 )
 
+# HERMES
+add_library(hermes-engine::libhermes SHARED IMPORTED)
+set(hermes_include_dirs
+    "${third_party_dir}/hermes/API"
+    "${third_party_dir}/hermes/public"
+)
+set_property(TARGET hermes-engine::libhermes PROPERTY
+                IMPORTED_LOCATION "${third_party_dir}/hermes_prebuilt/${OHOS_ARCH}/libhermes.so")
+
 # -------- REACT COMMON --------
 set(REACT_COMMON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ReactCommon")
 add_library(folly_runtime ALIAS folly_target)
@@ -124,7 +133,6 @@ set_target_properties(runtimeexecutor PROPERTIES LINKER_LANGUAGE CXX)
 
 # CALLINVOKER
 add_subdirectory("${REACT_COMMON_DIR}/callinvoker")
-set_target_properties(runtimeexecutor PROPERTIES LINKER_LANGUAGE CXX)
 
 # JSI
 add_subdirectory("${REACT_COMMON_DIR}/jsi")
@@ -133,6 +141,24 @@ target_include_directories(jsi PRIVATE
     "${boost_include_dir}"
 )
 target_compile_options(jsi PRIVATE ${folly_compile_options})
+
+# JSI EXECUTOR
+add_subdirectory("${REACT_COMMON_DIR}/jsiexecutor")
+target_include_directories(jsireact PRIVATE
+    "${folly_include_dir}"
+    "${boost_include_dir}"
+    "${hermes_include_dirs}"
+)
+target_compile_options(jsireact PRIVATE ${folly_compile_options})
+
+# HERMES EXECUTOR
+add_subdirectory("${REACT_COMMON_DIR}/hermes/executor")
+target_include_directories(hermes_executor_common PRIVATE
+    "${folly_include_dir}"
+    "${boost_include_dir}"
+    "${hermes_include_dirs}"
+)
+target_compile_options(hermes_executor_common PRIVATE ${folly_compile_options})
 
 # CXX REACT
 add_subdirectory("${REACT_COMMON_DIR}/cxxreact")

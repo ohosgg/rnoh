@@ -4,3 +4,6 @@ url = https://github.com/facebook/folly
 [submodule "native/rnoh/src/main/cpp/fmt"]
 	path = native/rnoh/src/main/cpp/third-party/fmt
 	url = https://github.com/fmtlib/fmt
+[submodule "native/rnoh/src/main/cpp/third-party/hermes"]
+	path = native/rnoh/src/main/cpp/third-party/hermes
+	url = https://github.com/facebook/hermes
