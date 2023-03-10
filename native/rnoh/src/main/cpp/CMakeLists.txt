@@ -103,6 +103,9 @@ target_sources(folly_target PRIVATE
     "${folly_src_dir}/Conv.cpp"
     "${folly_src_dir}/Format.cpp"
     "${folly_src_dir}/memory/detail/MallocImpl.cpp"
+    "${folly_src_dir}/json.cpp"
+    "${folly_src_dir}/Unicode.cpp"
+    "${folly_src_dir}/lang/Assume.cpp"
 )
 target_link_libraries(folly_target PUBLIC
     fmt_target
@@ -183,14 +186,19 @@ target_compile_options(reactnative PRIVATE ${folly_compile_options})
 
 # ----------------------------------------------------------------------------------------------------------------------
 
-include_directories(
-    "${CMAKE_CURRENT_SOURCE_DIR}/"
-    "${REACT_COMMON_DIR}/"
-)
+
 
 add_library(rnoh SHARED
+    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHInstance.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHMessageQueueThread.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/rnoh_napi.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ArkJS.cpp"
 )
-target_link_libraries(rnoh PUBLIC libace_napi.z.so)
+target_include_directories(rnoh PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${REACT_COMMON_DIR}"
+    "${folly_include_dir}"
+)
+target_link_libraries(rnoh PUBLIC libace_napi.z.so reactnative)
+target_compile_options(rnoh PRIVATE ${folly_compile_options})
 
