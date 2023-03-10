@@ -160,6 +160,23 @@ target_include_directories(hermes_executor_common PRIVATE
 )
 target_compile_options(hermes_executor_common PRIVATE ${folly_compile_options})
 
+# JS INSPECTOR
+add_subdirectory("${REACT_COMMON_DIR}/jsinspector")
+target_include_directories(jsinspector PRIVATE
+    "${folly_include_dir}"
+    "${boost_include_dir}"
+)
+target_compile_options(jsinspector PRIVATE ${folly_compile_options})
+
+# LOGGER
+add_subdirectory("${REACT_COMMON_DIR}/logger")
+target_include_directories(logger PRIVATE
+    "${folly_include_dir}"
+    "${boost_include_dir}"
+    "${glog_include_dir}"
+)
+target_compile_options(logger PRIVATE ${folly_compile_options})
+
 # CXX REACT
 add_subdirectory("${REACT_COMMON_DIR}/cxxreact")
 target_compile_options(reactnative PRIVATE ${folly_compile_options})
