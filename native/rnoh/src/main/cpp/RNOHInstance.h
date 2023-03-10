@@ -8,11 +8,14 @@
 #include <utility>
 #include <thread>
 #include <functional>
+#include <react/renderer/scheduler/SurfaceHandler.h>
+
 
 class RNOHInstance {
     public:
     RNOHInstance(std::function<void(int)> onComponentDescriptorTreeChanged)
         :
+        surfaceHandler("Root", 1),
         instance(std::make_shared<facebook::react::Instance>()),
         onComponentDescriptorTreeChanged(onComponentDescriptorTreeChanged) {}
     
@@ -24,6 +27,7 @@ class RNOHInstance {
     private:
     std::shared_ptr<facebook::react::Instance> instance;
     std::function<void(int)> onComponentDescriptorTreeChanged;
+    facebook::react::SurfaceHandler surfaceHandler;
     
     void initialize();
     void runApplication();

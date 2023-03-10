@@ -42,7 +42,7 @@ target_sources(double_conversion_target PRIVATE
 set(glog_include_dir "${third_party_dir}/glog/src")
 set(glog_src_dir "${third_party_dir}/glog/src")
 add_library(glog_target)
-target_include_directories(glog_target PRIVATE
+target_include_directories(glog_target PUBLIC
     "${glog_include_dir}"
     "${glog_include_dir}/base"
 )
@@ -87,7 +87,7 @@ set(folly_compile_options
     -Wno-documentation
     -faligned-new
 )
-target_compile_options(folly_target PRIVATE ${folly_compile_options})
+target_compile_options(folly_target PUBLIC ${folly_compile_options})
 target_sources(folly_target PRIVATE
     "${folly_src_dir}/SharedMutex.cpp"
     "${folly_src_dir}/concurrency/CacheLocality.cpp"
@@ -106,12 +106,14 @@ target_sources(folly_target PRIVATE
     "${folly_src_dir}/json.cpp"
     "${folly_src_dir}/Unicode.cpp"
     "${folly_src_dir}/lang/Assume.cpp"
+    "${folly_src_dir}/ScopeGuard.cpp"
 )
 target_link_libraries(folly_target PUBLIC
     fmt_target
     glog_target
     double_conversion_target
 )
+
 
 # HERMES
 add_library(hermes-engine::libhermes SHARED IMPORTED)
@@ -127,66 +129,73 @@ set(REACT_COMMON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ReactCommon")
 add_library(folly_runtime ALIAS folly_target)
 add_library(glog ALIAS glog_target)
 
-# REACTPERFLOGGER
-add_subdirectory("${REACT_COMMON_DIR}/reactperflogger")
+# dummy targetes added to avoid modyfing CMakeLists located in ReactCommon
+add_library(boost INTERFACE)
+add_library(log INTERFACE)
+add_library(glog_init INTERFACE)
+add_library(android INTERFACE)
+add_library(fb INTERFACE)
+add_library(fbjni INTERFACE)
+add_library(reactnativejni INTERFACE)
 
-# RUNTIMEEXECUTOR
-add_subdirectory("${REACT_COMMON_DIR}/runtimeexecutor")
-set_target_properties(runtimeexecutor PROPERTIES LINKER_LANGUAGE CXX)
 
-# CALLINVOKER
-add_subdirectory("${REACT_COMMON_DIR}/callinvoker")
+function(add_react_common_subdir relative_path)
+  add_subdirectory(${REACT_COMMON_DIR}/${relative_path})
+endfunction()
 
-# JSI
-add_subdirectory("${REACT_COMMON_DIR}/jsi")
-target_include_directories(jsi PRIVATE
-    "${folly_include_dir}"
-    "${boost_include_dir}"
-)
-target_compile_options(jsi PRIVATE ${folly_compile_options})
-
-# JSI EXECUTOR
-add_subdirectory("${REACT_COMMON_DIR}/jsiexecutor")
-target_include_directories(jsireact PRIVATE
-    "${folly_include_dir}"
-    "${boost_include_dir}"
-    "${hermes_include_dirs}"
-)
-target_compile_options(jsireact PRIVATE ${folly_compile_options})
-
-# HERMES EXECUTOR
-add_subdirectory("${REACT_COMMON_DIR}/hermes/executor")
+add_react_common_subdir(yoga)
+add_library(yoga ALIAS yogacore)
+add_react_common_subdir(runtimeexecutor)
+add_react_common_subdir(reactperflogger)
+add_react_common_subdir(logger)
+add_react_common_subdir(jsiexecutor)
+add_react_common_subdir(cxxreact)
+# add_react_common_subdir(jsc)
+add_react_common_subdir(jsi)
+add_react_common_subdir(butter)
+add_react_common_subdir(callinvoker)
+add_react_common_subdir(jsinspector)
+add_react_common_subdir(hermes/executor)
 target_include_directories(hermes_executor_common PRIVATE
     "${folly_include_dir}"
     "${boost_include_dir}"
     "${hermes_include_dirs}"
 )
-target_compile_options(hermes_executor_common PRIVATE ${folly_compile_options})
-
-# JS INSPECTOR
-add_subdirectory("${REACT_COMMON_DIR}/jsinspector")
-target_include_directories(jsinspector PRIVATE
-    "${folly_include_dir}"
-    "${boost_include_dir}"
-)
-target_compile_options(jsinspector PRIVATE ${folly_compile_options})
-
-# LOGGER
-add_subdirectory("${REACT_COMMON_DIR}/logger")
-target_include_directories(logger PRIVATE
-    "${folly_include_dir}"
-    "${boost_include_dir}"
-    "${glog_include_dir}"
-)
-target_compile_options(logger PRIVATE ${folly_compile_options})
-
-# CXX REACT
-add_subdirectory("${REACT_COMMON_DIR}/cxxreact")
-target_compile_options(reactnative PRIVATE ${folly_compile_options})
-
-# ----------------------------------------------------------------------------------------------------------------------
-
-
+# add_react_common_subdir(hermes/inspector)
+add_react_common_subdir(react/renderer/runtimescheduler)
+add_react_common_subdir(react/debug)
+add_react_common_subdir(react/config)
+add_react_common_subdir(react/renderer/animations)
+add_react_common_subdir(react/renderer/attributedstring)
+add_react_common_subdir(react/renderer/componentregistry)
+add_react_common_subdir(react/renderer/mounting)
+add_react_common_subdir(react/renderer/scheduler)
+add_react_common_subdir(react/renderer/telemetry)
+add_react_common_subdir(react/renderer/templateprocessor)
+add_react_common_subdir(react/renderer/uimanager)
+add_react_common_subdir(react/renderer/core)
+add_react_common_subdir(react/renderer/graphics)
+add_react_common_subdir(react/renderer/debug)
+add_react_common_subdir(react/renderer/imagemanager)
+add_react_common_subdir(react/renderer/components/view)
+# add_react_common_subdir(react/renderer/components/switch)
+# add_react_common_subdir(react/renderer/components/textinput)
+# add_react_common_subdir(react/renderer/components/progressbar)
+add_react_common_subdir(react/renderer/components/root)
+# add_react_common_subdir(react/renderer/components/image)
+# add_react_common_subdir(react/renderer/components/legacyviewmanagerinterop)
+# add_react_common_subdir(react/renderer/componentregistry/native)
+# add_react_common_subdir(react/renderer/components/text)
+# add_react_common_subdir(react/renderer/components/unimplementedview)
+# add_react_common_subdir(react/renderer/components/modal)
+# add_react_common_subdir(react/renderer/components/scrollview)
+add_react_common_subdir(react/renderer/leakchecker)
+# add_react_common_subdir(react/renderer/textlayoutmanager)
+add_react_common_subdir(react/utils)
+add_react_common_subdir(react/bridging)
+add_react_common_subdir(react/renderer/mapbuffer)
+add_react_common_subdir(react/nativemodule/core)
+target_include_directories(react_nativemodule_core PRIVATE "${REACT_COMMON_DIR}/callinvoker")
 
 add_library(rnoh SHARED
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHInstance.cpp"
@@ -199,6 +208,6 @@ target_include_directories(rnoh PRIVATE
     "${REACT_COMMON_DIR}"
     "${folly_include_dir}"
 )
-target_link_libraries(rnoh PUBLIC libace_napi.z.so reactnative)
-target_compile_options(rnoh PRIVATE ${folly_compile_options})
+target_link_libraries(rnoh PUBLIC libace_napi.z.so reactnative react_render_scheduler)
+target_compile_options(rnoh PRIVATE ${folly_compile_options} -std=c++17)
 

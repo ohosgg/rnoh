@@ -1,6 +1,6 @@
 [submodule "native/rnoh/src/main/cpp/folly"]
 	path = native/rnoh/src/main/cpp/third-party/folly
-url = https://github.com/facebook/folly
+	url = https://github.com/facebook/folly
 [submodule "native/rnoh/src/main/cpp/fmt"]
 	path = native/rnoh/src/main/cpp/third-party/fmt
 	url = https://github.com/fmtlib/fmt
