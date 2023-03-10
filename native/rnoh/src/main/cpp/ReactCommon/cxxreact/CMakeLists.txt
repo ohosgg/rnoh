@@ -18,12 +18,12 @@ add_library(reactnative STATIC ${reactnative_SRC})
 target_include_directories(reactnative PUBLIC ${REACT_COMMON_DIR})
 
 target_link_libraries(reactnative
-        # boost
+        boost
         callinvoker
         folly_runtime
         glog
         jsi
-        # jsinspector
-        # logger
+        jsinspector
+        logger
         reactperflogger
         runtimeexecutor)
