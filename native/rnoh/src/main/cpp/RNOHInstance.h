@@ -10,12 +10,13 @@
 #include <functional>
 
 class RNOHInstance {
+    public:
     RNOHInstance(std::function<void(int)> onComponentDescriptorTreeChanged)
         :
         instance(std::make_shared<facebook::react::Instance>()),
         onComponentDescriptorTreeChanged(onComponentDescriptorTreeChanged) {}
     
-    public:
+    
     void run();
     void simulateComponentDescriptorTreeUpdate();
 

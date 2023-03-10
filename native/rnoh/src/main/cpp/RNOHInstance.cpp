@@ -12,7 +12,7 @@ void RNOHInstance::initialize() {
                 std::make_unique<facebook::react::InstanceCallback>(),
                 nullptr,
                 std::make_shared<RNOHMessageQueueThread>(),
-                std::make_shared<facebook::react::ModuleRegistry>(modules));
+                std::make_shared<facebook::react::ModuleRegistry>(std::move(modules)));
 }
 
 void RNOHInstance::runApplication() {
