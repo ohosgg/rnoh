@@ -1,8 +1,9 @@
 #include "RNOHMessageQueueThread.h"
 #include "RNOHInstance.h"
 
-void RNOHInstance::run() {
+void RNOHInstance::start() {
     this->initialize();
+    this->surfaceHandler.start();
     this->runApplication();
 }
 
