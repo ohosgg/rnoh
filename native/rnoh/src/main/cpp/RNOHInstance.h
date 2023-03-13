@@ -20,7 +20,7 @@ class RNOHInstance {
         onComponentDescriptorTreeChanged(onComponentDescriptorTreeChanged) {}
     
     
-    void run();
+    void start();
     void simulateComponentDescriptorTreeUpdate();
 
     
