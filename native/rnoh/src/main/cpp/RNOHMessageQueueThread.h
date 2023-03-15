@@ -31,4 +31,6 @@ class RNOHMessageQueueThread : public facebook::react::MessageQueueThread {
     bool m_isDead;
 };
 
+typedef RNOHMessageQueueThread RNOHTaskExecutor;
+
 #endif //native_RNOHMessageQueueThread_H
