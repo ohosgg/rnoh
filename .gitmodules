@@ -7,3 +7,9 @@
 [submodule "native/rnoh/src/main/cpp/third-party/hermes"]
 	path = native/rnoh/src/main/cpp/third-party/hermes
 	url = https://github.com/facebook/hermes
+[submodule "native/rnoh/src/main/cpp/third-party/boost"]
+	path = native/rnoh/src/main/cpp/third-party/boost
+	url = https://github.com/boostorg/boost.git
+[submodule "native/rnoh/src/main/cpp/third-party/libevent-sub"]
+	path = native/rnoh/src/main/cpp/third-party/libevent
+	url = https://github.com/libevent/libevent
