@@ -23,8 +23,8 @@ target_compile_options(
 target_include_directories(hermes_inspector PUBLIC ${REACT_COMMON_DIR})
 target_link_libraries(hermes_inspector
         jsinspector
-        fb
-        fbjni
+        # fb
+        # fbjni
         folly_futures
         folly_runtime
         glog

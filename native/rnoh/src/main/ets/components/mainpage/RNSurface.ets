@@ -7,9 +7,10 @@ export struct RNSurface {
   @State componentDescriptorTree: number = 42
 
   aboutToAppear() {
-    rnoh.onComponentDescriptorTreeUpdate((newComponentDescriptorTree) => {
-      this.componentDescriptorTree = newComponentDescriptorTree
-    });
+
+//    rnoh.onComponentDescriptorTreeUpdate((newComponentDescriptorTree) => {
+//      this.componentDescriptorTree = newComponentDescriptorTree
+//    });
   }
 
   build() {
@@ -18,7 +19,7 @@ export struct RNSurface {
         Text(this.componentDescriptorTree.toString())
           .fontSize(50)
           .fontWeight(FontWeight.Bold)
-        Button("Update state")
+        Button(rnoh ? "RNOH defined" : "RNOH undefined")
           .onClick(
             () => {
               rnoh.simulateComponentDescriptorTreeUpdate()
