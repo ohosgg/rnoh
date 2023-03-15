@@ -23,12 +23,12 @@ static napi_value on_component_descriptor_tree_update(napi_env env, napi_callbac
         auto listener = ark_js.get_reference_value(listener_ref);
         ark_js.call(listener, component_descriptor_tree);
     });
+    rnohInstance->start();
     return ark_js.get_undefined();
 }
 
 static napi_value simulate_component_descriptor_tree_update(napi_env env, napi_callback_info info) {
     ArkJS ark_js(env);
-    rnohInstance->start();
     rnohInstance->simulateComponentDescriptorTreeUpdate();
     
     return ark_js.get_undefined();

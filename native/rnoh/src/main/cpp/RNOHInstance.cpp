@@ -12,8 +12,14 @@ void RNOHInstance::start() {
     RNOHLogSink::initializeLogging();
 
     this->initialize();
-    //    this->surfaceHandler.start();
-    //    this->runApplication();
+    this->initializeScheduler();
+    
+    auto layoutConstraints = this->surfaceHandler.getLayoutConstraints();
+    layoutConstraints.layoutDirection = LayoutDirection::LeftToRight;
+    this->surfaceHandler.constraintLayout(layoutConstraints, surfaceHandler.getLayoutContext());
+    this->scheduler->registerSurface(this->surfaceHandler);
+    this->surfaceHandler.start();
+//    this->runApplication();
 }
 
 void RNOHInstance::initialize() {
@@ -39,6 +45,9 @@ void RNOHInstance::initialize() {
 }
 
 void RNOHInstance::initializeScheduler() {
+    auto reactConfig = std::make_shared<react::EmptyReactNativeConfig>();
+    this->contextContainer->insert("ReactNativeConfig", std::move(reactConfig));
+    
     facebook::react::EventBeat::Factory eventBeatFactory = [taskExecutor = this->taskExecutor, runtimeExecutor = this->instance->getRuntimeExecutor()](auto ownerBox) {
         return std::make_unique<RNOHEventBeat>(taskExecutor, runtimeExecutor, ownerBox);
     };
@@ -68,8 +77,11 @@ void RNOHInstance::initializeScheduler() {
 }
 
 void RNOHInstance::runApplication() {
-    auto runAppArgs = folly::dynamic::array();
-    this->instance->callJSFunction("AppRegistry", "runApplication", std::forward<folly::dynamic>(runAppArgs));
+    folly::dynamic config = folly::dynamic::object("rootTag", 1)("fabric", true);
+    auto args = folly::dynamic::array();
+    args.push_back("emptyapp");
+    args.push_back(std::move(config));
+    this->instance->callJSFunction("AppRegistry", "runApplication", std::move(args));
 }
 
 void RNOHInstance::simulateComponentDescriptorTreeUpdate() {
