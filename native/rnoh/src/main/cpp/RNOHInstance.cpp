@@ -3,10 +3,14 @@
 #include "RNOHMessageQueueThread.h"
 #include "RNOHInstance.h"
 #include "RNOHEventBeat.h"
+#include "RNOHLogSink.h"
 #include "hermes/executor/HermesExecutorFactory.h"
+
 using namespace facebook::react;
 
 void RNOHInstance::start() {
+    RNOHLogSink::initializeLogging();
+
     this->initialize();
     //    this->surfaceHandler.start();
     //    this->runApplication();
