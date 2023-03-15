@@ -7,10 +7,9 @@ export struct RNSurface {
   @State componentDescriptorTree: number = 42
 
   aboutToAppear() {
-
-//    rnoh.onComponentDescriptorTreeUpdate((newComponentDescriptorTree) => {
-//      this.componentDescriptorTree = newComponentDescriptorTree
-//    });
+    rnoh.onComponentDescriptorTreeUpdate((newComponentDescriptorTree) => {
+      this.componentDescriptorTree = newComponentDescriptorTree
+    });
   }
 
   build() {

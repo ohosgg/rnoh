@@ -51,6 +51,7 @@ void RNOHMessageQueueThread::run() {
             lock.unlock();
             func();
             m_cv.notify_one();
+            continue;
         }
         if (!m_asyncTaskQueue.empty()) {
             auto func = std::move(m_asyncTaskQueue.front());
