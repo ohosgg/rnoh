@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "bundle": "metro build index.js --platform android --out jsBundle.js --minify",
+    "bundle": "metro build index.js --platform android --out jsBundle.js --config metro.config.js --minify false",
     "patch": "patch-package react-native",
     "postinstall": "patch-package",
     "dev": "npm run bundle && ts-node ./createHeader.js jsBundle.js ../native/rnoh/src/main/cpp/jsbundle.h && npm run patch"

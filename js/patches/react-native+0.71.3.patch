@@ -1,0 +1,147 @@
+diff --git a/node_modules/react-native/Libraries/ReactNative/NativeUIManager.js b/node_modules/react-native/Libraries/ReactNative/NativeUIManager.js
+index df161a1..2958d3e 100644
+--- a/node_modules/react-native/Libraries/ReactNative/NativeUIManager.js
++++ b/node_modules/react-native/Libraries/ReactNative/NativeUIManager.js
+@@ -118,4 +118,75 @@ export interface Spec extends TurboModule {
+   +dismissPopupMenu: () => void;
+ }
+ 
+-export default (TurboModuleRegistry.getEnforcing<Spec>('UIManager'): Spec);
++// export default (TurboModuleRegistry.getEnforcing<Spec>('UIManager'): Spec);
++
++class FakeUIManager implements Spec {
++  getConstants() {
++    return {};
++  }
++
++  getConstantsForViewManager(viewManagerName) {
++    return {};
++  }
++
++  getDefaultEventTypes() {
++    return [];
++  }
++
++  lazilyLoadView(name) {
++    return {};
++  }
++
++  createView(reactTag, viewName, rootTag, props) {}
++
++  updateView(reactTag, viewName, props) {}
++
++  focus(reactTag) {}
++
++  blur(reactTag) {}
++
++  findSubviewIn(reactTag, point, callback) {}
++
++  dispatchViewManagerCommand(reactTag, commandID, commandArgs) {}
++
++  measure(reactTag, callback) {}
++
++  measureInWindow(reactTag, callback) {}
++
++  viewIsDescendantOf(reactTag, ancestorReactTag, callback) {}
++
++  measureLayout(reactTag, ancestorReactTag, errorCallback, callback) {}
++
++  measureLayoutRelativeToParent(reactTag, errorCallback, callback) {}
++
++  setJSResponder(reactTag, blockNativeResponder) {}
++
++  clearJSResponder() {}
++
++  configureNextLayoutAnimation(config, callback, errorCallback) {}
++
++  removeSubviewsFromContainerWithID(containerID) {}
++
++  replaceExistingNonRootView(reactTag, newReactTag) {}
++
++  setChildren(containerTag, reactTags) {}
++
++  manageChildren(
++    containerTag,
++    moveFromIndices,
++    moveToIndices,
++    addChildReactTags,
++    addAtIndices,
++    removeAtIndices
++  ) {}
++
++  setLayoutAnimationEnabledExperimental(enabled) {}
++
++  sendAccessibilityEvent(reactTag, eventType) {}
++
++  showPopupMenu(reactTag, items, error, success) {}
++
++  dismissPopupMenu() {}
++}
++
++export default new FakeUIManager();
+diff --git a/node_modules/react-native/Libraries/Utilities/NativeDeviceInfo.js b/node_modules/react-native/Libraries/Utilities/NativeDeviceInfo.js
+index c81d3fa..8c94b77 100644
+--- a/node_modules/react-native/Libraries/Utilities/NativeDeviceInfo.js
++++ b/node_modules/react-native/Libraries/Utilities/NativeDeviceInfo.js
+@@ -10,7 +10,7 @@
+ 
+ import type {TurboModule} from '../TurboModule/RCTExport';
+ 
+-import * as TurboModuleRegistry from '../TurboModule/TurboModuleRegistry';
++// import * as TurboModuleRegistry from '../TurboModule/TurboModuleRegistry';
+ 
+ export type DisplayMetricsAndroid = {|
+   width: number,
+@@ -41,17 +41,34 @@ export interface Spec extends TurboModule {
+   |};
+ }
+ 
+-const NativeModule: Spec = TurboModuleRegistry.getEnforcing<Spec>('DeviceInfo');
+-let constants = null;
++// const NativeModule: Spec = TurboModuleRegistry.getEnforcing<Spec>('DeviceInfo');
++let constants = {
++    Dimensions: {
++        window: {
++            width: 0,
++            height: 0,
++            scale: 1,
++            fontScale: 1,
++        },
++        screen: {
++            width: 0,
++            height: 0,
++            scale: 1,
++            fontScale: 1,
++        },
++        windowPhysicalPixels: undefined,
++        screenPhysicalPixels: undefined,
++    }
++};
+ 
+ const NativeDeviceInfo = {
+   getConstants(): {|
+     +Dimensions: DimensionsPayload,
+     +isIPhoneX_deprecated?: boolean,
+   |} {
+-    if (constants == null) {
+-      constants = NativeModule.getConstants();
+-    }
++    // if (constants == null) {
++    //   constants = NativeModule.getConstants();
++    // }
+     return constants;
+   },
+ };
+diff --git a/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js b/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js
+index 6d0efb5..85113c7 100644
+--- a/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js
++++ b/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js
+@@ -56,7 +56,7 @@ const _cookies: {[key: string]: number, ...} = {};
+ const PRINT_TO_CONSOLE: false = false; // Type as false to prevent accidentally committing `true`;
+ 
+ export const getCurrentTimestamp: () => number =
+-  global.nativeQPLTimestamp ?? global.performance.now.bind(global.performance);
++  global.nativeQPLTimestamp ?? global.performance ? global.performance.now.bind(global.performance) : Date.now;
+ 
+ class PerformanceLogger implements IPerformanceLogger {
+   _timespans: {[key: string]: ?Timespan} = {};
