@@ -14,13 +14,13 @@ void RNOHInstance::start() {
 
     this->initialize();
     this->initializeScheduler();
-    
+
     auto layoutConstraints = this->surfaceHandler.getLayoutConstraints();
     layoutConstraints.layoutDirection = LayoutDirection::LeftToRight;
     this->surfaceHandler.constraintLayout(layoutConstraints, surfaceHandler.getLayoutContext());
     this->scheduler->registerSurface(this->surfaceHandler);
     this->surfaceHandler.start();
-//    this->runApplication();
+    //    this->runApplication();
 }
 
 void RNOHInstance::initialize() {
@@ -48,7 +48,7 @@ void RNOHInstance::initialize() {
 void RNOHInstance::initializeScheduler() {
     auto reactConfig = std::make_shared<react::EmptyReactNativeConfig>();
     this->contextContainer->insert("ReactNativeConfig", std::move(reactConfig));
-    
+
     facebook::react::EventBeat::Factory eventBeatFactory = [taskExecutor = this->taskExecutor, runtimeExecutor = this->instance->getRuntimeExecutor()](auto ownerBox) {
         return std::make_unique<RNOHEventBeat>(taskExecutor, runtimeExecutor, ownerBox);
     };
@@ -82,9 +82,9 @@ void RNOHInstance::runApplication() {
     auto args = folly::dynamic::array();
     auto unique_js_bundle = std::make_unique<facebook::react::JSBigStdString>(JS_BUNDLE);
     try {
-        this->instance->loadScriptFromString(std::move(unique_js_bundle), "index.bundle", true);
+        this->instance->loadScriptFromString(std::move(unique_js_bundle), "jsBundle.js", true);
     } catch (const std::exception &e) {
-        LOG(ERROR) << "RNOHInstance::runApplication: " << e.what() << "\n";
+        LOG(ERROR) << "runApplication: " << e.what() << "\n";
         return;
     }
     args.push_back("rnempty");
