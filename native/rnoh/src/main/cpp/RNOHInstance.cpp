@@ -19,7 +19,6 @@ void RNOHInstance::start() {
     layoutConstraints.layoutDirection = LayoutDirection::LeftToRight;
     this->surfaceHandler.constraintLayout(layoutConstraints, surfaceHandler.getLayoutContext());
     this->scheduler->registerSurface(this->surfaceHandler);
-    this->surfaceHandler.start();
     //    this->runApplication();
 }
 
@@ -83,13 +82,15 @@ void RNOHInstance::runApplication() {
     auto unique_js_bundle = std::make_unique<facebook::react::JSBigStdString>(JS_BUNDLE);
     try {
         this->instance->loadScriptFromString(std::move(unique_js_bundle), "jsBundle.js", true);
+        args.push_back("rnempty");
+        args.push_back(std::move(config));
+        this->surfaceHandler.start();
+        // this->instance->callJSFunction("AppRegistry", "runApplication", std::move(args));
     } catch (const std::exception &e) {
         LOG(ERROR) << "runApplication: " << e.what() << "\n";
         return;
     }
-    args.push_back("rnempty");
-    args.push_back(std::move(config));
-    this->instance->callJSFunction("AppRegistry", "runApplication", std::move(args));
+
 }
 
 void RNOHInstance::simulateComponentDescriptorTreeUpdate() {
