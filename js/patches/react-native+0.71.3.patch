@@ -1,8 +1,20 @@
+diff --git a/node_modules/react-native/Libraries/Core/setUpErrorHandling.js b/node_modules/react-native/Libraries/Core/setUpErrorHandling.js
+index 32846d4..b3734a9 100644
+--- a/node_modules/react-native/Libraries/Core/setUpErrorHandling.js
++++ b/node_modules/react-native/Libraries/Core/setUpErrorHandling.js
+@@ -18,6 +18,7 @@ const ExceptionsManager = require('./ExceptionsManager');
+ ExceptionsManager.installConsoleErrorReporter();
+ 
+ // Set up error handler
++global.__fbDisableExceptionsManager = true
+ if (!global.__fbDisableExceptionsManager) {
+   const handleError = (e: mixed, isFatal: boolean) => {
+     try {
 diff --git a/node_modules/react-native/Libraries/ReactNative/NativeUIManager.js b/node_modules/react-native/Libraries/ReactNative/NativeUIManager.js
-index df161a1..2958d3e 100644
+index df161a1..64eb0be 100644
 --- a/node_modules/react-native/Libraries/ReactNative/NativeUIManager.js
 +++ b/node_modules/react-native/Libraries/ReactNative/NativeUIManager.js
-@@ -118,4 +118,75 @@ export interface Spec extends TurboModule {
+@@ -118,4 +118,78 @@ export interface Spec extends TurboModule {
    +dismissPopupMenu: () => void;
  }
  
@@ -15,7 +27,10 @@ index df161a1..2958d3e 100644
 +  }
 +
 +  getConstantsForViewManager(viewManagerName) {
-+    return {};
++    return {
++        uiViewClassName: "RCTFakeComponent",
++        NativeProps: {}
++    };
 +  }
 +
 +  getDefaultEventTypes() {
@@ -132,6 +147,51 @@ index c81d3fa..8c94b77 100644
      return constants;
    },
  };
+diff --git a/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsAndroid.js b/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsAndroid.js
+index e1329e8..ea2376c 100644
+--- a/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsAndroid.js
++++ b/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsAndroid.js
+@@ -34,6 +34,37 @@ export interface Spec extends TurboModule {
+   +getAndroidID: () => string;
+ }
+ 
+-export default (TurboModuleRegistry.getEnforcing<Spec>(
+-  'PlatformConstants',
+-): Spec);
++// export default (TurboModuleRegistry.getEnforcing<Spec>(
++//   'PlatformConstants',
++// ): Spec);
++
++class FakePlatformConstants implements Spec {
++    getConstants() {
++        return {
++            isTesting: false,
++            reactNativeVersion: {
++                major: 0,
++                minor: 0,
++                patch: 0,
++                prerelease: null,
++            },
++            Version: 0,
++            Release: 'dummy_release',
++            Serial: 'dummy_serial',
++            Fingerprint: 'dummy_fingerprint',
++            Model: 'dummy_model',
++            ServerHost: 'dummy_server_host',
++            uiMode: 'dummy_ui_mode',
++            Brand: 'dummy_brand',
++            Manufacturer: 'dummy_manufacturer',
++        };
++    }
++
++    getAndroidID() {
++        return 'dummy_android_id';
++    }
++}
++  
++export default new FakePlatformConstants();
++
++
 diff --git a/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js b/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js
 index 6d0efb5..85113c7 100644
 --- a/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js

@@ -16,7 +16,7 @@
 class RNOHInstance {
   public:
     RNOHInstance(std::function<void(int)> onComponentDescriptorTreeChanged)
-        : surfaceHandler("Root", 1),
+        : surfaceHandler("rnempty", 1),
           instance(std::make_shared<facebook::react::Instance>()),
           scheduler(nullptr),
           taskExecutor(nullptr),
