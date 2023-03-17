@@ -24,7 +24,8 @@ class RNOHInstance {
 
     void start();
     void simulateComponentDescriptorTreeUpdate();
-
+    void runApplication();
+    
   private:
     std::shared_ptr<facebook::react::ContextContainer> contextContainer;
     std::shared_ptr<facebook::react::Instance> instance;
@@ -37,7 +38,7 @@ class RNOHInstance {
 
     void initialize();
     void initializeScheduler();
-    void runApplication();
+    
 };
 
 #endif //native_RNOHInstance_H

@@ -5,6 +5,7 @@
 #include "RNOHEventBeat.h"
 #include "RNOHLogSink.h"
 #include "hermes/executor/HermesExecutorFactory.h"
+#include "jsbundle.h"
 
 using namespace facebook::react;
 
@@ -79,7 +80,14 @@ void RNOHInstance::initializeScheduler() {
 void RNOHInstance::runApplication() {
     folly::dynamic config = folly::dynamic::object("rootTag", 1)("fabric", true);
     auto args = folly::dynamic::array();
-    args.push_back("emptyapp");
+    auto unique_js_bundle = std::make_unique<facebook::react::JSBigStdString>(JS_BUNDLE);
+    try {
+        this->instance->loadScriptFromString(std::move(unique_js_bundle), "index.bundle", true);
+    } catch (const std::exception &e) {
+        LOG(ERROR) << "RNOHInstance::runApplication: " << e.what() << "\n";
+        return;
+    }
+    args.push_back("rnempty");
     args.push_back(std::move(config));
     this->instance->callJSFunction("AppRegistry", "runApplication", std::move(args));
 }
