@@ -2,7 +2,7 @@
 
 class RNOHEventBeat : public facebook::react::EventBeat {
   public:
-    RNOHEventBeat(std::weak_ptr<RNOHTaskExecutor> const taskExecutor, facebook::react::RuntimeExecutor runtimeExecutor, SharedOwnerBox ownerBox)
+    RNOHEventBeat(std::weak_ptr<rnoh::TaskExecutor> const &taskExecutor, facebook::react::RuntimeExecutor runtimeExecutor, SharedOwnerBox ownerBox)
         : m_taskExecutor(taskExecutor), m_runtimeExecutor(runtimeExecutor), EventBeat(ownerBox) {
     }
 
@@ -12,7 +12,7 @@ class RNOHEventBeat : public facebook::react::EventBeat {
         }
 
         if (auto taskExecutor = m_taskExecutor.lock()) {
-            taskExecutor->runOnQueue([this]() {
+            taskExecutor->runTask(rnoh::TaskThread::BACKGROUND, [this]() {
                 this->m_runtimeExecutor([this](facebook::jsi::Runtime &runtime) {
                     beat(runtime);
                 });
@@ -28,6 +28,6 @@ class RNOHEventBeat : public facebook::react::EventBeat {
     ~RNOHEventBeat() override = default;
 
   private:
-    std::weak_ptr<RNOHTaskExecutor> m_taskExecutor;
+    std::weak_ptr<rnoh::TaskExecutor> m_taskExecutor;
     facebook::react::RuntimeExecutor m_runtimeExecutor;
 };

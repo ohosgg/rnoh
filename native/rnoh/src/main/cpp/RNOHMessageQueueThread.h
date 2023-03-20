@@ -7,9 +7,11 @@
 #include <queue>
 #include <thread>
 
+#include "TaskExecutor/TaskExecutor.h"
+
 class RNOHMessageQueueThread : public facebook::react::MessageQueueThread {
   public:
-    RNOHMessageQueueThread();
+    RNOHMessageQueueThread(std::shared_ptr<rnoh::TaskExecutor> const &taskExecutor);
     virtual ~RNOHMessageQueueThread();
 
     void runOnQueue(std::function<void()> &&func) override;
@@ -19,18 +21,7 @@ class RNOHMessageQueueThread : public facebook::react::MessageQueueThread {
     void quitSynchronous() override;
 
   private:
-    void run();
-
-    std::thread m_thread;
-    std::queue<std::function<void()>> m_asyncTaskQueue;
-    std::queue<std::function<void()>> m_syncTaskQueue;
-    std::mutex m_mtx;
-    std::condition_variable m_cv;
-    std::condition_variable m_quitCv;
-    bool m_isDying;
-    bool m_isDead;
+    std::shared_ptr<rnoh::TaskExecutor> taskExecutor;
 };
-
-typedef RNOHMessageQueueThread RNOHTaskExecutor;
 
 #endif //native_RNOHMessageQueueThread_H

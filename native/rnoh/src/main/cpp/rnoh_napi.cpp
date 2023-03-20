@@ -7,7 +7,6 @@
 #include <vector>
 #include "ArkJS.h"
 #include "RNOHInstance.h"
-#include "RNOHMessageQueueThread.h"
 
 static napi_ref listener_ref;
 
@@ -17,7 +16,7 @@ static napi_value on_component_descriptor_tree_update(napi_env env, napi_callbac
     ArkJS ark_js(env);
     auto args = ark_js.get_callback_args(info, 1);
     listener_ref = ark_js.create_reference_value(args[0]);
-    rnohInstance = std::make_shared<RNOHInstance>([env](int newTree) {
+    rnohInstance = std::make_shared<RNOHInstance>(env, [env](int newTree) {
         ArkJS ark_js(env);
         std::array<napi_value, 1> component_descriptor_tree = {ark_js.get_double(newTree)};
         auto listener = ark_js.get_reference_value(listener_ref);

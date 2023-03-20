@@ -25,7 +25,7 @@ void RNOHInstance::start() {
 void RNOHInstance::initialize() {
     std::vector<std::unique_ptr<NativeModule>> modules;
     this->contextContainer = std::make_shared<facebook::react::ContextContainer>();
-    this->taskExecutor = std::make_shared<RNOHTaskExecutor>();
+    this->taskExecutor = std::make_shared<rnoh::TaskExecutor>(env);
     this->componentDescriptorProviderRegistry = std::make_shared<facebook::react::ComponentDescriptorProviderRegistry>();
     auto instanceCallback = std::make_unique<facebook::react::InstanceCallback>();
     auto jsExecutorFactory = std::make_shared<facebook::react::HermesExecutorFactory>(
@@ -35,7 +35,7 @@ void RNOHInstance::initialize() {
         [](facebook::jsi::Runtime &rt) {
             return;
         });
-    auto jsQueue = std::make_shared<RNOHMessageQueueThread>();
+    auto jsQueue = std::make_shared<RNOHMessageQueueThread>(this->taskExecutor);
     auto moduleRegistry = std::make_shared<facebook::react::ModuleRegistry>(std::move(modules));
     this->instance->initializeBridge(
         std::move(instanceCallback),
@@ -48,7 +48,7 @@ void RNOHInstance::initializeScheduler() {
     auto reactConfig = std::make_shared<react::EmptyReactNativeConfig>();
     this->contextContainer->insert("ReactNativeConfig", std::move(reactConfig));
 
-    facebook::react::EventBeat::Factory eventBeatFactory = [taskExecutor = this->taskExecutor, runtimeExecutor = this->instance->getRuntimeExecutor()](auto ownerBox) {
+    facebook::react::EventBeat::Factory eventBeatFactory = [taskExecutor = std::weak_ptr(taskExecutor), runtimeExecutor = this->instance->getRuntimeExecutor()](auto ownerBox) {
         return std::make_unique<RNOHEventBeat>(taskExecutor, runtimeExecutor, ownerBox);
     };
 
@@ -60,7 +60,7 @@ void RNOHInstance::initializeScheduler() {
         };
 
     auto backgroundExecutor = [executor = this->taskExecutor](std::function<void()> &&callback) {
-        executor->runOnQueue(std::move(callback));
+        executor->runTask(rnoh::TaskThread::BACKGROUND, std::move(callback));
     };
 
     facebook::react::SchedulerToolbox schedulerToolbox{
