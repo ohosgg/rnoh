@@ -6,6 +6,8 @@
 #include "RNOHLogSink.h"
 #include "hermes/executor/HermesExecutorFactory.h"
 #include "jsbundle.h"
+#include <react/renderer/components/view/ViewComponentDescriptor.h>
+#include <react/renderer/componentregistry/ComponentDescriptorProvider.h>
 
 using namespace facebook::react;
 
@@ -13,6 +15,7 @@ void RNOHInstance::start() {
     RNOHLogSink::initializeLogging();
 
     this->initialize();
+    this->initializeComponentDescriptorRegistry();
     this->initializeScheduler();
 
     auto layoutConstraints = this->surfaceHandler.getLayoutConstraints();
@@ -26,7 +29,6 @@ void RNOHInstance::initialize() {
     std::vector<std::unique_ptr<NativeModule>> modules;
     this->contextContainer = std::make_shared<facebook::react::ContextContainer>();
     this->taskExecutor = std::make_shared<rnoh::TaskExecutor>(env);
-    this->componentDescriptorProviderRegistry = std::make_shared<facebook::react::ComponentDescriptorProviderRegistry>();
     auto instanceCallback = std::make_unique<facebook::react::InstanceCallback>();
     auto jsExecutorFactory = std::make_shared<facebook::react::HermesExecutorFactory>(
         // runtime installer, which is run when the runtime
@@ -42,6 +44,11 @@ void RNOHInstance::initialize() {
         std::move(jsExecutorFactory),
         std::move(jsQueue),
         std::move(moduleRegistry));
+}
+
+void RNOHInstance::initializeComponentDescriptorRegistry() {
+    this->componentDescriptorProviderRegistry = std::make_shared<facebook::react::ComponentDescriptorProviderRegistry>();
+    this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<ViewComponentDescriptor>());
 }
 
 void RNOHInstance::initializeScheduler() {

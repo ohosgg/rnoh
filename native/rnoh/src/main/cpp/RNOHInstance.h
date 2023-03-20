@@ -45,6 +45,7 @@ class RNOHInstance {
     std::shared_ptr<ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry;
 
     void initialize();
+    void initializeComponentDescriptorRegistry();
     void initializeScheduler();
 };
 
