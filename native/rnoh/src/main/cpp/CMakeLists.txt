@@ -377,6 +377,8 @@ add_library(rnoh SHARED
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHLogSink.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/rnoh_napi.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ArkJS.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/TaskExecutor/TaskExecutor.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/TaskExecutor/TaskRunner.cpp"
 )
 target_include_directories(rnoh PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -388,6 +390,7 @@ target_include_directories(rnoh PRIVATE
 target_link_libraries(rnoh PUBLIC
     libace_napi.z.so
     libhilog_ndk.z.so
+    uv
     Boost::context
     reactnative
     react_render_scheduler
