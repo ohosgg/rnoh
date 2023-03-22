@@ -6,6 +6,10 @@ ArkJS::ArkJS(napi_env env) {
     this->env = env;
 }
 
+napi_env ArkJS::get_env() {
+    return this->env;
+}
+
 napi_value ArkJS::get_double(double init_value) {
     napi_value result;
     napi_create_double(this->env, init_value, &result);
@@ -16,6 +20,10 @@ napi_value ArkJS::get_undefined() {
     napi_value undefined;
     napi_get_undefined(this->env, &undefined);
     return undefined;
+}
+
+RNOHNapiObjectBuilder ArkJS::createObjectBuilder() {
+    return RNOHNapiObjectBuilder(this->env, this);
 }
 
 napi_value ArkJS::get_reference_value(napi_ref ref) {
@@ -29,6 +37,15 @@ napi_ref ArkJS::create_reference_value(napi_value value) {
     napi_ref result;
     auto status = napi_create_reference(this->env, value, 1, &result);
     this->maybe_throw_from_status(status, "Couldn't create a reference");
+    return result;
+}
+
+napi_value ArkJS::createArray(std::vector<napi_value> values) {
+    napi_value result;
+    napi_create_array(env, &result);
+    for (size_t i = 0; i < values.size(); i++) {
+        napi_set_element(env, result, i, values[i]);
+    }
     return result;
 }
 
@@ -50,8 +67,57 @@ void ArkJS::maybe_throw_from_status(napi_status status, const char *message) {
     }
 }
 
-void ArkJS::throw_error(const char* message) {
+void ArkJS::throw_error(const char *message) {
     napi_throw_error(this->env, nullptr, message);
     // stops a code execution after throwing napi_error
     throw std::runtime_error(message);
+}
+
+RNOHNapiObjectBuilder::RNOHNapiObjectBuilder(napi_env env, ArkJS *arkJs) : m_env(env), m_arkJs(arkJs) {
+    napi_value obj;
+    napi_create_object(env, &obj);
+    m_object = obj;
+}
+
+RNOHNapiObjectBuilder& RNOHNapiObjectBuilder::addProperty(const char *name, napi_value value) {
+    napi_set_named_property(m_env, m_object, name, value);
+    return *this;
+}
+
+RNOHNapiObjectBuilder& RNOHNapiObjectBuilder::addProperty(const char *name, int value) {
+    napi_value n_value;
+    napi_create_int32(m_env, static_cast<int32_t>(value), &n_value);
+    napi_set_named_property(m_env, m_object, name, n_value);
+    return *this;
+}
+
+RNOHNapiObjectBuilder& RNOHNapiObjectBuilder::addProperty(const char *name, facebook::react::Float value) {
+    napi_value n_value;
+    napi_create_double(m_env, static_cast<double>(value), &n_value);
+    napi_set_named_property(m_env, m_object, name, n_value);
+    return *this;
+}
+
+RNOHNapiObjectBuilder& RNOHNapiObjectBuilder::addProperty(const char *name, char const *value) {
+    napi_value n_value;
+    size_t strLength = strlen(value);
+    napi_create_string_utf8(m_env, value, strLength, &n_value);
+    napi_set_named_property(m_env, m_object, name, n_value);
+    return *this;
+}
+
+RNOHNapiObjectBuilder& RNOHNapiObjectBuilder::addProperty(const char *name, facebook::react::SharedColor value) {
+    auto colorComponents = colorComponentsFromColor(value);
+    napi_value n_value;
+    napi_create_array(m_env, &n_value);
+    napi_set_element(m_env, n_value, 0, m_arkJs->get_double(colorComponents.red));
+    napi_set_element(m_env, n_value, 1, m_arkJs->get_double(colorComponents.green));
+    napi_set_element(m_env, n_value, 2, m_arkJs->get_double(colorComponents.blue));
+    napi_set_element(m_env, n_value, 3, m_arkJs->get_double(colorComponents.alpha));
+    napi_set_named_property(m_env, m_object, name, n_value);
+    return *this;
+}
+
+napi_value RNOHNapiObjectBuilder::build() {
+    return m_object;
 }
