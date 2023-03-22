@@ -37,5 +37,5 @@ type CreateMutation = {
 
 type Mutation = CreateMutation
 
-export const onComponentDescriptorTreeUpdate: (onComplete: (mutations: Mutation[]) => void) => number;
-export const simulateComponentDescriptorTreeUpdate: () => void;
+export const subscribeToShadowTreeChanges: (onShadowTreeChange: (mutations: Mutation[]) => void) => number;
+export const startReactNative: () => void;

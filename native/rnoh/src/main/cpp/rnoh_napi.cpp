@@ -14,7 +14,7 @@ static napi_ref listener_ref;
 
 std::shared_ptr<RNOHInstance> rnohInstance;
 
-static napi_value on_component_descriptor_tree_update(napi_env env, napi_callback_info info) {
+static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info info) {
     ArkJS ark_js(env);
     auto args = ark_js.get_callback_args(info, 1);
     listener_ref = ark_js.create_reference_value(args[0]);
@@ -29,7 +29,7 @@ static napi_value on_component_descriptor_tree_update(napi_env env, napi_callbac
     return ark_js.get_undefined();
 }
 
-static napi_value simulate_component_descriptor_tree_update(napi_env env, napi_callback_info info) {
+static napi_value startReactNative(napi_env env, napi_callback_info info) {
     ArkJS ark_js(env);
     rnohInstance->start();
     rnohInstance->simulateComponentDescriptorTreeUpdate();
@@ -40,8 +40,8 @@ static napi_value simulate_component_descriptor_tree_update(napi_env env, napi_c
 EXTERN_C_START
 static napi_value Init(napi_env env, napi_value exports) {
     napi_property_descriptor desc[] = {
-        {"onComponentDescriptorTreeUpdate", nullptr, on_component_descriptor_tree_update, nullptr, nullptr, nullptr, napi_default, nullptr},
-        {"simulateComponentDescriptorTreeUpdate", nullptr, simulate_component_descriptor_tree_update, nullptr, nullptr, nullptr, napi_default, nullptr}};
+        {"subscribeToShadowTreeChanges", nullptr, subscribeToShadowTreeChanges, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"startReactNative", nullptr, startReactNative, nullptr, nullptr, nullptr, napi_default, nullptr}};
 
     napi_define_properties(env, exports, sizeof(desc) / sizeof(napi_property_descriptor), desc);
     return exports;
