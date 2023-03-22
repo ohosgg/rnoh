@@ -1,6 +1,4 @@
-import rnoh from 'librnoh.so'
-
-
+import {subscribeToShadowTreeChanges, startReactNative} from 'librnoh.so'
 
 @Preview
 @Component
@@ -8,22 +6,20 @@ export struct RNSurface {
   @State descriptorByTag: Record<number, any> = {}
 
   aboutToAppear() {
-    rnoh.onComponentDescriptorTreeUpdate((mutations) => {
+    subscribeToShadowTreeChanges((mutations) => {
       for (const mutation of mutations) {
         console.log(mutation)
       }
-
-//      this.componentDescriptorTree = newComponentDescriptorTree
     });
   }
 
   build() {
     Row() {
       Column() {
-        Button(rnoh ? "RNOH defined" : "RNOH undefined")
+        Button("Start RN")
           .onClick(
             () => {
-              rnoh.simulateComponentDescriptorTreeUpdate()
+              startReactNative()
             }
           )
       }
