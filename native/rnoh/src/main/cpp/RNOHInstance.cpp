@@ -22,7 +22,6 @@ void RNOHInstance::start() {
     layoutConstraints.layoutDirection = LayoutDirection::LeftToRight;
     this->surfaceHandler.constraintLayout(layoutConstraints, surfaceHandler.getLayoutContext());
     this->scheduler->registerSurface(this->surfaceHandler);
-    //    this->runApplication();
 }
 
 void RNOHInstance::initialize() {
@@ -79,25 +78,26 @@ void RNOHInstance::initializeScheduler() {
         .backgroundExecutor = backgroundExecutor,
     };
 
-    this->schedulerDelegate = std::make_unique<RNOHSchedulerDelegate>();
+    this->schedulerDelegate = std::make_unique<RNOHSchedulerDelegate>(rnoh::MountingManager(
+        taskExecutor,
+        [this, counter = 0]() mutable {
+            LOG(INFO) << "Triggering ui update";
+            this->onComponentDescriptorTreeChanged(counter++);
+        }));
     this->scheduler = std::make_unique<facebook::react::Scheduler>(schedulerToolbox, nullptr, schedulerDelegate.get());
 }
 
 void RNOHInstance::runApplication() {
     folly::dynamic config = folly::dynamic::object("rootTag", 1)("fabric", true);
-    auto args = folly::dynamic::array();
+    this->surfaceHandler.setProps(std::move(config));
     auto unique_js_bundle = std::make_unique<facebook::react::JSBigStdString>(JS_BUNDLE);
     try {
         this->instance->loadScriptFromString(std::move(unique_js_bundle), "jsBundle.js", true);
-        args.push_back("rnempty");
-        args.push_back(std::move(config));
         this->surfaceHandler.start();
-        // this->instance->callJSFunction("AppRegistry", "runApplication", std::move(args));
     } catch (const std::exception &e) {
         LOG(ERROR) << "runApplication: " << e.what() << "\n";
         return;
     }
-
 }
 
 void RNOHInstance::simulateComponentDescriptorTreeUpdate() {

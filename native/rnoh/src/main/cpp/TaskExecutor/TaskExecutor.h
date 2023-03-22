@@ -14,14 +14,16 @@
 namespace rnoh {
 
 enum TaskThread {
-    MAIN,       // main thread running the eTS event loop
-    JS,         // React Native's JS runtime thread
-    BACKGROUND  // background tasks queue
+    MAIN,      // main thread running the eTS event loop
+    JS,        // React Native's JS runtime thread
+    BACKGROUND // background tasks queue
 };
 
 class TaskExecutor {
-public:
+  public:
     using Task = std::function<void()>;
+    using Shared = std::shared_ptr<TaskExecutor>;
+    using Weak = std::weak_ptr<TaskExecutor>;
 
     TaskExecutor(napi_env env);
     ~TaskExecutor();
@@ -29,7 +31,7 @@ public:
     void runTask(TaskThread thread, Task &&task);
     void runSyncTask(TaskThread thread, Task &&task);
 
-private:
+  private:
     napi_env env;
     uv_loop_t *getLoop() const;
 
@@ -41,4 +43,4 @@ private:
     std::queue<Task> mainThreadTasks;
 };
 
-}
+} // namespace rnoh

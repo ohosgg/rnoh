@@ -2,15 +2,19 @@
 #define native_RNOHSchedulerDelegate_H
 #include <react/renderer/scheduler/SchedulerDelegate.h>
 
+#include "mounting/MountingManager.h"
+
 using namespace facebook::react;
 
 class RNOHSchedulerDelegate : public SchedulerDelegate {
   public:
-    RNOHSchedulerDelegate() = default;
-    
+    RNOHSchedulerDelegate(rnoh::MountingManager mountingManager)
+        : mountingManager(std::move(mountingManager)){};
+
     ~RNOHSchedulerDelegate() = default;
 
     void schedulerDidFinishTransaction(MountingCoordinator::Shared const &mountingCoordinator) override {
+        mountingManager.scheduleTransaction(mountingCoordinator);
     }
 
     void schedulerDidRequestPreliminaryViewAllocation(SurfaceId surfaceId, const ShadowNode &shadowView) override {}
@@ -24,6 +28,9 @@ class RNOHSchedulerDelegate : public SchedulerDelegate {
 
     void schedulerDidSetIsJSResponder(
         ShadowView const &shadowView, bool isJSResponder, bool blockNativeResponder) override {}
+
+  private:
+    rnoh::MountingManager mountingManager;
 };
 
-#endif //native_RNOHSchedulerDelegate
+#endif // native_RNOHSchedulerDelegate
