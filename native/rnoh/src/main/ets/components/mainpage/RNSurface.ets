@@ -1,23 +1,25 @@
 import rnoh from 'librnoh.so'
 
+
+
 @Preview
 @Component
 export struct RNSurface {
-  // number will be replaced with the actual tree in the future
-  @State componentDescriptorTree: number = 42
+  @State descriptorByTag: Record<number, any> = {}
 
   aboutToAppear() {
-    rnoh.onComponentDescriptorTreeUpdate((newComponentDescriptorTree) => {
-      this.componentDescriptorTree = newComponentDescriptorTree
+    rnoh.onComponentDescriptorTreeUpdate((mutations) => {
+      for (const mutation of mutations) {
+        console.log(mutation)
+      }
+
+//      this.componentDescriptorTree = newComponentDescriptorTree
     });
   }
 
   build() {
     Row() {
       Column() {
-        Text(this.componentDescriptorTree.toString())
-          .fontSize(50)
-          .fontWeight(FontWeight.Bold)
         Button(rnoh ? "RNOH defined" : "RNOH undefined")
           .onClick(
             () => {

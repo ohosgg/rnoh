@@ -374,6 +374,7 @@ target_compile_options(hermes_inspector PRIVATE ${folly_compile_options})
 add_library(rnoh SHARED
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHInstance.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHMessageQueueThread.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHMutationsToNapiConverter.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHLogSink.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/rnoh_napi.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ArkJS.cpp"

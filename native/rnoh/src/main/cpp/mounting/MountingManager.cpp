@@ -59,7 +59,7 @@ void MountingManager::performTransaction(facebook::react::MountingCoordinator::S
         },
         [this](MountingTransaction const &transaction, SurfaceTelemetry const &surfaceTelemetry) {
             // Did mount
-            this->triggerUICallback();
+            this->triggerUICallback(transaction.getMutations());
         });
 }
 } // namespace rnoh

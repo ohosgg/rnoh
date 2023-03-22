@@ -80,9 +80,9 @@ void RNOHInstance::initializeScheduler() {
 
     this->schedulerDelegate = std::make_unique<RNOHSchedulerDelegate>(rnoh::MountingManager(
         taskExecutor,
-        [this, counter = 0]() mutable {
+        [this, counter = 0](facebook::react::ShadowViewMutationList mutations) mutable {
             LOG(INFO) << "Triggering ui update";
-            this->onComponentDescriptorTreeChanged(counter++);
+            this->onComponentDescriptorTreeChanged(mutations);
         }));
     this->scheduler = std::make_unique<facebook::react::Scheduler>(schedulerToolbox, nullptr, schedulerDelegate.get());
 }
@@ -101,5 +101,5 @@ void RNOHInstance::runApplication() {
 }
 
 void RNOHInstance::simulateComponentDescriptorTreeUpdate() {
-    this->onComponentDescriptorTreeChanged(100);
+//    this->onComponentDescriptorTreeChanged(100);
 }

@@ -21,7 +21,7 @@
 
 class RNOHInstance {
   public:
-    RNOHInstance(napi_env env, std::function<void(int)> onComponentDescriptorTreeChanged)
+    RNOHInstance(napi_env env, std::function<void(facebook::react::ShadowViewMutationList const &mutations)> onComponentDescriptorTreeChanged)
         : env(env),
           surfaceHandler("rnempty", 1),
           instance(std::make_shared<facebook::react::Instance>()),
@@ -37,7 +37,7 @@ class RNOHInstance {
     napi_env env;
     std::shared_ptr<facebook::react::ContextContainer> contextContainer;
     std::shared_ptr<facebook::react::Instance> instance;
-    std::function<void(int)> onComponentDescriptorTreeChanged;
+    std::function<void(facebook::react::ShadowViewMutationList const &mutations)> onComponentDescriptorTreeChanged;
     facebook::react::SurfaceHandler surfaceHandler;
     std::unique_ptr<facebook::react::Scheduler> scheduler;
     std::unique_ptr<RNOHSchedulerDelegate> schedulerDelegate;

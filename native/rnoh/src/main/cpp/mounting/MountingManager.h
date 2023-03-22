@@ -16,7 +16,7 @@ using namespace facebook;
 
 class MountingManager {
   public:
-    using TriggerUICallback = std::function<void()>;
+    using TriggerUICallback = std::function<void(facebook::react::ShadowViewMutationList const &mutations)>;
 
     MountingManager(TaskExecutor::Shared taskExecutor, TriggerUICallback triggerUICallback)
         : taskExecutor(std::move(taskExecutor)), triggerUICallback(std::move(triggerUICallback)) {}
