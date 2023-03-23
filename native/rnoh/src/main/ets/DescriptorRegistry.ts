@@ -35,13 +35,34 @@ export type CreateMutation = {
   descriptor: DescriptorData
 }
 
+export type DeleteMutation = {
+  type: MutationType.DELETE
+  tag: Tag
+}
+
 export type InsertMutation = {
   type: MutationType.INSERT
   parentTag: Tag
   childTag: Tag
 }
 
-export type Mutation = CreateMutation | InsertMutation
+export type RemoveMutation = {
+  type: MutationType.REMOVE
+  parentTag: Tag
+  childTag: Tag
+}
+
+export type UpdateMutation = {
+  type: MutationType.UPDATE
+  descriptor: DescriptorData
+}
+
+export type Mutation =
+CreateMutation
+  | DeleteMutation
+  | InsertMutation
+  | RemoveMutation
+  | UpdateMutation
 
 export enum MutationType {
   CREATE = 1,
@@ -54,6 +75,10 @@ export enum MutationType {
 
 export class Descriptor {
   childrenTags: Tag[] = []
+
+  public applyUpdate(data: DescriptorData) {
+    console.log(JSON.stringify(data));
+  }
 }
 
 export class ViewDescriptor extends Descriptor {
@@ -68,25 +93,39 @@ export class DescriptorRegistry {
   constructor(descriptorByTag: Record<Tag, Descriptor>) {
     this.descriptorByTag = descriptorByTag
   }
-}
 
-export function updateDescriptorByTagFromMutations(
-  descriptorByTag: Record<Tag, Descriptor>,
-  mutations: Mutation[]
-) {
-  const newDescriptorByTag = { ...descriptorByTag }
-  for (const mutation of mutations) {
+  public applyMutations(mutations: Mutation[]) {
+    mutations.forEach((mutation) => this.applyMutation(mutation));
+    // the record needs to be copied to apply updates to Ark Components.
+    // TODO: figure out how to only update the components which actually changed
+    this.descriptorByTag = {...this.descriptorByTag}
+  }
+
+  private applyMutation(mutation: Mutation) {
     if (mutation.type === MutationType.CREATE) {
       if (mutation.descriptor.type === 'View') {
-        newDescriptorByTag[mutation.descriptor.tag] = new ViewDescriptor(
-          mutation.descriptor
+        this.descriptorByTag[mutation.descriptor.tag] = new ViewDescriptor(
+        mutation.descriptor
         )
       }
-    } else if (mutation.type === MutationType.INSERT) {
-      newDescriptorByTag[mutation.parentTag].childrenTags.push(
-        mutation.childTag
-      )
+    }
+    else if (mutation.type === MutationType.INSERT) {
+      const parentDescriptor = this.descriptorByTag[mutation.parentTag];
+      parentDescriptor.childrenTags.push(mutation.childTag)
+    }
+    else if (mutation.type === MutationType.UPDATE) {
+      const descriptor = this.descriptorByTag[mutation.descriptor.tag];
+      descriptor.applyUpdate(mutation.descriptor);
+    }
+    else if (mutation.type === MutationType.REMOVE) {
+      const parentDescriptor = this.descriptorByTag[mutation.parentTag];
+      const idx = parentDescriptor.childrenTags.indexOf(mutation.childTag);
+      if (idx != -1) {
+        parentDescriptor.childrenTags.splice(idx, 1);
+      }
+    }
+    else if (mutation.type === MutationType.DELETE) {
+      delete this.descriptorByTag[mutation.tag];
     }
   }
-  return newDescriptorByTag
 }

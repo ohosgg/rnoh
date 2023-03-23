@@ -1,5 +1,5 @@
 import rnoh from 'librnoh.so'
-import {DescriptorRegistry, updateDescriptorByTagFromMutations, ViewDescriptor} from "../../DescriptorRegistry"
+import {DescriptorRegistry, ViewDescriptor} from "../../DescriptorRegistry"
 
 const viewDescriptor1 = new ViewDescriptor({
   type: 'View',
@@ -16,8 +16,9 @@ const viewDescriptor1 = new ViewDescriptor({
 @Preview
 @Component
 export struct RNSurface {
-  @State descriptorRegistry: DescriptorRegistry = {descriptorByTag: {'1': viewDescriptor1}};
-
+  @State descriptorRegistry: DescriptorRegistry = new DescriptorRegistry({
+    '1': viewDescriptor1,
+  });
 
   aboutToAppear() {
     rnoh?.subscribeToShadowTreeChanges((mutations)=> {
@@ -30,8 +31,7 @@ export struct RNSurface {
   }
 
   updateDescriptorRegistry(mutations) {
-    const newDescriptorByTag = updateDescriptorByTagFromMutations(this.descriptorRegistry.descriptorByTag, mutations)
-    this.descriptorRegistry.descriptorByTag = newDescriptorByTag
+    this.descriptorRegistry.applyMutations(mutations)
   }
 
   build() {
@@ -79,6 +79,11 @@ struct RNComponent {
   convertColorToString(color?: Color) {
     if (!color) return undefined
     return `rgba(${Math.round(color[0] * 255)}, ${Math.round(color[1] * 255)}, ${Math.round(color[2] * 255)}, 1)`
+  }
+
+  aboutToAppear() {
+    console.log(`[RNOH] aboutToAppear tag: ${this.tag}`)
+    console.log(`[RNOH] props: ${JSON.stringify(this.getDescriptorData())}`)
   }
 
   build() {
