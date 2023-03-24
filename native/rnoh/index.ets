@@ -1,1 +1,1 @@
-export { RNSurface } from './src/main/ets/components/mainpage/RNSurface'
+export { RNSurface } from './src/main/ets/RNSurface'

@@ -33,6 +33,8 @@ class ArkJS {
 
     napi_ref create_reference_value(napi_value value);
 
+    napi_value createArray();
+
     napi_value createArray(std::vector<napi_value>);
 
     void throw_error(const char *message);

@@ -57,5 +57,6 @@ napi_value RNOHMutationsToNapiConverter::convertShadowView(ShadowView const shad
         .addProperty("tag", shadowView.tag)
         .addProperty("type", shadowView.componentName)
         .addProperty("props", propsObjBuilder.build())
+        .addProperty("childrenTags", m_arkJs.createArray())
         .build();
 }

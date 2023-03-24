@@ -40,6 +40,12 @@ napi_ref ArkJS::create_reference_value(napi_value value) {
     return result;
 }
 
+napi_value ArkJS::createArray() {
+    napi_value result;
+    napi_create_array(env, &result);
+    return result;
+}
+
 napi_value ArkJS::createArray(std::vector<napi_value> values) {
     napi_value result;
     napi_create_array(env, &result);
