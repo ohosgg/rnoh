@@ -1,5 +1,5 @@
 diff --git a/node_modules/react-native/Libraries/Core/setUpErrorHandling.js b/node_modules/react-native/Libraries/Core/setUpErrorHandling.js
-index 32846d4..b3734a9 100644
+index 32846d4..2e0d320
 --- a/node_modules/react-native/Libraries/Core/setUpErrorHandling.js
 +++ b/node_modules/react-native/Libraries/Core/setUpErrorHandling.js
 @@ -18,6 +18,7 @@ const ExceptionsManager = require('./ExceptionsManager');
@@ -11,13 +11,13 @@ index 32846d4..b3734a9 100644
    const handleError = (e: mixed, isFatal: boolean) => {
      try {
 diff --git a/node_modules/react-native/Libraries/Image/NativeImageLoaderAndroid.js b/node_modules/react-native/Libraries/Image/NativeImageLoaderAndroid.js
-index 121de3b..cd230c2 100644
+index 121de3b..cd230c2
 --- a/node_modules/react-native/Libraries/Image/NativeImageLoaderAndroid.js
 +++ b/node_modules/react-native/Libraries/Image/NativeImageLoaderAndroid.js
 @@ -34,4 +34,7 @@ export interface Spec extends TurboModule {
    +queryCache: (uris: Array<string>) => Promise<Object>;
  }
- 
+
 -export default (TurboModuleRegistry.getEnforcing<Spec>('ImageLoader'): Spec);
 +// export default (TurboModuleRegistry.getEnforcing<Spec>('ImageLoader'): Spec);
 +
@@ -25,7 +25,7 @@ index 121de3b..cd230c2 100644
 +export default {}
 \ No newline at end of file
 diff --git a/node_modules/react-native/Libraries/Image/NativeImageLoaderIOS.js b/node_modules/react-native/Libraries/Image/NativeImageLoaderIOS.js
-index b46a43b..9f0531b 100644
+index b46a43b..9f0531b
 --- a/node_modules/react-native/Libraries/Image/NativeImageLoaderIOS.js
 +++ b/node_modules/react-native/Libraries/Image/NativeImageLoaderIOS.js
 @@ -34,4 +34,5 @@ export interface Spec extends TurboModule {
@@ -36,10 +36,10 @@ index b46a43b..9f0531b 100644
 +// export default (TurboModuleRegistry.getEnforcing<Spec>('ImageLoader'): Spec);
 +export default {}
 diff --git a/node_modules/react-native/Libraries/ReactNative/NativeUIManager.js b/node_modules/react-native/Libraries/ReactNative/NativeUIManager.js
-index df161a1..64eb0be 100644
+index df161a1..af40c5d
 --- a/node_modules/react-native/Libraries/ReactNative/NativeUIManager.js
 +++ b/node_modules/react-native/Libraries/ReactNative/NativeUIManager.js
-@@ -118,4 +118,92 @@ export interface Spec extends TurboModule {
+@@ -118,4 +118,104 @@ export interface Spec extends TurboModule {
    +dismissPopupMenu: () => void;
  }
  
@@ -146,7 +146,7 @@ index df161a1..64eb0be 100644
 +
 +export default new FakeUIManager();
 diff --git a/node_modules/react-native/Libraries/Utilities/NativeDeviceInfo.js b/node_modules/react-native/Libraries/Utilities/NativeDeviceInfo.js
-index c81d3fa..8c94b77 100644
+index c81d3fa..e03e745
 --- a/node_modules/react-native/Libraries/Utilities/NativeDeviceInfo.js
 +++ b/node_modules/react-native/Libraries/Utilities/NativeDeviceInfo.js
 @@ -10,7 +10,7 @@
@@ -199,7 +199,7 @@ index c81d3fa..8c94b77 100644
    },
  };
 diff --git a/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsAndroid.js b/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsAndroid.js
-index e1329e8..ea2376c 100644
+index e1329e8..0b3c1bb
 --- a/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsAndroid.js
 +++ b/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsAndroid.js
 @@ -34,6 +34,37 @@ export interface Spec extends TurboModule {
@@ -244,7 +244,7 @@ index e1329e8..ea2376c 100644
 +
 +
 diff --git a/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsIOS.js b/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsIOS.js
-index cf60d5e..22d5888 100644
+index cf60d5e..22d5888
 --- a/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsIOS.js
 +++ b/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsIOS.js
 @@ -28,6 +28,8 @@ export interface Spec extends TurboModule {
@@ -261,7 +261,7 @@ index cf60d5e..22d5888 100644
 +export default {}
 \ No newline at end of file
 diff --git a/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js b/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js
-index 6d0efb5..85113c7 100644
+index 6d0efb5..85113c7
 --- a/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js
 +++ b/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js
 @@ -56,7 +56,7 @@ const _cookies: {[key: string]: number, ...} = {};
