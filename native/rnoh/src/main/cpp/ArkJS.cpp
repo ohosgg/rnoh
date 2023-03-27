@@ -112,6 +112,13 @@ RNOHNapiObjectBuilder& RNOHNapiObjectBuilder::addProperty(const char *name, char
     return *this;
 }
 
+RNOHNapiObjectBuilder& RNOHNapiObjectBuilder::addProperty(const char *name, std::string value) {
+    napi_value n_value;
+    napi_create_string_utf8(m_env, value.c_str(), value.length(), &n_value);
+    napi_set_named_property(m_env, m_object, name, n_value);
+    return *this;
+}
+
 RNOHNapiObjectBuilder& RNOHNapiObjectBuilder::addProperty(const char *name, facebook::react::SharedColor value) {
     auto colorComponents = colorComponentsFromColor(value);
     napi_value n_value;

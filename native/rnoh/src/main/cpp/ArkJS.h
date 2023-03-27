@@ -61,6 +61,8 @@ class RNOHNapiObjectBuilder {
 
     RNOHNapiObjectBuilder& addProperty(const char *name, facebook::react::SharedColor value);
 
+    RNOHNapiObjectBuilder& addProperty(const char *name, std::string value);
+
     napi_value build();
 
   private:

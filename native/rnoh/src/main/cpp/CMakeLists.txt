@@ -299,6 +299,7 @@ add_library(android INTERFACE)
 add_library(fb INTERFACE)
 add_library(fbjni INTERFACE)
 add_library(reactnativejni INTERFACE)
+add_library(mapbufferjni INTERFACE)
 
 
 function(add_react_common_subdir relative_path)
@@ -347,12 +348,12 @@ add_react_common_subdir(react/renderer/components/root)
 # add_react_common_subdir(react/renderer/components/image)
 # add_react_common_subdir(react/renderer/components/legacyviewmanagerinterop)
 # add_react_common_subdir(react/renderer/componentregistry/native)
-# add_react_common_subdir(react/renderer/components/text)
+add_react_common_subdir(react/renderer/components/text)
 # add_react_common_subdir(react/renderer/components/unimplementedview)
 # add_react_common_subdir(react/renderer/components/modal)
 # add_react_common_subdir(react/renderer/components/scrollview)
 add_react_common_subdir(react/renderer/leakchecker)
-# add_react_common_subdir(react/renderer/textlayoutmanager)
+add_react_common_subdir(react/renderer/textlayoutmanager)
 add_react_common_subdir(react/utils)
 add_react_common_subdir(react/bridging)
 add_react_common_subdir(react/renderer/mapbuffer)
@@ -397,6 +398,7 @@ target_link_libraries(rnoh PUBLIC
     reactnative
     react_render_scheduler
     hermes_executor_common
+    rrc_text
 )
 target_compile_options(rnoh PRIVATE ${folly_compile_options} -std=c++17)
 

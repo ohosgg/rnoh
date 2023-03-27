@@ -1,10 +1,11 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 
 function App() {
   return <View style={styles.container}>
     <View style={styles.rect1} />
     <View style={styles.rect2} />
+    <Text>Foobar</Text>
   </View>;
 }
 

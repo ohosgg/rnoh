@@ -1,5 +1,7 @@
 #include "RNOHMutationsToNapiConverter.h"
 #include <react/renderer/components/view/ViewProps.h>
+#include <react/renderer/components/text/ParagraphState.h>
+#include <react/renderer/core/ConcreteState.h>
 
 using namespace facebook::react;
 
@@ -52,6 +54,10 @@ napi_value RNOHMutationsToNapiConverter::convertShadowView(ShadowView const shad
         .addProperty("height", shadowView.layoutMetrics.frame.size.height);
     if (auto viewProps = std::dynamic_pointer_cast<const ViewProps>(shadowView.props)) {
         propsObjBuilder.addProperty("backgroundColor", viewProps->backgroundColor);
+    }
+    if (auto state = std::dynamic_pointer_cast<const ConcreteState<ParagraphState>>(shadowView.state)) {
+        auto string = state->getData().attributedString.getString();
+        propsObjBuilder.addProperty("string", string);
     }
     return m_arkJs.createObjectBuilder()
         .addProperty("tag", shadowView.tag)

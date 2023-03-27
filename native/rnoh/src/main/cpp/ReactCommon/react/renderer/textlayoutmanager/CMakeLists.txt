@@ -17,7 +17,7 @@ add_compile_options(
 
 file(GLOB react_render_textlayourmanager_SRC CONFIGURE_DEPENDS
         *.cpp
-        platform/android/react/renderer/textlayoutmanager/*.cpp)
+        platform/cxx/react/renderer/textlayoutmanager/*.cpp) # RNOH: patch
 
 add_library(react_render_textlayoutmanager
         SHARED
@@ -26,7 +26,7 @@ add_library(react_render_textlayoutmanager
 target_include_directories(react_render_textlayoutmanager
         PUBLIC
           ${REACT_COMMON_DIR}
-          ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/
+          ${CMAKE_CURRENT_SOURCE_DIR}/platform/cxx/ # RNOH: patch
 )
 
 target_link_libraries(react_render_textlayoutmanager
