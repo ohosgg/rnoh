@@ -345,7 +345,7 @@ add_react_common_subdir(react/renderer/components/view)
 # add_react_common_subdir(react/renderer/components/textinput)
 # add_react_common_subdir(react/renderer/components/progressbar)
 add_react_common_subdir(react/renderer/components/root)
-# add_react_common_subdir(react/renderer/components/image)
+add_react_common_subdir(react/renderer/components/image)
 # add_react_common_subdir(react/renderer/components/legacyviewmanagerinterop)
 # add_react_common_subdir(react/renderer/componentregistry/native)
 add_react_common_subdir(react/renderer/components/text)
@@ -400,6 +400,7 @@ target_link_libraries(rnoh PUBLIC
     reactnative
     react_render_scheduler
     hermes_executor_common
+    rrc_image
     rrc_text
 )
 target_compile_options(rnoh PRIVATE ${folly_compile_options} -std=c++17)

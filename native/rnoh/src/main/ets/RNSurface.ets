@@ -46,18 +46,13 @@ export struct RNSurface {
         .height("61.8%")
         .shadow({radius: 16})
         .backgroundColor("white")
+      Column() {
+        Button("Start RN")
+          .onClick(() => rnoh.startReactNative())
         Scroll() {
-          Column() {
-            if (!this.started) {
-              Button("Start RN")
-                .onClick(() => {
-                  this.started = true
-                  rnoh.startReactNative()
-                })
-            }
-            Text(JSON.stringify(this.descriptorRegistry, null, 2))
-          }.margin({top: 16})
+          Text(JSON.stringify(this.descriptorRegistry, null, 2))
         }
+      }.margin({top: 16})
       }
       .width('100%')
     }

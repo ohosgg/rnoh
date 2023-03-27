@@ -1,5 +1,6 @@
 #include "RNOHMutationsToNapiConverter.h"
 #include <react/renderer/components/view/ViewProps.h>
+#include <react/renderer/components/image/ImageProps.h>
 #include <react/renderer/components/text/ParagraphState.h>
 #include <react/renderer/core/ConcreteState.h>
 
@@ -52,9 +53,17 @@ napi_value RNOHMutationsToNapiConverter::convertShadowView(ShadowView const shad
         .addProperty("left", shadowView.layoutMetrics.frame.origin.x)
         .addProperty("width", shadowView.layoutMetrics.frame.size.width)
         .addProperty("height", shadowView.layoutMetrics.frame.size.height);
-    if (auto viewProps = std::dynamic_pointer_cast<const ViewProps>(shadowView.props)) {
-        propsObjBuilder.addProperty("backgroundColor", viewProps->backgroundColor);
+    if (auto props = std::dynamic_pointer_cast<const ImageProps>(shadowView.props)) {
+        ImageSource imageSource;
+        if (props->sources.size() > 0) {
+            imageSource = props->sources[0];
+            propsObjBuilder.addProperty("uri", imageSource.uri);
+        }
     }
+    if (auto props = std::dynamic_pointer_cast<const ViewProps>(shadowView.props)) {
+        propsObjBuilder.addProperty("backgroundColor", props->backgroundColor);
+    }
+
     if (auto state = std::dynamic_pointer_cast<const ConcreteState<ParagraphState>>(shadowView.state)) {
         auto string = state->getData().attributedString.getString();
         propsObjBuilder.addProperty("string", string);

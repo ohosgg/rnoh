@@ -124,36 +124,29 @@ RNOHNapiObjectBuilder::RNOHNapiObjectBuilder(napi_env env, ArkJS *arkJs) : m_env
     m_object = obj;
 }
 
-RNOHNapiObjectBuilder& RNOHNapiObjectBuilder::addProperty(const char *name, napi_value value) {
+RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, napi_value value) {
     napi_set_named_property(m_env, m_object, name, value);
     return *this;
 }
 
-RNOHNapiObjectBuilder& RNOHNapiObjectBuilder::addProperty(const char *name, int value) {
+RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, int value) {
     napi_value n_value;
     napi_create_int32(m_env, static_cast<int32_t>(value), &n_value);
     napi_set_named_property(m_env, m_object, name, n_value);
     return *this;
 }
 
-RNOHNapiObjectBuilder& RNOHNapiObjectBuilder::addProperty(const char *name, facebook::react::Float value) {
+RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, facebook::react::Float value) {
     napi_value n_value;
     napi_create_double(m_env, static_cast<double>(value), &n_value);
     napi_set_named_property(m_env, m_object, name, n_value);
     return *this;
 }
 
-RNOHNapiObjectBuilder& RNOHNapiObjectBuilder::addProperty(const char *name, char const *value) {
+RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, char const *value) {
     napi_value n_value;
     size_t strLength = strlen(value);
     napi_create_string_utf8(m_env, value, strLength, &n_value);
-    napi_set_named_property(m_env, m_object, name, n_value);
-    return *this;
-}
-
-RNOHNapiObjectBuilder& RNOHNapiObjectBuilder::addProperty(const char *name, std::string value) {
-    napi_value n_value;
-    napi_create_string_utf8(m_env, value.c_str(), value.length(), &n_value);
     napi_set_named_property(m_env, m_object, name, n_value);
     return *this;
 }
@@ -166,6 +159,13 @@ RNOHNapiObjectBuilder& RNOHNapiObjectBuilder::addProperty(const char *name, face
     napi_set_element(m_env, n_value, 1, m_arkJs->get_double(colorComponents.green));
     napi_set_element(m_env, n_value, 2, m_arkJs->get_double(colorComponents.blue));
     napi_set_element(m_env, n_value, 3, m_arkJs->get_double(colorComponents.alpha));
+    napi_set_named_property(m_env, m_object, name, n_value);
+    return *this;
+}
+
+RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, std::string value) {
+    napi_value n_value;
+    napi_create_string_utf8(m_env, value.c_str(), value.length(), &n_value);
     napi_set_named_property(m_env, m_object, name, n_value);
     return *this;
 }

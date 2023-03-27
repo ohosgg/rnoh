@@ -1,4 +1,5 @@
 import {RNView} from "./RNView"
+import {RNImage} from "./RNImage"
 import {DescriptorRegistry} from "./DescriptorRegistry"
 
 
@@ -24,7 +25,9 @@ export struct RNComponentFactory {
 
   build() {
     if (this.getDescriptorType() === "View") {
-      RNView({tag: this.tag, descriptorRegistry: $descriptorRegistry, renderDescriptors: this.renderDescriptors})
+    RNView({tag: this.tag, descriptorRegistry: $descriptorRegistry, renderDescriptors: this.renderDescriptors})
+    } else if (this.getDescriptorType() === "Image") {
+    RNImage({tag: this.tag, descriptorRegistry: $descriptorRegistry})
     }
   }
 }

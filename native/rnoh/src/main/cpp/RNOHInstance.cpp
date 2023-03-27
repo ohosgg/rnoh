@@ -7,6 +7,7 @@
 #include "hermes/executor/HermesExecutorFactory.h"
 #include "jsbundle.h"
 #include <react/renderer/components/view/ViewComponentDescriptor.h>
+#include <react/renderer/components/image/ImageComponentDescriptor.h>
 #include <react/renderer/components/text/TextComponentDescriptor.h>
 #include <react/renderer/components/text/RawTextComponentDescriptor.h>
 #include <react/renderer/components/text/ParagraphComponentDescriptor.h>
@@ -52,6 +53,7 @@ void RNOHInstance::initialize() {
 void RNOHInstance::initializeComponentDescriptorRegistry() {
     this->componentDescriptorProviderRegistry = std::make_shared<facebook::react::ComponentDescriptorProviderRegistry>();
     this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<ViewComponentDescriptor>());
+    this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<ImageComponentDescriptor>());
     this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<TextComponentDescriptor>());
     this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<RawTextComponentDescriptor>());
     this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<ParagraphComponentDescriptor>());
