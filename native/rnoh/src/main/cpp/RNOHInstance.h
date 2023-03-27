@@ -18,6 +18,8 @@
 #include "RNOHMessageQueueThread.h"
 #include "RNOHSchedulerDelegate.h"
 #include "TaskExecutor/TaskExecutor.h"
+#include "mounting/events/EventEmitterRegistry.h"
+#include "mounting/events/EventEmitterHelper.h"
 
 class RNOHInstance {
   public:
@@ -27,11 +29,14 @@ class RNOHInstance {
           instance(std::make_shared<facebook::react::Instance>()),
           scheduler(nullptr),
           taskExecutor(nullptr),
-          onComponentDescriptorTreeChanged(onComponentDescriptorTreeChanged) {}
+          onComponentDescriptorTreeChanged(onComponentDescriptorTreeChanged),
+          eventEmitterRegistry(std::make_shared<rnoh::EventEmitterRegistry>()),
+          eventEmitterHelper(ArkJS(env), eventEmitterRegistry) {}
 
     void start();
-    void simulateComponentDescriptorTreeUpdate();
     void runApplication();
+
+    void emitEvent(facebook::react::Tag tag, rnoh::ReactEventKind eventKind, napi_value eventObject);
 
   private:
     napi_env env;
@@ -43,6 +48,8 @@ class RNOHInstance {
     std::unique_ptr<RNOHSchedulerDelegate> schedulerDelegate;
     std::shared_ptr<rnoh::TaskExecutor> taskExecutor;
     std::shared_ptr<ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry;
+    rnoh::EventEmitterRegistry::Shared eventEmitterRegistry;
+    rnoh::EventEmitterHelper eventEmitterHelper;
 
     void initialize();
     void initializeComponentDescriptorRegistry();

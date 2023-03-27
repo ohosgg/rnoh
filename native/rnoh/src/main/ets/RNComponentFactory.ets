@@ -23,10 +23,8 @@ export struct RNComponentFactory {
   }
 
   build() {
-    Stack() {
-      if (this.getDescriptorType() === "View") {
-        RNView({tag: this.tag, descriptorRegistry: $descriptorRegistry, renderDescriptors: this.renderDescriptors})
-      }
-    }.width("100%").height("100%")
+    if (this.getDescriptorType() === "View") {
+      RNView({tag: this.tag, descriptorRegistry: $descriptorRegistry, renderDescriptors: this.renderDescriptors})
+    }
   }
 }

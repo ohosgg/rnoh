@@ -62,6 +62,45 @@ std::vector<napi_value> ArkJS::get_callback_args(napi_callback_info info, size_t
     return args;
 }
 
+napi_value ArkJS::createString(std::string const &str) {
+    napi_value result;
+    auto status = napi_create_string_utf8(env, str.c_str(), str.length(), &result);
+    this->maybe_throw_from_status(status, "Failed to create string");
+    return result;
+}
+
+napi_value ArkJS::getObjectProperty(napi_value object, std::string const &key) {
+    return getObjectProperty(object, createString(key));
+}
+
+napi_value ArkJS::getObjectProperty(napi_value object, napi_value key) {
+    napi_value result;
+    auto status = napi_get_property(env, object, key, &result);
+    this->maybe_throw_from_status(status, "Failed to retrieve property from object");
+    return result;
+}
+
+double ArkJS::getDouble(napi_value value) {
+    double result;
+    auto status = napi_get_value_double(env, value, &result);
+    this->maybe_throw_from_status(status, "Failed to retrieve double value");
+    return result;
+}
+
+napi_value ArkJS::getArrayElement(napi_value array, uint32_t index) {
+    napi_value result;
+    auto status = napi_get_element(env, array, index, &result);
+    this->maybe_throw_from_status(status, "Failed to retrieve value at index");
+    return result;
+}
+
+uint32_t ArkJS::getArrayLength(napi_value array) {
+    uint32_t length;
+    auto status = napi_get_array_length(env, array, &length);
+    this->maybe_throw_from_status(status, "Failed to read array length");
+    return length;
+}
+
 void ArkJS::maybe_throw_from_status(napi_status status, const char *message) {
     if (status != napi_ok) {
         std::string msg_str = message;

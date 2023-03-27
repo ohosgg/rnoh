@@ -11,6 +11,7 @@
 #include <react/renderer/components/text/RawTextComponentDescriptor.h>
 #include <react/renderer/components/text/ParagraphComponentDescriptor.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProvider.h>
+#include "mounting/events/EventEmitterRegistry.h"
 
 using namespace facebook::react;
 
@@ -86,7 +87,8 @@ void RNOHInstance::initializeScheduler() {
 
     this->schedulerDelegate = std::make_unique<RNOHSchedulerDelegate>(rnoh::MountingManager(
         taskExecutor,
-        [this, counter = 0](facebook::react::ShadowViewMutationList mutations) mutable {
+        eventEmitterRegistry,
+        [this](facebook::react::ShadowViewMutationList mutations) {
             LOG(INFO) << "Triggering ui update";
             this->onComponentDescriptorTreeChanged(mutations);
         }));
@@ -106,6 +108,6 @@ void RNOHInstance::runApplication() {
     }
 }
 
-void RNOHInstance::simulateComponentDescriptorTreeUpdate() {
-//    this->onComponentDescriptorTreeChanged(100);
+void RNOHInstance::emitEvent(facebook::react::Tag tag, rnoh::ReactEventKind eventKind, napi_value eventObject) {
+    this->eventEmitterHelper.emitEvent(tag, eventKind, eventObject);
 }

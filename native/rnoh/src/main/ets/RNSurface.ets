@@ -18,6 +18,7 @@ export struct RNSurface {
   @State descriptorRegistry: DescriptorRegistry = new DescriptorRegistry({
     '1': {...rootDescriptor},
   });
+  @State started: boolean = false;
 
   aboutToAppear() {
     rnoh?.subscribeToShadowTreeChanges((mutations)=> {
@@ -47,11 +48,16 @@ export struct RNSurface {
         .backgroundColor("white")
         Scroll() {
           Column() {
-            Button("Start RN")
-              .onClick(() => rnoh.startReactNative())
+            if (!this.started) {
+              Button("Start RN")
+                .onClick(() => {
+                  this.started = true
+                  rnoh.startReactNative()
+                })
+            }
             Text(JSON.stringify(this.descriptorRegistry, null, 2))
           }.margin({top: 16})
-        }.height('100%')
+        }
       }
       .width('100%')
     }

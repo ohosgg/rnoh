@@ -32,8 +32,19 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
 static napi_value startReactNative(napi_env env, napi_callback_info info) {
     ArkJS ark_js(env);
     rnohInstance->start();
-    rnohInstance->simulateComponentDescriptorTreeUpdate();
     rnohInstance->runApplication();
+    return ark_js.get_undefined();
+}
+
+static napi_value emitEvent(napi_env env, napi_callback_info info) {
+    ArkJS ark_js(env);
+    auto args = ark_js.get_callback_args(info, 3);
+    double tag, eventKind;
+    napi_get_value_double(env, args[0], &tag);
+    napi_get_value_double(env, args[1], &eventKind);
+
+    rnohInstance->emitEvent(tag, (rnoh::ReactEventKind)eventKind, args[2]);
+
     return ark_js.get_undefined();
 }
 
@@ -41,7 +52,8 @@ EXTERN_C_START
 static napi_value Init(napi_env env, napi_value exports) {
     napi_property_descriptor desc[] = {
         {"subscribeToShadowTreeChanges", nullptr, subscribeToShadowTreeChanges, nullptr, nullptr, nullptr, napi_default, nullptr},
-        {"startReactNative", nullptr, startReactNative, nullptr, nullptr, nullptr, napi_default, nullptr}};
+        {"startReactNative", nullptr, startReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"emitEvent", nullptr, emitEvent, nullptr, nullptr, nullptr, napi_default, nullptr}};
 
     napi_define_properties(env, exports, sizeof(desc) / sizeof(napi_property_descriptor), desc);
     return exports;

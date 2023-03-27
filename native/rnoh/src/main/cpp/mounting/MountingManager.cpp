@@ -12,11 +12,16 @@ void MountingManager::performMountInstructions(react::ShadowViewMutationList con
         case ShadowViewMutation::Create: {
             auto newChild = mutation.newChildShadowView;
             LOG(INFO) << "CREATE mutation for tag: " << newChild.tag;
+
+            eventEmitterRegistry->setEventEmitter(newChild.tag, newChild.eventEmitter);
             break;
         }
         case ShadowViewMutation::Delete: {
             auto oldChild = mutation.oldChildShadowView;
+
             LOG(INFO) << "DELETE mutation for tag: " << oldChild.tag;
+
+            eventEmitterRegistry->clearEventEmitter(oldChild.tag);
             break;
         }
         case ShadowViewMutation::Insert: {
@@ -33,7 +38,10 @@ void MountingManager::performMountInstructions(react::ShadowViewMutationList con
         }
         case ShadowViewMutation::Update: {
             auto newChild = mutation.newChildShadowView;
+
             LOG(INFO) << "UPDATE mutation for tag: " << newChild.tag;
+
+            eventEmitterRegistry->setEventEmitter(newChild.tag, newChild.eventEmitter);
             break;
         }
         }

@@ -41,6 +41,17 @@ class ArkJS {
 
     std::vector<napi_value> get_callback_args(napi_callback_info info, size_t args_count);
 
+    napi_value createString(std::string const &str);
+
+    napi_value getObjectProperty(napi_value object, std::string const &key);
+    napi_value getObjectProperty(napi_value object, napi_value key);
+
+    double getDouble(napi_value value);
+
+    napi_value getArrayElement(napi_value array, uint32_t index);
+
+    uint32_t getArrayLength(napi_value array);
+    
   private:
     napi_env env;
 

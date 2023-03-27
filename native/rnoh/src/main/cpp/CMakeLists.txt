@@ -380,6 +380,8 @@ add_library(rnoh SHARED
     "${CMAKE_CURRENT_SOURCE_DIR}/rnoh_napi.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ArkJS.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/mounting/MountingManager.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/mounting/events/EventEmitterRegistry.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/mounting/events/EventEmitterHelper.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/TaskExecutor/TaskExecutor.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/TaskExecutor/TaskRunner.cpp"
 )

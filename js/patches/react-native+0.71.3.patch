@@ -39,7 +39,7 @@ diff --git a/node_modules/react-native/Libraries/ReactNative/NativeUIManager.js 
 index df161a1..64eb0be 100644
 --- a/node_modules/react-native/Libraries/ReactNative/NativeUIManager.js
 +++ b/node_modules/react-native/Libraries/ReactNative/NativeUIManager.js
-@@ -118,4 +118,78 @@ export interface Spec extends TurboModule {
+@@ -118,4 +118,92 @@ export interface Spec extends TurboModule {
    +dismissPopupMenu: () => void;
  }
  
@@ -54,7 +54,33 @@ index df161a1..64eb0be 100644
 +  getConstantsForViewManager(viewManagerName) {
 +    return {
 +        uiViewClassName: "RCTFakeComponent",
-+        NativeProps: {}
++        NativeProps: {},
++        bubblingEventTypes: {
++          topTouchStart: {
++            phasedRegistrationNames: {
++              bubbled: "onTouchStart",
++              captured: "onTouchStartCaptured"
++            }
++          },
++          topTouchEnd: {
++            phasedRegistrationNames: {
++              bubbled: "onTouchEnd",
++              captured: "onTouchEndCaptured"
++            }
++          },
++          topTouchMove: {
++            phasedRegistrationNames: {
++              bubbled: "onTouchMove",
++              captured: "onTouchMoveCaptured"
++            }
++          },
++          topTouchCancel: {
++            phasedRegistrationNames: {
++              bubbled: "onTouchCancel",
++              captured: "onTouchCancelCaptured"
++            }
++          },
++        }
 +    };
 +  }
 +

@@ -1,6 +1,8 @@
+import rnoh from 'librnoh.so'
 import {LayoutProps, ColorSegments, Tag, Descriptor} from "./descriptor"
 import {convertColorSegmentsToString} from "./cpp-bridge-utils"
 import {DescriptorRegistry} from "./DescriptorRegistry"
+import {ReactEventKind} from "./events"
 
 export type ViewDescriptorProps = LayoutProps & {
   backgroundColor?: ColorSegments
@@ -18,6 +20,10 @@ export struct RNView {
     return this.descriptorRegistry.getDescriptor<ViewDescriptor>(this.tag)
   }
 
+  onTouchEvent(event: TouchEvent) {
+    rnoh?.emitEvent(this.getDescriptor().tag, ReactEventKind.TOUCH, event)
+  }
+
   build() {
     Stack() {
       this.renderDescriptors(this.tag)
@@ -26,5 +32,6 @@ export struct RNView {
     .height(this.getDescriptor().props.height)
     .backgroundColor(convertColorSegmentsToString(this.getDescriptor().props.backgroundColor))
     .position({y: this.getDescriptor().props.top, x: this.getDescriptor().props.left})
+    .onTouch((event) => this.onTouchEvent(event))
   }
 }

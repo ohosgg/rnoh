@@ -9,6 +9,7 @@
 #include <react/renderer/mounting/TelemetryController.h>
 
 #include "TaskExecutor/TaskExecutor.h"
+#include "events/EventEmitterRegistry.h"
 
 namespace rnoh {
 
@@ -18,8 +19,8 @@ class MountingManager {
   public:
     using TriggerUICallback = std::function<void(facebook::react::ShadowViewMutationList const &mutations)>;
 
-    MountingManager(TaskExecutor::Shared taskExecutor, TriggerUICallback triggerUICallback)
-        : taskExecutor(std::move(taskExecutor)), triggerUICallback(std::move(triggerUICallback)) {}
+    MountingManager(TaskExecutor::Shared taskExecutor, EventEmitterRegistry::Shared eventEmitterRegistry, TriggerUICallback triggerUICallback)
+        : taskExecutor(std::move(taskExecutor)), eventEmitterRegistry(std::move(eventEmitterRegistry)), triggerUICallback(std::move(triggerUICallback)) {}
 
     void performMountInstructions(react::ShadowViewMutationList const &mutations, react::SurfaceId surfaceId);
 
@@ -29,6 +30,7 @@ class MountingManager {
 
   private:
     TaskExecutor::Shared taskExecutor;
+    EventEmitterRegistry::Shared eventEmitterRegistry;
     TriggerUICallback triggerUICallback;
 };
 
