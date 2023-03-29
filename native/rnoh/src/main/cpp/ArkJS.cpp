@@ -101,6 +101,17 @@ uint32_t ArkJS::getArrayLength(napi_value array) {
     return length;
 }
 
+std::string ArkJS::getString(napi_value value) {
+    size_t length;
+    napi_status status;
+    status = napi_get_value_string_utf8(env, value, nullptr, 0, &length);
+    this->maybe_throw_from_status(status, "Failed to get the length of the string");
+    std::string buffer(length, '\0');
+    status = napi_get_value_string_utf8(env, value, buffer.data(), length + 1, &length);
+    this->maybe_throw_from_status(status, "Failed to get the string data");
+    return buffer;
+}
+
 void ArkJS::maybe_throw_from_status(napi_status status, const char *message) {
     if (status != napi_ok) {
         std::string msg_str = message;
@@ -151,7 +162,7 @@ RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, char
     return *this;
 }
 
-RNOHNapiObjectBuilder& RNOHNapiObjectBuilder::addProperty(const char *name, facebook::react::SharedColor value) {
+RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, facebook::react::SharedColor value) {
     auto colorComponents = colorComponentsFromColor(value);
     napi_value n_value;
     napi_create_array(m_env, &n_value);

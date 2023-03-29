@@ -23,11 +23,16 @@ export struct RNTextInput {
     rnoh?.emitEvent(this.getDescriptor().tag, ReactEventKind.TOUCH, event)
   }
 
+  relayChangeEvent(value: string) {
+    rnoh?.emitEvent(this.getDescriptor().tag, ReactEventKind.TEXT_INPUT_CHANGE, value)
+  }
+
   build() {
-    TextInput({text: this.getDescriptor().props.text})
+    TextInput()
     .width(this.getDescriptor().props.width)
     .height(this.getDescriptor().props.height)
     .position({y: this.getDescriptor().props.top, x: this.getDescriptor().props.left})
+    .onChange((event) => this.relayChangeEvent(event))
 //    .onTouch((event) => this.onTouchEvent(event))
   }
 }

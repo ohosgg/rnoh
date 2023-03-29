@@ -64,14 +64,14 @@ napi_value RNOHMutationsToNapiConverter::convertShadowView(ShadowView const shad
     if (auto props = std::dynamic_pointer_cast<const ViewProps>(shadowView.props)) {
         propsObjBuilder.addProperty("backgroundColor", props->backgroundColor);
     }
-
     if (auto state = std::dynamic_pointer_cast<const ConcreteState<ParagraphState>>(shadowView.state)) {
         auto string = state->getData().attributedString.getString();
-        propsObjBuilder.addProperty("string", string);
+        propsObjBuilder.addProperty("text", string);
     }
     if (auto props = std::dynamic_pointer_cast<const TextInputProps>(shadowView.props)) {
         propsObjBuilder.addProperty("text", props->text);
     }
+    
     return m_arkJs.createObjectBuilder()
         .addProperty("tag", shadowView.tag)
         .addProperty("type", shadowView.componentName)

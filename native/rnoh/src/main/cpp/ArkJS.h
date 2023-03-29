@@ -51,6 +51,8 @@ class ArkJS {
     napi_value getArrayElement(napi_value array, uint32_t index);
 
     uint32_t getArrayLength(napi_value array);
+
+    std::string getString(napi_value value);
     
   private:
     napi_env env;

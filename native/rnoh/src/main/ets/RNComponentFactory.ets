@@ -1,6 +1,7 @@
 import {RNView} from "./RNView"
 import {RNImage} from "./RNImage"
 import {RNTextInput} from "./RNTextInput"
+import {RNText} from "./RNText"
 import {DescriptorRegistry} from "./DescriptorRegistry"
 
 
@@ -31,6 +32,8 @@ export struct RNComponentFactory {
       RNImage({tag: this.tag, descriptorRegistry: $descriptorRegistry})
     } else if (this.getDescriptorType() === "TextInput") {
       RNTextInput({tag: this.tag, descriptorRegistry: $descriptorRegistry})
+    } else if (this.getDescriptorType() === "Paragraph") {
+      RNText({tag: this.tag, descriptorRegistry: $descriptorRegistry})
     }
   }
 }
