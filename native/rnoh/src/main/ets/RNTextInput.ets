@@ -5,7 +5,13 @@ import {DescriptorRegistry} from "./DescriptorRegistry"
 import {ReactEventKind} from "./events"
 
 export type TextInputDescriptorProps = LayoutProps & {
+  backgroundColor?: ColorSegments
+  fontColor?: ColorSegments
+  fontSize?: number
   text?: string
+  borderWidth?: number
+  borderColor?: ColorSegments
+  borderRadius?: number
 }
 
 export type TextInputDescriptor = Descriptor<"TextInput", TextInputDescriptorProps>
@@ -32,6 +38,12 @@ export struct RNTextInput {
     .width(this.getDescriptor().props.width)
     .height(this.getDescriptor().props.height)
     .position({y: this.getDescriptor().props.top, x: this.getDescriptor().props.left})
+    .backgroundColor(convertColorSegmentsToString(this.getDescriptor().props.backgroundColor))
+    .fontColor(convertColorSegmentsToString(this.getDescriptor().props.fontColor))
+    .fontSize(this.getDescriptor().props.fontSize)
+    .borderWidth(this.getDescriptor().props.borderWidth)
+    .borderColor(convertColorSegmentsToString(this.getDescriptor().props.borderColor))
+    .borderRadius(this.getDescriptor().props.borderRadius)
     .onChange((event) => this.relayChangeEvent(event))
 //    .onTouch((event) => this.onTouchEvent(event))
   }

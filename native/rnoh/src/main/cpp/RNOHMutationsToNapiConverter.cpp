@@ -2,6 +2,7 @@
 #include <react/renderer/components/view/ViewProps.h>
 #include <react/renderer/components/image/ImageProps.h>
 #include <react/renderer/components/text/ParagraphState.h>
+#include <react/renderer/components/text/ParagraphProps.h>
 #include <react/renderer/components/textinput/TextInputProps.h>
 #include <react/renderer/core/ConcreteState.h>
 
@@ -62,16 +63,35 @@ napi_value RNOHMutationsToNapiConverter::convertShadowView(ShadowView const shad
         }
     }
     if (auto props = std::dynamic_pointer_cast<const ViewProps>(shadowView.props)) {
-        propsObjBuilder.addProperty("backgroundColor", props->backgroundColor);
+        auto borderMetrics = props->resolveBorderMetrics(shadowView.layoutMetrics);
+        propsObjBuilder
+            .addProperty("backgroundColor", props->backgroundColor)
+            .addProperty("borderWidth", borderMetrics.borderWidths.top) // NOTE: ArkTS doesn't support widths per edge
+            .addProperty("borderColor", borderMetrics.borderColors.top)
+            .addProperty("borderRadius", borderMetrics.borderRadii.topLeft);
     }
     if (auto state = std::dynamic_pointer_cast<const ConcreteState<ParagraphState>>(shadowView.state)) {
-        auto string = state->getData().attributedString.getString();
-        propsObjBuilder.addProperty("text", string);
+        auto data = state->getData();
+        propsObjBuilder.addProperty("text", data.attributedString.getString());
+        for (auto fragment : data.attributedString.getFragments()) {
+            auto textAttributes = fragment.textAttributes;
+            propsObjBuilder
+                .addProperty("fontColor", textAttributes.foregroundColor)
+                .addProperty("fontSize", textAttributes.fontSize);
+            auto fontWeight = textAttributes.fontWeight;
+            if (fontWeight.has_value()) {
+                propsObjBuilder.addProperty("fontWeight", static_cast<int>(fontWeight.value()));
+            }
+            // NOTE: This is a temporary solution. Nesting <Text> component's won't work as expected.
+            break;
+        }
     }
     if (auto props = std::dynamic_pointer_cast<const TextInputProps>(shadowView.props)) {
-        propsObjBuilder.addProperty("text", props->text);
-    }
-    
+        propsObjBuilder
+            .addProperty("text", props->text)
+            .addProperty("fontColor", props->textAttributes.foregroundColor)
+            .addProperty("fontSize", props->textAttributes.fontSize);
+    }    
     return m_arkJs.createObjectBuilder()
         .addProperty("tag", shadowView.tag)
         .addProperty("type", shadowView.componentName)

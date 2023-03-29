@@ -6,6 +6,9 @@ import {ReactEventKind} from "./events"
 
 export type ViewDescriptorProps = LayoutProps & {
   backgroundColor?: ColorSegments
+  borderWidth?: number
+  borderColor?: ColorSegments
+  borderRadius?: number
 }
 
 export type ViewDescriptor = Descriptor<"View", ViewDescriptorProps>
@@ -32,6 +35,9 @@ export struct RNView {
     .height(this.getDescriptor().props.height)
     .backgroundColor(convertColorSegmentsToString(this.getDescriptor().props.backgroundColor))
     .position({y: this.getDescriptor().props.top, x: this.getDescriptor().props.left})
+    .borderWidth(this.getDescriptor().props.borderWidth)
+    .borderColor(convertColorSegmentsToString(this.getDescriptor().props.borderColor))
+    .borderRadius(this.getDescriptor().props.borderRadius)
     .onTouch((event) => this.onTouchEvent(event))
   }
 }

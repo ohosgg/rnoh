@@ -1,10 +1,15 @@
 import rnoh from 'librnoh.so'
-import {LayoutProps, ColorSegments, Tag, Descriptor} from "./descriptor"
-import {DescriptorRegistry} from "./DescriptorRegistry"
-import {ReactEventKind} from "./events"
+import { ColorSegments, Descriptor, LayoutProps, Tag } from './descriptor'
+import { DescriptorRegistry } from './DescriptorRegistry'
+import { ReactEventKind } from './events'
+import { convertColorSegmentsToString } from './cpp-bridge-utils'
 
 export type ImageDescriptorProps = LayoutProps & {
   uri: string
+  borderWidth?: number
+  borderColor?: ColorSegments
+  borderRadius?: number
+  backgroundColor?: ColorSegments
 }
 
 export type ImageDescriptor = Descriptor<"Image", ImageDescriptorProps>
@@ -24,9 +29,14 @@ export struct RNImage {
 
   build() {
     Image(this.getDescriptor().props.uri)
-    .width(this.getDescriptor().props.width)
-    .height(this.getDescriptor().props.height)
-    .position({y: this.getDescriptor().props.top, x: this.getDescriptor().props.left})
-    .onTouch((event) => this.onTouchEvent(event))
+      .interpolation(ImageInterpolation.High)
+      .width(this.getDescriptor().props.width)
+      .height(this.getDescriptor().props.height)
+      .position({ y: this.getDescriptor().props.top, x: this.getDescriptor().props.left })
+      .backgroundColor(convertColorSegmentsToString(this.getDescriptor().props.backgroundColor))
+      .borderWidth(this.getDescriptor().props.borderWidth)
+      .borderColor(convertColorSegmentsToString(this.getDescriptor().props.borderColor))
+      .borderRadius(this.getDescriptor().props.borderRadius)
+      .onTouch((event) => this.onTouchEvent(event))
   }
 }

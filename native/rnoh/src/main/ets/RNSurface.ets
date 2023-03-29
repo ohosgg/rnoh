@@ -37,23 +37,22 @@ export struct RNSurface {
   build() {
     Row() {
       Column() {
-        Stack() {
+        Flex({direction: FlexDirection.Column}) {
             ForEach(this.getDescriptorChildrenTags(), (childrenTag) => {
               RNComponentFactory({tag: childrenTag, descriptorRegistry: $descriptorRegistry})
             }, childrenTag => childrenTag)
         }
         .width("100%")
-        .height("61.8%")
+        .height(700)
         .shadow({radius: 16})
         .backgroundColor("white")
-      Column() {
+
         Button("Start RN")
+          .margin({top: 16})
           .onClick(() => rnoh.startReactNative())
-        Scroll() {
-          Text(JSON.stringify(this.descriptorRegistry, null, 2))
-        }
-      }.margin({top: 16})
+
       }
+      .height("100%")
       .width('100%')
     }
     .height('100%')
