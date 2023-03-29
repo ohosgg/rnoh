@@ -1,18 +1,15 @@
 import rnoh from 'librnoh.so'
-import { ColorSegments, Descriptor, LayoutProps, Tag } from './descriptor'
+import { ColorSegments, Descriptor, Tag } from './descriptor'
 import { DescriptorRegistry } from './DescriptorRegistry'
 import { ReactEventKind } from './events'
 import { convertColorSegmentsToString } from './cpp-bridge-utils'
+import { ViewProps } from './RNView'
 
-export type ImageDescriptorProps = LayoutProps & {
+export type ImageProps = ViewProps & {
   uri: string
-  borderWidth?: number
-  borderColor?: ColorSegments
-  borderRadius?: number
-  backgroundColor?: ColorSegments
 }
 
-export type ImageDescriptor = Descriptor<"Image", ImageDescriptorProps>
+export type ImageDescriptor = Descriptor<"Image", ImageProps>
 
 @Component
 export struct RNImage {

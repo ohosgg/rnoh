@@ -1,17 +1,18 @@
 import rnoh from 'librnoh.so'
-import {LayoutProps, ColorSegments, Tag, Descriptor} from "./descriptor"
-import {DescriptorRegistry} from "./DescriptorRegistry"
-import {ReactEventKind} from "./events"
-import {convertColorSegmentsToString} from "./cpp-bridge-utils"
+import { ColorSegments, Descriptor, LayoutProps, Tag } from './descriptor'
+import { DescriptorRegistry } from './DescriptorRegistry'
+import { ReactEventKind } from './events'
+import { convertColorSegmentsToString } from './cpp-bridge-utils'
+import { ViewProps } from './RNView'
 
-export type TextDescriptorProps = LayoutProps & {
+export type TextProps = ViewProps & {
   text?: string
   fontColor?: ColorSegments
   fontWeight?: number
   fontSize?: number
 }
 
-export type TextDescriptor = Descriptor<"Paragraph", TextDescriptorProps>
+export type TextDescriptor = Descriptor<"Paragraph", TextProps>
 
 @Component
 export struct RNText {
@@ -30,7 +31,7 @@ export struct RNText {
     Text(this.getDescriptor().props.text)
       .width(this.getDescriptor().props.width)
       .height(this.getDescriptor().props.height)
-      .position({y: this.getDescriptor().props.top, x: this.getDescriptor().props.left})
+      .position({ y: this.getDescriptor().props.top, x: this.getDescriptor().props.left })
       .fontColor(convertColorSegmentsToString(this.getDescriptor().props.fontColor))
       .fontWeight(this.getDescriptor().props.fontWeight)
       .fontSize(this.getDescriptor().props.fontSize)

@@ -1,17 +1,17 @@
 import rnoh from 'librnoh.so'
-import {LayoutProps, ColorSegments, Tag, Descriptor} from "./descriptor"
-import {convertColorSegmentsToString} from "./cpp-bridge-utils"
-import {DescriptorRegistry} from "./DescriptorRegistry"
-import {ReactEventKind} from "./events"
+import { ColorSegments, Descriptor, LayoutProps, Tag } from './descriptor'
+import { convertColorSegmentsToString } from './cpp-bridge-utils'
+import { DescriptorRegistry } from './DescriptorRegistry'
+import { ReactEventKind } from './events'
 
-export type ViewDescriptorProps = LayoutProps & {
+export type ViewProps = LayoutProps & {
   backgroundColor?: ColorSegments
   borderWidth?: number
   borderColor?: ColorSegments
   borderRadius?: number
 }
 
-export type ViewDescriptor = Descriptor<"View", ViewDescriptorProps>
+export type ViewDescriptor = Descriptor<"View", ViewProps>
 
 @Component
 export struct RNView {
@@ -34,7 +34,7 @@ export struct RNView {
     .width(this.getDescriptor().props.width)
     .height(this.getDescriptor().props.height)
     .backgroundColor(convertColorSegmentsToString(this.getDescriptor().props.backgroundColor))
-    .position({y: this.getDescriptor().props.top, x: this.getDescriptor().props.left})
+    .position({ y: this.getDescriptor().props.top, x: this.getDescriptor().props.left })
     .borderWidth(this.getDescriptor().props.borderWidth)
     .borderColor(convertColorSegmentsToString(this.getDescriptor().props.borderColor))
     .borderRadius(this.getDescriptor().props.borderRadius)
