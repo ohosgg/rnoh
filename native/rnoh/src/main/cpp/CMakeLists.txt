@@ -288,6 +288,7 @@ set_property(TARGET hermes-engine::libhermes PROPERTY
 
 # -------- REACT COMMON --------
 set(REACT_COMMON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ReactCommon")
+set(REACT_COMMON_PATCH_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ReactCommonPatch")
 add_library(folly_runtime ALIAS folly_target)
 add_library(glog ALIAS glog_target)
 
@@ -342,7 +343,7 @@ add_react_common_subdir(react/renderer/debug)
 add_react_common_subdir(react/renderer/imagemanager)
 add_react_common_subdir(react/renderer/components/view)
 # add_react_common_subdir(react/renderer/components/switch)
-# add_react_common_subdir(react/renderer/components/textinput)
+add_subdirectory(${REACT_COMMON_PATCH_DIR}/react/renderer/components/textinput)
 # add_react_common_subdir(react/renderer/components/progressbar)
 add_react_common_subdir(react/renderer/components/root)
 add_react_common_subdir(react/renderer/components/image)
@@ -402,6 +403,7 @@ target_link_libraries(rnoh PUBLIC
     hermes_executor_common
     rrc_image
     rrc_text
+    rrc_textinput
 )
 target_compile_options(rnoh PRIVATE ${folly_compile_options} -std=c++17)
 

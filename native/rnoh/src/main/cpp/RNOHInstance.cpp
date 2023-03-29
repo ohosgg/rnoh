@@ -11,6 +11,7 @@
 #include <react/renderer/components/text/TextComponentDescriptor.h>
 #include <react/renderer/components/text/RawTextComponentDescriptor.h>
 #include <react/renderer/components/text/ParagraphComponentDescriptor.h>
+#include <react/renderer/components/textinput/TextInputComponentDescriptor.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProvider.h>
 #include "mounting/events/EventEmitterRegistry.h"
 
@@ -57,6 +58,7 @@ void RNOHInstance::initializeComponentDescriptorRegistry() {
     this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<TextComponentDescriptor>());
     this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<RawTextComponentDescriptor>());
     this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<ParagraphComponentDescriptor>());
+    this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<TextInputComponentDescriptor>());
 }
 
 void RNOHInstance::initializeScheduler() {

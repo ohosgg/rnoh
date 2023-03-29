@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Text } from 'react-native';
+import { View, StyleSheet, Image, Text, TextInput } from 'react-native';
 
 const HUAWEI_LOGO_URL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaj2LyrXUzyYuP6G7DKWJXC48kA2atLmUpgw&usqp=CAU";
 
@@ -11,6 +11,7 @@ function App() {
     <View style={flag ? styles.rect2 : styles.rect1} onTouchEnd={() => setFlag(current => !current)}>
       <Image style={styles.image} source={{ uri: HUAWEI_LOGO_URL }} />
     </View>
+    <TextInput style={styles.textInput} />
     <Text>Foobar</Text>
   </View>;
 }
@@ -34,6 +35,10 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 96,
+    height: 96,
+  },
+  textInput: {
+    width: 256,
     height: 96,
   }
 });

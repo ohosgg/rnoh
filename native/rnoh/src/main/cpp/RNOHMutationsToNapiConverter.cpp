@@ -2,6 +2,7 @@
 #include <react/renderer/components/view/ViewProps.h>
 #include <react/renderer/components/image/ImageProps.h>
 #include <react/renderer/components/text/ParagraphState.h>
+#include <react/renderer/components/textinput/TextInputProps.h>
 #include <react/renderer/core/ConcreteState.h>
 
 using namespace facebook::react;
@@ -67,6 +68,9 @@ napi_value RNOHMutationsToNapiConverter::convertShadowView(ShadowView const shad
     if (auto state = std::dynamic_pointer_cast<const ConcreteState<ParagraphState>>(shadowView.state)) {
         auto string = state->getData().attributedString.getString();
         propsObjBuilder.addProperty("string", string);
+    }
+    if (auto props = std::dynamic_pointer_cast<const TextInputProps>(shadowView.props)) {
+        propsObjBuilder.addProperty("text", props->text);
     }
     return m_arkJs.createObjectBuilder()
         .addProperty("tag", shadowView.tag)
