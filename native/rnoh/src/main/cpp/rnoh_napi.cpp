@@ -15,37 +15,37 @@ static napi_ref listener_ref;
 std::shared_ptr<RNOHInstance> rnohInstance;
 
 static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info info) {
-    ArkJS ark_js(env);
-    auto args = ark_js.get_callback_args(info, 1);
-    listener_ref = ark_js.create_reference_value(args[0]);
+    ArkJS arkJs(env);
+    auto args = arkJs.getCallbackArgs(info, 1);
+    listener_ref = arkJs.createReference(args[0]);
     rnohInstance = std::make_shared<RNOHInstance>(env, [env](auto const &mutations) {
         ArkJS ark_js(env);
         RNOHMutationsToNapiConverter mutationsToNapiConverter(env);
         auto napiMutations = mutationsToNapiConverter.convert(mutations);
         std::array<napi_value, 1> args = {napiMutations};
-        auto listener = ark_js.get_reference_value(listener_ref);
+        auto listener = ark_js.getReferenceValue(listener_ref);
         ark_js.call(listener, args);
     });
-    return ark_js.get_undefined();
+    return arkJs.getUndefined();
 }
 
 static napi_value startReactNative(napi_env env, napi_callback_info info) {
-    ArkJS ark_js(env);
+    ArkJS arkJs(env);
     rnohInstance->start();
     rnohInstance->runApplication();
-    return ark_js.get_undefined();
+    return arkJs.getUndefined();
 }
 
 static napi_value emitEvent(napi_env env, napi_callback_info info) {
-    ArkJS ark_js(env);
-    auto args = ark_js.get_callback_args(info, 3);
+    ArkJS arkJs(env);
+    auto args = arkJs.getCallbackArgs(info, 3);
     double tag, eventKind;
     napi_get_value_double(env, args[0], &tag);
     napi_get_value_double(env, args[1], &eventKind);
 
     rnohInstance->emitEvent(tag, (rnoh::ReactEventKind)eventKind, args[2]);
 
-    return ark_js.get_undefined();
+    return arkJs.getUndefined();
 }
 
 EXTERN_C_START
