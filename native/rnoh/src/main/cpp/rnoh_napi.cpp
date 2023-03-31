@@ -14,11 +14,19 @@ static napi_ref listener_ref;
 
 std::shared_ptr<RNOHInstance> rnohInstance;
 
+static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
+    ArkJS arkJs(env);
+    rnohInstance = std::make_shared<RNOHInstance>(env);
+    rnohInstance->start();
+    return arkJs.getUndefined();
+
+}
+
 static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 1);
     listener_ref = arkJs.createReference(args[0]);
-    rnohInstance = std::make_shared<RNOHInstance>(env, [env](auto const &mutations) {
+    rnohInstance->registerSurface([env](auto const &mutations) {
         ArkJS ark_js(env);
         RNOHMutationsToNapiConverter mutationsToNapiConverter(env);
         auto napiMutations = mutationsToNapiConverter.convert(mutations);
@@ -31,8 +39,9 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
 
 static napi_value startReactNative(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    rnohInstance->start();
-    rnohInstance->runApplication();
+    auto args = arkJs.getCallbackArgs(info, 2);
+
+    rnohInstance->runApplication(arkJs.getDouble(args[0]), arkJs.getDouble(args[1]));
     return arkJs.getUndefined();
 }
 
@@ -52,6 +61,7 @@ EXTERN_C_START
 static napi_value Init(napi_env env, napi_value exports) {
     napi_property_descriptor desc[] = {
         {"subscribeToShadowTreeChanges", nullptr, subscribeToShadowTreeChanges, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"initializeReactNative", nullptr, initializeReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"startReactNative", nullptr, startReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"emitEvent", nullptr, emitEvent, nullptr, nullptr, nullptr, napi_default, nullptr}};
 

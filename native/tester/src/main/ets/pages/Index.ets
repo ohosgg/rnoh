@@ -1,11 +1,11 @@
-import {RNSurface} from '@ohos/rnoh'
+import { RNApp } from '@ohos/rnoh'
 
 @Entry
 @Component
 struct Index {
   build() {
     Column() {
-      RNSurface()
+      RNApp()
     }
     .height('100%')
     .width('100%')

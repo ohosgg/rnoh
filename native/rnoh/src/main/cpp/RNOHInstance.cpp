@@ -17,17 +17,16 @@
 
 using namespace facebook::react;
 
+void RNOHInstance::registerSurface(std::function<void(facebook::react::ShadowViewMutationList const &mutations)> listener) {
+    this->onComponentDescriptorTreeChanged = listener;
+}
+
 void RNOHInstance::start() {
     RNOHLogSink::initializeLogging();
 
     this->initialize();
     this->initializeComponentDescriptorRegistry();
     this->initializeScheduler();
-
-    auto layoutConstraints = this->surfaceHandler.getLayoutConstraints();
-    layoutConstraints.layoutDirection = LayoutDirection::LeftToRight;
-    this->surfaceHandler.constraintLayout(layoutConstraints, surfaceHandler.getLayoutContext());
-    this->scheduler->registerSurface(this->surfaceHandler);
 }
 
 void RNOHInstance::initialize() {
@@ -99,12 +98,19 @@ void RNOHInstance::initializeScheduler() {
     this->scheduler = std::make_unique<facebook::react::Scheduler>(schedulerToolbox, nullptr, schedulerDelegate.get());
 }
 
-void RNOHInstance::runApplication() {
-    folly::dynamic config = folly::dynamic::object("rootTag", 1)("fabric", true);
-    this->surfaceHandler.setProps(std::move(config));
-    auto unique_js_bundle = std::make_unique<facebook::react::JSBigStdString>(JS_BUNDLE);
+void RNOHInstance::runApplication(float width, float height) {
     try {
-        this->instance->loadScriptFromString(std::move(unique_js_bundle), "jsBundle.js", true);
+        auto jsBundle = std::make_unique<facebook::react::JSBigStdString>(JS_BUNDLE);
+        this->instance->loadScriptFromString(std::move(jsBundle), "jsBundle.js", true);
+        folly::dynamic config = folly::dynamic::object("rootTag", 1)("fabric", true);
+        this->surfaceHandler.setProps(std::move(config));
+        auto layoutConstraints = this->surfaceHandler.getLayoutConstraints();
+        layoutConstraints.layoutDirection = LayoutDirection::LeftToRight;
+        layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
+            .width = width,
+            .height = height};
+        this->surfaceHandler.constraintLayout(layoutConstraints, this->surfaceHandler.getLayoutContext());
+        this->scheduler->registerSurface(this->surfaceHandler);
         this->surfaceHandler.start();
     } catch (const std::exception &e) {
         LOG(ERROR) << "runApplication: " << e.what() << "\n";

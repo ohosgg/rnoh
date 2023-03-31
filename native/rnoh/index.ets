@@ -1,1 +1,1 @@
-export { RNSurface } from './src/main/ets/RNSurface'
+export { RNApp } from './src/main/ets/RNSurface'

@@ -19,6 +19,7 @@ export class DescriptorRegistry {
   }
 
   private applyMutation(mutation: Mutation) {
+    console.log("[RNOH] mutation: ", JSON.stringify(mutation))
     if (mutation.type === MutationType.CREATE) {
       this.descriptorByTag[mutation.descriptor.tag] = mutation.descriptor
     } else if (mutation.type === MutationType.INSERT) {

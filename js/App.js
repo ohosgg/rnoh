@@ -152,7 +152,6 @@ const styles = StyleSheet.create({
   row: {
     display: "flex",
     flexDirection: "row",
-    backgroundColor: "orange",
     width: "100%",
     height: "12.5%"
   },

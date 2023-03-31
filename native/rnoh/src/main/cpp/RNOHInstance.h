@@ -23,19 +23,18 @@
 
 class RNOHInstance {
   public:
-    RNOHInstance(napi_env env, std::function<void(facebook::react::ShadowViewMutationList const &mutations)> onComponentDescriptorTreeChanged)
+    RNOHInstance(napi_env env)
         : env(env),
           surfaceHandler("rnempty", 1),
           instance(std::make_shared<facebook::react::Instance>()),
           scheduler(nullptr),
           taskExecutor(nullptr),
-          onComponentDescriptorTreeChanged(onComponentDescriptorTreeChanged),
           eventEmitterRegistry(std::make_shared<rnoh::EventEmitterRegistry>()),
           eventEmitterHelper(ArkJS(env), eventEmitterRegistry) {}
 
+    void registerSurface(std::function<void(facebook::react::ShadowViewMutationList const &mutations)>);
     void start();
-    void runApplication();
-
+    void runApplication(float width, float height);
     void emitEvent(facebook::react::Tag tag, rnoh::ReactEventKind eventKind, napi_value eventObject);
 
   private:
