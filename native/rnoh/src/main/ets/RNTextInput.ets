@@ -16,27 +16,23 @@ export type TextInputDescriptor = Descriptor<"TextInput", TextInputProps>
 @Component
 export struct RNTextInput {
   @State tag: number = -1
-  @Link descriptorRegistry: DescriptorRegistry
-
-  getDescriptor() {
-    return this.descriptorRegistry.getDescriptor<TextInputDescriptor>(this.tag)
-  }
+  @Prop descriptor: TextInputDescriptor
 
   relayChangeEvent(value: string) {
-    rnoh?.emitEvent(this.getDescriptor().tag, ReactEventKind.TEXT_INPUT_CHANGE, value)
+    rnoh?.emitEvent(this.descriptor.tag, ReactEventKind.TEXT_INPUT_CHANGE, value)
   }
 
   build() {
     TextInput()
-      .width(this.getDescriptor().props.width)
-      .height(this.getDescriptor().props.height)
-      .position({ y: this.getDescriptor().props.top, x: this.getDescriptor().props.left })
-      .backgroundColor(convertColorSegmentsToString(this.getDescriptor().props.backgroundColor))
-      .fontColor(convertColorSegmentsToString(this.getDescriptor().props.fontColor))
-      .fontSize(this.getDescriptor().props.fontSize)
-      .borderWidth(this.getDescriptor().props.borderWidth)
-      .borderColor(convertColorSegmentsToString(this.getDescriptor().props.borderColor))
-      .borderRadius(this.getDescriptor().props.borderRadius)
+      .width(this.descriptor.props.width)
+      .height(this.descriptor.props.height)
+      .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
+      .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
+      .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
+      .fontSize(this.descriptor.props.fontSize)
+      .borderWidth(this.descriptor.props.borderWidth)
+      .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
+      .borderRadius(this.descriptor.props.borderRadius)
       .onChange((event) => this.relayChangeEvent(event))
   }
 }

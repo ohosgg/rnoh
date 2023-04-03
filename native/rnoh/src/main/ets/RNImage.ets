@@ -14,26 +14,22 @@ export type ImageDescriptor = Descriptor<"Image", ImageProps>
 @Component
 export struct RNImage {
   @State tag: number = -1
-  @Link descriptorRegistry: DescriptorRegistry
-
-  getDescriptor() {
-    return this.descriptorRegistry.getDescriptor<ImageDescriptor>(this.tag)
-  }
+  @Prop descriptor: ImageDescriptor
 
   onTouchEvent(event: TouchEvent) {
-    rnoh?.emitEvent(this.getDescriptor().tag, ReactEventKind.TOUCH, event)
+    rnoh?.emitEvent(this.descriptor.tag, ReactEventKind.TOUCH, event)
   }
 
   build() {
-    Image(this.getDescriptor().props.uri)
-      .interpolation(ImageInterpolation.High)
-      .width(this.getDescriptor().props.width)
-      .height(this.getDescriptor().props.height)
-      .position({ y: this.getDescriptor().props.top, x: this.getDescriptor().props.left })
-      .backgroundColor(convertColorSegmentsToString(this.getDescriptor().props.backgroundColor))
-      .borderWidth(this.getDescriptor().props.borderWidth)
-      .borderColor(convertColorSegmentsToString(this.getDescriptor().props.borderColor))
-      .borderRadius(this.getDescriptor().props.borderRadius)
-      .onTouch((event) => this.onTouchEvent(event))
+      Image(this.descriptor.props.uri)
+        .interpolation(ImageInterpolation.High)
+        .width(this.descriptor.props.width)
+        .height(this.descriptor.props.height)
+        .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
+        .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
+        .borderWidth(this.descriptor.props.borderWidth)
+        .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
+        .borderRadius(this.descriptor.props.borderRadius)
+        .onTouch((event) => this.onTouchEvent(event))
   }
 }

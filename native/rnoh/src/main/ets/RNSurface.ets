@@ -6,7 +6,6 @@ import { ViewProps } from './RNView'
 import { convertColorSegmentsToString } from './cpp-bridge-utils'
 import Device from '@system.device'
 
-
 @Component
 @Preview
 export struct RNApp {
@@ -41,7 +40,6 @@ export struct RNApp {
   }
 }
 
-
 export type RootDescriptor = Descriptor<"RootView", ViewProps>
 
 const rootDescriptor: RootDescriptor = {
@@ -51,42 +49,53 @@ const rootDescriptor: RootDescriptor = {
   props: { top: 0, left: 0, width: 0, height: 0 },
 }
 
-
 @Component
 export struct RNSurface {
   @State initialSurfaceWidth: number = 0
   @State initialSurfaceHeight: number = 0
-  @State descriptorRegistry: DescriptorRegistry = new DescriptorRegistry({
-    '1': { ...rootDescriptor },
-  });
   @Prop screenDensity: number
+  @State descriptor: RootDescriptor = rootDescriptor
+  @Provide('__RN_DESCRIPTOR_REGISTRY') descriptorRegistry: DescriptorRegistry =
+    new DescriptorRegistry({
+      '1': { ...rootDescriptor },
+    });
+
+  private cleanup?: () => void = undefined
 
   aboutToAppear() {
     rnoh?.subscribeToShadowTreeChanges((mutations) => {
       this.updateDescriptorRegistry(mutations)
     });
     rnoh.startReactNative(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity)
+    this.cleanup = this.descriptorRegistry.registerComponentUpdateCallback(
+      1,
+      (newDescriptor) => this.onUpdateComponent(newDescriptor)
+    )
+  }
+
+  aboutToDisappear() {
+    this.cleanup?.();
   }
 
   updateDescriptorRegistry(mutations) {
     this.descriptorRegistry.applyMutations(mutations)
   }
 
-  getCurrentDescriptor() {
-    return this.descriptorRegistry.getDescriptor<RootDescriptor>(1)
+  onUpdateComponent(newDescriptor: Descriptor) {
+    this.descriptor = newDescriptor as RootDescriptor
   }
 
   build() {
     Row() {
       Column() {
         Flex({ direction: FlexDirection.Column }) {
-          ForEach(this.getCurrentDescriptor().childrenTags, (childrenTag) => {
-            RNComponentFactory({ tag: childrenTag, descriptorRegistry: $descriptorRegistry })
+          ForEach(this.descriptor.childrenTags, (childrenTag) => {
+            RNComponentFactory({ tag: childrenTag })
           }, childrenTag => childrenTag)
         }
         .width("100%")
         .height("100%")
-        .backgroundColor(convertColorSegmentsToString(this.getCurrentDescriptor().props.backgroundColor))
+        .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
       }
       .height("100%")
       .width('100%')

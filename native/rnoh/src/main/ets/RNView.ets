@@ -16,28 +16,24 @@ export type ViewDescriptor = Descriptor<"View", ViewProps>
 @Component
 export struct RNView {
   @State tag: number = -1
-  @Link descriptorRegistry: DescriptorRegistry
-  @BuilderParam renderDescriptors: (parentTag: number) => void
-
-  getDescriptor(): ViewDescriptor {
-    return this.descriptorRegistry.getDescriptor<ViewDescriptor>(this.tag)
-  }
+  @BuilderParam renderDescriptors: () => void
+  @Prop descriptor: ViewDescriptor
 
   onTouchEvent(event: TouchEvent) {
-    rnoh?.emitEvent(this.getDescriptor().tag, ReactEventKind.TOUCH, event)
+    rnoh?.emitEvent(this.descriptor.tag, ReactEventKind.TOUCH, event)
   }
 
   build() {
     Stack() {
-      this.renderDescriptors(this.tag)
+      this.renderDescriptors()
     }
-    .width(this.getDescriptor().props.width)
-    .height(this.getDescriptor().props.height)
-    .backgroundColor(convertColorSegmentsToString(this.getDescriptor().props.backgroundColor))
-    .position({ y: this.getDescriptor().props.top, x: this.getDescriptor().props.left })
-    .borderWidth(this.getDescriptor().props.borderWidth)
-    .borderColor(convertColorSegmentsToString(this.getDescriptor().props.borderColor))
-    .borderRadius(this.getDescriptor().props.borderRadius)
+    .width(this.descriptor.props.width)
+    .height(this.descriptor.props.height)
+    .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
+    .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
+    .borderWidth(this.descriptor.props.borderWidth)
+    .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
+    .borderRadius(this.descriptor.props.borderRadius)
     .onTouch((event) => this.onTouchEvent(event))
   }
 }

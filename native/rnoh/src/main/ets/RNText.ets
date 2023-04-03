@@ -17,24 +17,20 @@ export type TextDescriptor = Descriptor<"Paragraph", TextProps>
 @Component
 export struct RNText {
   @State tag: number = -1
-  @Link descriptorRegistry: DescriptorRegistry
-
-  getDescriptor() {
-    return this.descriptorRegistry.getDescriptor<TextDescriptor>(this.tag)
-  }
+  @Prop descriptor: TextDescriptor
 
   onTouchEvent(event: TouchEvent) {
-    rnoh?.emitEvent(this.getDescriptor().tag, ReactEventKind.TOUCH, event)
+    rnoh?.emitEvent(this.descriptor.tag, ReactEventKind.TOUCH, event)
   }
 
   build() {
-    Text(this.getDescriptor().props.text)
-      .width(this.getDescriptor().props.width)
-      .height(this.getDescriptor().props.height)
-      .position({ y: this.getDescriptor().props.top, x: this.getDescriptor().props.left })
-      .fontColor(convertColorSegmentsToString(this.getDescriptor().props.fontColor))
-      .fontWeight(this.getDescriptor().props.fontWeight)
-      .fontSize(this.getDescriptor().props.fontSize)
+    Text(this.descriptor.props.text)
+      .width(this.descriptor.props.width)
+      .height(this.descriptor.props.height)
+      .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
+      .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
+      .fontWeight(this.descriptor.props.fontWeight)
+      .fontSize(this.descriptor.props.fontSize)
       .onTouch((event) => this.onTouchEvent(event))
   }
 }
