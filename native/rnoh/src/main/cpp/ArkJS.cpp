@@ -10,6 +10,12 @@ napi_env ArkJS::getEnv() {
     return m_env;
 }
 
+napi_value ArkJS::createBoolean(bool value) {
+    napi_value result;
+    napi_get_boolean(m_env, value, &result);
+    return result;
+}
+
 napi_value ArkJS::createInt(int value) {
     napi_value result;
     napi_create_int32(m_env, static_cast<int32_t>(value), &result);
@@ -32,6 +38,12 @@ napi_value ArkJS::createString(std::string const &str) {
 napi_value ArkJS::getUndefined() {
     napi_value result;
     napi_get_undefined(m_env, &result);
+    return result;
+}
+
+napi_value ArkJS::getNull() {
+    napi_value result;
+    napi_get_null(m_env, &result);
     return result;
 }
 
@@ -68,6 +80,12 @@ napi_value ArkJS::createArray(std::vector<napi_value> values) {
     return result;
 }
 
+std::vector<napi_value> ArkJS::getCallbackArgs(napi_callback_info info) {
+    size_t argc;
+    napi_get_cb_info(m_env, info, &argc, nullptr, nullptr, nullptr);
+    return getCallbackArgs(info, argc);
+}
+
 std::vector<napi_value> ArkJS::getCallbackArgs(napi_callback_info info, size_t args_count) {
     size_t argc = args_count;
     std::vector<napi_value> args(args_count, nullptr);
@@ -83,6 +101,13 @@ napi_value ArkJS::getObjectProperty(napi_value object, napi_value key) {
     napi_value result;
     auto status = napi_get_property(m_env, object, key, &result);
     this->maybeThrowFromStatus(status, "Failed to retrieve property from object");
+    return result;
+}
+
+bool ArkJS::getBoolean(napi_value value) {
+    bool result;
+    auto status = napi_get_value_bool(m_env, value, &result);
+    this->maybeThrowFromStatus(status, "Failed to retrieve boolean value");
     return result;
 }
 
@@ -105,6 +130,20 @@ uint32_t ArkJS::getArrayLength(napi_value array) {
     auto status = napi_get_array_length(m_env, array, &length);
     this->maybeThrowFromStatus(status, "Failed to read array length");
     return length;
+}
+
+std::vector<std::pair<napi_value, napi_value>> ArkJS::getObjectProperties(napi_value object) {
+    napi_value propertyNames;
+    auto status = napi_get_property_names(m_env, object, &propertyNames);
+    this->maybeThrowFromStatus(status, "Failed to retrieve property names");
+    uint32_t length = this->getArrayLength(propertyNames);
+    std::vector<std::pair<napi_value, napi_value>> result;
+    for (uint32_t i = 0; i < length; i++) {
+        napi_value propertyName = this->getArrayElement(propertyNames, i);
+        napi_value propertyValue = this->getObjectProperty(object, propertyName);
+        result.emplace_back(propertyName, propertyValue);
+    }
+    return result;
 }
 
 std::string ArkJS::getString(napi_value value) {
@@ -133,6 +172,13 @@ void ArkJS::throwError(const char *message) {
     napi_throw_error(m_env, nullptr, message);
     // stops a code execution after throwing napi_error
     throw std::runtime_error(message);
+}
+
+napi_valuetype ArkJS::getType(napi_value value) {
+    napi_valuetype result;
+    auto status = napi_typeof(m_env, value, &result);
+    this->maybeThrowFromStatus(status, "Failed to get value type");
+    return result;
 }
 
 RNOHNapiObjectBuilder::RNOHNapiObjectBuilder(napi_env env, ArkJS arkJs) : m_env(env), m_arkJs(arkJs) {

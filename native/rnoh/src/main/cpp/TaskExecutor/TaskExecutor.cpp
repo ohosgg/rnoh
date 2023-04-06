@@ -49,8 +49,17 @@ void TaskExecutor::runTask(TaskThread thread, Task &&task) {
 
 void TaskExecutor::runSyncTask(TaskThread thread, Task &&task) {
     switch (thread) {
-        case TaskThread::MAIN:
-            LOG(FATAL) << "Running sync tasks on main thread is not supported yet.";
+        case TaskThread::MAIN: {
+            std::condition_variable cv;
+            std::unique_lock<std::mutex> lock(mainThreadTasksMutex);
+            mainThreadTasks.push([&cv, task = std::move(task)]() {
+                task();
+                cv.notify_one();
+            });
+            uv_async_send(&asyncHandle);
+            cv.wait(lock);
+            return;
+        }
         break;
         case TaskThread::JS:
             jsTaskRunner.runSyncTask(std::move(task));

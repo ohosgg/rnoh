@@ -21,6 +21,8 @@ class ArkJS {
         return result;
     }
 
+    napi_value createBoolean(bool value);
+
     napi_value createInt(int value);
 
     napi_value createDouble(double value);
@@ -37,7 +39,11 @@ class ArkJS {
 
     napi_value getUndefined();
 
+    napi_value getNull();
+
     napi_value getReferenceValue(napi_ref ref);
+
+    std::vector<napi_value> getCallbackArgs(napi_callback_info info);
 
     std::vector<napi_value> getCallbackArgs(napi_callback_info info, size_t args_count);
 
@@ -45,17 +51,23 @@ class ArkJS {
 
     napi_value getObjectProperty(napi_value object, napi_value key);
 
+    bool getBoolean(napi_value value);
+
     double getDouble(napi_value value);
 
     napi_value getArrayElement(napi_value array, uint32_t index);
 
     uint32_t getArrayLength(napi_value array);
 
+    std::vector<std::pair<napi_value, napi_value>> getObjectProperties(napi_value object);
+
     std::string getString(napi_value value);
 
     napi_env getEnv();
 
     void throwError(const char *message);
+    
+    napi_valuetype getType(napi_value value);
 
   private:
     napi_env m_env;
