@@ -14,8 +14,14 @@
 #include <react/renderer/components/textinput/TextInputComponentDescriptor.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProvider.h>
 #include "mounting/events/EventEmitterRegistry.h"
+#include "RNOHTurboModuleProvider.h"
+#include "RNOHTurboModuleFactory.h"
+#include "TurboModules/RNOHUIManagerModule.h"
+
 
 using namespace facebook::react;
+using namespace facebook::jsi;
+using namespace rnoh;
 
 void RNOHInstance::registerSurface(std::function<void(facebook::react::ShadowViewMutationList const &mutations)> listener) {
     this->onComponentDescriptorTreeChanged = listener;
@@ -48,6 +54,9 @@ void RNOHInstance::initialize() {
         std::move(jsExecutorFactory),
         std::move(jsQueue),
         std::move(moduleRegistry));
+
+    std::make_shared<RNOHTurboModuleProvider>(this->instance->getJSCallInvoker(), std::move(m_turboModuleFactory))
+        ->installJSBindings(this->instance->getRuntimeExecutor());
 }
 
 void RNOHInstance::initializeComponentDescriptorRegistry() {

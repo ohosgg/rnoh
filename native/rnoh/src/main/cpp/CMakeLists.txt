@@ -385,6 +385,9 @@ add_library(rnoh SHARED
     "${CMAKE_CURRENT_SOURCE_DIR}/mounting/events/EventEmitterHelper.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/TaskExecutor/TaskExecutor.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/TaskExecutor/TaskRunner.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHTurboModuleProvider.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHTurboModuleFactory.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/TurboModules/RNOHUIManagerModule.cpp"
 )
 target_include_directories(rnoh PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -404,6 +407,7 @@ target_link_libraries(rnoh PUBLIC
     rrc_image
     rrc_text
     rrc_textinput
+    react_nativemodule_core
 )
 target_compile_options(rnoh PRIVATE ${folly_compile_options} -std=c++17)
 

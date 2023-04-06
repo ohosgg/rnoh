@@ -9,17 +9,32 @@
 #include "RNOHInstance.h"
 #include <react/renderer/mounting/ShadowViewMutation.h>
 #include "RNOHMutationsToNapiConverter.h"
+#include "RNOHTurboModuleFactory.h"
+#include "ComponentManagers/RNOHViewManager.h"
+#include "ComponentManagers/RNOHImageViewManager.h"
+
+using namespace rnoh;
 
 static napi_ref listener_ref;
 
-std::shared_ptr<RNOHInstance> rnohInstance;
+std::unique_ptr<RNOHInstance> rnohInstance;
+
+void createRNOHInstance(napi_env env) {
+    const ComponentManagerBindingByString componentManagerBindingByName = {
+        {"RCTView", std::make_shared<RNOHViewManager>()},
+        {"RCTImageView", std::make_shared<RNOHImageViewManager>()},
+        {"RCTVirtualText", std::make_shared<RNOHViewManager>()},
+        {"RCTSinglelineTextInputView", std::make_shared<RNOHViewManager>()},
+    };
+    auto turboModuleFactory = RNOHTurboModuleFactory(std::move(componentManagerBindingByName));
+    rnohInstance = std::make_unique<RNOHInstance>(env, std::move(turboModuleFactory));
+}
 
 static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    rnohInstance = std::make_shared<RNOHInstance>(env);
+    createRNOHInstance(env);
     rnohInstance->start();
     return arkJs.getUndefined();
-
 }
 
 static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info info) {

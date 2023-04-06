@@ -10,14 +10,19 @@ import Device from '@system.device'
 @Preview
 export struct RNApp {
   @State screenDensity: number = 0
+  @State shouldShow: boolean = false
   private initialSurfaceWidth: number = 0
   private initialSurfaceHeight: number = 0
 
   aboutToAppear() {
-    rnoh?.initializeReactNative()
     Device.getInfo({ success: (data) => {
       this.screenDensity = data.screenDensity
     } })
+    // delay running the app so that debugger has a chance to connect before a potential error is thrown
+    setTimeout(() => {
+      rnoh?.initializeReactNative()
+      this.shouldShow = true
+    }, 1000)
   }
 
   onLayout(children, constraint) {
@@ -27,7 +32,7 @@ export struct RNApp {
 
   build() {
     Stack() {
-      if (this.screenDensity > 0) {
+      if (this.screenDensity > 0 && this.shouldShow) {
         RNSurface({
           screenDensity: this.screenDensity,
           initialSurfaceWidth: this.initialSurfaceWidth,
@@ -59,7 +64,6 @@ export struct RNSurface {
     new DescriptorRegistry({
       '1': { ...rootDescriptor },
     });
-
   private cleanup?: () => void = undefined
 
   aboutToAppear() {

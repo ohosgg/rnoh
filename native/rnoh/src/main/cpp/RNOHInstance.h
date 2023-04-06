@@ -14,23 +14,26 @@
 #include <folly/dynamic.h>
 #include <react/renderer/scheduler/Scheduler.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h>
+#include <ReactCommon/LongLivedObject.h>
 
 #include "RNOHMessageQueueThread.h"
 #include "RNOHSchedulerDelegate.h"
 #include "TaskExecutor/TaskExecutor.h"
 #include "mounting/events/EventEmitterRegistry.h"
 #include "mounting/events/EventEmitterHelper.h"
+#include "RNOHTurboModuleFactory.h"
 
 class RNOHInstance {
   public:
-    RNOHInstance(napi_env env)
+    RNOHInstance(napi_env env, rnoh::RNOHTurboModuleFactory &&turboModuleFactory)
         : env(env),
           surfaceHandler("rnempty", 1),
           instance(std::make_shared<facebook::react::Instance>()),
           scheduler(nullptr),
           taskExecutor(nullptr),
           eventEmitterRegistry(std::make_shared<rnoh::EventEmitterRegistry>()),
-          eventEmitterHelper(ArkJS(env), eventEmitterRegistry) {}
+          eventEmitterHelper(ArkJS(env), eventEmitterRegistry),
+          m_turboModuleFactory(std::move(turboModuleFactory)) {}
 
     void registerSurface(std::function<void(facebook::react::ShadowViewMutationList const &mutations)>);
     void start();
@@ -49,6 +52,7 @@ class RNOHInstance {
     std::shared_ptr<ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry;
     rnoh::EventEmitterRegistry::Shared eventEmitterRegistry;
     rnoh::EventEmitterHelper eventEmitterHelper;
+    rnoh::RNOHTurboModuleFactory m_turboModuleFactory;
 
     void initialize();
     void initializeComponentDescriptorRegistry();
