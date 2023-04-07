@@ -3,8 +3,8 @@
 using namespace rnoh;
 using namespace facebook::jsi;
 
-RNOHUIManagerModule::RNOHUIManagerModule(std::string name, std::shared_ptr<facebook::react::CallInvoker> jsInvoker, const ComponentManagerBindingByString &&componentManagerBindingByName)
-    : RNOHTurboModule(name, jsInvoker),
+RNOHUIManagerModule::RNOHUIManagerModule(RNOHTurboModule::Context context, std::string name, const ComponentManagerBindingByString &&componentManagerBindingByName)
+    : RNOHTurboModule(context, name),
       m_componentManagerBindingByName(componentManagerBindingByName) {
     MethodMetadata getConstantsMetadata = {.argCount = 0, .invoker = getConstants};
 

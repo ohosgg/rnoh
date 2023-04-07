@@ -38,7 +38,6 @@ void RNOHInstance::start() {
 void RNOHInstance::initialize() {
     std::vector<std::unique_ptr<NativeModule>> modules;
     this->contextContainer = std::make_shared<facebook::react::ContextContainer>();
-    this->taskExecutor = std::make_shared<rnoh::TaskExecutor>(env);
     auto instanceCallback = std::make_unique<facebook::react::InstanceCallback>();
     auto jsExecutorFactory = std::make_shared<facebook::react::HermesExecutorFactory>(
         // runtime installer, which is run when the runtime

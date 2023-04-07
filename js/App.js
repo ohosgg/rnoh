@@ -1,11 +1,17 @@
 import React from "react";
 import { View, StyleSheet, Image, TextInput, Text } from "react-native";
+import SampleTurboModule from "./SampleTurboModule"
 
 function App() {
   const [username, setUsername] = React.useState("");
 
   return (
     <View style={styles.container}>
+      <View style={styles.button} onTouchStart={() => {
+        SampleTurboModule.voidFunc()
+      }}>
+        <Text style={styles.buttonText}>Run Turbo module</Text>
+      </View>
       <UserInfo avatar="https://i.pravatar.cc/100?img=8" />
       <View style={styles.centerX}>
         <Chessboard />
@@ -218,6 +224,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     width: 12, // hack
     height: 12 // hack
+  },
+  button: {
+    width: 160,
+    height: 36,
+    backgroundColor: "hsl(190, 50%, 70%)",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8
+  },
+  buttonText: {
+    width: "100%",
+    height: "100%",
+    fontWeight: "bold"
   }
 });
 

@@ -8,10 +8,13 @@
 namespace rnoh {
 
 class RNOHTurboModule : public facebook::react::TurboModule {
-
   public:
-    RNOHTurboModule(std::string name, std::shared_ptr<facebook::react::CallInvoker> jsInvoker)
-        : facebook::react::TurboModule(name, jsInvoker) {
+    struct Context {
+        std::shared_ptr<facebook::react::CallInvoker> jsInvoker;
+    };
+
+    RNOHTurboModule(Context ctx, std::string name)
+        : facebook::react::TurboModule(name, ctx.jsInvoker) {
     }
 
     void set(facebook::jsi::Runtime &rt, const facebook::jsi::PropNameID &name, const facebook::jsi::Value &value) override {

@@ -11,7 +11,7 @@ using ComponentManagerBindingByString = std::unordered_map<std::string, std::sha
 
 class RNOHUIManagerModule : public RNOHTurboModule {
   public:
-    RNOHUIManagerModule(std::string name, std::shared_ptr<facebook::react::CallInvoker> jsInvoker, const ComponentManagerBindingByString &&viewManagerBinderByName);
+    RNOHUIManagerModule(RNOHTurboModule::Context context, std::string name, const ComponentManagerBindingByString &&viewManagerBinderByName);
 
     std::vector<facebook::jsi::PropNameID> getPropertyNames(facebook::jsi::Runtime &rt) override;
 

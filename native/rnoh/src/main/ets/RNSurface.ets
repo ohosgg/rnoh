@@ -5,6 +5,9 @@ import { Descriptor } from './descriptor'
 import { ViewProps } from './RNView'
 import { convertColorSegmentsToString } from './cpp-bridge-utils'
 import Device from '@system.device'
+import {TurboModuleProvider} from "./TurboModuleProvider"
+import {TurboModuleFactory} from "./TurboModuleFactory"
+
 
 @Component
 @Preview
@@ -15,6 +18,7 @@ export struct RNApp {
   private initialSurfaceHeight: number = 0
 
   aboutToAppear() {
+    rnoh?.registerTurboModuleProvider(new TurboModuleProvider(new TurboModuleFactory()))
     Device.getInfo({ success: (data) => {
       this.screenDensity = data.screenDensity
     } })

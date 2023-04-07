@@ -16,24 +16,35 @@
 using namespace rnoh;
 
 static napi_ref listener_ref;
+static napi_ref arkTsTurboModuleProviderRef;
 
 std::unique_ptr<RNOHInstance> rnohInstance;
 
 void createRNOHInstance(napi_env env) {
+    auto taskExecutor = std::make_shared<TaskExecutor>(env);
     const ComponentManagerBindingByString componentManagerBindingByName = {
         {"RCTView", std::make_shared<RNOHViewManager>()},
         {"RCTImageView", std::make_shared<RNOHImageViewManager>()},
         {"RCTVirtualText", std::make_shared<RNOHViewManager>()},
         {"RCTSinglelineTextInputView", std::make_shared<RNOHViewManager>()},
     };
-    auto turboModuleFactory = RNOHTurboModuleFactory(std::move(componentManagerBindingByName));
-    rnohInstance = std::make_unique<RNOHInstance>(env, std::move(turboModuleFactory));
+    auto turboModuleFactory = RNOHTurboModuleFactory(env, arkTsTurboModuleProviderRef, std::move(componentManagerBindingByName), taskExecutor);
+    rnohInstance = std::make_unique<RNOHInstance>(env,
+                                                  std::move(turboModuleFactory),
+                                                  taskExecutor);
 }
 
 static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
     createRNOHInstance(env);
     rnohInstance->start();
+    return arkJs.getUndefined();
+}
+
+static napi_value registerTurboModuleProvider(napi_env env, napi_callback_info info) {
+    ArkJS arkJs(env);
+    auto args = arkJs.getCallbackArgs(info, 1);
+    arkTsTurboModuleProviderRef = arkJs.createReference(args[0]);
     return arkJs.getUndefined();
 }
 
@@ -78,7 +89,8 @@ static napi_value Init(napi_env env, napi_value exports) {
         {"subscribeToShadowTreeChanges", nullptr, subscribeToShadowTreeChanges, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"initializeReactNative", nullptr, initializeReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"startReactNative", nullptr, startReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
-        {"emitEvent", nullptr, emitEvent, nullptr, nullptr, nullptr, napi_default, nullptr}};
+        {"emitEvent", nullptr, emitEvent, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"registerTurboModuleProvider", nullptr, registerTurboModuleProvider, nullptr, nullptr, nullptr, napi_default, nullptr}};
 
     napi_define_properties(env, exports, sizeof(desc) / sizeof(napi_property_descriptor), desc);
     return exports;

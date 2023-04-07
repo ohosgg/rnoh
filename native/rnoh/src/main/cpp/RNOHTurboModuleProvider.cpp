@@ -9,9 +9,10 @@ using namespace facebook::react;
 RNOHTurboModuleProvider::RNOHTurboModuleProvider(std::shared_ptr<CallInvoker> jsInvoker,
                                                  RNOHTurboModuleFactory &&turboModuleFactory)
     : m_jsInvoker(jsInvoker),
-      m_createTurboModule([factory = std::move(turboModuleFactory)](std::string const &moduleName,
-                                                                    std::shared_ptr<CallInvoker> jsInvoker) -> std::shared_ptr<TurboModule> {
-          return factory.create(RNOHTurboModuleFactory::Context{.jsInvoker = jsInvoker}, moduleName);
+      m_createTurboModule([factory = std::move(turboModuleFactory), env = RNOHTurboModuleFactory::arkTsTurboModuleFactoryEnv](
+                              std::string const &moduleName,
+                              std::shared_ptr<CallInvoker> jsInvoker) -> std::shared_ptr<TurboModule> {
+          return factory.create(jsInvoker, moduleName);
       }) {}
 
 void RNOHTurboModuleProvider::installJSBindings(RuntimeExecutor runtimeExecutor) {
