@@ -4,6 +4,7 @@ project(rnopenharmony)
 
 set(NATIVERENDER_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 set(third_party_dir "${CMAKE_CURRENT_SOURCE_DIR}/third-party")
+set(patches_dir "${CMAKE_CURRENT_SOURCE_DIR}/patches")
 
 add_compile_options("-Wno-unused-command-line-argument")
 
@@ -87,7 +88,7 @@ add_subdirectory("${boost_libs_dir}/context")
 add_library(libevent)
 set(libevent_src_dir "${third_party_dir}/libevent")
 set(libevent_include_dirs
-    "${third_party_dir}/libevent_patch/${OHOS_ARCH}"
+    "${patches_dir}/libevent/${OHOS_ARCH}"
     "${third_party_dir}/libevent/include"
     "${third_party_dir}/libevent/compat"
 )
@@ -183,7 +184,7 @@ target_compile_options(folly_futures PRIVATE
     "-std=c++17"
 )
 target_sources(folly_futures PRIVATE
-    "${third_party_dir}/folly_patch/Demangle.cpp"
+    "${patches_dir}/folly/Demangle.cpp"
     "${folly_src_dir}/ExceptionString.cpp"
     "${folly_src_dir}/ExceptionWrapper.cpp"
     "${folly_src_dir}/Executor.cpp"
@@ -287,8 +288,8 @@ set_property(TARGET hermes-engine::libhermes PROPERTY
                 IMPORTED_LOCATION "${third_party_dir}/prebuilt/${OHOS_ARCH}/libhermes.so")
 
 # -------- REACT COMMON --------
-set(REACT_COMMON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ReactCommon")
-set(REACT_COMMON_PATCH_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ReactCommonPatch")
+set(REACT_COMMON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third-party/react_native_core/ReactCommon")
+set(REACT_COMMON_PATCH_DIR "${patches_dir}/react_native_core")
 add_library(folly_runtime ALIAS folly_target)
 add_library(glog ALIAS glog_target)
 
