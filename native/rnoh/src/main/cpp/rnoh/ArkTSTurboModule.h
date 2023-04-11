@@ -3,8 +3,8 @@
 #include <jsi/jsi.h>
 
 #include "ArkJS.h"
-#include "rnoh/TaskExecutor.h"
-#include "rnoh/TurboModule.h"
+#include "RNOH/TaskExecutor.h"
+#include "RNOH/TurboModule.h"
 
 namespace rnoh {
 class RNOHArkTSTurboModule : public RNOHTurboModule {

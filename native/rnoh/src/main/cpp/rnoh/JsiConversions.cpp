@@ -1,5 +1,5 @@
 #include "JsiConversions.h"
-#include "rnoh/ArkJS.h"
+#include "RNOH/ArkJS.h"
 
 namespace rnoh {
 

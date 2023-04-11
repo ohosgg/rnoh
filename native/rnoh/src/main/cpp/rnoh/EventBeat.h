@@ -1,6 +1,6 @@
 #include <ReactCommon/RuntimeExecutor.h>
 #include <react/renderer/core/EventBeat.h>
-#include "rnoh/TaskExecutor.h"
+#include "RNOH/TaskExecutor.h"
 
 class RNOHEventBeat : public facebook::react::EventBeat {
   public:

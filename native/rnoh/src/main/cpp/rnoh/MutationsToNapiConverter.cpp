@@ -5,7 +5,7 @@
 #include <react/renderer/components/textinput/TextInputProps.h>
 #include <react/renderer/core/ConcreteState.h>
 
-#include "rnoh/MutationsToNapiConverter.h"
+#include "RNOH/MutationsToNapiConverter.h"
 
 using namespace facebook::react;
 

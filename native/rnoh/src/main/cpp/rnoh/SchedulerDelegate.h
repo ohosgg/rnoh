@@ -2,7 +2,7 @@
 #define native_RNOHSchedulerDelegate_H
 #include <react/renderer/scheduler/SchedulerDelegate.h>
 
-#include "rnoh/MountingManager.h"
+#include "RNOH/MountingManager.h"
 
 using namespace facebook::react;
 

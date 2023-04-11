@@ -9,8 +9,8 @@
 #include <react/renderer/mounting/MountingCoordinator.h>
 #include <react/renderer/mounting/TelemetryController.h>
 
-#include "rnoh/TaskExecutor.h"
-#include "rnoh/events/EventEmitterRegistry.h"
+#include "RNOH/TaskExecutor.h"
+#include "RNOH/events/EventEmitterRegistry.h"
 
 namespace rnoh {
 

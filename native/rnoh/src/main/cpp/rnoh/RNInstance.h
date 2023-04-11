@@ -16,12 +16,12 @@
 #include <react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h>
 #include <ReactCommon/LongLivedObject.h>
 
-#include "rnoh/MessageQueueThread.h"
-#include "rnoh/SchedulerDelegate.h"
-#include "rnoh/TaskExecutor.h"
-#include "rnoh/events/EventEmitterRegistry.h"
-#include "rnoh/events/EventEmitterHelper.h"
-#include "rnoh/TurboModuleFactory.h"
+#include "RNOH/MessageQueueThread.h"
+#include "RNOH/SchedulerDelegate.h"
+#include "RNOH/TaskExecutor.h"
+#include "RNOH/events/EventEmitterRegistry.h"
+#include "RNOH/events/EventEmitterHelper.h"
+#include "RNOH/TurboModuleFactory.h"
 
 class RNOHInstance {
   public:

@@ -1,8 +1,8 @@
 #include <jsi/JSIDynamic.h>
 
-#include "rnoh/JsiConversions.h"
-#include "rnoh/TaskExecutor.h"
-#include "rnoh/ArkTSTurboModule.h"
+#include "RNOH/JsiConversions.h"
+#include "RNOH/TaskExecutor.h"
+#include "RNOH/ArkTSTurboModule.h"
 
 using namespace rnoh;
 using namespace facebook;

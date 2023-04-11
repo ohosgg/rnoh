@@ -1,8 +1,8 @@
-#include "rnoh/TurboModuleProvider.h"
+#include "RNOH/TurboModuleProvider.h"
 
 #include <ReactCommon/TurboModuleBinding.h>
 #include <ReactCommon/LongLivedObject.h>
-#include "rnoh/LogSink.h"
+#include "RNOH/LogSink.h"
 
 
 using namespace rnoh;

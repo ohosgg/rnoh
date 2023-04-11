@@ -3,7 +3,7 @@
 #include <napi/native_api.h>
 #include <react/renderer/components/view/TouchEvent.h>
 
-#include "rnoh/ArkJS.h"
+#include "RNOH/ArkJS.h"
 
 namespace rnoh {
 using namespace facebook::react;

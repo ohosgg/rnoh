@@ -1,4 +1,4 @@
-#include "rnoh/CorePackage/UIManagerModule.h"
+#include "RNOHCorePackage/UIManagerModule.h"
 
 using namespace rnoh;
 using namespace facebook::jsi;

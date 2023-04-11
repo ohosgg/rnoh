@@ -1,5 +1,5 @@
 #pragma once
-#include "rnoh/CorePackage/UIManagerModule.h"
+#include "RNOHCorePackage/UIManagerModule.h"
 
 namespace rnoh {
 class RNOHViewManager : public RNOHComponentManagerBinding {

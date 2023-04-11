@@ -1,5 +1,5 @@
 #pragma once
-#include "rnoh/TurboModule.h"
+#include "RNOH/TurboModule.h"
 
 namespace rnoh {
 class RNOHComponentManagerBinding {

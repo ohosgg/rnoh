@@ -3,7 +3,7 @@
 #pragma once
 
 #include <ReactCommon/TurboModule.h>
-#include "rnoh/ArkTSTurboModule.h"
+#include "RNOH/ArkTSTurboModule.h"
 
 namespace rnoh {
 

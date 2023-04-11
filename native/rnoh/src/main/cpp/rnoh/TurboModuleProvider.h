@@ -5,7 +5,7 @@
 #include <ReactCommon/RuntimeExecutor.h>
 #include <ReactCommon/CallInvoker.h>
 #include <ReactCommon/LongLivedObject.h>
-#include "rnoh/TurboModuleFactory.h"
+#include "RNOH/TurboModuleFactory.h"
 
 namespace rnoh {
 class RNOHTurboModuleProvider : public std::enable_shared_from_this<RNOHTurboModuleProvider> {

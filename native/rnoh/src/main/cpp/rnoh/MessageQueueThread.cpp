@@ -1,4 +1,4 @@
-#include "rnoh/MessageQueueThread.h"
+#include "RNOH/MessageQueueThread.h"
 
 RNOHMessageQueueThread::RNOHMessageQueueThread(std::shared_ptr<rnoh::TaskExecutor> const &taskExecutor) 
     : taskExecutor(taskExecutor) {}

@@ -2,8 +2,8 @@
 #include <napi/native_api.h>
 #include <react/renderer/core/EventEmitter.h>
 
-#include "rnoh/ArkJS.h"
-#include "rnoh/events/EventEmitterRegistry.h"
+#include "RNOH/ArkJS.h"
+#include "RNOH/events/EventEmitterRegistry.h"
 
 namespace rnoh {
 

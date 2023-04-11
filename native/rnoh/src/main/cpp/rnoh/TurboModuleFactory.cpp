@@ -1,10 +1,10 @@
-#include "rnoh/TurboModuleFactory.h"
+#include "RNOH/TurboModuleFactory.h"
 
-#include "rnoh/CorePackage/StubModule.h"
-#include "rnoh/CorePackage/UIManagerModule.h"
-#include "rnoh/CorePackage/SampleTurboModuleSpec.h"
-#include "rnoh/CorePackage/ViewManager.h"
-#include "rnoh/CorePackage/ImageViewManager.h"
+#include "RNOHCorePackage/StubModule.h"
+#include "RNOHCorePackage/UIManagerModule.h"
+#include "RNOHCorePackage/SampleTurboModuleSpec.h"
+#include "RNOHCorePackage/ViewManager.h"
+#include "RNOHCorePackage/ImageViewManager.h"
 
 
 using namespace rnoh;

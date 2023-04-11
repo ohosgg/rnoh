@@ -1,9 +1,9 @@
 #include <react/renderer/scheduler/Scheduler.h>
 #include <react/renderer/componentregistry/ComponentDescriptorRegistry.h>
-#include "rnoh/MessageQueueThread.h"
-#include "rnoh/RNInstance.h"
-#include "rnoh/EventBeat.h"
-#include "rnoh/LogSink.h"
+#include "RNOH/MessageQueueThread.h"
+#include "RNOH/RNInstance.h"
+#include "RNOH/EventBeat.h"
+#include "RNOH/LogSink.h"
 #include "hermes/executor/HermesExecutorFactory.h"
 #include "jsbundle.h"
 #include <react/renderer/components/view/ViewComponentDescriptor.h>
@@ -13,9 +13,9 @@
 #include <react/renderer/components/text/ParagraphComponentDescriptor.h>
 #include <react/renderer/components/textinput/TextInputComponentDescriptor.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProvider.h>
-#include "rnoh/events/EventEmitterRegistry.h"
-#include "rnoh/TurboModuleProvider.h"
-#include "rnoh/TurboModuleFactory.h"
+#include "RNOH/events/EventEmitterRegistry.h"
+#include "RNOH/TurboModuleProvider.h"
+#include "RNOH/TurboModuleFactory.h"
 
 
 using namespace facebook::react;

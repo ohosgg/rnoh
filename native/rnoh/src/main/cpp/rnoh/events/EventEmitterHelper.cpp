@@ -2,8 +2,8 @@
 #include <react/renderer/components/view/TouchEventEmitter.h>
 #include <react/renderer/components/textinput/TextInputEventEmitter.h>
 
-#include "rnoh/events/EventEmitterHelper.h"
-#include "rnoh/events/TouchEventConversions.h"
+#include "RNOH/events/EventEmitterHelper.h"
+#include "RNOH/events/TouchEventConversions.h"
 
 namespace rnoh {
 

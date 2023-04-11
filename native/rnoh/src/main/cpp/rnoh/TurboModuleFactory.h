@@ -3,8 +3,8 @@
 #include "napi/native_api.h"
 #include <ReactCommon/TurboModule.h>
 
-#include "rnoh/CorePackage/UIManagerModule.h"
-#include "rnoh/ArkTSTurboModule.h"
+#include "RNOHCorePackage/UIManagerModule.h"
+#include "RNOH/ArkTSTurboModule.h"
 
 namespace rnoh {
 class RNOHTurboModuleFactory {

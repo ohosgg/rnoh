@@ -7,7 +7,7 @@
 #include <queue>
 #include <thread>
 
-#include "rnoh/TaskExecutor.h"
+#include "RNOH/TaskExecutor.h"
 
 class RNOHMessageQueueThread : public facebook::react::MessageQueueThread {
   public:
