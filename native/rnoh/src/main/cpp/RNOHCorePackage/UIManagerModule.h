@@ -2,16 +2,16 @@
 #include "RNOH/TurboModule.h"
 
 namespace rnoh {
-class RNOHComponentManagerBinding {
+class ComponentManagerBinding {
   public:
     virtual facebook::jsi::Object createManager(facebook::jsi::Runtime &) = 0;
 };
 
-using ComponentManagerBindingByString = std::unordered_map<std::string, std::shared_ptr<RNOHComponentManagerBinding>>;
+using ComponentManagerBindingByString = std::unordered_map<std::string, std::shared_ptr<ComponentManagerBinding>>;
 
-class RNOHUIManagerModule : public RNOHTurboModule {
+class UIManagerModule : public TurboModule {
   public:
-    RNOHUIManagerModule(RNOHTurboModule::Context context, std::string name, const ComponentManagerBindingByString &&viewManagerBinderByName);
+    UIManagerModule(TurboModule::Context context, std::string name, const ComponentManagerBindingByString &&viewManagerBinderByName);
 
     std::vector<facebook::jsi::PropNameID> getPropertyNames(facebook::jsi::Runtime &rt) override;
 

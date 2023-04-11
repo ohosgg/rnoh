@@ -7,9 +7,9 @@
 
 namespace rnoh {
 
-class JSI_EXPORT NativeSampleTurboModuleSpecJSI : public RNOHArkTSTurboModule {
+class JSI_EXPORT NativeSampleTurboModuleSpecJSI : public ArkTSTurboModule {
   public:
-    NativeSampleTurboModuleSpecJSI(const RNOHArkTSTurboModule::Context ctx, const std::string name);
+    NativeSampleTurboModuleSpecJSI(const ArkTSTurboModule::Context ctx, const std::string name);
 };
 
 } // namespace rnoh

@@ -18,64 +18,63 @@
 #include "RNOH/TurboModuleFactory.h"
 
 
-using namespace facebook::react;
-using namespace facebook::jsi;
+using namespace facebook;
 using namespace rnoh;
 
-void RNOHInstance::registerSurface(std::function<void(facebook::react::ShadowViewMutationList const &mutations)> listener) {
+void RNInstance::registerSurface(std::function<void(react::ShadowViewMutationList const &mutations)> listener) {
     this->onComponentDescriptorTreeChanged = listener;
 }
 
-void RNOHInstance::start() {
-    RNOHLogSink::initializeLogging();
+void RNInstance::start() {
+    LogSink::initializeLogging();
 
     this->initialize();
     this->initializeComponentDescriptorRegistry();
     this->initializeScheduler();
 }
 
-void RNOHInstance::initialize() {
-    std::vector<std::unique_ptr<NativeModule>> modules;
-    this->contextContainer = std::make_shared<facebook::react::ContextContainer>();
-    auto instanceCallback = std::make_unique<facebook::react::InstanceCallback>();
-    auto jsExecutorFactory = std::make_shared<facebook::react::HermesExecutorFactory>(
+void RNInstance::initialize() {
+    std::vector<std::unique_ptr<react::NativeModule>> modules;
+    this->contextContainer = std::make_shared<react::ContextContainer>();
+    auto instanceCallback = std::make_unique<react::InstanceCallback>();
+    auto jsExecutorFactory = std::make_shared<react::HermesExecutorFactory>(
         // runtime installer, which is run when the runtime
         // is first initialized and provides access to the runtime
         // before the JS code is executed
         [](facebook::jsi::Runtime &rt) {
             return;
         });
-    auto jsQueue = std::make_shared<RNOHMessageQueueThread>(this->taskExecutor);
-    auto moduleRegistry = std::make_shared<facebook::react::ModuleRegistry>(std::move(modules));
+    auto jsQueue = std::make_shared<MessageQueueThread>(this->taskExecutor);
+    auto moduleRegistry = std::make_shared<react::ModuleRegistry>(std::move(modules));
     this->instance->initializeBridge(
         std::move(instanceCallback),
         std::move(jsExecutorFactory),
         std::move(jsQueue),
         std::move(moduleRegistry));
 
-    std::make_shared<RNOHTurboModuleProvider>(this->instance->getJSCallInvoker(), std::move(m_turboModuleFactory))
+    std::make_shared<TurboModuleProvider>(this->instance->getJSCallInvoker(), std::move(m_turboModuleFactory))
         ->installJSBindings(this->instance->getRuntimeExecutor());
 }
 
-void RNOHInstance::initializeComponentDescriptorRegistry() {
-    this->componentDescriptorProviderRegistry = std::make_shared<facebook::react::ComponentDescriptorProviderRegistry>();
-    this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<ViewComponentDescriptor>());
-    this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<ImageComponentDescriptor>());
-    this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<TextComponentDescriptor>());
-    this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<RawTextComponentDescriptor>());
-    this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<ParagraphComponentDescriptor>());
-    this->componentDescriptorProviderRegistry->add(concreteComponentDescriptorProvider<TextInputComponentDescriptor>());
+void RNInstance::initializeComponentDescriptorRegistry() {
+    this->componentDescriptorProviderRegistry = std::make_shared<react::ComponentDescriptorProviderRegistry>();
+    this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::ViewComponentDescriptor>());
+    this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::ImageComponentDescriptor>());
+    this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::TextComponentDescriptor>());
+    this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::RawTextComponentDescriptor>());
+    this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::ParagraphComponentDescriptor>());
+    this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::TextInputComponentDescriptor>());
 }
 
-void RNOHInstance::initializeScheduler() {
+void RNInstance::initializeScheduler() {
     auto reactConfig = std::make_shared<react::EmptyReactNativeConfig>();
     this->contextContainer->insert("ReactNativeConfig", std::move(reactConfig));
 
-    facebook::react::EventBeat::Factory eventBeatFactory = [taskExecutor = std::weak_ptr(taskExecutor), runtimeExecutor = this->instance->getRuntimeExecutor()](auto ownerBox) {
-        return std::make_unique<RNOHEventBeat>(taskExecutor, runtimeExecutor, ownerBox);
+    react::EventBeat::Factory eventBeatFactory = [taskExecutor = std::weak_ptr(taskExecutor), runtimeExecutor = this->instance->getRuntimeExecutor()](auto ownerBox) {
+        return std::make_unique<EventBeat>(taskExecutor, runtimeExecutor, ownerBox);
     };
 
-    facebook::react::ComponentRegistryFactory componentRegistryFactory =
+    react::ComponentRegistryFactory componentRegistryFactory =
         [registry = this->componentDescriptorProviderRegistry](
             auto eventDispatcher, auto contextContainer) {
             return registry->createComponentDescriptorRegistry(
@@ -83,10 +82,10 @@ void RNOHInstance::initializeScheduler() {
         };
 
     auto backgroundExecutor = [executor = this->taskExecutor](std::function<void()> &&callback) {
-        executor->runTask(rnoh::TaskThread::BACKGROUND, std::move(callback));
+        executor->runTask(TaskThread::BACKGROUND, std::move(callback));
     };
 
-    facebook::react::SchedulerToolbox schedulerToolbox{
+    react::SchedulerToolbox schedulerToolbox{
         .contextContainer = this->contextContainer,
         .componentRegistryFactory = componentRegistryFactory,
         .runtimeExecutor = this->instance->getRuntimeExecutor(),
@@ -95,24 +94,24 @@ void RNOHInstance::initializeScheduler() {
         .backgroundExecutor = backgroundExecutor,
     };
 
-    this->schedulerDelegate = std::make_unique<RNOHSchedulerDelegate>(rnoh::MountingManager(
+    this->schedulerDelegate = std::make_unique<SchedulerDelegate>(MountingManager(
         taskExecutor,
         eventEmitterRegistry,
-        [this](facebook::react::ShadowViewMutationList mutations) {
+        [this](react::ShadowViewMutationList mutations) {
             LOG(INFO) << "Triggering ui update";
             this->onComponentDescriptorTreeChanged(mutations);
         }));
-    this->scheduler = std::make_unique<facebook::react::Scheduler>(schedulerToolbox, nullptr, schedulerDelegate.get());
+    this->scheduler = std::make_unique<react::Scheduler>(schedulerToolbox, nullptr, schedulerDelegate.get());
 }
 
-void RNOHInstance::runApplication(float width, float height) {
+void RNInstance::runApplication(float width, float height) {
     try {
-        auto jsBundle = std::make_unique<facebook::react::JSBigStdString>(JS_BUNDLE);
+        auto jsBundle = std::make_unique<react::JSBigStdString>(JS_BUNDLE);
         this->instance->loadScriptFromString(std::move(jsBundle), "bundle.harmony.js", true);
         folly::dynamic config = folly::dynamic::object("rootTag", 1)("fabric", true);
         this->surfaceHandler.setProps(std::move(config));
         auto layoutConstraints = this->surfaceHandler.getLayoutConstraints();
-        layoutConstraints.layoutDirection = LayoutDirection::LeftToRight;
+        layoutConstraints.layoutDirection = react::LayoutDirection::LeftToRight;
         layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
             .width = width,
             .height = height};
@@ -125,6 +124,6 @@ void RNOHInstance::runApplication(float width, float height) {
     }
 }
 
-void RNOHInstance::emitEvent(facebook::react::Tag tag, rnoh::ReactEventKind eventKind, napi_value eventObject) {
+void RNInstance::emitEvent(react::Tag tag, ReactEventKind eventKind, napi_value eventObject) {
     this->eventEmitterHelper.emitEvent(tag, eventKind, eventObject);
 }

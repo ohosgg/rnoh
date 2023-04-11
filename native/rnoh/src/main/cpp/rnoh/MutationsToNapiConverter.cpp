@@ -7,39 +7,40 @@
 
 #include "RNOH/MutationsToNapiConverter.h"
 
-using namespace facebook::react;
+using namespace facebook;
+using namespace rnoh;
 
-RNOHMutationsToNapiConverter::RNOHMutationsToNapiConverter(ArkJS arkJs) : m_arkJs(arkJs) {
+MutationsToNapiConverter::MutationsToNapiConverter(ArkJS arkJs) : m_arkJs(arkJs) {
 }
 
-napi_value RNOHMutationsToNapiConverter::convert(ShadowViewMutationList const &mutations) {
+napi_value MutationsToNapiConverter::convert(react::ShadowViewMutationList const &mutations) {
     std::vector<napi_value> napiMutations;
     for (auto &mutation : mutations) {
         auto objBuilder = m_arkJs.createObjectBuilder().addProperty("type", mutation.type);
         switch (mutation.type) {
-        case ShadowViewMutation::Type::Create: {
+        case react::ShadowViewMutation::Type::Create: {
             objBuilder
                 .addProperty("descriptor", this->convertShadowView(mutation.newChildShadowView));
             break;
         }
-        case ShadowViewMutation::Type::Remove: {
+        case react::ShadowViewMutation::Type::Remove: {
             objBuilder
                 .addProperty("childTag", mutation.oldChildShadowView.tag)
                 .addProperty("parentTag", mutation.parentShadowView.tag);
             break;
         }
-        case ShadowViewMutation::Type::Update: {
+        case react::ShadowViewMutation::Type::Update: {
             objBuilder
                 .addProperty("descriptor", this->convertShadowView(mutation.newChildShadowView));
             break;
         }
-        case ShadowViewMutation::Type::Insert: {
+        case react::ShadowViewMutation::Type::Insert: {
             objBuilder
                 .addProperty("childTag", mutation.newChildShadowView.tag)
                 .addProperty("parentTag", mutation.parentShadowView.tag);
             break;
         }
-        case ShadowViewMutation::Type::Delete: {
+        case react::ShadowViewMutation::Type::Delete: {
             objBuilder.addProperty("tag", mutation.oldChildShadowView.tag);
             break;
         }
@@ -49,21 +50,21 @@ napi_value RNOHMutationsToNapiConverter::convert(ShadowViewMutationList const &m
     return m_arkJs.createArray(napiMutations);
 }
 
-napi_value RNOHMutationsToNapiConverter::convertShadowView(ShadowView const shadowView) {
+napi_value MutationsToNapiConverter::convertShadowView(react::ShadowView const shadowView) {
     auto propsObjBuilder = m_arkJs.createObjectBuilder();
     propsObjBuilder
         .addProperty("top", shadowView.layoutMetrics.frame.origin.y)
         .addProperty("left", shadowView.layoutMetrics.frame.origin.x)
         .addProperty("width", shadowView.layoutMetrics.frame.size.width)
         .addProperty("height", shadowView.layoutMetrics.frame.size.height);
-    if (auto props = std::dynamic_pointer_cast<const ImageProps>(shadowView.props)) {
-        ImageSource imageSource;
+    if (auto props = std::dynamic_pointer_cast<const react::ImageProps>(shadowView.props)) {
+        react::ImageSource imageSource;
         if (props->sources.size() > 0) {
             imageSource = props->sources[0];
             propsObjBuilder.addProperty("uri", imageSource.uri);
         }
     }
-    if (auto props = std::dynamic_pointer_cast<const ViewProps>(shadowView.props)) {
+    if (auto props = std::dynamic_pointer_cast<const react::ViewProps>(shadowView.props)) {
         auto borderMetrics = props->resolveBorderMetrics(shadowView.layoutMetrics);
         propsObjBuilder
             .addProperty("backgroundColor", props->backgroundColor)
@@ -71,7 +72,7 @@ napi_value RNOHMutationsToNapiConverter::convertShadowView(ShadowView const shad
             .addProperty("borderColor", borderMetrics.borderColors.top)
             .addProperty("borderRadius", borderMetrics.borderRadii.topLeft);
     }
-    if (auto state = std::dynamic_pointer_cast<const ConcreteState<ParagraphState>>(shadowView.state)) {
+    if (auto state = std::dynamic_pointer_cast<const react::ConcreteState<react::ParagraphState>>(shadowView.state)) {
         auto data = state->getData();
         propsObjBuilder.addProperty("text", data.attributedString.getString());
         for (auto fragment : data.attributedString.getFragments()) {
@@ -87,7 +88,7 @@ napi_value RNOHMutationsToNapiConverter::convertShadowView(ShadowView const shad
             break;
         }
     }
-    if (auto props = std::dynamic_pointer_cast<const TextInputProps>(shadowView.props)) {
+    if (auto props = std::dynamic_pointer_cast<const react::TextInputProps>(shadowView.props)) {
         propsObjBuilder
             .addProperty("text", props->text)
             .addProperty("fontColor", props->textAttributes.foregroundColor)

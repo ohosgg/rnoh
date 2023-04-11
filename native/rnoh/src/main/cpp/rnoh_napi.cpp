@@ -18,18 +18,18 @@ using namespace rnoh;
 static napi_ref listener_ref;
 static napi_ref arkTsTurboModuleProviderRef;
 
-std::unique_ptr<RNOHInstance> rnohInstance;
+std::unique_ptr<RNInstance> rnohInstance;
 
 void createRNOHInstance(napi_env env) {
     auto taskExecutor = std::make_shared<TaskExecutor>(env);
     const ComponentManagerBindingByString componentManagerBindingByName = {
-        {"RCTView", std::make_shared<RNOHViewManager>()},
-        {"RCTImageView", std::make_shared<RNOHImageViewManager>()},
-        {"RCTVirtualText", std::make_shared<RNOHViewManager>()},
-        {"RCTSinglelineTextInputView", std::make_shared<RNOHViewManager>()},
+        {"RCTView", std::make_shared<ViewManager>()},
+        {"RCTImageView", std::make_shared<ImageViewManager>()},
+        {"RCTVirtualText", std::make_shared<ViewManager>()},
+        {"RCTSinglelineTextInputView", std::make_shared<ViewManager>()},
     };
-    auto turboModuleFactory = RNOHTurboModuleFactory(env, arkTsTurboModuleProviderRef, std::move(componentManagerBindingByName), taskExecutor);
-    rnohInstance = std::make_unique<RNOHInstance>(env,
+    auto turboModuleFactory = TurboModuleFactory(env, arkTsTurboModuleProviderRef, std::move(componentManagerBindingByName), taskExecutor);
+    rnohInstance = std::make_unique<RNInstance>(env,
                                                   std::move(turboModuleFactory),
                                                   taskExecutor);
 }
@@ -54,7 +54,7 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
     listener_ref = arkJs.createReference(args[0]);
     rnohInstance->registerSurface([env](auto const &mutations) {
         ArkJS ark_js(env);
-        RNOHMutationsToNapiConverter mutationsToNapiConverter(env);
+        MutationsToNapiConverter mutationsToNapiConverter(env);
         auto napiMutations = mutationsToNapiConverter.convert(mutations);
         std::array<napi_value, 1> args = {napiMutations};
         auto listener = ark_js.getReferenceValue(listener_ref);

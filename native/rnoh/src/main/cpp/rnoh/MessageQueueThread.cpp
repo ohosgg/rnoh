@@ -1,18 +1,20 @@
 #include "RNOH/MessageQueueThread.h"
 
-RNOHMessageQueueThread::RNOHMessageQueueThread(std::shared_ptr<rnoh::TaskExecutor> const &taskExecutor) 
+using namespace rnoh;
+
+MessageQueueThread::MessageQueueThread(std::shared_ptr<TaskExecutor> const &taskExecutor) 
     : taskExecutor(taskExecutor) {}
 
-RNOHMessageQueueThread::~RNOHMessageQueueThread() {};
+MessageQueueThread::~MessageQueueThread() {};
 
-void RNOHMessageQueueThread::runOnQueue(std::function<void()> &&func) {
-    taskExecutor->runTask(rnoh::TaskThread::JS, std::move(func));
+void MessageQueueThread::runOnQueue(std::function<void()> &&func) {
+    taskExecutor->runTask(TaskThread::JS, std::move(func));
 }
 
-void RNOHMessageQueueThread::runOnQueueSync(std::function<void()> &&func) {
-    taskExecutor->runSyncTask(rnoh::TaskThread::JS, std::move(func));
+void MessageQueueThread::runOnQueueSync(std::function<void()> &&func) {
+    taskExecutor->runSyncTask(TaskThread::JS, std::move(func));
 }
 
-void RNOHMessageQueueThread::quitSynchronous() {
+void MessageQueueThread::quitSynchronous() {
     // TODO!
 }

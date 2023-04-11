@@ -2,7 +2,7 @@
 #include "RNOHCorePackage/UIManagerModule.h"
 
 namespace rnoh {
-class RNOHViewManager : public RNOHComponentManagerBinding {
+class ViewManager : public ComponentManagerBinding {
   public:
     facebook::jsi::Object createManager(facebook::jsi::Runtime &rt) override {
         facebook::jsi::Object baseManagerConfig = facebook::jsi::Object(rt);
@@ -24,4 +24,5 @@ class RNOHViewManager : public RNOHComponentManagerBinding {
         return facebook::jsi::Object(rt);
     }
 };
+
 } // namespace rnoh

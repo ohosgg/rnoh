@@ -2,10 +2,12 @@
 #include <react/renderer/core/EventBeat.h>
 #include "RNOH/TaskExecutor.h"
 
-class RNOHEventBeat : public facebook::react::EventBeat {
+namespace rnoh {
+
+class EventBeat : public facebook::react::EventBeat {
   public:
-    RNOHEventBeat(std::weak_ptr<rnoh::TaskExecutor> const &taskExecutor, facebook::react::RuntimeExecutor runtimeExecutor, SharedOwnerBox ownerBox)
-        : m_taskExecutor(taskExecutor), m_runtimeExecutor(runtimeExecutor), EventBeat(ownerBox) {
+    EventBeat(std::weak_ptr<TaskExecutor> const &taskExecutor, facebook::react::RuntimeExecutor runtimeExecutor, SharedOwnerBox ownerBox)
+        : m_taskExecutor(taskExecutor), m_runtimeExecutor(runtimeExecutor), facebook::react::EventBeat(ownerBox) {
     }
 
     void induce() const override {
@@ -14,7 +16,7 @@ class RNOHEventBeat : public facebook::react::EventBeat {
         }
 
         if (auto taskExecutor = m_taskExecutor.lock()) {
-            taskExecutor->runTask(rnoh::TaskThread::BACKGROUND, [this]() {
+            taskExecutor->runTask(TaskThread::BACKGROUND, [this]() {
                 this->m_runtimeExecutor([this](facebook::jsi::Runtime &runtime) {
                     beat(runtime);
                 });
@@ -23,13 +25,15 @@ class RNOHEventBeat : public facebook::react::EventBeat {
     }
 
     void request() const override {
-        EventBeat::request();
+        facebook::react::EventBeat::request();
         induce();
     }
 
-    ~RNOHEventBeat() override = default;
+    ~EventBeat() override = default;
 
   private:
-    std::weak_ptr<rnoh::TaskExecutor> m_taskExecutor;
+    std::weak_ptr<TaskExecutor> m_taskExecutor;
     facebook::react::RuntimeExecutor m_runtimeExecutor;
 };
+
+} // namespace rnoh

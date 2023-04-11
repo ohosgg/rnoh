@@ -6,9 +6,8 @@
 
 using namespace rnoh;
 using namespace facebook;
-using namespace facebook::react;
 
-RNOHArkTSTurboModule::RNOHArkTSTurboModule(Context ctx, std::string name) : m_ctx(ctx), RNOHTurboModule(ctx, name) {}
+ArkTSTurboModule::ArkTSTurboModule(Context ctx, std::string name) : m_ctx(ctx), TurboModule(ctx, name) {}
 
 std::vector<folly::dynamic> convertJSIArgsToDynamic(jsi::Runtime &runtime, const jsi::Value *args, size_t argsCount, std::function<void(jsi::Function)> onFunctionArg) {
     std::vector<folly::dynamic> dynamicArgs(argsCount);
@@ -25,7 +24,7 @@ std::vector<folly::dynamic> convertJSIArgsToDynamic(jsi::Runtime &runtime, const
     return dynamicArgs;
 }
 
-jsi::Value RNOHArkTSTurboModule::call(jsi::Runtime &runtime, const std::string &methodName, const jsi::Value *args, size_t argsCount) {
+jsi::Value ArkTSTurboModule::call(jsi::Runtime &runtime, const std::string &methodName, const jsi::Value *args, size_t argsCount) {
     folly::dynamic dynamicResult;
     auto dynamicArgs = convertJSIArgsToDynamic(runtime, args, argsCount, [](jsi::Function function) {
         // TODO: handle functions

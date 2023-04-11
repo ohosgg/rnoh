@@ -14,8 +14,6 @@
 
 namespace rnoh {
 
-using namespace facebook;
-
 class MountingManager {
   public:
     using TriggerUICallback = std::function<void(facebook::react::ShadowViewMutationList const &mutations)>;
@@ -23,9 +21,9 @@ class MountingManager {
     MountingManager(TaskExecutor::Shared taskExecutor, EventEmitterRegistry::Shared eventEmitterRegistry, TriggerUICallback triggerUICallback)
         : taskExecutor(std::move(taskExecutor)), eventEmitterRegistry(std::move(eventEmitterRegistry)), triggerUICallback(std::move(triggerUICallback)) {}
 
-    void performMountInstructions(react::ShadowViewMutationList const &mutations, react::SurfaceId surfaceId);
+    void performMountInstructions(facebook::react::ShadowViewMutationList const &mutations, react::SurfaceId surfaceId);
 
-    void scheduleTransaction(react::MountingCoordinator::Shared const &mountingCoordinator);
+    void scheduleTransaction(facebook::react::MountingCoordinator::Shared const &mountingCoordinator);
 
     void performTransaction(facebook::react::MountingCoordinator::Shared const &mountingCoordinator);
 

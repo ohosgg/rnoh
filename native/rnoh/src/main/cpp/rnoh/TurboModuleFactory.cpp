@@ -8,18 +8,17 @@
 
 
 using namespace rnoh;
-using namespace facebook::react;
-using namespace facebook::jsi;
+using namespace facebook;
 
-napi_env RNOHTurboModuleFactory::arkTsTurboModuleFactoryEnv;
+napi_env TurboModuleFactory::arkTsTurboModuleFactoryEnv;
 
-RNOHTurboModuleFactory::RNOHTurboModuleFactory(napi_env env, napi_ref arkTsTurboModuleProviderRef, const ComponentManagerBindingByString &&componentManagerBindingByString, std::shared_ptr<TaskExecutor> taskExecutor)
+TurboModuleFactory::TurboModuleFactory(napi_env env, napi_ref arkTsTurboModuleProviderRef, const ComponentManagerBindingByString &&componentManagerBindingByString, std::shared_ptr<TaskExecutor> taskExecutor)
     : m_env(env),
       m_arkTsTurboModuleProviderRef(arkTsTurboModuleProviderRef),
       m_componentManagerBindingByString(std::move(componentManagerBindingByString)),
       m_taskExecutor(taskExecutor) {}
 
-RNOHTurboModuleFactory::SharedTurboModule RNOHTurboModuleFactory::create(std::shared_ptr<facebook::react::CallInvoker> jsInvoker, const std::string &name) const {
+TurboModuleFactory::SharedTurboModule TurboModuleFactory::create(std::shared_ptr<facebook::react::CallInvoker> jsInvoker, const std::string &name) const {
     LOG(INFO) << "Providing Turbo Module: " << name;
     Context ctx{
         {.jsInvoker = jsInvoker},
@@ -27,7 +26,7 @@ RNOHTurboModuleFactory::SharedTurboModule RNOHTurboModuleFactory::create(std::sh
         .arkTsTurboModuleInstanceRef = this->maybeGetArkTsTurboModuleInstanceRef(name),
         .taskExecutor = m_taskExecutor};
     if (name == "UIManager") {
-        return std::make_shared<RNOHUIManagerModule>(ctx, name, std::move(m_componentManagerBindingByString));
+        return std::make_shared<UIManagerModule>(ctx, name, std::move(m_componentManagerBindingByString));
     } else if (name == "SampleTurboModule") {
         return std::make_shared<NativeSampleTurboModuleSpecJSI>(ctx, name);
     }
@@ -35,7 +34,7 @@ RNOHTurboModuleFactory::SharedTurboModule RNOHTurboModuleFactory::create(std::sh
     return this->handleUnregisteredModuleRequest(ctx, name);
 }
 
-napi_ref rnoh::RNOHTurboModuleFactory::maybeGetArkTsTurboModuleInstanceRef(const std::string &name) const {
+napi_ref TurboModuleFactory::maybeGetArkTsTurboModuleInstanceRef(const std::string &name) const {
     ArkJS arkJs(m_env);
     {
         auto result = arkJs.getObject(m_arkTsTurboModuleProviderRef).call("hasModule", {arkJs.createString(name)});
@@ -47,7 +46,7 @@ napi_ref rnoh::RNOHTurboModuleFactory::maybeGetArkTsTurboModuleInstanceRef(const
     return arkJs.createReference(n_turboModuleInstance);
 }
 
-RNOHTurboModuleFactory::SharedTurboModule rnoh::RNOHTurboModuleFactory::handleUnregisteredModuleRequest(Context ctx, const std::string &name) const {
+TurboModuleFactory::SharedTurboModule TurboModuleFactory::handleUnregisteredModuleRequest(Context ctx, const std::string &name) const {
     LOG(WARNING) << "Turbo Module '" << name << "' not found - providing stub.";
-    return std::make_shared<RNOHStubModule>(name, ctx.jsInvoker);
+    return std::make_shared<StubModule>(name, ctx.jsInvoker);
 }

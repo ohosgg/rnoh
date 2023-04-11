@@ -7,15 +7,15 @@
 #include "RNOH/TurboModule.h"
 
 namespace rnoh {
-class RNOHArkTSTurboModule : public RNOHTurboModule {
+class ArkTSTurboModule : public TurboModule {
   public:
-    struct Context : public RNOHTurboModule::Context {
+    struct Context : public TurboModule::Context {
         napi_env env;
         napi_ref arkTsTurboModuleInstanceRef;
         std::shared_ptr<TaskExecutor> taskExecutor;
     };
 
-    RNOHArkTSTurboModule(Context ctx, std::string name);
+    ArkTSTurboModule(Context ctx, std::string name);
 
     facebook::jsi::Value
     call(facebook::jsi::Runtime &runtime,

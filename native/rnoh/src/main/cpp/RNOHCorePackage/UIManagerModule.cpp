@@ -1,10 +1,10 @@
 #include "RNOHCorePackage/UIManagerModule.h"
 
 using namespace rnoh;
-using namespace facebook::jsi;
+using namespace facebook;
 
-RNOHUIManagerModule::RNOHUIManagerModule(RNOHTurboModule::Context context, std::string name, const ComponentManagerBindingByString &&componentManagerBindingByName)
-    : RNOHTurboModule(context, name),
+UIManagerModule::UIManagerModule(TurboModule::Context context, std::string name, const ComponentManagerBindingByString &&componentManagerBindingByName)
+    : TurboModule(context, name),
       m_componentManagerBindingByName(componentManagerBindingByName) {
     MethodMetadata getConstantsMetadata = {.argCount = 0, .invoker = getConstants};
 
@@ -16,16 +16,16 @@ RNOHUIManagerModule::RNOHUIManagerModule(RNOHTurboModule::Context context, std::
     };
 }
 
-std::vector<facebook::jsi::PropNameID> rnoh::RNOHUIManagerModule::getPropertyNames(facebook::jsi::Runtime &rt) {
+std::vector<facebook::jsi::PropNameID> UIManagerModule::getPropertyNames(facebook::jsi::Runtime &rt) {
     return std::vector<facebook::jsi::PropNameID>();
 }
 
-Value RNOHUIManagerModule::getConstants(Runtime &runtime, TurboModule &turboModule, const Value *args, size_t count) {
-    return Value(runtime, Object(runtime));
+jsi::Value UIManagerModule::getConstants(jsi::Runtime &runtime, react::TurboModule &turboModule, const jsi::Value *args, size_t count) {
+    return jsi::Value(runtime, jsi::Object(runtime));
 }
 
-facebook::jsi::Value rnoh::RNOHUIManagerModule::getConstantsForViewManager(facebook::jsi::Runtime &rt, TurboModule &turboModule, const facebook::jsi::Value *args, size_t count) {
-    auto &self = static_cast<RNOHUIManagerModule &>(turboModule);
+facebook::jsi::Value UIManagerModule::getConstantsForViewManager(facebook::jsi::Runtime &rt, react::TurboModule &turboModule, const facebook::jsi::Value *args, size_t count) {
+    auto &self = static_cast<UIManagerModule &>(turboModule);
     std::string name = args[0].asString(rt).utf8(rt);
     LOG(INFO) << "getConstantsForViewManager: " << name;
     auto viewManagerBinder = self.m_componentManagerBindingByName[name];
@@ -33,5 +33,5 @@ facebook::jsi::Value rnoh::RNOHUIManagerModule::getConstantsForViewManager(faceb
         return viewManagerBinder->createManager(rt);
     }
     LOG(ERROR) << "Couldn't find ViewManagerBinder for: " << name;
-    return Value::undefined();
+    return jsi::Value::undefined();
 }

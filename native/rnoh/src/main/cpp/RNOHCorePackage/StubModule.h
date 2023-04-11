@@ -4,9 +4,9 @@
 #include "glog/logging.h"
 
 namespace rnoh {
-class RNOHStubModule : public facebook::react::TurboModule {
+class StubModule : public facebook::react::TurboModule {
   public:
-    RNOHStubModule(std::string const &name, std::shared_ptr<facebook::react::CallInvoker> jsInvoker)
+    StubModule(std::string const &name, std::shared_ptr<facebook::react::CallInvoker> jsInvoker)
         : facebook::react::TurboModule(name, jsInvoker) {}
 
     facebook::jsi::Value get(facebook::jsi::Runtime &runtime, const facebook::jsi::PropNameID &propName) override {

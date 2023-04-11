@@ -2,7 +2,7 @@
 
 #include <glog/logging.h>
 
-class RNOHLogSink : public google::LogSink {
+class LogSink : public google::LogSink {
 public:
     static void initializeLogging();
     
@@ -12,5 +12,5 @@ public:
                     const char* message, size_t message_len) override;
 
 private:
-    static RNOHLogSink *instance;
+    static LogSink *instance;
 };

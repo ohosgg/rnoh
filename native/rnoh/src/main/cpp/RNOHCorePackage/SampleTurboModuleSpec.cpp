@@ -10,7 +10,7 @@ static jsi::Value __hostFunction_NativeSampleTurboModuleSpecJSI_voidFunc(
     react::TurboModule &turboModule,
     const jsi::Value *args,
     size_t count) {
-    return static_cast<RNOHArkTSTurboModule &>(turboModule).call(rt, "voidFunc", args, count);
+    return static_cast<ArkTSTurboModule &>(turboModule).call(rt, "voidFunc", args, count);
 }
 
 static jsi::Value __hostFunction_NativeSampleTurboCxxModuleSpecJSI_getBool(
@@ -18,7 +18,7 @@ static jsi::Value __hostFunction_NativeSampleTurboCxxModuleSpecJSI_getBool(
     react::TurboModule &turboModule,
     const jsi::Value *args,
     size_t count) {
-    return jsi::Value(static_cast<RNOHArkTSTurboModule &>(turboModule).call(rt, "getBool", args, count));
+    return jsi::Value(static_cast<ArkTSTurboModule &>(turboModule).call(rt, "getBool", args, count));
 }
 
 static jsi::Value __hostFunction_NativeSampleTurboCxxModuleSpecJSI_getNull(
@@ -26,7 +26,7 @@ static jsi::Value __hostFunction_NativeSampleTurboCxxModuleSpecJSI_getNull(
     react::TurboModule &turboModule,
     const jsi::Value *args,
     size_t count) {
-    return jsi::Value(static_cast<RNOHArkTSTurboModule &>(turboModule).call(rt, "getNull", args, count));
+    return jsi::Value(static_cast<ArkTSTurboModule &>(turboModule).call(rt, "getNull", args, count));
 }
 
 static jsi::Value __hostFunction_NativeSampleTurboCxxModuleSpecJSI_getString(
@@ -34,7 +34,7 @@ static jsi::Value __hostFunction_NativeSampleTurboCxxModuleSpecJSI_getString(
     react::TurboModule &turboModule,
     const jsi::Value *args,
     size_t count) {
-    return jsi::Value(static_cast<RNOHArkTSTurboModule &>(turboModule).call(rt, "getString", args, count));
+    return jsi::Value(static_cast<ArkTSTurboModule &>(turboModule).call(rt, "getString", args, count));
 }
 
 static jsi::Value __hostFunction_NativeSampleTurboCxxModuleSpecJSI_getObject(
@@ -42,7 +42,7 @@ static jsi::Value __hostFunction_NativeSampleTurboCxxModuleSpecJSI_getObject(
     react::TurboModule &turboModule,
     const jsi::Value *args,
     size_t count) {
-    return jsi::Value(static_cast<RNOHArkTSTurboModule &>(turboModule).call(rt, "getObject", args, count));
+    return jsi::Value(static_cast<ArkTSTurboModule &>(turboModule).call(rt, "getObject", args, count));
 }
 
 static jsi::Value __hostFunction_NativeSampleTurboCxxModuleSpecJSI_getArray(
@@ -50,7 +50,7 @@ static jsi::Value __hostFunction_NativeSampleTurboCxxModuleSpecJSI_getArray(
     react::TurboModule &turboModule,
     const jsi::Value *args,
     size_t count) {
-    return jsi::Value(static_cast<RNOHArkTSTurboModule &>(turboModule).call(rt, "getArray", args, count));
+    return jsi::Value(static_cast<ArkTSTurboModule &>(turboModule).call(rt, "getArray", args, count));
 }
 
 static jsi::Value __hostFunction_NativeSampleTurboCxxModuleSpecJSI_registerFunction(
@@ -58,11 +58,11 @@ static jsi::Value __hostFunction_NativeSampleTurboCxxModuleSpecJSI_registerFunct
     react::TurboModule &turboModule,
     const jsi::Value *args,
     size_t count) {
-    return jsi::Value(static_cast<RNOHArkTSTurboModule &>(turboModule).call(rt, "registerFunction", args, count));
+    return jsi::Value(static_cast<ArkTSTurboModule &>(turboModule).call(rt, "registerFunction", args, count));
 }
 
-NativeSampleTurboModuleSpecJSI::NativeSampleTurboModuleSpecJSI(const RNOHArkTSTurboModule::Context ctx, const std::string name)
-    : RNOHArkTSTurboModule(ctx, name) {
+NativeSampleTurboModuleSpecJSI::NativeSampleTurboModuleSpecJSI(const ArkTSTurboModule::Context ctx, const std::string name)
+    : ArkTSTurboModule(ctx, name) {
     methodMap_["voidFunc"] = MethodMetadata{0, __hostFunction_NativeSampleTurboModuleSpecJSI_voidFunc};
     methodMap_["getBool"] = MethodMetadata{1, __hostFunction_NativeSampleTurboCxxModuleSpecJSI_getBool};
     methodMap_["getNull"] = MethodMetadata{1, __hostFunction_NativeSampleTurboCxxModuleSpecJSI_getNull};

@@ -7,13 +7,13 @@
 
 namespace rnoh {
 
-class RNOHTurboModule : public facebook::react::TurboModule {
+class TurboModule : public facebook::react::TurboModule {
   public:
     struct Context {
         std::shared_ptr<facebook::react::CallInvoker> jsInvoker;
     };
 
-    RNOHTurboModule(Context ctx, std::string name)
+    TurboModule(Context ctx, std::string name)
         : facebook::react::TurboModule(name, ctx.jsInvoker) {
     }
 

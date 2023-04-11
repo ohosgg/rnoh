@@ -2,9 +2,9 @@
 #include "RNOHCorePackage/ViewManager.h"
 
 namespace rnoh {
-class RNOHImageViewManager : public RNOHViewManager {
+class ImageViewManager : public ViewManager {
     facebook::jsi::Object createNativeProps(facebook::jsi::Runtime &rt) override {
-        auto object = RNOHViewManager::createNativeProps(rt);
+        auto object = ViewManager::createNativeProps(rt);
         object.setProperty(rt, "source", "array");
         return object;
     }

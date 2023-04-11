@@ -7,14 +7,14 @@
 
 namespace rnoh {
 
-using namespace facebook::react;
+using namespace facebook;
 
-void EventEmitterHelper::emitEvent(Tag tag, ReactEventKind eventKind, napi_value payload) {
+void EventEmitterHelper::emitEvent(react::Tag tag, ReactEventKind eventKind, napi_value payload) {
     switch (eventKind) {
-    case rnoh::ReactEventKind::TOUCH:
+    case ReactEventKind::TOUCH:
         this->emitTouchEvent(tag, payload);
         break;
-    case rnoh::ReactEventKind::TEXT_INPUT_CHANGE:
+    case ReactEventKind::TEXT_INPUT_CHANGE:
         this->emitTextInputChangedEvent(tag, payload);
         break;
     default:
@@ -22,26 +22,26 @@ void EventEmitterHelper::emitEvent(Tag tag, ReactEventKind eventKind, napi_value
     }
 }
 
-void EventEmitterHelper::emitTouchEvent(Tag tag, napi_value eventObject) {
-    auto eventEmitter = eventEmitterRegistry->getEventEmitter<TouchEventEmitter>(tag);
+void EventEmitterHelper::emitTouchEvent(react::Tag tag, napi_value eventObject) {
+    auto eventEmitter = eventEmitterRegistry->getEventEmitter<react::TouchEventEmitter>(tag);
     if (eventEmitter == nullptr) {
         return;
     }
 
-    auto event = rnoh::convertTouchEvent(arkJs, tag, eventObject);
-    auto eventType = (rnoh::TouchType)(arkJs.getDouble(arkJs.getObjectProperty(eventObject, "type")));
+    auto event = convertTouchEvent(arkJs, tag, eventObject);
+    auto eventType = (TouchType)(arkJs.getDouble(arkJs.getObjectProperty(eventObject, "type")));
 
     switch (eventType) {
-    case rnoh::TouchType::DOWN:
+    case TouchType::DOWN:
         eventEmitter->onTouchStart(event);
         break;
-    case rnoh::TouchType::UP:
+    case TouchType::UP:
         eventEmitter->onTouchEnd(event);
         break;
-    case rnoh::TouchType::MOVE:
+    case TouchType::MOVE:
         eventEmitter->onTouchMove(event);
         break;
-    case rnoh::TouchType::CANCEL:
+    case TouchType::CANCEL:
         eventEmitter->onTouchCancel(event);
         break;
     default:
@@ -50,11 +50,11 @@ void EventEmitterHelper::emitTouchEvent(Tag tag, napi_value eventObject) {
 }
 
 void EventEmitterHelper::emitTextInputChangedEvent(facebook::react::Tag tag, napi_value payload) {
-    auto eventEmitter = eventEmitterRegistry->getEventEmitter<TextInputEventEmitter>(tag);
+    auto eventEmitter = eventEmitterRegistry->getEventEmitter<react::TextInputEventEmitter>(tag);
     if (eventEmitter == nullptr) {
         return;
     }
-    TextInputMetrics textInputMetrics{.text = arkJs.getString(payload)};
+    react::TextInputMetrics textInputMetrics{.text = arkJs.getString(payload)};
     eventEmitter->onChange(textInputMetrics);
 }
 

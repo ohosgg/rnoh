@@ -4,19 +4,19 @@
 
 namespace rnoh {
 
-using namespace facebook::react;
+using namespace facebook;
 
 void MountingManager::performMountInstructions(react::ShadowViewMutationList const &mutations, react::SurfaceId surfaceId) {
     for (auto &mutation : mutations) {
         switch (mutation.type) {
-        case ShadowViewMutation::Create: {
+        case react::ShadowViewMutation::Create: {
             auto newChild = mutation.newChildShadowView;
             LOG(INFO) << "CREATE mutation for tag: " << newChild.tag;
 
             eventEmitterRegistry->setEventEmitter(newChild.tag, newChild.eventEmitter);
             break;
         }
-        case ShadowViewMutation::Delete: {
+        case react::ShadowViewMutation::Delete: {
             auto oldChild = mutation.oldChildShadowView;
 
             LOG(INFO) << "DELETE mutation for tag: " << oldChild.tag;
@@ -24,19 +24,19 @@ void MountingManager::performMountInstructions(react::ShadowViewMutationList con
             eventEmitterRegistry->clearEventEmitter(oldChild.tag);
             break;
         }
-        case ShadowViewMutation::Insert: {
+        case react::ShadowViewMutation::Insert: {
             auto newChild = mutation.newChildShadowView;
             auto parent = mutation.parentShadowView;
             LOG(INFO) << "INSERT mutation for tag: " << newChild.tag << " to parent: " << parent.tag;
             break;
         }
-        case ShadowViewMutation::Remove: {
+        case react::ShadowViewMutation::Remove: {
             auto oldChild = mutation.oldChildShadowView;
             auto parent = mutation.parentShadowView;
             LOG(INFO) << "REMOVE mutation for tag: " << oldChild.tag << " from parent: " << parent.tag;
             break;
         }
-        case ShadowViewMutation::Update: {
+        case react::ShadowViewMutation::Update: {
             auto newChild = mutation.newChildShadowView;
 
             LOG(INFO) << "UPDATE mutation for tag: " << newChild.tag;
@@ -58,14 +58,14 @@ void MountingManager::performTransaction(facebook::react::MountingCoordinator::S
     auto surfaceId = mountingCoordinator->getSurfaceId();
 
     mountingCoordinator->getTelemetryController().pullTransaction(
-        [this](MountingTransaction const &transaction, SurfaceTelemetry const &surfaceTelemetry) {
+        [this](react::MountingTransaction const &transaction, react::SurfaceTelemetry const &surfaceTelemetry) {
             // Will mount
         },
-        [this, surfaceId](MountingTransaction const &transaction, SurfaceTelemetry const &surfaceTelemetry) {
+        [this, surfaceId](react::MountingTransaction const &transaction, react::SurfaceTelemetry const &surfaceTelemetry) {
             // Mounting
             performMountInstructions(transaction.getMutations(), surfaceId);
         },
-        [this](MountingTransaction const &transaction, SurfaceTelemetry const &surfaceTelemetry) {
+        [this](react::MountingTransaction const &transaction, react::SurfaceTelemetry const &surfaceTelemetry) {
             // Did mount
             this->triggerUICallback(transaction.getMutations());
         });

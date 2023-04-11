@@ -1,5 +1,5 @@
-#ifndef native_RNOHMessageQueueThread_H
-#define native_RNOHMessageQueueThread_H
+#pragma once
+
 #include <cxxreact/MessageQueueThread.h>
 #include <condition_variable>
 #include <functional>
@@ -9,10 +9,12 @@
 
 #include "RNOH/TaskExecutor.h"
 
-class RNOHMessageQueueThread : public facebook::react::MessageQueueThread {
+namespace rnoh {
+
+class MessageQueueThread : public facebook::react::MessageQueueThread {
   public:
-    RNOHMessageQueueThread(std::shared_ptr<rnoh::TaskExecutor> const &taskExecutor);
-    virtual ~RNOHMessageQueueThread();
+    MessageQueueThread(std::shared_ptr<TaskExecutor> const &taskExecutor);
+    virtual ~MessageQueueThread();
 
     void runOnQueue(std::function<void()> &&func) override;
 
@@ -21,7 +23,7 @@ class RNOHMessageQueueThread : public facebook::react::MessageQueueThread {
     void quitSynchronous() override;
 
   private:
-    std::shared_ptr<rnoh::TaskExecutor> taskExecutor;
+    std::shared_ptr<TaskExecutor> taskExecutor;
 };
 
-#endif //native_RNOHMessageQueueThread_H
+} // namespace rnoh

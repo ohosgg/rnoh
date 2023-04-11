@@ -6,18 +6,18 @@
 
 
 using namespace rnoh;
-using namespace facebook::react;
+using namespace facebook;
 
-RNOHTurboModuleProvider::RNOHTurboModuleProvider(std::shared_ptr<CallInvoker> jsInvoker,
-                                                 RNOHTurboModuleFactory &&turboModuleFactory)
+TurboModuleProvider::TurboModuleProvider(std::shared_ptr<react::CallInvoker> jsInvoker,
+                                                 TurboModuleFactory &&turboModuleFactory)
     : m_jsInvoker(jsInvoker),
-      m_createTurboModule([factory = std::move(turboModuleFactory), env = RNOHTurboModuleFactory::arkTsTurboModuleFactoryEnv](
+      m_createTurboModule([factory = std::move(turboModuleFactory), env = TurboModuleFactory::arkTsTurboModuleFactoryEnv](
                               std::string const &moduleName,
-                              std::shared_ptr<CallInvoker> jsInvoker) -> std::shared_ptr<TurboModule> {
+                              std::shared_ptr<react::CallInvoker> jsInvoker) -> std::shared_ptr<react::TurboModule> {
           return factory.create(jsInvoker, moduleName);
       }) {}
 
-void RNOHTurboModuleProvider::installJSBindings(RuntimeExecutor runtimeExecutor) {
+void TurboModuleProvider::installJSBindings(react::RuntimeExecutor runtimeExecutor) {
     if (!runtimeExecutor) {
         LOG(ERROR) << "Turbo Modules couldn't be installed. Invalid RuntimeExecutor.";
         return;
@@ -28,14 +28,14 @@ void RNOHTurboModuleProvider::installJSBindings(RuntimeExecutor runtimeExecutor)
     };
     runtimeExecutor(
         [turboModuleProvider = std::move(turboModuleProvider)](facebook::jsi::Runtime &runtime) {
-            TurboModuleBinding::install(runtime,
+            react::TurboModuleBinding::install(runtime,
                                         std::move(turboModuleProvider),
-                                        TurboModuleBindingMode::HostObject,
+                                        react::TurboModuleBindingMode::HostObject,
                                         nullptr);
         });
 }
 
-std::shared_ptr<TurboModule> RNOHTurboModuleProvider::getTurboModule(std::string const &moduleName) {
+std::shared_ptr<react::TurboModule> TurboModuleProvider::getTurboModule(std::string const &moduleName) {
     if (m_cache.contains(moduleName)) {
         LOG(INFO) << "Cache hit. Providing '" << moduleName << "' Turbo Module";
         return m_cache[moduleName];
