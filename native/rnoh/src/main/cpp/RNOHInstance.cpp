@@ -109,7 +109,7 @@ void RNOHInstance::initializeScheduler() {
 void RNOHInstance::runApplication(float width, float height) {
     try {
         auto jsBundle = std::make_unique<facebook::react::JSBigStdString>(JS_BUNDLE);
-        this->instance->loadScriptFromString(std::move(jsBundle), "jsBundle.js", true);
+        this->instance->loadScriptFromString(std::move(jsBundle), "bundle.harmony.js", true);
         folly::dynamic config = folly::dynamic::object("rootTag", 1)("fabric", true);
         this->surfaceHandler.setProps(std::move(config));
         auto layoutConstraints = this->surfaceHandler.getLayoutConstraints();
