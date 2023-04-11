@@ -35,18 +35,13 @@ RNOHTurboModuleFactory::SharedTurboModule RNOHTurboModuleFactory::create(std::sh
 
 napi_ref rnoh::RNOHTurboModuleFactory::maybeGetArkTsTurboModuleInstanceRef(const std::string &name) const {
     ArkJS arkJs(m_env);
-    auto n_arkTsTurboModuleProvider = arkJs.getReferenceValue(m_arkTsTurboModuleProviderRef);
     {
-        auto n_hasModule = arkJs.getObjectProperty(n_arkTsTurboModuleProvider, "hasModule");
-        std::array<napi_value, 1> args = {arkJs.createString(name)};
-        auto result = arkJs.call(n_hasModule, args, n_arkTsTurboModuleProvider);
+        auto result = arkJs.getObject(m_arkTsTurboModuleProviderRef).call("hasModule", {arkJs.createString(name)});
         if (!arkJs.getBoolean(result)) {
             return nullptr;
         }
     }
-    auto n_getModule = arkJs.getObjectProperty(n_arkTsTurboModuleProvider, "getModule");
-    std::array<napi_value, 1> args = {arkJs.createString(name)};
-    auto n_turboModuleInstance = arkJs.call(n_getModule, args, n_arkTsTurboModuleProvider);
+    auto n_turboModuleInstance = arkJs.getObject(m_arkTsTurboModuleProviderRef).call("getModule", {arkJs.createString(name)});
     return arkJs.createReference(n_turboModuleInstance);
 }
 

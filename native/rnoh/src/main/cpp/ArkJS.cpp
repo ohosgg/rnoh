@@ -10,6 +10,13 @@ napi_env ArkJS::getEnv() {
     return m_env;
 }
 
+napi_value ArkJS::call(napi_value callback, std::vector<napi_value> args, napi_value thisObject) {
+    napi_value result;
+    auto status = napi_call_function(m_env, thisObject, callback, args.size(), args.data(), &result);
+    this->maybeThrowFromStatus(status, "Couldn't call a callback");
+    return result;
+}
+
 napi_value ArkJS::createBoolean(bool value) {
     napi_value result;
     napi_get_boolean(m_env, value, &result);
@@ -91,6 +98,14 @@ std::vector<napi_value> ArkJS::getCallbackArgs(napi_callback_info info, size_t a
     std::vector<napi_value> args(args_count, nullptr);
     napi_get_cb_info(m_env, info, &argc, args.data(), nullptr, nullptr);
     return args;
+}
+
+RNOHNapiObject ArkJS::getObject(napi_value object) {
+    return RNOHNapiObject(*this, object);
+}
+
+RNOHNapiObject ArkJS::getObject(napi_ref objectRef) {
+    return RNOHNapiObject(*this, this->getReferenceValue(objectRef));
 }
 
 napi_value ArkJS::getObjectProperty(napi_value object, std::string const &key) {
@@ -226,4 +241,19 @@ RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, std:
 
 napi_value RNOHNapiObjectBuilder::build() {
     return m_object;
+}
+
+RNOHNapiObject::RNOHNapiObject(ArkJS arkJs, napi_value object) : m_arkJs(arkJs), m_object(object) {
+}
+
+napi_value RNOHNapiObject::getProperty(std::string const &key) {
+    return m_arkJs.getObjectProperty(m_object, key);
+}
+
+napi_value RNOHNapiObject::getProperty(napi_value key) {
+    return m_arkJs.getObjectProperty(m_object, key);
+}
+
+std::vector<std::pair<napi_value, napi_value>> RNOHNapiObject::getKeyValuePairs() {
+    return m_arkJs.getObjectProperties(m_object);
 }

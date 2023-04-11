@@ -9,6 +9,8 @@
 #include <react/renderer/graphics/Color.h>
 
 class RNOHNapiObjectBuilder;
+class RNOHNapiObject;
+
 class ArkJS {
   public:
     ArkJS(napi_env env);
@@ -20,6 +22,8 @@ class ArkJS {
         this->maybeThrowFromStatus(status, "Couldn't call a callback");
         return result;
     }
+
+    napi_value call(napi_value callback, std::vector<napi_value> args, napi_value thisObject = nullptr);
 
     napi_value createBoolean(bool value);
 
@@ -47,6 +51,10 @@ class ArkJS {
 
     std::vector<napi_value> getCallbackArgs(napi_callback_info info, size_t args_count);
 
+    RNOHNapiObject getObject(napi_value object);
+
+    RNOHNapiObject getObject(napi_ref object);
+
     napi_value getObjectProperty(napi_value object, std::string const &key);
 
     napi_value getObjectProperty(napi_value object, napi_value key);
@@ -66,13 +74,37 @@ class ArkJS {
     napi_env getEnv();
 
     void throwError(const char *message);
-    
+
     napi_valuetype getType(napi_value value);
 
   private:
     napi_env m_env;
 
     void maybeThrowFromStatus(napi_status status, const char *message);
+};
+
+class RNOHNapiObject {
+  public:
+    RNOHNapiObject(ArkJS arkJs, napi_value object);
+
+    template <size_t args_count>
+    napi_value call(std::string const &key, std::array<napi_value, args_count> args) {
+        return m_arkJs.call(this->getProperty(key), args, m_object);
+    }
+
+    napi_value call(std::string const &key, std::vector<napi_value> args) {
+        return m_arkJs.call(this->getProperty(key), args, m_object);
+    }
+
+    napi_value getProperty(std::string const &key);
+
+    napi_value getProperty(napi_value key);
+
+    std::vector<std::pair<napi_value, napi_value>> getKeyValuePairs();
+
+  private:
+    ArkJS m_arkJs;
+    napi_value m_object;
 };
 
 class RNOHNapiObjectBuilder {
