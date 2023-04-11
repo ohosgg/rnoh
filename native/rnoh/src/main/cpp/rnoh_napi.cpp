@@ -5,13 +5,13 @@
 #include <string>
 #include <array>
 #include <vector>
-#include "ArkJS.h"
-#include "RNOHInstance.h"
+#include "rnoh/ArkJS.h"
+#include "rnoh/RNInstance.h"
 #include <react/renderer/mounting/ShadowViewMutation.h>
-#include "RNOHMutationsToNapiConverter.h"
-#include "RNOHTurboModuleFactory.h"
-#include "ComponentManagers/RNOHViewManager.h"
-#include "ComponentManagers/RNOHImageViewManager.h"
+#include "rnoh/MutationsToNapiConverter.h"
+#include "rnoh/TurboModuleFactory.h"
+#include "rnoh/CorePackage/ViewManager.h"
+#include "rnoh/CorePackage/ImageViewManager.h"
 
 using namespace rnoh;
 
