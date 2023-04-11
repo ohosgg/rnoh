@@ -7,6 +7,7 @@
 #include <string>
 #include <react/renderer/graphics/Float.h>
 #include <react/renderer/graphics/Color.h>
+#include <folly/dynamic.h>
 
 class RNOHNapiObjectBuilder;
 class RNOHNapiObject;
@@ -25,6 +26,8 @@ class ArkJS {
 
     napi_value call(napi_value callback, std::vector<napi_value> args, napi_value thisObject = nullptr);
 
+    napi_value call(napi_value callback, const napi_value *args, int argsCount, napi_value thisObject);
+
     napi_value createBoolean(bool value);
 
     napi_value createInt(int value);
@@ -38,6 +41,10 @@ class ArkJS {
     napi_value createArray();
 
     napi_value createArray(std::vector<napi_value>);
+
+    std::vector<napi_value> createFromDynamics(std::vector<folly::dynamic>);
+
+    napi_value createFromDynamic(folly::dynamic);
 
     RNOHNapiObjectBuilder createObjectBuilder();
 
@@ -71,6 +78,8 @@ class ArkJS {
 
     std::string getString(napi_value value);
 
+    folly::dynamic getDynamic(napi_value value);
+
     napi_env getEnv();
 
     void throwError(const char *message);
@@ -94,6 +103,10 @@ class RNOHNapiObject {
 
     napi_value call(std::string const &key, std::vector<napi_value> args) {
         return m_arkJs.call(this->getProperty(key), args, m_object);
+    }
+
+    napi_value call(std::string const &key, const napi_value *args, int argsCount) {
+        return m_arkJs.call(this->getProperty(key), args, argsCount, m_object);
     }
 
     napi_value getProperty(std::string const &key);

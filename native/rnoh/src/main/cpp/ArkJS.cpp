@@ -17,6 +17,13 @@ napi_value ArkJS::call(napi_value callback, std::vector<napi_value> args, napi_v
     return result;
 }
 
+napi_value ArkJS::call(napi_value callback, const napi_value *args, int argsCount, napi_value thisObject) {
+    napi_value result;
+    auto status = napi_call_function(m_env, thisObject, callback, argsCount, args, &result);
+    this->maybeThrowFromStatus(status, "Couldn't call a callback");
+    return result;
+}
+
 napi_value ArkJS::createBoolean(bool value) {
     napi_value result;
     napi_get_boolean(m_env, value, &result);
@@ -56,6 +63,40 @@ napi_value ArkJS::getNull() {
 
 RNOHNapiObjectBuilder ArkJS::createObjectBuilder() {
     return RNOHNapiObjectBuilder(m_env, *this);
+}
+
+std::vector<napi_value> ArkJS::createFromDynamics(std::vector<folly::dynamic> dynamics) {
+    std::vector<napi_value> results(dynamics.size());
+    for (size_t i = 0; i < dynamics.size(); ++i) {
+        results[i] = this->createFromDynamic(dynamics[i]);
+    }
+    return results;
+}
+
+napi_value ArkJS::createFromDynamic(folly::dynamic dyn) {
+    if (dyn.isBool()) {
+        return this->createBoolean(dyn.asBool());
+    } else if (dyn.isInt()) {
+        return this->createDouble(dyn.asInt());
+    } else if (dyn.isDouble()) {
+        return this->createDouble(dyn.asDouble());
+    } else if (dyn.isString()) {
+        return this->createString(dyn.asString());
+    } else if (dyn.isArray()) {
+        std::vector<napi_value> n_values(dyn.size());
+        for (size_t i = 0; i < dyn.size(); ++i) {
+            n_values[i] = this->createFromDynamic(dyn[i]);
+        }
+        return this->createArray(n_values);
+    } else if (dyn.isObject()) {
+        auto objectBuilder = this->createObjectBuilder();
+        for (const auto &pair : dyn.items()) {
+            objectBuilder.addProperty(pair.first.asString().c_str(), this->createFromDynamic(pair.second));
+        }
+        return objectBuilder.build();
+    } else {
+        return this->getUndefined();
+    }
 }
 
 napi_value ArkJS::getReferenceValue(napi_ref ref) {
@@ -194,6 +235,42 @@ napi_valuetype ArkJS::getType(napi_value value) {
     auto status = napi_typeof(m_env, value, &result);
     this->maybeThrowFromStatus(status, "Failed to get value type");
     return result;
+}
+
+folly::dynamic ArkJS::getDynamic(napi_value value) {
+    switch (this->getType(value)) {
+    case napi_undefined:
+        return folly::dynamic(nullptr);
+    case napi_null:
+        return folly::dynamic(nullptr);
+    case napi_boolean:
+        return folly::dynamic(this->getBoolean(value));
+    case napi_number:
+        return folly::dynamic(this->getDouble(value));
+    case napi_string:
+        return folly::dynamic(this->getString(value));
+    case napi_object: {
+        bool isArray;
+        auto status = napi_is_array(m_env, value, &isArray);
+        assert(status == napi_ok);
+        if (isArray) {
+            auto arrayLength = this->getArrayLength(value);
+            folly::dynamic result = folly::dynamic::array();
+            for (uint32_t i = 0; i < arrayLength; ++i) {
+                result.push_back(this->getDynamic(this->getArrayElement(value, i)));
+            }
+            return result;
+        } else {
+            folly::dynamic result = folly::dynamic::object();
+            for (auto [key, val] : this->getObject(value).getKeyValuePairs()) {
+                result[this->getString(key)] = this->getDynamic(val);
+            }
+            return result;
+        }
+    }
+    default:
+        return folly::dynamic(nullptr);
+    }
 }
 
 RNOHNapiObjectBuilder::RNOHNapiObjectBuilder(napi_env env, ArkJS arkJs) : m_env(env), m_arkJs(arkJs) {

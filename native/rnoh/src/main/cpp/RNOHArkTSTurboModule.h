@@ -7,9 +7,6 @@
 namespace rnoh {
 class RNOHArkTSTurboModule : public RNOHTurboModule {
   public:
-    enum MethodReturnType {
-        Void
-    };
     struct Context : public RNOHTurboModule::Context {
         napi_env env;
         napi_ref arkTsTurboModuleInstanceRef;
@@ -19,8 +16,7 @@ class RNOHArkTSTurboModule : public RNOHTurboModule {
     RNOHArkTSTurboModule(Context ctx, std::string name);
 
     facebook::jsi::Value
-    invoke(facebook::jsi::Runtime &runtime,
-           MethodReturnType returnType,
+    call(facebook::jsi::Runtime &runtime,
            const std::string &methodName,
            const facebook::jsi::Value *args,
            size_t argsCount);

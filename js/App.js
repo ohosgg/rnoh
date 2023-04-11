@@ -4,12 +4,30 @@ import SampleTurboModule from "./SampleTurboModule"
 
 function App() {
   const [username, setUsername] = React.useState("");
+  const [consoleOutput, setConsoleOutput] = React.useState("");
 
   return (
     <View style={styles.container}>
-      <View style={styles.button} onTouchStart={() => {
-        SampleTurboModule.voidFunc()
-      }}>
+      <View style={styles.console}>
+        <Text style={{ width: "100%", height: "100%", color: "white" }}>
+          {consoleOutput}
+        </Text>
+      </View>
+      <View
+        style={styles.button}
+        onTouchStart={() => {
+          const results = [];
+          results.push("SampleTurboModule>")
+          results.push(`voidFunc: ${SampleTurboModule.voidFunc()}`);
+          results.push(`getBool: ${SampleTurboModule.getBool(true)}`);
+          results.push(`getNull: ${SampleTurboModule.getNull(null)}`);
+          results.push(`getObject: ${JSON.stringify(SampleTurboModule.getObject({x: {y: 1}}))}`);
+          results.push(`getArray: ${SampleTurboModule.getArray([1,2,3])}`);
+          results.push(`registerFunction`);
+          SampleTurboModule.registerFunction(() => {setConsoleOutput(prev => prev += " Callback called")})
+          setConsoleOutput(results.join(" "));
+        }}
+      >
         <Text style={styles.buttonText}>Run Turbo module</Text>
       </View>
       <UserInfo avatar="https://i.pravatar.cc/100?img=8" />
@@ -237,6 +255,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     fontWeight: "bold"
+  },
+  console: {
+    width: "100%",
+    height: 100,
+    backgroundColor: "black",
+    padding: 8
   }
 });
 
