@@ -5,11 +5,12 @@
   "scripts": {
     "lint": "eslint .",
     "start": "react-native start",
-    "prepare-package": "cd ../react-native-harmony && npm pack && cd ../tester && npm uninstall react-native-harmony && npm i ../react-native-harmony/react-native-harmony-0.0.1.tgz",
-    "bundle:dev": "metro build index.js --platform harmony --out bundle.harmony.js --config metro.config.js --minify false",
-    "bundle": "npm run prepare-package && npm run bundle:dev",
-    "dev": "npm run bundle && node ./createHeader.js bundle.harmony.js ../native/rnoh/src/main/cpp/jsbundle.h",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package && npm run install-rn-harmony",
+    "install-rn-harmony": "cd ../react-native-harmony && npm pack && cd ../tester && npm uninstall react-native-harmony && npm i ../react-native-harmony/react-native-harmony-0.0.1.tgz",
+    "bundle": "metro build index.js --platform harmony --out bundle.harmony.js --config metro.config.js --minify false",
+    "bundle:clean": "npm run prepare-package && npm run bundle:dev",
+    "sync:native": "node ./createHeader.js bundle.harmony.js ../native/rnoh/src/main/cpp/jsbundle.h",
+    "dev": "npm run bundle && npm run sync:native"
   },
   "dependencies": {
     "react": "18.2.0",
