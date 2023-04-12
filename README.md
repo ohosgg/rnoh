@@ -1,5 +1,8 @@
 # React Native Open Harmony
 
+## Components diagram
+![](./docs/react-native-open-harmony-app--components-diagram.png)
+
 ## Running sample application
 
 1. Go to the `/tester` directory.
