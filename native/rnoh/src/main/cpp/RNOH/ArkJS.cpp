@@ -113,6 +113,36 @@ napi_ref ArkJS::createReference(napi_value value) {
     return result;
 }
 
+std::function<napi_value(napi_env, std::vector<napi_value>)> *createNapiCallback(std::function<void(std::vector<folly::dynamic>)> &&callback) {    
+    return new std::function([onCall = std::move(callback)](napi_env env, std::vector<napi_value> callbackNapiArgs) -> napi_value {
+        ArkJS arkJs(env);
+        onCall(arkJs.getDynamics(callbackNapiArgs));
+        return arkJs.getUndefined();
+    });
+}
+
+napi_value singleUseCallback(napi_env env, napi_callback_info info) {
+    void *data;
+    napi_get_cb_info(env, info, nullptr, nullptr, nullptr, &data);
+    auto callback = static_cast<std::function<napi_value(napi_env, std::vector<napi_value>)> *>(data);
+    ArkJS arkJs(env);
+    (*callback)(env, arkJs.getCallbackArgs(info));
+    delete callback;
+    return arkJs.getUndefined();
+}
+
+/*
+* The callback will be deallocated after is called. It cannot be called more than once. Creates memory leaks if the callback is not called.
+* Consider changing this implementation when adding napi finalizers is supported. .
+*/
+napi_value ArkJS::createSingleUseCallback(std::function<void(std::vector<folly::dynamic>)> &&callback) {
+    std::string fnName = "callback";
+    napi_value result;
+    auto status = napi_create_function(m_env, fnName.c_str(), fnName.length(), singleUseCallback, createNapiCallback(std::move(callback)), &result);
+    this->maybeThrowFromStatus(status, "Couldn't create a callback");
+    return result;
+}
+
 napi_value ArkJS::createArray() {
     napi_value result;
     napi_create_array(m_env, &result);
@@ -271,6 +301,14 @@ folly::dynamic ArkJS::getDynamic(napi_value value) {
     default:
         return folly::dynamic(nullptr);
     }
+}
+
+std::vector<folly::dynamic> ArkJS::getDynamics(std::vector<napi_value> values) {
+    std::vector<folly::dynamic> dynamics;
+    for (auto value : values) {
+        dynamics.push_back(this->getDynamic(value));
+    }
+    return dynamics;
 }
 
 RNOHNapiObjectBuilder::RNOHNapiObjectBuilder(napi_env env, ArkJS arkJs) : m_env(env), m_arkJs(arkJs) {

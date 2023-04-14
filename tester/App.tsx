@@ -24,8 +24,10 @@ function App() {
           results.push(`getObject: ${JSON.stringify(SampleTurboModule?.getObject({ x: { y: 1 } }))}`);
           results.push(`getArray: ${SampleTurboModule?.getArray([1, 2, 3])}`);
           results.push(`registerFunction`);
-          SampleTurboModule?.registerFunction(() => { setConsoleOutput(prev => prev += " Callback called"); });
           setConsoleOutput(results.join(" "));
+          SampleTurboModule?.registerFunction((value) => {
+            setConsoleOutput(prev => prev += ` Callback called from: ${value}`);
+          });
         }}
       >
         <Text style={styles.buttonText}>Run Turbo module</Text>

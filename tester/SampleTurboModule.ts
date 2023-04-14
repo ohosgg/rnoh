@@ -14,7 +14,7 @@ export interface SampleTurboModuleProtocol {
 
   getArray(args: any[]): any[];
 
-  registerFunction(onComplete: () => void): void;
+  registerFunction(onComplete: (value: string) => void): void;
 }
 
 export interface Spec extends TurboModule, SampleTurboModuleProtocol { }

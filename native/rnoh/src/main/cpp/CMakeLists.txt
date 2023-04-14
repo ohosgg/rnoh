@@ -412,6 +412,7 @@ target_link_libraries(rnoh PUBLIC
     rrc_text
     rrc_textinput
     react_nativemodule_core
+    react_bridging
 )
 target_compile_options(rnoh PRIVATE ${folly_compile_options} -std=c++17)
 

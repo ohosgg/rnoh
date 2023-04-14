@@ -30,8 +30,10 @@ export class SampleTurboModule implements TurboModule {
     return args;
   }
 
-  registerFunction(onComplete: () => void): void {
+  registerFunction(onComplete: (value: string) => void): void {
     console.log(`RNOH SampleTurboModule::registerFunction + trigger`);
-    onComplete?.();
+    setTimeout(() => {
+      onComplete?.("... from native side")
+    }, 1000)
   }
 }

@@ -8,6 +8,7 @@
 #include <react/renderer/graphics/Float.h>
 #include <react/renderer/graphics/Color.h>
 #include <folly/dynamic.h>
+#include <functional>
 
 class RNOHNapiObjectBuilder;
 class RNOHNapiObject;
@@ -37,6 +38,8 @@ class ArkJS {
     napi_value createString(std::string const &str);
 
     napi_ref createReference(napi_value value);
+
+    napi_value createSingleUseCallback(std::function<void(std::vector<folly::dynamic>)> &&callback);
 
     napi_value createArray();
 
@@ -79,6 +82,8 @@ class ArkJS {
     std::string getString(napi_value value);
 
     folly::dynamic getDynamic(napi_value value);
+
+    std::vector<folly::dynamic> getDynamics(std::vector<napi_value> values);
 
     napi_env getEnv();
 
