@@ -13,6 +13,7 @@
 class RNOHNapiObjectBuilder;
 class RNOHNapiObject;
 
+
 class ArkJS {
   public:
     ArkJS(napi_env env);
@@ -50,6 +51,8 @@ class ArkJS {
     napi_value createFromDynamic(folly::dynamic);
 
     RNOHNapiObjectBuilder createObjectBuilder();
+
+    bool isPromise(napi_value);
 
     napi_value getUndefined();
 
@@ -147,6 +150,18 @@ class RNOHNapiObjectBuilder {
     ArkJS m_arkJs;
     napi_env m_env;
     napi_value m_object;
+};
+
+class Promise {
+    public:
+        Promise(napi_env env, napi_value value);
+
+        Promise& then(std::function<void(std::vector<folly::dynamic>)> &&callback);
+        Promise& catch_(std::function<void(std::vector<folly::dynamic>)> &&callback);
+
+    private:
+        ArkJS m_arkJs;
+        napi_value m_value;
 };
 
 #endif //native_ArkJS_H

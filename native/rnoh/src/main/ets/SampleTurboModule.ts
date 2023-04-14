@@ -33,7 +33,19 @@ export class SampleTurboModule implements TurboModule {
   registerFunction(onComplete: (value: string) => void): void {
     console.log(`RNOH SampleTurboModule::registerFunction + trigger`);
     setTimeout(() => {
-      onComplete?.("... from native side")
-    }, 1000)
+      onComplete?.("... from native side");
+    }, 1000);
+  }
+
+  doAsyncJob(shouldResolve: boolean): Promise<string> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (shouldResolve) {
+          resolve("resolved on native side");
+        } else {
+          reject("rejected on native side");
+        }
+      }, 1000);
+    });
   }
 }

@@ -7,6 +7,7 @@
 #include "RNOH/TurboModule.h"
 
 namespace rnoh {
+
 class ArkTSTurboModule : public TurboModule {
   public:
     struct Context : public TurboModule::Context {
@@ -17,14 +18,17 @@ class ArkTSTurboModule : public TurboModule {
 
     ArkTSTurboModule(Context ctx, std::string name);
 
-    facebook::jsi::Value
-    call(facebook::jsi::Runtime &runtime,
-           const std::string &methodName,
-           const facebook::jsi::Value *args,
-           size_t argsCount);
+    facebook::jsi::Value call(facebook::jsi::Runtime &runtime,
+                              const std::string &methodName,
+                              const facebook::jsi::Value *args,
+                              size_t argsCount);
+
+    facebook::jsi::Value callAsync(facebook::jsi::Runtime &runtime,
+                                   const std::string &methodName,
+                                   const facebook::jsi::Value *args,
+                                   size_t argsCount);
 
   private:
     Context m_ctx;
 };
 } // namespace rnoh
-

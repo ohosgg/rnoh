@@ -15,6 +15,8 @@ export interface SampleTurboModuleProtocol {
   getArray(args: any[]): any[];
 
   registerFunction(onComplete: (value: string) => void): void;
+
+  doAsyncJob(shouldResolve: boolean): Promise<string>;
 }
 
 export interface Spec extends TurboModule, SampleTurboModuleProtocol { }

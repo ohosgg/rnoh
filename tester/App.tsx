@@ -24,10 +24,18 @@ function App() {
           results.push(`getObject: ${JSON.stringify(SampleTurboModule?.getObject({ x: { y: 1 } }))}`);
           results.push(`getArray: ${SampleTurboModule?.getArray([1, 2, 3])}`);
           results.push(`registerFunction`);
+          results.push(`doAsyncJob`);
           setConsoleOutput(results.join(" "));
           SampleTurboModule?.registerFunction((value) => {
-            setConsoleOutput(prev => prev += ` Callback called from: ${value}`);
+            setConsoleOutput(prev => prev += ` Callback called with: ${value}`);
           });
+          SampleTurboModule?.doAsyncJob(true).then((value) => {
+            setConsoleOutput(prev => prev += ` Promise resolved with: ${value}`);
+          });
+          SampleTurboModule?.doAsyncJob(false).catch((err) => {
+            setConsoleOutput(prev => prev += ` Promise rejected with: ${err.message}`);
+          });
+
         }}
       >
         <Text style={styles.buttonText}>Run Turbo module</Text>
