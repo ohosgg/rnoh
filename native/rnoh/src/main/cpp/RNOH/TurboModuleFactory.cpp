@@ -5,6 +5,7 @@
 #include "RNOHCorePackage/SampleTurboModuleSpec.h"
 #include "RNOHCorePackage/ViewManager.h"
 #include "RNOHCorePackage/ImageViewManager.h"
+#include "RNOHCorePackage/generated/PlatformConstantsTurboModule.h"
 
 
 using namespace rnoh;
@@ -29,6 +30,8 @@ TurboModuleFactory::SharedTurboModule TurboModuleFactory::create(std::shared_ptr
         return std::make_shared<UIManagerModule>(ctx, name, std::move(m_componentManagerBindingByString));
     } else if (name == "SampleTurboModule") {
         return std::make_shared<NativeSampleTurboModuleSpecJSI>(ctx, name);
+    } else if (name == "PlatformConstants") {
+        return std::make_shared<PlatformConstantsTurboModule>(ctx, name);
     }
 
     return this->handleUnregisteredModuleRequest(ctx, name);

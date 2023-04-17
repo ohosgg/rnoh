@@ -1,6 +1,6 @@
 import { TurboModule } from "./TurboModule";
 
-export class SampleTurboModule implements TurboModule {
+export class SampleTurboModule extends TurboModule {
   voidFunc() {
     console.log("RNOH SampleTurboModule::voidFunc");
   }

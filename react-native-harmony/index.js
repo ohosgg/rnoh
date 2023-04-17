@@ -8,6 +8,9 @@ module.exports = {
   get NativeModules() {
     return require('react-native/Libraries/BatchedBridge/NativeModules');
   },
+  get Platform() {
+    return require('./Libraries/Utilities/Platform');
+  },
   get StyleSheet() {
     return require('react-native/Libraries/StyleSheet/StyleSheet');
   },
@@ -15,7 +18,7 @@ module.exports = {
     return require('react-native/Libraries/Text/Text');
   },
   get TextInput() {
-    return require('react-native/Libraries/Components/TextInput/TextInput');
+    return require('./Libraries/Components/TextInput/TextInput.harmony');
   },
   get TurboModuleRegistry() {
     return require('react-native/Libraries/TurboModule/TurboModuleRegistry');

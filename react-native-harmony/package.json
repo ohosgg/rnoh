@@ -10,5 +10,8 @@
   "peerDependencies": {
     "react-native": "0.71.3"
   },
-  "types": "types"
+  "types": "types",
+  "devDependencies": {
+    "@tsconfig/react-native": "^2.0.3"
+  }
 }

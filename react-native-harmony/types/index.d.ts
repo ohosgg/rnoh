@@ -73,7 +73,7 @@ export * as TurboModuleRegistry from 'react-native/Libraries/TurboModule/TurboMo
 // export * from 'react-native/Libraries/Utilities/DevSettings';
 // export * from 'react-native/Libraries/Utilities/Dimensions';
 // export * from 'react-native/Libraries/Utilities/PixelRatio';
-// export * from 'react-native/Libraries/Utilities/Platform';
+export * from '../Libraries/Utilities/Platform';
 // export * from 'react-native/Libraries/Vibration/Vibration';
 // export * from 'react-native/Libraries/YellowBox/YellowBoxDeprecated';
 // export * from 'react-native/Libraries/vendor/core/ErrorUtils';

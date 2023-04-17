@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "@tsconfig/react-native/tsconfig.json",
+  ],
+  "compilerOptions": {
+    "types": [
+      "node", // Removes an error when exporting with module.exports.
+    ]
+  }
+}

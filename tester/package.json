@@ -8,11 +8,14 @@
     "postinstall": "patch-package && npm run install-rn-harmony",
     "install-rn-harmony": "cd ../react-native-harmony && npm pack && cd ../tester && npm uninstall react-native-harmony && npm i ../react-native-harmony/react-native-harmony-0.0.1.tgz",
     "bundle": "metro build index.js --platform harmony --out bundle.harmony.js --config metro.config.js --minify false",
-    "bundle:clean": "npm run prepare-package && npm run bundle:dev",
+    "bundle:clean": "npm run install-rn-harmony && npm run bundle",
     "sync:native": "node ./createHeader.js bundle.harmony.js ../native/rnoh/src/main/cpp/jsbundle.h",
-    "dev": "npm run bundle && npm run sync:native"
+    "patch:rn": "patch-package react-native",
+    "dev": "npm run bundle:clean && npm run sync:native && npm run patch:rn",
+    "dev:fast": "npm run bundle && npm run sync:native"
   },
   "dependencies": {
+    "chai": "^4.3.7",
     "react": "18.2.0",
     "react-native": "0.71.3",
     "react-native-harmony": "file:../react-native-harmony/react-native-harmony-0.0.1.tgz"
@@ -23,6 +26,7 @@
     "@babel/runtime": "^7.20.0",
     "@react-native-community/eslint-config": "^3.2.0",
     "@tsconfig/react-native": "^2.0.2",
+    "@types/chai": "^4.3.4",
     "@types/jest": "^29.2.1",
     "@types/metro-config": "^0.76.2",
     "@types/react": "^18.0.24",

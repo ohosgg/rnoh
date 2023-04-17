@@ -134,21 +134,45 @@ index e1329e8..ea2376c 100644
 +
 +
 diff --git a/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsIOS.js b/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsIOS.js
-index cf60d5e..22d5888 100644
+index cf60d5e..2a1b062 100644
 --- a/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsIOS.js
 +++ b/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsIOS.js
-@@ -28,6 +28,8 @@ export interface Spec extends TurboModule {
+@@ -8,26 +8,26 @@
+  * @format
+  */
+ 
+-import type {TurboModule} from '../TurboModule/RCTExport';
++import type { TurboModule } from '../TurboModule/RCTExport';
+ 
+ import * as TurboModuleRegistry from '../TurboModule/TurboModuleRegistry';
+ 
+ export interface Spec extends TurboModule {
+   +getConstants: () => {|
+-    isTesting: boolean,
++  isTesting: boolean,
+     reactNativeVersion: {|
+       major: number,
+-      minor: number,
+-      patch: number,
+-      prerelease: ?number,
++        minor: number,
++          patch: number,
++            prerelease: ?number,
+     |},
+-    forceTouchAvailable: boolean,
++  forceTouchAvailable: boolean,
+     osVersion: string,
+-    systemName: string,
+-    interfaceIdiom: string,
++      systemName: string,
++        interfaceIdiom: string,
    |};
  }
  
 -export default (TurboModuleRegistry.getEnforcing<Spec>(
--  'PlatformConstants',
--): Spec);
-+// export default (TurboModuleRegistry.getEnforcing<Spec>(
-+//   'PlatformConstants',
-+// ): Spec);
-+
-+export default {}
++export default (TurboModuleRegistry.getEnforcing < Spec > (
+   'PlatformConstants',
+ ): Spec);
 \ No newline at end of file
 diff --git a/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js b/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js
 index 6d0efb5..85113c7 100644

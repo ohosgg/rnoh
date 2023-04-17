@@ -6,14 +6,10 @@
  */
 const pathUtils = require('path');
 
-function shouldReplaceRN(moduleName) {
-  return moduleName === "react-native";
-}
 
-function shouldUseIOSPlatform(moduleName, originModulePath) {
-  return moduleName.startsWith("react-native/") || originModulePath.includes(`${pathUtils.sep}node_modules${pathUtils.sep}react-native${pathUtils.sep}`);
+function isInternalReactNativeRelativeImport(originModulePath) {
+  return originModulePath.includes(`${pathUtils.sep}node_modules${pathUtils.sep}react-native${pathUtils.sep}`);
 }
-
 
 /**
  * @type {import("@types/metro-config").ConfigT}
@@ -30,9 +26,19 @@ module.exports = {
   resolver: {
     resolveRequest: (ctx, moduleName, platform) => {
       if (platform === "harmony") {
-        if (shouldReplaceRN(moduleName)) {
+        if (moduleName === "react-native") {
           return ctx.resolveRequest(ctx, "react-native-harmony", platform);
-        } else if (shouldUseIOSPlatform(moduleName, ctx.originModulePath)) {
+        } else if (moduleName.startsWith("react-native/")) {
+          return ctx.resolveRequest(ctx, moduleName, "ios");
+        } else if (isInternalReactNativeRelativeImport(ctx.originModulePath)) {
+          if (moduleName.startsWith(".")) {
+            const moduleAbsPath = pathUtils.resolve(pathUtils.dirname(ctx.originModulePath), moduleName);
+            const [_, modulePathRelativeToReactNative] = moduleAbsPath.split(`${pathUtils.sep}node_modules${pathUtils.sep}react-native${pathUtils.sep}`);
+            try {
+              return ctx.resolveRequest(ctx, `react-native-harmony${pathUtils.sep}${modulePathRelativeToReactNative}`, "harmony");
+            } catch (err) { }
+
+          }
           return ctx.resolveRequest(ctx, moduleName, "ios");
         }
       }

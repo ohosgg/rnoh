@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, Image, TextInput, Text } from 'react-native';
 import SampleTurboModule from './SampleTurboModule';
+import { PlatformConstantsTestSuite } from './tests';
+import { Tester } from './components';
 
 function App() {
   const [username, setUsername] = React.useState("");
@@ -13,6 +15,9 @@ function App() {
           {consoleOutput}
         </Text>
       </View>
+      <Tester>
+        <PlatformConstantsTestSuite />
+      </Tester>
       <View
         style={styles.button}
         onTouchStart={() => {

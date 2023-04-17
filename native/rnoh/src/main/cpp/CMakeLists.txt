@@ -392,6 +392,7 @@ add_library(rnoh SHARED
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/JsiConversions.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/UIManagerModule.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/SampleTurboModuleSpec.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/generated/PlatformConstantsTurboModule.cpp"
 )
 target_include_directories(rnoh PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
