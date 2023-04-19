@@ -1,8 +1,5 @@
-import { Platform as Platform_, } from "react-native";
-import type { Platform as PlatformType } from "react-native-harmony";
+import { Platform } from "react-native";
 import { TestSuite, TestCase } from "../components";
-
-const Platform = Platform_ as PlatformType;
 
 export function PlatformConstantsTestSuite() {
   return <TestSuite name="PlatformConstants">

@@ -11,6 +11,9 @@ module.exports = {
   get Platform() {
     return require('./Libraries/Utilities/Platform');
   },
+  get PixelRatio() {
+    return require('react-native/Libraries/Utilities/PixelRatio');
+  },
   get StyleSheet() {
     return require('react-native/Libraries/StyleSheet/StyleSheet');
   },

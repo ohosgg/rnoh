@@ -1,15 +1,19 @@
-import type { TurboModule } from './TurboModule'
-import { TurboModuleFactory } from './TurboModuleFactory'
+import type { TurboModule } from './TurboModule';
+import { TurboModuleFactory } from './TurboModuleFactory';
 
 export class TurboModuleProvider {
-  constructor(private turboModuleFactory: TurboModuleFactory) {}
+  private cachedTurboModuleByName: Record<string, TurboModule> = {};
 
-  getModule(name: string): TurboModule {
-    // TODO: caching
-    return this.turboModuleFactory.createTurboModule(name)
+  constructor(private turboModuleFactory: TurboModuleFactory) { }
+
+  getModule<T extends TurboModule>(name: string): T {
+    if (!(name in this.cachedTurboModuleByName)) {
+      this.cachedTurboModuleByName[name] = this.turboModuleFactory.createTurboModule(name);
+    }
+    return this.cachedTurboModuleByName[name] as T;
   }
 
   hasModule(name: string) {
-      return this.turboModuleFactory.hasModule(name)
+    return this.turboModuleFactory.hasModule(name);
   }
 }

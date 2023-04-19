@@ -69,7 +69,7 @@ export const LogicalTestCase: FC<{ fn: (utils: { expect: typeof expect_; }) => (
 
   }, []);
 
-  return <Text style={[styles.textLine]}>{JSON.stringify(result)}</Text>;
+  return <Text style={styles.textLine}>{JSON.stringify(result)}</Text>;
 };
 
 
@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
   },
   textLine: {
     width: "100%",
-    height: 16
+    height: 16,
+    fontSize: 8
   },
 });

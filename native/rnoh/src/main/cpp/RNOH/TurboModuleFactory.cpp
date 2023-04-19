@@ -6,7 +6,7 @@
 #include "RNOHCorePackage/ViewManager.h"
 #include "RNOHCorePackage/ImageViewManager.h"
 #include "RNOHCorePackage/generated/PlatformConstantsTurboModule.h"
-
+#include "RNOHCorePackage/generated/DeviceInfoTurboModule.h"
 
 using namespace rnoh;
 using namespace facebook;
@@ -32,21 +32,27 @@ TurboModuleFactory::SharedTurboModule TurboModuleFactory::create(std::shared_ptr
         return std::make_shared<NativeSampleTurboModuleSpecJSI>(ctx, name);
     } else if (name == "PlatformConstants") {
         return std::make_shared<PlatformConstantsTurboModule>(ctx, name);
+    } else if (name == "DeviceInfo") {
+        return std::make_shared<DeviceInfoTurboModule>(ctx, name);
     }
 
     return this->handleUnregisteredModuleRequest(ctx, name);
 }
 
 napi_ref TurboModuleFactory::maybeGetArkTsTurboModuleInstanceRef(const std::string &name) const {
-    ArkJS arkJs(m_env);
-    {
-        auto result = arkJs.getObject(m_arkTsTurboModuleProviderRef).call("hasModule", {arkJs.createString(name)});
-        if (!arkJs.getBoolean(result)) {
-            return nullptr;
+    napi_ref result;
+    m_taskExecutor->runSyncTask(TaskThread::MAIN, [env = m_env, arkTsTurboModuleProviderRef = m_arkTsTurboModuleProviderRef, name, &result]() {
+        ArkJS arkJs(env);
+        {
+            auto result = arkJs.getObject(arkTsTurboModuleProviderRef).call("hasModule", {arkJs.createString(name)});
+            if (!arkJs.getBoolean(result)) {
+                return;
+            }
         }
-    }
-    auto n_turboModuleInstance = arkJs.getObject(m_arkTsTurboModuleProviderRef).call("getModule", {arkJs.createString(name)});
-    return arkJs.createReference(n_turboModuleInstance);
+        auto n_turboModuleInstance = arkJs.getObject(arkTsTurboModuleProviderRef).call("getModule", {arkJs.createString(name)});
+        result = arkJs.createReference(n_turboModuleInstance);
+    });
+    return result;
 }
 
 TurboModuleFactory::SharedTurboModule TurboModuleFactory::handleUnregisteredModuleRequest(Context ctx, const std::string &name) const {

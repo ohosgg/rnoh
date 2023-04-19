@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Image, TextInput, Text } from 'react-native';
 import SampleTurboModule from './SampleTurboModule';
-import { PlatformConstantsTestSuite } from './tests';
+import { PlatformConstantsTestSuite, PixelRatioTestSuite } from './tests';
 import { Tester } from './components';
 
 function App() {
@@ -16,6 +16,7 @@ function App() {
         </Text>
       </View>
       <Tester>
+        <PixelRatioTestSuite />
         <PlatformConstantsTestSuite />
       </Tester>
       <View

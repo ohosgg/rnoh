@@ -17,7 +17,6 @@
 #include "RNOH/TurboModuleProvider.h"
 #include "RNOH/TurboModuleFactory.h"
 
-
 using namespace facebook;
 using namespace rnoh;
 
@@ -105,23 +104,25 @@ void RNInstance::initializeScheduler() {
 }
 
 void RNInstance::runApplication(float width, float height) {
-    try {
-        auto jsBundle = std::make_unique<react::JSBigStdString>(JS_BUNDLE);
-        this->instance->loadScriptFromString(std::move(jsBundle), "bundle.harmony.js", true);
-        folly::dynamic config = folly::dynamic::object("rootTag", 1)("fabric", true);
-        this->surfaceHandler.setProps(std::move(config));
-        auto layoutConstraints = this->surfaceHandler.getLayoutConstraints();
-        layoutConstraints.layoutDirection = react::LayoutDirection::LeftToRight;
-        layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
-            .width = width,
-            .height = height};
-        this->surfaceHandler.constraintLayout(layoutConstraints, this->surfaceHandler.getLayoutContext());
-        this->scheduler->registerSurface(this->surfaceHandler);
-        this->surfaceHandler.start();
-    } catch (const std::exception &e) {
-        LOG(ERROR) << "runApplication: " << e.what() << "\n";
-        return;
-    }
+    this->taskExecutor->runTask(TaskThread::JS, [this, width, height]() {
+        try {
+            auto jsBundle = std::make_unique<react::JSBigStdString>(JS_BUNDLE);
+            instance->loadScriptFromString(std::move(jsBundle), "bundle.harmony.js", true);
+            folly::dynamic config = folly::dynamic::object("rootTag", 1)("fabric", true);
+            this->surfaceHandler.setProps(std::move(config));
+            auto layoutConstraints = this->surfaceHandler.getLayoutConstraints();
+            layoutConstraints.layoutDirection = react::LayoutDirection::LeftToRight;
+            layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
+                .width = width,
+                .height = height};
+            this->surfaceHandler.constraintLayout(layoutConstraints, this->surfaceHandler.getLayoutContext());
+            this->scheduler->registerSurface(this->surfaceHandler);
+            this->surfaceHandler.start();
+        } catch (const std::exception &e) {
+            LOG(ERROR) << "runApplication: " << e.what() << "\n";
+            throw e;
+        };
+    });
 }
 
 void RNInstance::emitEvent(react::Tag tag, ReactEventKind eventKind, napi_value eventObject) {
