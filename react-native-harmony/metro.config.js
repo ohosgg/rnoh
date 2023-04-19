@@ -16,6 +16,7 @@ function isInternalReactNativeRelativeImport(originModulePath) {
  */
 module.exports = {
   transformer: {
+    assetRegistryPath: "react-native/Libraries/Image/AssetRegistry",
     getTransformOptions: async () => ({
       transform: {
         experimentalImportSupport: false,
@@ -43,6 +44,6 @@ module.exports = {
         }
       }
       return ctx.resolveRequest(ctx, moduleName, platform);
-    }
+    },
   }
 };

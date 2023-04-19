@@ -9,7 +9,7 @@
     "install-rn-harmony": "cd ../react-native-harmony && npm pack && cd ../tester && npm uninstall react-native-harmony && npm i ../react-native-harmony/react-native-harmony-0.0.1.tgz",
     "bundle": "metro build index.js --platform harmony --out bundle.harmony.js --config metro.config.js --minify false",
     "bundle:clean": "npm run install-rn-harmony && npm run bundle",
-    "sync:native": "node ./createHeader.js bundle.harmony.js ../native/rnoh/src/main/cpp/jsbundle.h",
+    "sync:native": "node ./updateNative.js bundle.harmony.js ../native/rnoh/src/main/cpp/jsbundle.h assets ../native/tester/src/main/ets/assets/assets",
     "patch:rn": "patch-package react-native",
     "dev": "npm run bundle:clean && npm run sync:native && npm run patch:rn",
     "dev:fast": "npm run bundle && npm run sync:native"
@@ -33,6 +33,7 @@
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.2.1",
     "eslint": "^8.19.0",
+    "fs-extra": "^11.1.1",
     "jest": "^29.2.1",
     "metro-react-native-babel-preset": "0.73.9",
     "patch-package": "^6.5.1",

@@ -20,8 +20,15 @@ export struct RNImage {
     rnoh?.emitEvent(this.descriptor.tag, ReactEventKind.TOUCH, event)
   }
 
+  getSource() {
+    if (this.descriptor.props.uri.startsWith("asset://")) {
+      return this.descriptor.props.uri.replace("asset://", "/assets/");
+    }
+    return this.descriptor.props.uri
+  }
+
   build() {
-      Image(this.descriptor.props.uri)
+      Image(this.getSource())
         .interpolation(ImageInterpolation.High)
         .width(this.descriptor.props.width)
         .height(this.descriptor.props.height)

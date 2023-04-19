@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet, Image, TextInput, Text } from 'react-native';
 import SampleTurboModule from './SampleTurboModule';
-import { PlatformConstantsTestSuite, PixelRatioTestSuite } from './tests';
+import { PlatformConstantsTestSuite, PixelRatioTestSuite, ImageTestSuite } from './tests';
 import { Tester } from './components';
 
 function App() {
@@ -18,6 +18,7 @@ function App() {
         </Text>
       </View>
       <Tester>
+        <ImageTestSuite />
         <PixelRatioTestSuite />
         <PlatformConstantsTestSuite />
       </Tester>
@@ -57,9 +58,9 @@ function App() {
         <Text style={styles.label}>Your username</Text>
         <TextInput style={styles.textInput} onChangeText={setUsername} />
       </View>
-      <View 
+      <View
         style={styles.button}
-        onTouchEnd={() => scrollRef.current?.scrollTo({y: 0, animated: false})}
+        onTouchEnd={() => scrollRef.current?.scrollTo({ y: 0, animated: false })}
       >
         <Text style={styles.buttonText}>Scroll To Top</Text>
       </View>

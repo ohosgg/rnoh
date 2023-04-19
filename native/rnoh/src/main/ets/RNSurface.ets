@@ -17,8 +17,8 @@ const turboModuleProvider = new TurboModuleProvider(new TurboModuleFactory())
 export struct RNApp {
   @State screenDensity: number = 0
   @State shouldShow: boolean = false
-  private initialSurfaceWidth: number = 100
-  private initialSurfaceHeight: number = 100
+  private initialSurfaceWidth: number = 0
+  private initialSurfaceHeight: number = 0
 
   aboutToAppear() {
     // delay running the app so that debugger has a chance to connect before a potential error is thrown
