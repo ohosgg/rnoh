@@ -17,7 +17,7 @@ export * from 'react-native/Libraries/BatchedBridge/NativeModules';
 // export * from 'react-native/Libraries/Components/ProgressViewIOS/ProgressViewIOS';
 // export * from 'react-native/Libraries/Components/RefreshControl/RefreshControl';
 // export * from 'react-native/Libraries/Components/SafeAreaView/SafeAreaView';
-// export * from 'react-native/Libraries/Components/ScrollView/ScrollView';
+export * from 'react-native/Libraries/Components/ScrollView/ScrollView';
 // export * from 'react-native/Libraries/Components/Slider/Slider';
 // export * from 'react-native/Libraries/Components/StatusBar/StatusBar';
 // export * from 'react-native/Libraries/Components/Switch/Switch';

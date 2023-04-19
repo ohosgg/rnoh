@@ -1,4 +1,5 @@
 #include "RNOHCorePackage/UIManagerModule.h"
+#include "RNOHCorePackage/ComponentManagerBindings/BaseManager.h"
 
 using namespace rnoh;
 using namespace facebook;
@@ -33,5 +34,5 @@ facebook::jsi::Value UIManagerModule::getConstantsForViewManager(facebook::jsi::
         return viewManagerBinder->createManager(rt);
     }
     LOG(ERROR) << "Couldn't find ViewManagerBinder for: " << name;
-    return jsi::Value::undefined();
+    return BaseManager().createManager(rt);
 }

@@ -311,6 +311,25 @@ std::vector<folly::dynamic> ArkJS::getDynamics(std::vector<napi_value> values) {
     return dynamics;
 }
 
+std::vector<napi_value> ArkJS::convertIntermediaryValuesToNapiValues(std::vector<IntermediaryArg> args) {
+    std::vector<napi_value> napiArgs;
+    for (auto arg : args) {
+        napiArgs.push_back(convertIntermediaryValueToNapiValue(arg));
+    }
+    return napiArgs;
+}
+
+napi_value ArkJS::convertIntermediaryValueToNapiValue(IntermediaryArg arg) {
+    try {
+        return this->createFromDynamic(std::get<folly::dynamic>(arg));
+    } catch (const std::bad_variant_access &e) {
+    }
+    try {
+        return this->createSingleUseCallback(std::move(std::get<IntermediaryCallback>(arg)));
+    } catch (const std::bad_variant_access &e) {
+    }
+}
+
 RNOHNapiObjectBuilder::RNOHNapiObjectBuilder(napi_env env, ArkJS arkJs) : m_env(env), m_arkJs(arkJs) {
     napi_value obj;
     napi_create_object(env, &obj);

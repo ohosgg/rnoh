@@ -17,9 +17,13 @@ namespace rnoh {
 class MountingManager {
   public:
     using TriggerUICallback = std::function<void(facebook::react::ShadowViewMutationList const &mutations)>;
+    using CommandDispatcher = std::function<void(facebook::react::Tag tag, std::string const &commandName, folly::dynamic const args)>;
 
-    MountingManager(TaskExecutor::Shared taskExecutor, EventEmitterRegistry::Shared eventEmitterRegistry, TriggerUICallback triggerUICallback)
-        : taskExecutor(std::move(taskExecutor)), eventEmitterRegistry(std::move(eventEmitterRegistry)), triggerUICallback(std::move(triggerUICallback)) {}
+    MountingManager(TaskExecutor::Shared taskExecutor, EventEmitterRegistry::Shared eventEmitterRegistry, TriggerUICallback triggerUICallback, CommandDispatcher commandDispatcher)
+        : taskExecutor(std::move(taskExecutor)),
+          eventEmitterRegistry(std::move(eventEmitterRegistry)),
+          triggerUICallback(std::move(triggerUICallback)),
+          commandDispatcher(std::move(commandDispatcher)) {}
 
     void performMountInstructions(facebook::react::ShadowViewMutationList const &mutations, react::SurfaceId surfaceId);
 
@@ -27,10 +31,13 @@ class MountingManager {
 
     void performTransaction(facebook::react::MountingCoordinator::Shared const &mountingCoordinator);
 
+    void dispatchCommand(facebook::react::Tag tag, std::string const &commandName, folly::dynamic const args);
+
   private:
     TaskExecutor::Shared taskExecutor;
     EventEmitterRegistry::Shared eventEmitterRegistry;
     TriggerUICallback triggerUICallback;
+    CommandDispatcher commandDispatcher;
 };
 
 } // namespace rnoh

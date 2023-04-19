@@ -18,9 +18,10 @@ export type LayoutProps = {
   height: number
 }
 
-export type Descriptor<TType = string, TProps extends Object = Object> = {
+export type Descriptor<TType = string, TProps extends Object = Object, TState = {}> = {
   type: TType
   tag: Tag
   props: TProps
+  state: TState
   childrenTags: Tag[]
 }

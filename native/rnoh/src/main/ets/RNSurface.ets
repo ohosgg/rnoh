@@ -1,5 +1,6 @@
 import rnoh from 'librnoh.so'
 import { DescriptorRegistry } from './DescriptorRegistry'
+import { CommandDispatcher } from './CommandDispatcher'
 import { RNComponentFactory } from './RNComponentFactory'
 import { Descriptor } from './descriptor'
 import { ViewProps } from './RNView'
@@ -68,6 +69,7 @@ const rootDescriptor: RootDescriptor = {
   tag: 1,
   childrenTags: [],
   props: { top: 0, left: 0, width: 0, height: 0 },
+  state: {}
 }
 
 @Component
@@ -76,16 +78,24 @@ export struct RNSurface {
   @State initialSurfaceHeight: number = 0
   @Prop screenDensity: number
   @State descriptor: RootDescriptor = rootDescriptor
-  @Provide('__RN_DESCRIPTOR_REGISTRY') descriptorRegistry: DescriptorRegistry =
+
+  @Provide('__RN_DESCRIPTOR_REGISTRY') 
+  descriptorRegistry: DescriptorRegistry =
     new DescriptorRegistry({
       '1': { ...rootDescriptor },
     });
+
+  @Provide('__RN_COMMAND_DISPATCHER') 
+  commandDispatcher: CommandDispatcher = new CommandDispatcher()
+
   private cleanup?: () => void = undefined
 
   aboutToAppear() {
     console.log("RNOH::JS Subscribing to shadow tree changes")
     rnoh?.subscribeToShadowTreeChanges((mutations) => {
       this.updateDescriptorRegistry(mutations)
+    }, (tag, commandName, args) => {
+      this.dispatchCommand(tag, commandName, args)
     });
     rnoh.startReactNative(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity)
     this.cleanup = this.descriptorRegistry.registerComponentUpdateCallback(
@@ -100,6 +110,10 @@ export struct RNSurface {
 
   updateDescriptorRegistry(mutations) {
     this.descriptorRegistry.applyMutations(mutations)
+  }
+
+  dispatchCommand(tag, commandName, args) {
+    this.commandDispatcher.dispatchCommand(tag, commandName, args)
   }
 
   onUpdateComponent(newDescriptor: Descriptor) {

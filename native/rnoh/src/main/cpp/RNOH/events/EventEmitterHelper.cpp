@@ -1,9 +1,12 @@
 #include <glog/logging.h>
 #include <react/renderer/components/view/TouchEventEmitter.h>
 #include <react/renderer/components/textinput/TextInputEventEmitter.h>
+#include <react/renderer/components/scrollview/ScrollViewEventEmitter.h>
 
 #include "RNOH/events/EventEmitterHelper.h"
 #include "RNOH/events/TouchEventConversions.h"
+#include "RNOH/events/ScrollEventConversions.h"
+#include "EventEmitterHelper.h"
 
 namespace rnoh {
 
@@ -16,6 +19,9 @@ void EventEmitterHelper::emitEvent(react::Tag tag, ReactEventKind eventKind, nap
         break;
     case ReactEventKind::TEXT_INPUT_CHANGE:
         this->emitTextInputChangedEvent(tag, payload);
+        break;
+    case ReactEventKind::SCROLL:
+        this->emitScrollEvent(tag, payload);
         break;
     default:
         LOG(FATAL) << "Unsupported event kind: " << eventKind;
@@ -56,6 +62,33 @@ void EventEmitterHelper::emitTextInputChangedEvent(facebook::react::Tag tag, nap
     }
     react::TextInputMetrics textInputMetrics{.text = arkJs.getString(payload)};
     eventEmitter->onChange(textInputMetrics);
+}
+
+void EventEmitterHelper::emitScrollEvent(facebook::react::Tag tag, napi_value eventObject) {
+    auto eventEmitter = eventEmitterRegistry->getEventEmitter<react::ScrollViewEventEmitter>(tag);
+    if (eventEmitter == nullptr) {
+        return;
+    }
+
+    auto event = convertScrollEvent(arkJs, eventObject);
+    
+    switch (getScrollEventType(arkJs, eventObject))
+    {
+    case ScrollEventType::BEGIN:
+        eventEmitter->onScrollBeginDrag(event);
+        break;
+
+    case ScrollEventType::END:
+        eventEmitter->onScrollEndDrag(event);
+        break;
+
+    case ScrollEventType::SCROLLING:
+        eventEmitter->onScroll(event);
+        break;
+    
+    default:
+        break;
+    }
 }
 
 } // namespace rnoh

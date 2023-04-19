@@ -1,7 +1,6 @@
 import rnoh from 'librnoh.so'
 import { ColorSegments, Descriptor, LayoutProps, Tag } from './descriptor'
 import { convertColorSegmentsToString } from './cpp-bridge-utils'
-import { DescriptorRegistry } from './DescriptorRegistry'
 import { ReactEventKind } from './events'
 
 export type ViewProps = LayoutProps & {

@@ -3,8 +3,6 @@
 #include "RNOHCorePackage/StubModule.h"
 #include "RNOHCorePackage/UIManagerModule.h"
 #include "RNOHCorePackage/SampleTurboModuleSpec.h"
-#include "RNOHCorePackage/ViewManager.h"
-#include "RNOHCorePackage/ImageViewManager.h"
 #include "RNOHCorePackage/generated/PlatformConstantsTurboModule.h"
 #include "RNOHCorePackage/generated/DeviceInfoTurboModule.h"
 

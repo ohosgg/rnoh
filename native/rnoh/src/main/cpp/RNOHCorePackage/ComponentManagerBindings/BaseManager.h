@@ -1,0 +1,54 @@
+#pragma once
+#include "RNOHCorePackage/UIManagerModule.h"
+
+namespace rnoh {
+class BaseManager : public ComponentManagerBinding {
+  public:
+    facebook::jsi::Object createManager(facebook::jsi::Runtime &rt) override {
+        facebook::jsi::Object baseManagerConfig(rt);
+        baseManagerConfig.setProperty(rt, "NativeProps", this->createNativeProps(rt));
+        baseManagerConfig.setProperty(rt, "Constants", this->createConstants(rt));
+        baseManagerConfig.setProperty(rt, "Commands", this->createCommands(rt));
+
+        baseManagerConfig.setProperty(rt, "bubblingEventTypes", this->createBubblingEventTypes(rt));
+        baseManagerConfig.setProperty(rt, "directEventTypes", this->createDirectEventTypes(rt));
+        return baseManagerConfig;
+    };
+
+  protected:
+    virtual facebook::jsi::Object createNativeProps(facebook::jsi::Runtime &rt) {
+        return facebook::jsi::Object(rt);
+    }
+
+    virtual facebook::jsi::Object createConstants(facebook::jsi::Runtime &rt) {
+        return facebook::jsi::Object(rt);
+    }
+
+    virtual facebook::jsi::Object createCommands(facebook::jsi::Runtime &rt) {
+        return facebook::jsi::Object(rt);
+    }
+
+    virtual facebook::jsi::Object createBubblingEventTypes(facebook::jsi::Runtime &rt) {
+        return facebook::jsi::Object(rt);
+    }
+
+    virtual facebook::jsi::Object createDirectEventTypes(facebook::jsi::Runtime &rt) {
+        return facebook::jsi::Object(rt);
+    }
+
+    static facebook::jsi::Object createBubblingCapturedEvent(facebook::jsi::Runtime &runtime, std::string name) {
+        facebook::jsi::Object event(runtime);
+        facebook::jsi::Object phasedRegistrationNames(runtime);
+        phasedRegistrationNames.setProperty(runtime, "bubbled", name);
+        phasedRegistrationNames.setProperty(runtime, "captured", name + "Capture");
+        event.setProperty(runtime, "phasedRegistrationNames", phasedRegistrationNames);
+        return event;
+    }
+
+    static facebook::jsi::Object createDirectEvent(facebook::jsi::Runtime &runtime, std::string name) {
+        facebook::jsi::Object event(runtime);
+        event.setProperty(runtime, "registrationName", name);
+        return event;
+    }
+};
+} // namespace rnoh

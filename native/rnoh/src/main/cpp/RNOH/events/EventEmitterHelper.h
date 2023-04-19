@@ -9,7 +9,8 @@ namespace rnoh {
 
 enum ReactEventKind {
     TOUCH = 0,
-    TEXT_INPUT_CHANGE = 1
+    TEXT_INPUT_CHANGE = 1,
+    SCROLL = 2,
 };
 
 class EventEmitterHelper {
@@ -27,6 +28,8 @@ class EventEmitterHelper {
     void emitTouchEvent(facebook::react::Tag tag, napi_value eventObject);
 
     void emitTextInputChangedEvent(facebook::react::Tag tag, napi_value eventObject);
+
+    void emitScrollEvent(facebook::react::Tag tag, napi_value eventObject);
 };
 
 } // namespace rnoh

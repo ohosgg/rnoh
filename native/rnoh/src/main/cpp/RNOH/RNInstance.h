@@ -35,7 +35,10 @@ class RNInstance {
           eventEmitterHelper(ArkJS(env), eventEmitterRegistry),
           m_turboModuleFactory(std::move(turboModuleFactory)) {}
 
-    void registerSurface(std::function<void(facebook::react::ShadowViewMutationList const &mutations)>);
+    void registerSurface(
+      MountingManager::TriggerUICallback,
+      MountingManager::CommandDispatcher
+    );
     void start();
     void runApplication(float width, float height);
     void emitEvent(facebook::react::Tag tag, ReactEventKind eventKind, napi_value eventObject);
@@ -44,6 +47,7 @@ class RNInstance {
     std::shared_ptr<facebook::react::ContextContainer> contextContainer;
     std::shared_ptr<facebook::react::Instance> instance;
     std::function<void(facebook::react::ShadowViewMutationList const &mutations)> onComponentDescriptorTreeChanged;
+    MountingManager::CommandDispatcher commandDispatcher;
     facebook::react::SurfaceHandler surfaceHandler;
     std::unique_ptr<facebook::react::Scheduler> scheduler;
     std::unique_ptr<SchedulerDelegate> schedulerDelegate;

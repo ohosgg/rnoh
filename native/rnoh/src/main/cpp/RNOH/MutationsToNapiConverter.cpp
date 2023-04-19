@@ -3,6 +3,8 @@
 #include <react/renderer/components/text/ParagraphState.h>
 #include <react/renderer/components/text/ParagraphProps.h>
 #include <react/renderer/components/textinput/TextInputProps.h>
+#include <react/renderer/components/scrollview/ScrollViewState.h>
+#include <react/renderer/components/scrollview/ScrollViewProps.h>
 #include <react/renderer/core/ConcreteState.h>
 
 #include "RNOH/MutationsToNapiConverter.h"
@@ -52,11 +54,15 @@ napi_value MutationsToNapiConverter::convert(react::ShadowViewMutationList const
 
 napi_value MutationsToNapiConverter::convertShadowView(react::ShadowView const shadowView) {
     auto propsObjBuilder = m_arkJs.createObjectBuilder();
+    auto stateObjBuilder = m_arkJs.createObjectBuilder();
+
+    // layout metrics
     propsObjBuilder
         .addProperty("top", shadowView.layoutMetrics.frame.origin.y)
         .addProperty("left", shadowView.layoutMetrics.frame.origin.x)
         .addProperty("width", shadowView.layoutMetrics.frame.size.width)
         .addProperty("height", shadowView.layoutMetrics.frame.size.height);
+
     if (auto props = std::dynamic_pointer_cast<const react::ImageProps>(shadowView.props)) {
         react::ImageSource imageSource;
         if (props->sources.size() > 0) {
@@ -93,11 +99,29 @@ napi_value MutationsToNapiConverter::convertShadowView(react::ShadowView const s
             .addProperty("text", props->text)
             .addProperty("fontColor", props->textAttributes.foregroundColor)
             .addProperty("fontSize", props->textAttributes.fontSize);
-    }    
+    }
+    if (auto props = std::dynamic_pointer_cast<const react::ScrollViewProps>(shadowView.props)) {
+        propsObjBuilder
+            .addProperty("contentOffsetX", props->contentOffset.x)
+            .addProperty("contentOffsetY", props->contentOffset.y)
+            .addProperty("scrollEnabled", props->scrollEnabled)
+            .addProperty("bounces", props->bounces)
+            .addProperty("showsHorizontalScrollIndicator", props->showsHorizontalScrollIndicator)
+            .addProperty("showsVerticalScrollIndicator", props->showsVerticalScrollIndicator);
+    }
+    if (auto state = std::dynamic_pointer_cast<const react::ConcreteState<react::ScrollViewState>>(shadowView.state)) {
+        auto data = state->getData();
+        stateObjBuilder
+            .addProperty("contentOffsetX", data.contentOffset.x)
+            .addProperty("contentOffsetY", data.contentOffset.y)
+            .addProperty("contentSizeWidth", data.getContentSize().width)
+            .addProperty("contentSizeHeight", data.getContentSize().height);
+    }
     return m_arkJs.createObjectBuilder()
         .addProperty("tag", shadowView.tag)
         .addProperty("type", shadowView.componentName)
         .addProperty("props", propsObjBuilder.build())
+        .addProperty("state", stateObjBuilder.build())
         .addProperty("childrenTags", m_arkJs.createArray())
         .build();
 }

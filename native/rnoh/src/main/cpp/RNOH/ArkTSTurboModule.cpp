@@ -11,15 +11,13 @@
 using namespace rnoh;
 using namespace facebook;
 
-using IntermediaryCallback = std::function<void(std::vector<folly::dynamic>)>;
-using IntermediaryArg = std::variant<folly::dynamic, IntermediaryCallback>;
+using IntermediaryArg = ArkJS::IntermediaryArg;
+using IntermediaryCallback = ArkJS::IntermediaryCallback;
 
-std::vector<IntermediaryArg> convertJSIValuesToIntermediaryValues(jsi::Runtime &runtime, std::shared_ptr<react::CallInvoker> jsInvoker, const jsi::Value *jsiArgs, size_t argsCount);
-IntermediaryCallback createIntermediaryCallback(std::weak_ptr<react::CallbackWrapper>);
-const std::vector<jsi::Value> convertDynamicsToJSIValues(jsi::Runtime &rt, const std::vector<folly::dynamic> &dynamics);
-napi_value convertIntermediaryValueToNapiValue(ArkJS arkJs, IntermediaryArg arg);
-std::vector<napi_value> convertIntermediaryValuesToNapiValues(ArkJS arkJs, std::vector<IntermediaryArg> args);
-jsi::Value preparePromiseResolverResult(jsi::Runtime &rt, const std::vector<folly::dynamic> args);
+std::vector<IntermediaryArg> convertJSIValuesToIntermediaryValues(facebook::jsi::Runtime &runtime, std::shared_ptr<facebook::react::CallInvoker> jsInvoker, const facebook::jsi::Value *jsiArgs, size_t argsCount);
+IntermediaryCallback createIntermediaryCallback(std::weak_ptr<facebook::react::CallbackWrapper>);
+const std::vector<facebook::jsi::Value> convertDynamicsToJSIValues(facebook::jsi::Runtime &rt, const std::vector<folly::dynamic> &dynamics);
+facebook::jsi::Value preparePromiseResolverResult(facebook::jsi::Runtime &rt, const std::vector<folly::dynamic> args);
 std::string preparePromiseRejectionResult(const std::vector<folly::dynamic> args);
 
 ArkTSTurboModule::ArkTSTurboModule(Context ctx, std::string name) : m_ctx(ctx), TurboModule(ctx, name) {}
@@ -29,7 +27,7 @@ jsi::Value ArkTSTurboModule::call(jsi::Runtime &runtime, const std::string &meth
     auto args = convertJSIValuesToIntermediaryValues(runtime, m_ctx.jsInvoker, jsiArgs, argsCount);
     m_ctx.taskExecutor->runSyncTask(TaskThread::MAIN, [ctx = m_ctx, &methodName, &args, &result, &runtime]() {
         ArkJS arkJs(ctx.env);
-        auto napiArgs = convertIntermediaryValuesToNapiValues(arkJs, args);
+        auto napiArgs = arkJs.convertIntermediaryValuesToNapiValues(args);
         auto napiTurboModuleObject = arkJs.getObject(ctx.arkTsTurboModuleInstanceRef);
         auto napiResult = napiTurboModuleObject.call(methodName, napiArgs);
         result = arkJs.getDynamic(napiResult);
@@ -42,7 +40,7 @@ jsi::Value ArkTSTurboModule::callAsync(jsi::Runtime &runtime, const std::string 
     napi_value napiResult;
     m_ctx.taskExecutor->runSyncTask(TaskThread::MAIN, [ctx = m_ctx, &methodName, &args, &runtime, &napiResult]() {
         ArkJS arkJs(ctx.env);
-        auto napiArgs = convertIntermediaryValuesToNapiValues(arkJs, args);
+        auto napiArgs = arkJs.convertIntermediaryValuesToNapiValues(args);
         auto napiTurboModuleObject = arkJs.getObject(ctx.arkTsTurboModuleInstanceRef);
         napiResult = napiTurboModuleObject.call(methodName, napiArgs);
     });
@@ -106,25 +104,6 @@ const std::vector<jsi::Value> convertDynamicsToJSIValues(jsi::Runtime &rt, const
         values.push_back(jsi::valueFromDynamic(rt, dynamic));
     }
     return values;
-}
-
-std::vector<napi_value> convertIntermediaryValuesToNapiValues(ArkJS arkJs, std::vector<IntermediaryArg> args) {
-    std::vector<napi_value> napiArgs;
-    for (auto arg : args) {
-        napiArgs.push_back(convertIntermediaryValueToNapiValue(arkJs, arg));
-    }
-    return napiArgs;
-}
-
-napi_value convertIntermediaryValueToNapiValue(ArkJS arkJs, IntermediaryArg arg) {
-    try {
-        return arkJs.createFromDynamic(std::get<folly::dynamic>(arg));
-    } catch (const std::bad_variant_access &e) {
-    }
-    try {
-        return arkJs.createSingleUseCallback(std::move(std::get<IntermediaryCallback>(arg)));
-    } catch (const std::bad_variant_access &e) {
-    }
 }
 
 jsi::Value preparePromiseResolverResult(jsi::Runtime &rt, const std::vector<folly::dynamic> args) {

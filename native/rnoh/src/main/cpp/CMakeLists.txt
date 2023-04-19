@@ -353,7 +353,7 @@ add_react_common_subdir(react/renderer/components/image)
 add_react_common_subdir(react/renderer/components/text)
 # add_react_common_subdir(react/renderer/components/unimplementedview)
 # add_react_common_subdir(react/renderer/components/modal)
-# add_react_common_subdir(react/renderer/components/scrollview)
+add_react_common_subdir(react/renderer/components/scrollview)
 add_react_common_subdir(react/renderer/leakchecker)
 add_react_common_subdir(react/renderer/textlayoutmanager)
 add_react_common_subdir(react/utils)
@@ -413,6 +413,7 @@ target_link_libraries(rnoh PUBLIC
     rrc_image
     rrc_text
     rrc_textinput
+    rrc_scrollview
     react_nativemodule_core
     react_bridging
 )

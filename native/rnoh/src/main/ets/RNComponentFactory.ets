@@ -2,6 +2,7 @@ import { RNView, ViewDescriptor } from "./RNView"
 import { RNImage, ImageDescriptor } from "./RNImage"
 import { RNTextInput, TextInputDescriptor } from "./RNTextInput"
 import { RNText, TextDescriptor } from "./RNText"
+import { RNScrollView, ScrollViewDescriptor } from "./RNScrollView"
 import { Descriptor } from "./descriptor"
 import { DescriptorRegistry } from "./DescriptorRegistry"
 
@@ -11,6 +12,7 @@ const nullDescriptor = {
   type: "null",
   tag: -1,
   props: {},
+  state: {},
   childrenTags: []
 }
 
@@ -27,8 +29,6 @@ export struct RNComponentFactory {
 
   aboutToAppear() {
     this.descriptor = this.descriptorRegistry.getDescriptor(this.tag)
-    console.log(`[RNOH] aboutToAppear tag: ${this.tag}`)
-    console.log(`[RNOH] descriptor: ${JSON.stringify(this.descriptorRegistry.getDescriptor(this.tag))}`)
     this.cleanupCallback = this.descriptorRegistry.registerComponentUpdateCallback(
       this.tag,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
@@ -62,6 +62,12 @@ export struct RNComponentFactory {
       RNTextInput({ tag: this.tag, descriptor: this.descriptor as TextInputDescriptor })
     } else if (this.getDescriptorType() === "Paragraph") {
       RNText({ tag: this.tag, descriptor: this.descriptor as TextDescriptor })
+    } else if (this.getDescriptorType() === "ScrollView") {
+      RNScrollView({
+        tag: this.tag,
+        renderDescriptors: this.renderDescriptors,
+        descriptor: this.descriptor as ScrollViewDescriptor
+      })
     }
   }
 }

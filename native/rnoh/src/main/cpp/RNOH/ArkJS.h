@@ -5,17 +5,20 @@
 #include <array>
 #include <vector>
 #include <string>
+#include <functional>
+#include <variant>
+#include <folly/dynamic.h>
 #include <react/renderer/graphics/Float.h>
 #include <react/renderer/graphics/Color.h>
-#include <folly/dynamic.h>
-#include <functional>
 
 class RNOHNapiObjectBuilder;
 class RNOHNapiObject;
 
-
 class ArkJS {
   public:
+    using IntermediaryCallback = std::function<void(std::vector<folly::dynamic>)>;
+    using IntermediaryArg = std::variant<folly::dynamic, IntermediaryCallback>;
+
     ArkJS(napi_env env);
 
     template <size_t args_count>
@@ -93,6 +96,10 @@ class ArkJS {
     void throwError(const char *message);
 
     napi_valuetype getType(napi_value value);
+
+    napi_value convertIntermediaryValueToNapiValue(IntermediaryArg arg);
+
+    std::vector<napi_value> convertIntermediaryValuesToNapiValues(std::vector<IntermediaryArg> args);
 
   private:
     napi_env m_env;

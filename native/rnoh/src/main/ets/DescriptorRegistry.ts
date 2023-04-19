@@ -37,7 +37,6 @@ export class DescriptorRegistry {
   }
 
   private applyMutation(mutation: Mutation): Tag[] {
-    console.log("[RNOH] mutation: ", JSON.stringify(mutation))
     if (mutation.type === MutationType.CREATE) {
       this.descriptorByTag[mutation.descriptor.tag] = mutation.descriptor
       return []
@@ -63,5 +62,7 @@ export class DescriptorRegistry {
       delete this.descriptorByTag[mutation.tag]
       return []
     }
+
+    return []
   }
 }

@@ -1,6 +1,10 @@
 #pragma once
 #include "napi/native_api.h"
 #include <jsi/jsi.h>
+#include <variant>
+#include <jsi/JSIDynamic.h>
+#include <ReactCommon/CallbackWrapper.h>
+#include <ReactCommon/TurboModuleUtils.h>
 
 #include "ArkJS.h"
 #include "RNOH/TaskExecutor.h"

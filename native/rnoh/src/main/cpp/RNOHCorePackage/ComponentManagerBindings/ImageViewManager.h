@@ -1,5 +1,5 @@
 #pragma once
-#include "RNOHCorePackage/ViewManager.h"
+#include "RNOHCorePackage/ComponentManagerBindings/ViewManager.h"
 
 namespace rnoh {
 class ImageViewManager : public ViewManager {

@@ -10,8 +10,10 @@
 #include <react/renderer/mounting/ShadowViewMutation.h>
 #include "RNOH/MutationsToNapiConverter.h"
 #include "RNOH/TurboModuleFactory.h"
-#include "RNOHCorePackage/ViewManager.h"
-#include "RNOHCorePackage/ImageViewManager.h"
+#include "RNOH/ArkTSTurboModule.h"
+#include "RNOHCorePackage/ComponentManagerBindings/ViewManager.h"
+#include "RNOHCorePackage/ComponentManagerBindings/ImageViewManager.h"
+#include "RNOHCorePackage/ComponentManagerBindings/ScrollViewManager.h"
 
 using namespace rnoh;
 
@@ -27,6 +29,7 @@ void createRNOHInstance(napi_env env) {
         {"RCTImageView", std::make_shared<ImageViewManager>()},
         {"RCTVirtualText", std::make_shared<ViewManager>()},
         {"RCTSinglelineTextInputView", std::make_shared<ViewManager>()},
+        {"RCTScrollView", std::make_shared<ScrollViewManager>()}
     };
     auto turboModuleFactory = TurboModuleFactory(env, arkTsTurboModuleProviderRef, std::move(componentManagerBindingByName), taskExecutor);
     rnohInstance = std::make_unique<RNInstance>(env,
@@ -50,8 +53,9 @@ static napi_value registerTurboModuleProvider(napi_env env, napi_callback_info i
 
 static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 1);
+    auto args = arkJs.getCallbackArgs(info, 2);
     listener_ref = arkJs.createReference(args[0]);
+    auto commandDispatcherRef = arkJs.createReference(args[1]);
     rnohInstance->registerSurface([env](auto const &mutations) {
         ArkJS ark_js(env);
         MutationsToNapiConverter mutationsToNapiConverter(env);
@@ -59,6 +63,13 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
         std::array<napi_value, 1> args = {napiMutations};
         auto listener = ark_js.getReferenceValue(listener_ref);
         ark_js.call(listener, args);
+    },
+    [env, commandDispatcherRef](auto tag, auto const &commandName, auto args) {
+        ArkJS arkJs(env);
+        auto napiArgs = arkJs.convertIntermediaryValueToNapiValue(args);
+        std::array<napi_value, 3> napiArgsArray = {arkJs.createDouble(tag), arkJs.createString(commandName), napiArgs};
+        auto commandDispatcher = arkJs.getReferenceValue(commandDispatcherRef);
+        arkJs.call(commandDispatcher, napiArgsArray);
     });
     return arkJs.getUndefined();
 }

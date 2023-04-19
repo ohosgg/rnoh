@@ -12,6 +12,7 @@
 #include <react/renderer/components/text/RawTextComponentDescriptor.h>
 #include <react/renderer/components/text/ParagraphComponentDescriptor.h>
 #include <react/renderer/components/textinput/TextInputComponentDescriptor.h>
+#include <react/renderer/components/scrollview/ScrollViewComponentDescriptor.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProvider.h>
 #include "RNOH/events/EventEmitterRegistry.h"
 #include "RNOH/TurboModuleProvider.h"
@@ -20,8 +21,12 @@
 using namespace facebook;
 using namespace rnoh;
 
-void RNInstance::registerSurface(std::function<void(react::ShadowViewMutationList const &mutations)> listener) {
-    this->onComponentDescriptorTreeChanged = listener;
+void RNInstance::registerSurface(
+    MountingManager::TriggerUICallback shadowTreeListener,
+    MountingManager::CommandDispatcher commandDispatcher
+) {
+    this->onComponentDescriptorTreeChanged = shadowTreeListener;
+    this->commandDispatcher = commandDispatcher;
 }
 
 void RNInstance::start() {
@@ -63,6 +68,7 @@ void RNInstance::initializeComponentDescriptorRegistry() {
     this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::RawTextComponentDescriptor>());
     this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::ParagraphComponentDescriptor>());
     this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::TextInputComponentDescriptor>());
+    this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::ScrollViewComponentDescriptor>());
 }
 
 void RNInstance::initializeScheduler() {
@@ -99,6 +105,9 @@ void RNInstance::initializeScheduler() {
         [this](react::ShadowViewMutationList mutations) {
             LOG(INFO) << "Triggering ui update";
             this->onComponentDescriptorTreeChanged(mutations);
+        },
+        [this](auto tag, auto commandName, auto args) {
+            this->commandDispatcher(tag, commandName, args);
         }));
     this->scheduler = std::make_unique<react::Scheduler>(schedulerToolbox, nullptr, schedulerDelegate.get());
 }

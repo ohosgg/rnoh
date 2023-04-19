@@ -19,7 +19,10 @@ class SchedulerDelegate : public facebook::react::SchedulerDelegate {
     void schedulerDidRequestPreliminaryViewAllocation(react::SurfaceId surfaceId, const react::ShadowNode &shadowView) override {}
 
     void schedulerDidDispatchCommand(
-        const react::ShadowView &shadowView, std::string const &commandName, folly::dynamic const &args) override {
+        const react::ShadowView &shadowView,
+        std::string const &commandName,
+        folly::dynamic const &args) override {
+        mountingManager.dispatchCommand(shadowView.tag, commandName, args);
     }
 
     void schedulerDidSendAccessibilityEvent(const react::ShadowView &shadowView, std::string const &eventType) override {

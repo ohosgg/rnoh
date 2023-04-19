@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, TextInput, Text } from 'react-native';
+import { View, ScrollView, StyleSheet, Image, TextInput, Text } from 'react-native';
 import SampleTurboModule from './SampleTurboModule';
 import { PlatformConstantsTestSuite, PixelRatioTestSuite } from './tests';
 import { Tester } from './components';
@@ -8,8 +8,10 @@ function App() {
   const [username, setUsername] = React.useState("");
   const [consoleOutput, setConsoleOutput] = React.useState("");
 
+  const scrollRef = React.useRef<ScrollView>(null);
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} ref={scrollRef}>
       <View style={styles.console}>
         <Text style={{ width: "100%", height: "100%", color: "white" }}>
           {consoleOutput}
@@ -55,7 +57,13 @@ function App() {
         <Text style={styles.label}>Your username</Text>
         <TextInput style={styles.textInput} onChangeText={setUsername} />
       </View>
-    </View>
+      <View 
+        style={styles.button}
+        onTouchEnd={() => scrollRef.current?.scrollTo({y: 0, animated: false})}
+      >
+        <Text style={styles.buttonText}>Scroll To Top</Text>
+      </View>
+    </ScrollView>
   );
 }
 

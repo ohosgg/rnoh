@@ -14,6 +14,9 @@ module.exports = {
   get PixelRatio() {
     return require('react-native/Libraries/Utilities/PixelRatio');
   },
+  get ScrollView() {
+    return require('react-native/Libraries/Components/ScrollView/ScrollView');
+  },
   get StyleSheet() {
     return require('react-native/Libraries/StyleSheet/StyleSheet');
   },
