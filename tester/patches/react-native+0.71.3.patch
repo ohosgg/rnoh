@@ -11,7 +11,7 @@ index 32846d4..b3734a9 100644
    const handleError = (e: mixed, isFatal: boolean) => {
      try {
 diff --git a/node_modules/react-native/Libraries/Image/NativeImageLoaderAndroid.js b/node_modules/react-native/Libraries/Image/NativeImageLoaderAndroid.js
-index 121de3b..cd230c2 100644
+index 121de3b..56164be 100644
 --- a/node_modules/react-native/Libraries/Image/NativeImageLoaderAndroid.js
 +++ b/node_modules/react-native/Libraries/Image/NativeImageLoaderAndroid.js
 @@ -34,4 +34,7 @@ export interface Spec extends TurboModule {
@@ -81,7 +81,7 @@ index e1329e8..ea2376c 100644
 +
 +
 diff --git a/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsIOS.js b/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsIOS.js
-index cf60d5e..2a1b062 100644
+index cf60d5e..d1a686e 100644
 --- a/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsIOS.js
 +++ b/node_modules/react-native/Libraries/Utilities/NativePlatformConstantsIOS.js
 @@ -8,26 +8,26 @@
@@ -120,7 +120,6 @@ index cf60d5e..2a1b062 100644
 +export default (TurboModuleRegistry.getEnforcing < Spec > (
    'PlatformConstants',
  ): Spec);
-\ No newline at end of file
 diff --git a/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js b/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js
 index 6d0efb5..85113c7 100644
 --- a/node_modules/react-native/Libraries/Utilities/createPerformanceLogger.js
@@ -136,7 +135,7 @@ index 6d0efb5..85113c7 100644
    _timespans: {[key: string]: ?Timespan} = {};
 diff --git a/node_modules/react-native/scripts/.packager.bat b/node_modules/react-native/scripts/.packager.bat
 new file mode 100644
-index 0000000..e89260e
+index 0000000..7be09d9
 --- /dev/null
 +++ b/node_modules/react-native/scripts/.packager.bat
 @@ -0,0 +1 @@

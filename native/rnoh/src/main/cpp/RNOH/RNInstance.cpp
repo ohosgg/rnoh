@@ -137,3 +137,9 @@ void RNInstance::runApplication(float width, float height) {
 void RNInstance::emitEvent(react::Tag tag, ReactEventKind eventKind, napi_value eventObject) {
     this->eventEmitterHelper.emitEvent(tag, eventKind, eventObject);
 }
+
+void RNInstance::callFunction(std::string &&module, std::string &&method, folly::dynamic &&params) {
+    this->taskExecutor->runTask(TaskThread::JS, [this, module = std::move(module), method = std::move(method), params = std::move(params)] () mutable {
+        this->instance->callJSFunction(std::move(module), std::move(method), std::move(params));
+    });
+}

@@ -7,7 +7,7 @@ import { Tag } from "./descriptor";
 
 export class RNInstance {
   private packages: RNPackage[];
-  private ctx: RNPackageContext = { reactNativeVersion: "0.0.0" };
+  private ctx: RNPackageContext = { reactNativeVersion: "0.0.0", rnInstance: this };
   private turboModuleProvider: TurboModuleProvider;
   private rnAppNapiBridge: any;
 
@@ -51,5 +51,9 @@ export class RNInstance {
 
   run(initialSurfaceWidth: number, initialSurfaceHeight: number) {
     this.rnAppNapiBridge.startReactNative(initialSurfaceWidth, initialSurfaceHeight);
+  }
+
+  callRNFunction(moduleName: string, functionName: string, args: unknown[]): void {
+    this.rnAppNapiBridge.callRNFunction(moduleName, functionName, args);
   }
 }

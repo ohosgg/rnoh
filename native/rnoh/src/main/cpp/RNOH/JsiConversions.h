@@ -1,6 +1,7 @@
 #pragma once 
 #include <napi/native_api.h>
 #include <jsi/jsi.h>
+#include <folly/dynamic.h>
 
 namespace rnoh {
 

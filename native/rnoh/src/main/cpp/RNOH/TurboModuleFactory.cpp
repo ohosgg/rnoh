@@ -6,6 +6,7 @@
 #include "RNOHCorePackage/generated/PlatformConstantsTurboModule.h"
 #include "RNOHCorePackage/generated/DeviceInfoTurboModule.h"
 #include "RNOHCorePackage/generated/SourceCodeTurboModule.h"
+#include "RNOHCorePackage/generated/TimingTurboModule.h"
 
 using namespace rnoh;
 using namespace facebook;
@@ -38,6 +39,8 @@ TurboModuleFactory::SharedTurboModule TurboModuleFactory::create(std::shared_ptr
         return std::make_shared<DeviceInfoTurboModule>(ctx, name);
     } else if (name == "SourceCode") {
         return std::make_shared<SourceCodeTurboModule>(ctx, name);
+    } else if (name == "Timing") {
+        return std::make_shared<TimingTurboModule>(ctx, name);
     } else {
         return m_delegates[0]->createTurboModule(ctx, "fail");
     }

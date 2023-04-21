@@ -69,20 +69,22 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
     auto args = arkJs.getCallbackArgs(info, 2);
     listener_ref = arkJs.createReference(args[0]);
     auto commandDispatcherRef = arkJs.createReference(args[1]);
-    rnohInstance->registerSurface([env](auto const &mutations) {
-        ArkJS ark_js(env);
-        MutationsToNapiConverter mutationsToNapiConverter(env);
-        auto napiMutations = mutationsToNapiConverter.convert(mutations);
-        std::array<napi_value, 1> args = {napiMutations};
-        auto listener = ark_js.getReferenceValue(listener_ref);
-        ark_js.call(listener, args); },
-                                  [env, commandDispatcherRef](auto tag, auto const &commandName, auto args) {
-                                      ArkJS arkJs(env);
-                                      auto napiArgs = arkJs.convertIntermediaryValueToNapiValue(args);
-                                      std::array<napi_value, 3> napiArgsArray = {arkJs.createDouble(tag), arkJs.createString(commandName), napiArgs};
-                                      auto commandDispatcher = arkJs.getReferenceValue(commandDispatcherRef);
-                                      arkJs.call(commandDispatcher, napiArgsArray);
-                                  });
+    rnohInstance->registerSurface(
+        [env](auto const &mutations) {
+            ArkJS ark_js(env);
+            MutationsToNapiConverter mutationsToNapiConverter(env);
+            auto napiMutations = mutationsToNapiConverter.convert(mutations);
+            std::array<napi_value, 1> args = {napiMutations};
+            auto listener = ark_js.getReferenceValue(listener_ref);
+            ark_js.call(listener, args); 
+        },
+        [env, commandDispatcherRef](auto tag, auto const &commandName, auto args) {
+            ArkJS arkJs(env);
+            auto napiArgs = arkJs.convertIntermediaryValueToNapiValue(args);
+            std::array<napi_value, 3> napiArgsArray = {arkJs.createDouble(tag), arkJs.createString(commandName), napiArgs};
+            auto commandDispatcher = arkJs.getReferenceValue(commandDispatcherRef);
+            arkJs.call(commandDispatcher, napiArgsArray);
+        });
     return arkJs.getUndefined();
 }
 
@@ -106,6 +108,18 @@ static napi_value emitEvent(napi_env env, napi_callback_info info) {
     return arkJs.getUndefined();
 }
 
+static napi_value callRNFunction(napi_env env, napi_callback_info info) {
+    ArkJS arkJs(env);
+    auto args = arkJs.getCallbackArgs(info, 3);
+    auto moduleString = arkJs.getString(args[0]);
+    auto nameString = arkJs.getString(args[1]);
+    auto argsDynamic = arkJs.getDynamic(args[2]);
+
+    rnohInstance->callFunction(std::move(moduleString), std::move(nameString), std::move(argsDynamic));
+
+    return arkJs.getUndefined();
+}
+
 EXTERN_C_START
 static napi_value Init(napi_env env, napi_value exports) {
     napi_property_descriptor desc[] = {
@@ -113,7 +127,8 @@ static napi_value Init(napi_env env, napi_value exports) {
         {"initializeReactNative", nullptr, initializeReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"startReactNative", nullptr, startReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"emitEvent", nullptr, emitEvent, nullptr, nullptr, nullptr, napi_default, nullptr},
-        {"registerTurboModuleProvider", nullptr, registerTurboModuleProvider, nullptr, nullptr, nullptr, napi_default, nullptr}};
+        {"registerTurboModuleProvider", nullptr, registerTurboModuleProvider, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"callRNFunction", nullptr, callRNFunction, nullptr, nullptr, nullptr, napi_default, nullptr}};
 
     napi_define_properties(env, exports, sizeof(desc) / sizeof(napi_property_descriptor), desc);
     return exports;

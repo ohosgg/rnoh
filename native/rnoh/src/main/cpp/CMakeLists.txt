@@ -393,6 +393,7 @@ add_library(rnoh SHARED
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/generated/PlatformConstantsTurboModule.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/generated/DeviceInfoTurboModule.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/generated/SourceCodeTurboModule.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/generated/TimingTurboModule.cpp"
 )
 target_include_directories(rnoh PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"

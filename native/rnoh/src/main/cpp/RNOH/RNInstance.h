@@ -42,6 +42,7 @@ class RNInstance {
     void start();
     void runApplication(float width, float height);
     void emitEvent(facebook::react::Tag tag, ReactEventKind eventKind, napi_value eventObject);
+    void callFunction(std::string &&module, std::string &&method, folly::dynamic &&params);
 
   private:
     std::shared_ptr<facebook::react::ContextContainer> contextContainer;
