@@ -11,7 +11,7 @@ using namespace facebook;
 TurboModuleProvider::TurboModuleProvider(std::shared_ptr<react::CallInvoker> jsInvoker,
                                                  TurboModuleFactory &&turboModuleFactory)
     : m_jsInvoker(jsInvoker),
-      m_createTurboModule([factory = std::move(turboModuleFactory), env = TurboModuleFactory::arkTsTurboModuleFactoryEnv](
+      m_createTurboModule([factory = std::move(turboModuleFactory)](
                               std::string const &moduleName,
                               std::shared_ptr<react::CallInvoker> jsInvoker) -> std::shared_ptr<react::TurboModule> {
           return factory.create(jsInvoker, moduleName);

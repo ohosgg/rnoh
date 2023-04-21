@@ -14,6 +14,7 @@
 #include "RNOHCorePackage/ComponentManagerBindings/ViewManager.h"
 #include "RNOHCorePackage/ComponentManagerBindings/ImageViewManager.h"
 #include "RNOHCorePackage/ComponentManagerBindings/ScrollViewManager.h"
+#include "RNOH/PackageProvider.h"
 
 using namespace rnoh;
 
@@ -22,19 +23,31 @@ static napi_ref arkTsTurboModuleProviderRef;
 
 std::unique_ptr<RNInstance> rnohInstance;
 
+std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> createTurboModuleFactoryDelegatesFromPackages(std::vector<std::shared_ptr<Package>> packages) {
+    std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> results;
+    for (auto &package : packages) {
+        results.push_back(package->createTurboModuleFactory());
+    }
+    return results;
+}
+
 void createRNOHInstance(napi_env env) {
+    PackageProvider packageProvider;
+    auto packages = packageProvider.getPackages({});
     auto taskExecutor = std::make_shared<TaskExecutor>(env);
     const ComponentManagerBindingByString componentManagerBindingByName = {
         {"RCTView", std::make_shared<ViewManager>()},
         {"RCTImageView", std::make_shared<ImageViewManager>()},
         {"RCTVirtualText", std::make_shared<ViewManager>()},
         {"RCTSinglelineTextInputView", std::make_shared<ViewManager>()},
-        {"RCTScrollView", std::make_shared<ScrollViewManager>()}
-    };
-    auto turboModuleFactory = TurboModuleFactory(env, arkTsTurboModuleProviderRef, std::move(componentManagerBindingByName), taskExecutor);
+        {"RCTScrollView", std::make_shared<ScrollViewManager>()}};
+    auto turboModuleFactory = TurboModuleFactory(env, arkTsTurboModuleProviderRef,
+                                                 std::move(componentManagerBindingByName),
+                                                 taskExecutor,
+                                                 createTurboModuleFactoryDelegatesFromPackages(packages));
     rnohInstance = std::make_unique<RNInstance>(env,
-                                                  std::move(turboModuleFactory),
-                                                  taskExecutor);
+                                                std::move(turboModuleFactory),
+                                                taskExecutor);
 }
 
 static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
@@ -62,15 +75,14 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
         auto napiMutations = mutationsToNapiConverter.convert(mutations);
         std::array<napi_value, 1> args = {napiMutations};
         auto listener = ark_js.getReferenceValue(listener_ref);
-        ark_js.call(listener, args);
-    },
-    [env, commandDispatcherRef](auto tag, auto const &commandName, auto args) {
-        ArkJS arkJs(env);
-        auto napiArgs = arkJs.convertIntermediaryValueToNapiValue(args);
-        std::array<napi_value, 3> napiArgsArray = {arkJs.createDouble(tag), arkJs.createString(commandName), napiArgs};
-        auto commandDispatcher = arkJs.getReferenceValue(commandDispatcherRef);
-        arkJs.call(commandDispatcher, napiArgsArray);
-    });
+        ark_js.call(listener, args); },
+                                  [env, commandDispatcherRef](auto tag, auto const &commandName, auto args) {
+                                      ArkJS arkJs(env);
+                                      auto napiArgs = arkJs.convertIntermediaryValueToNapiValue(args);
+                                      std::array<napi_value, 3> napiArgsArray = {arkJs.createDouble(tag), arkJs.createString(commandName), napiArgs};
+                                      auto commandDispatcher = arkJs.getReferenceValue(commandDispatcherRef);
+                                      arkJs.call(commandDispatcher, napiArgsArray);
+                                  });
     return arkJs.getUndefined();
 }
 

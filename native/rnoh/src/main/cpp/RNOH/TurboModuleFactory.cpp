@@ -10,13 +10,16 @@
 using namespace rnoh;
 using namespace facebook;
 
-napi_env TurboModuleFactory::arkTsTurboModuleFactoryEnv;
-
-TurboModuleFactory::TurboModuleFactory(napi_env env, napi_ref arkTsTurboModuleProviderRef, const ComponentManagerBindingByString &&componentManagerBindingByString, std::shared_ptr<TaskExecutor> taskExecutor)
+TurboModuleFactory::TurboModuleFactory(napi_env env,
+                                       napi_ref arkTsTurboModuleProviderRef,
+                                       const ComponentManagerBindingByString &&componentManagerBindingByString,
+                                       std::shared_ptr<TaskExecutor> taskExecutor,
+                                       std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> delegates)
     : m_env(env),
       m_arkTsTurboModuleProviderRef(arkTsTurboModuleProviderRef),
       m_componentManagerBindingByString(std::move(componentManagerBindingByString)),
-      m_taskExecutor(taskExecutor) {}
+      m_taskExecutor(taskExecutor),
+      m_delegates(delegates) {}
 
 TurboModuleFactory::SharedTurboModule TurboModuleFactory::create(std::shared_ptr<facebook::react::CallInvoker> jsInvoker, const std::string &name) const {
     LOG(INFO) << "Providing Turbo Module: " << name;
@@ -35,6 +38,8 @@ TurboModuleFactory::SharedTurboModule TurboModuleFactory::create(std::shared_ptr
         return std::make_shared<DeviceInfoTurboModule>(ctx, name);
     } else if (name == "SourceCode") {
         return std::make_shared<SourceCodeTurboModule>(ctx, name);
+    } else {
+        return m_delegates[0]->createTurboModule(ctx, "fail");
     }
 
     return this->handleUnregisteredModuleRequest(ctx, name);

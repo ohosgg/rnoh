@@ -9,7 +9,7 @@
     "install-rn-harmony": "cd ../react-native-harmony && npm pack && cd ../tester && npm uninstall react-native-harmony && npm i ../react-native-harmony/react-native-harmony-0.0.1.tgz",
     "bundle": "metro build index.js --platform harmony --out bundle.harmony.js --config metro.config.js --minify false",
     "bundle:clean": "npm run install-rn-harmony && npm run bundle",
-    "sync:native": "node ./updateNative.js bundle.harmony.js ../native/rnoh/src/main/cpp/jsbundle.h assets ../native/tester/src/main/ets/assets/assets",
+    "sync:native": "node ./updateNative.js bundle.harmony.js ../native/tester/src/main/cpp/jsbundle.h assets ../native/tester/src/main/ets/assets/assets",
     "patch:rn": "patch-package react-native",
     "dev": "npm run bundle:clean && npm run sync:native && npm run patch:rn",
     "dev:fast": "npm run bundle && npm run sync:native"

@@ -1,9 +1,9 @@
-import rnoh from 'librnoh.so'
 import { ColorSegments, Descriptor, Tag } from './descriptor'
 import { DescriptorRegistry } from './DescriptorRegistry'
 import { ReactEventKind } from './events'
 import { convertColorSegmentsToString } from './cpp-bridge-utils'
 import { ViewProps } from './RNView'
+import { RNInstance } from "./RNInstance"
 
 export type ImageProps = ViewProps & {
   uri: string
@@ -13,11 +13,12 @@ export type ImageDescriptor = Descriptor<"Image", ImageProps>
 
 @Component
 export struct RNImage {
+  @Consume("RNInstance") rnInstance: RNInstance
   @State tag: number = -1
   @Prop descriptor: ImageDescriptor
 
   onTouchEvent(event: TouchEvent) {
-    rnoh?.emitEvent(this.descriptor.tag, ReactEventKind.TOUCH, event)
+    this.rnInstance.emitEvent(this.descriptor.tag, ReactEventKind.TOUCH, event)
   }
 
   getSource() {

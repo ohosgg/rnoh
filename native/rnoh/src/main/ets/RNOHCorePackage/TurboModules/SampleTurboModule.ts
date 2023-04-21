@@ -1,4 +1,4 @@
-import { TurboModule } from "./TurboModule";
+import { TurboModule } from "../../TurboModule";
 
 export class SampleTurboModule extends TurboModule {
   voidFunc() {

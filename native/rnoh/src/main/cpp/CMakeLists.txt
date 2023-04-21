@@ -1,6 +1,4 @@
-
 cmake_minimum_required(VERSION 3.4.1)
-project(rnopenharmony)
 
 set(NATIVERENDER_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 set(third_party_dir "${CMAKE_CURRENT_SOURCE_DIR}/third-party")
@@ -288,7 +286,7 @@ set_property(TARGET hermes-engine::libhermes PROPERTY
                 IMPORTED_LOCATION "${third_party_dir}/prebuilt/${OHOS_ARCH}/libhermes.so")
 
 # -------- REACT COMMON --------
-set(REACT_COMMON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third-party/react_native_core/ReactCommon")
+set(REACT_COMMON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third-party/rn/ReactCommon")
 set(REACT_COMMON_PATCH_DIR "${patches_dir}/react_native_core")
 add_library(folly_runtime ALIAS folly_target)
 add_library(glog ALIAS glog_target)
@@ -375,7 +373,6 @@ target_compile_options(hermes_inspector PRIVATE ${folly_compile_options})
 # ----------------------------------------------------------------------------------------------------------------------
 
 add_library(rnoh SHARED
-    "${CMAKE_CURRENT_SOURCE_DIR}/rnoh_napi.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/RNInstance.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/MessageQueueThread.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/MutationsToNapiConverter.cpp"
@@ -390,18 +387,20 @@ add_library(rnoh SHARED
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/TurboModuleFactory.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/ArkTSTurboModule.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/JsiConversions.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/Package.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/UIManagerModule.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/SampleTurboModuleSpec.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/generated/PlatformConstantsTurboModule.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/generated/DeviceInfoTurboModule.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/generated/SourceCodeTurboModule.cpp"
 )
-target_include_directories(rnoh PRIVATE
+target_include_directories(rnoh PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${REACT_COMMON_DIR}"
     "${REACT_COMMON_DIR}/jsiexecutor"
     "${folly_include_dir}"
     "${hermes_include_dirs}"
+    "${RNOH_APP_DIR}"
 )
 target_link_libraries(rnoh PUBLIC
     libace_napi.z.so
@@ -418,5 +417,4 @@ target_link_libraries(rnoh PUBLIC
     react_nativemodule_core
     react_bridging
 )
-target_compile_options(rnoh PRIVATE ${folly_compile_options} -std=c++17)
-
+target_compile_options(rnoh PUBLIC ${folly_compile_options} -std=c++17)

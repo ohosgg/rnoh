@@ -1,9 +1,9 @@
-import rnoh from 'librnoh.so'
 import { ColorSegments, Descriptor, LayoutProps, Tag } from './descriptor'
 import { DescriptorRegistry } from './DescriptorRegistry'
 import { ReactEventKind } from './events'
 import { convertColorSegmentsToString } from './cpp-bridge-utils'
 import { ViewProps } from './RNView'
+import type { RNInstance } from './RNInstance'
 
 export type TextProps = ViewProps & {
   text?: string
@@ -16,11 +16,12 @@ export type TextDescriptor = Descriptor<"Paragraph", TextProps>
 
 @Component
 export struct RNText {
+  @Consume("RNInstance") rnInstance: RNInstance
   @State tag: number = -1
   @Prop descriptor: TextDescriptor
 
   onTouchEvent(event: TouchEvent) {
-    rnoh?.emitEvent(this.descriptor.tag, ReactEventKind.TOUCH, event)
+    this.rnInstance.emitEvent(this.descriptor.tag, ReactEventKind.TOUCH, event)
   }
 
   build() {

@@ -1,10 +1,9 @@
-import rnoh from 'librnoh.so'
-
 import { ColorSegments, Descriptor, Tag } from './descriptor'
-import { ViewProps } from "./RNView"
+import { ViewProps } from './RNView'
 import { convertColorSegmentsToString } from './cpp-bridge-utils'
 import { ReactEventKind } from './events'
-import { CommandDispatcher } from "./CommandDispatcher"
+import { CommandDispatcher } from './CommandDispatcher'
+import { RNInstance } from "./RNInstance"
 
 export type ScrollViewProps = ViewProps & {
   scrollEnabled?: boolean
@@ -24,6 +23,7 @@ export type ScrollViewDescriptor = Descriptor<"ScrollView", ScrollViewProps, Scr
 
 @Component
 export struct RNScrollView {
+  @Consume("RNInstance") rnInstance: RNInstance
   @State tag: number = -1
   @BuilderParam renderDescriptors: () => void
   @Prop descriptor: ScrollViewDescriptor
@@ -33,7 +33,7 @@ export struct RNScrollView {
 
   aboutToAppear() {
     this.cleanupCommandCallback = this.commandDispatcher.registerCommandCallback(
-      this.tag,
+    this.tag,
       (command, args) => {
         if (command === 'scrollTo') {
           this.scrollTo(args[0], args[1], args[2]);
@@ -48,7 +48,7 @@ export struct RNScrollView {
   scrollTo(xOffset, yOffset, animated) {
     const animation = animated ? { duration: 1000, curve: Curve.Smooth } : undefined;
 
-    setTimeout(() => this.scroller.scrollTo({xOffset, yOffset, animation}), 0);
+    setTimeout(() => this.scroller.scrollTo({ xOffset, yOffset, animation }), 0);
   }
 
   scrollDirection(): ScrollDirection {
@@ -74,7 +74,7 @@ export struct RNScrollView {
   onScroll(xOffset: number, yOffset: number) {
     const offset = this.scroller.currentOffset()
 
-    rnoh?.emitEvent(
+    this.rnInstance.emitEvent(
     this.descriptor.tag,
     ReactEventKind.SCROLL,
     this.createScrollEvent("scroll", offset.xOffset, offset.yOffset)
@@ -82,7 +82,7 @@ export struct RNScrollView {
   }
 
   onScrollBegin(dx: number, dy: number) {
-    rnoh?.emitEvent(
+    this.rnInstance.emitEvent(
     this.descriptor.tag,
     ReactEventKind.SCROLL,
     this.createScrollEvent(
@@ -95,7 +95,7 @@ export struct RNScrollView {
   }
 
   onScrollEnd() {
-    rnoh?.emitEvent(
+    this.rnInstance.emitEvent(
     this.descriptor.tag,
     ReactEventKind.SCROLL,
     this.createScrollEvent(
@@ -124,8 +124,8 @@ export struct RNScrollView {
     //    .scrollBarWidth(30)
     .edgeEffect(this.descriptor.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
     .onScroll(this.onScroll.bind(this))
-//    .onScrollBegin(this.onScrollBegin.bind(this))
-//    .onScrollEnd(this.onScrollEnd.bind(this))
+    //    .onScrollBegin(this.onScrollBegin.bind(this))
+    //    .onScrollEnd(this.onScrollEnd.bind(this))
     .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
   }
 }

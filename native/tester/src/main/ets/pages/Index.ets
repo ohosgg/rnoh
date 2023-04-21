@@ -1,11 +1,11 @@
-import { RNApp } from '@ohos/rnoh'
+import { RNApp, RNInstance } from '@ohos/rnoh'
 
 @Entry
 @Component
 struct Index {
   build() {
     Column() {
-      RNApp()
+      RNApp({ rnInstance: new RNInstance((ctx) => []) })
     }
     .height('100%')
     .width('100%')
