@@ -6,13 +6,6 @@
 #include "RNOH/LogSink.h"
 #include "hermes/executor/HermesExecutorFactory.h"
 #include "jsbundle.h"
-#include <react/renderer/components/view/ViewComponentDescriptor.h>
-#include <react/renderer/components/image/ImageComponentDescriptor.h>
-#include <react/renderer/components/text/TextComponentDescriptor.h>
-#include <react/renderer/components/text/RawTextComponentDescriptor.h>
-#include <react/renderer/components/text/ParagraphComponentDescriptor.h>
-#include <react/renderer/components/textinput/TextInputComponentDescriptor.h>
-#include <react/renderer/components/scrollview/ScrollViewComponentDescriptor.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProvider.h>
 #include "RNOH/events/EventEmitterRegistry.h"
 #include "RNOH/TurboModuleProvider.h"
@@ -23,17 +16,14 @@ using namespace rnoh;
 
 void RNInstance::registerSurface(
     MountingManager::TriggerUICallback shadowTreeListener,
-    MountingManager::CommandDispatcher commandDispatcher
-) {
+    MountingManager::CommandDispatcher commandDispatcher) {
     this->onComponentDescriptorTreeChanged = shadowTreeListener;
     this->commandDispatcher = commandDispatcher;
 }
 
 void RNInstance::start() {
     LogSink::initializeLogging();
-
     this->initialize();
-    this->initializeComponentDescriptorRegistry();
     this->initializeScheduler();
 }
 
@@ -60,17 +50,6 @@ void RNInstance::initialize() {
         ->installJSBindings(this->instance->getRuntimeExecutor());
 }
 
-void RNInstance::initializeComponentDescriptorRegistry() {
-    this->componentDescriptorProviderRegistry = std::make_shared<react::ComponentDescriptorProviderRegistry>();
-    this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::ViewComponentDescriptor>());
-    this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::ImageComponentDescriptor>());
-    this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::TextComponentDescriptor>());
-    this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::RawTextComponentDescriptor>());
-    this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::ParagraphComponentDescriptor>());
-    this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::TextInputComponentDescriptor>());
-    this->componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::ScrollViewComponentDescriptor>());
-}
-
 void RNInstance::initializeScheduler() {
     auto reactConfig = std::make_shared<react::EmptyReactNativeConfig>();
     this->contextContainer->insert("ReactNativeConfig", std::move(reactConfig));
@@ -80,7 +59,7 @@ void RNInstance::initializeScheduler() {
     };
 
     react::ComponentRegistryFactory componentRegistryFactory =
-        [registry = this->componentDescriptorProviderRegistry](
+        [registry = m_componentDescriptorProviderRegistry](
             auto eventDispatcher, auto contextContainer) {
             return registry->createComponentDescriptorRegistry(
                 {eventDispatcher, contextContainer});
@@ -139,7 +118,7 @@ void RNInstance::emitEvent(react::Tag tag, ReactEventKind eventKind, napi_value 
 }
 
 void RNInstance::callFunction(std::string &&module, std::string &&method, folly::dynamic &&params) {
-    this->taskExecutor->runTask(TaskThread::JS, [this, module = std::move(module), method = std::move(method), params = std::move(params)] () mutable {
+    this->taskExecutor->runTask(TaskThread::JS, [this, module = std::move(module), method = std::move(method), params = std::move(params)]() mutable {
         this->instance->callJSFunction(std::move(module), std::move(method), std::move(params));
     });
 }

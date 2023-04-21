@@ -7,55 +7,19 @@
 #include <vector>
 #include "RNOH/ArkJS.h"
 #include "RNOH/RNInstance.h"
-#include <react/renderer/mounting/ShadowViewMutation.h>
-#include "RNOH/MutationsToNapiConverter.h"
-#include "RNOH/TurboModuleFactory.h"
-#include "RNOH/ArkTSTurboModule.h"
-#include "RNOHCorePackage/ComponentBinders/ViewComponentJSIBinder.h"
-#include "RNOHCorePackage/ComponentBinders/ImageViewComponentJSIBinder.h"
-#include "RNOHCorePackage/ComponentBinders/ScrollViewComponentJSIBinder.h"
-#include "RNOH/PackageProvider.h"
-#include "RNOHCorePackage/RNOHCorePackage.h"
+#include "RNInstanceFactory.h"
 
 using namespace rnoh;
 
 static napi_ref listener_ref;
 static napi_ref arkTsTurboModuleProviderRef;
 
-std::unique_ptr<RNInstance> rnohInstance;
-
-std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> createTurboModuleFactoryDelegatesFromPackages(std::vector<std::shared_ptr<Package>> packages) {
-    std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> results;
-    for (auto &package : packages) {
-        results.push_back(package->createTurboModuleFactoryDelegate());
-    }
-    return results;
-}
-
-void createRNOHInstance(napi_env env) {
-    PackageProvider packageProvider;
-    auto packages = packageProvider.getPackages({});
-    packages.insert(packages.begin(), std::make_shared<RNOHCorePackage>(Package::Context {}));
-    auto taskExecutor = std::make_shared<TaskExecutor>(env);
-    const ComponentJSIBinderByString componentBinderByName = {
-        {"RCTView", std::make_shared<ViewComponentJSIBinder>()},
-        {"RCTImageView", std::make_shared<ImageViewComponentJSIBinder>()},
-        {"RCTVirtualText", std::make_shared<ViewComponentJSIBinder>()},
-        {"RCTSinglelineTextInputView", std::make_shared<ViewComponentJSIBinder>()},
-        {"RCTScrollView", std::make_shared<ScrollViewComponentJSIBinder>()}};
-    auto turboModuleFactory = TurboModuleFactory(env, arkTsTurboModuleProviderRef,
-                                                 std::move(componentBinderByName),
-                                                 taskExecutor,
-                                                 createTurboModuleFactoryDelegatesFromPackages(packages));
-    rnohInstance = std::make_unique<RNInstance>(env,
-                                                std::move(turboModuleFactory),
-                                                taskExecutor);
-}
+std::unique_ptr<RNInstance> rnInstance;
 
 static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    createRNOHInstance(env);
-    rnohInstance->start();
+    rnInstance = createRNInstance(env, arkTsTurboModuleProviderRef);
+    rnInstance->start();
     return arkJs.getUndefined();
 }
 
@@ -71,14 +35,14 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
     auto args = arkJs.getCallbackArgs(info, 2);
     listener_ref = arkJs.createReference(args[0]);
     auto commandDispatcherRef = arkJs.createReference(args[1]);
-    rnohInstance->registerSurface(
+    rnInstance->registerSurface(
         [env](auto const &mutations) {
             ArkJS ark_js(env);
             MutationsToNapiConverter mutationsToNapiConverter(env);
             auto napiMutations = mutationsToNapiConverter.convert(mutations);
             std::array<napi_value, 1> args = {napiMutations};
             auto listener = ark_js.getReferenceValue(listener_ref);
-            ark_js.call(listener, args); 
+            ark_js.call(listener, args);
         },
         [env, commandDispatcherRef](auto tag, auto const &commandName, auto args) {
             ArkJS arkJs(env);
@@ -94,7 +58,7 @@ static napi_value startReactNative(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 2);
 
-    rnohInstance->runApplication(arkJs.getDouble(args[0]), arkJs.getDouble(args[1]));
+    rnInstance->runApplication(arkJs.getDouble(args[0]), arkJs.getDouble(args[1]));
     return arkJs.getUndefined();
 }
 
@@ -105,7 +69,7 @@ static napi_value emitEvent(napi_env env, napi_callback_info info) {
     napi_get_value_double(env, args[0], &tag);
     napi_get_value_double(env, args[1], &eventKind);
 
-    rnohInstance->emitEvent(tag, (rnoh::ReactEventKind)eventKind, args[2]);
+    rnInstance->emitEvent(tag, (rnoh::ReactEventKind)eventKind, args[2]);
 
     return arkJs.getUndefined();
 }
@@ -117,7 +81,7 @@ static napi_value callRNFunction(napi_env env, napi_callback_info info) {
     auto nameString = arkJs.getString(args[1]);
     auto argsDynamic = arkJs.getDynamic(args[2]);
 
-    rnohInstance->callFunction(std::move(moduleString), std::move(nameString), std::move(argsDynamic));
+    rnInstance->callFunction(std::move(moduleString), std::move(nameString), std::move(argsDynamic));
 
     return arkJs.getUndefined();
 }

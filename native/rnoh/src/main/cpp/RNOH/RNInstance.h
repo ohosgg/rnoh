@@ -26,19 +26,21 @@
 namespace rnoh {
 class RNInstance {
   public:
-    RNInstance(napi_env env, TurboModuleFactory &&turboModuleFactory, std::shared_ptr<TaskExecutor> taskExecutor)
+    RNInstance(napi_env env, TurboModuleFactory &&turboModuleFactory,
+               std::shared_ptr<TaskExecutor> taskExecutor,
+               std::shared_ptr<react::ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry)
         : surfaceHandler("rnempty", 1),
           instance(std::make_shared<facebook::react::Instance>()),
           scheduler(nullptr),
           taskExecutor(taskExecutor),
           eventEmitterRegistry(std::make_shared<EventEmitterRegistry>()),
           eventEmitterHelper(ArkJS(env), eventEmitterRegistry),
-          m_turboModuleFactory(std::move(turboModuleFactory)) {}
+          m_turboModuleFactory(std::move(turboModuleFactory)),
+          m_componentDescriptorProviderRegistry(componentDescriptorProviderRegistry) {}
 
     void registerSurface(
-      MountingManager::TriggerUICallback,
-      MountingManager::CommandDispatcher
-    );
+        MountingManager::TriggerUICallback,
+        MountingManager::CommandDispatcher);
     void start();
     void runApplication(float width, float height);
     void emitEvent(facebook::react::Tag tag, ReactEventKind eventKind, napi_value eventObject);
@@ -53,13 +55,12 @@ class RNInstance {
     std::unique_ptr<facebook::react::Scheduler> scheduler;
     std::unique_ptr<SchedulerDelegate> schedulerDelegate;
     std::shared_ptr<TaskExecutor> taskExecutor;
-    std::shared_ptr<react::ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry;
+    std::shared_ptr<react::ComponentDescriptorProviderRegistry> m_componentDescriptorProviderRegistry;
     EventEmitterRegistry::Shared eventEmitterRegistry;
     EventEmitterHelper eventEmitterHelper;
     TurboModuleFactory m_turboModuleFactory;
 
     void initialize();
-    void initializeComponentDescriptorRegistry();
     void initializeScheduler();
 };
 
