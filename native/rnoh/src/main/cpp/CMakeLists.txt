@@ -388,7 +388,7 @@ add_library(rnoh SHARED
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/ArkTSTurboModule.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/JsiConversions.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/Package.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/UIManagerModule.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/UIManagerModule.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/SampleTurboModuleSpec.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/generated/PlatformConstantsTurboModule.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/generated/DeviceInfoTurboModule.cpp"

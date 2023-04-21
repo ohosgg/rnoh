@@ -13,7 +13,7 @@ class SamplePackage : public Package {
   public:
     SamplePackage(Package::Context ctx) : Package(ctx) {}
 
-    std::unique_ptr<TurboModuleFactoryDelegate> createTurboModuleFactory() override {
+    std::unique_ptr<TurboModuleFactoryDelegate> createTurboModuleFactoryDelegate() override {
         return std::make_unique<SampleTurboModuleFactoryDelegate>();
     }
 };

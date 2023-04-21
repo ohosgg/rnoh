@@ -15,6 +15,7 @@
 #include "RNOHCorePackage/ComponentManagerBindings/ImageViewManager.h"
 #include "RNOHCorePackage/ComponentManagerBindings/ScrollViewManager.h"
 #include "RNOH/PackageProvider.h"
+#include "RNOHCorePackage/RNOHCorePackage.h"
 
 using namespace rnoh;
 
@@ -26,7 +27,7 @@ std::unique_ptr<RNInstance> rnohInstance;
 std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> createTurboModuleFactoryDelegatesFromPackages(std::vector<std::shared_ptr<Package>> packages) {
     std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> results;
     for (auto &package : packages) {
-        results.push_back(package->createTurboModuleFactory());
+        results.push_back(package->createTurboModuleFactoryDelegate());
     }
     return results;
 }
@@ -34,6 +35,7 @@ std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> createTurboModuleFactor
 void createRNOHInstance(napi_env env) {
     PackageProvider packageProvider;
     auto packages = packageProvider.getPackages({});
+    packages.insert(packages.begin(), std::make_shared<RNOHCorePackage>(Package::Context {}));
     auto taskExecutor = std::make_shared<TaskExecutor>(env);
     const ComponentManagerBindingByString componentManagerBindingByName = {
         {"RCTView", std::make_shared<ViewManager>()},

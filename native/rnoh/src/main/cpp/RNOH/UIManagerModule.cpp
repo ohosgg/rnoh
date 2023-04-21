@@ -1,4 +1,4 @@
-#include "RNOHCorePackage/UIManagerModule.h"
+#include "RNOH/UIManagerModule.h"
 #include "RNOHCorePackage/ComponentManagerBindings/BaseManager.h"
 
 using namespace rnoh;

@@ -1,12 +1,7 @@
 #include "RNOH/TurboModuleFactory.h"
-
+#include "RNOH/UIManagerModule.h"
 #include "RNOHCorePackage/StubModule.h"
-#include "RNOHCorePackage/UIManagerModule.h"
-#include "RNOHCorePackage/SampleTurboModuleSpec.h"
-#include "RNOHCorePackage/generated/PlatformConstantsTurboModule.h"
-#include "RNOHCorePackage/generated/DeviceInfoTurboModule.h"
-#include "RNOHCorePackage/generated/SourceCodeTurboModule.h"
-#include "RNOHCorePackage/generated/TimingTurboModule.h"
+#include "TurboModuleFactory.h"
 
 using namespace rnoh;
 using namespace facebook;
@@ -31,21 +26,24 @@ TurboModuleFactory::SharedTurboModule TurboModuleFactory::create(std::shared_ptr
         .taskExecutor = m_taskExecutor};
     if (name == "UIManager") {
         return std::make_shared<UIManagerModule>(ctx, name, std::move(m_componentManagerBindingByString));
-    } else if (name == "SampleTurboModule") {
-        return std::make_shared<NativeSampleTurboModuleSpecJSI>(ctx, name);
-    } else if (name == "PlatformConstants") {
-        return std::make_shared<PlatformConstantsTurboModule>(ctx, name);
-    } else if (name == "DeviceInfo") {
-        return std::make_shared<DeviceInfoTurboModule>(ctx, name);
-    } else if (name == "SourceCode") {
-        return std::make_shared<SourceCodeTurboModule>(ctx, name);
-    } else if (name == "Timing") {
-        return std::make_shared<TimingTurboModule>(ctx, name);
     } else {
-        return m_delegates[0]->createTurboModule(ctx, "fail");
+        auto result = this->delegateCreatingTurboModule(ctx, name);
+        if (result != nullptr) {
+            return result;
+        }
     }
 
     return this->handleUnregisteredModuleRequest(ctx, name);
+}
+
+TurboModuleFactory::SharedTurboModule TurboModuleFactory::delegateCreatingTurboModule(Context ctx, const std::string &name) const {
+    for (auto delegate : m_delegates) {
+        auto result = delegate->createTurboModule(ctx, name);
+        if (result != nullptr) {
+            return result;
+        }
+    }
+    return nullptr;
 }
 
 napi_ref TurboModuleFactory::maybeGetArkTsTurboModuleInstanceRef(const std::string &name) const {

@@ -11,7 +11,7 @@ class Package {
     Package(Context ctx);
     virtual ~Package() {};
 
-    virtual std::unique_ptr<TurboModuleFactoryDelegate> createTurboModuleFactory() = 0;
+    virtual std::unique_ptr<TurboModuleFactoryDelegate> createTurboModuleFactoryDelegate() = 0;
 
 
   protected:
