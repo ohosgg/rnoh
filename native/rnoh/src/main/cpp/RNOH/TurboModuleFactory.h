@@ -22,7 +22,7 @@ class TurboModuleFactory {
 
     TurboModuleFactory(napi_env env,
                        napi_ref arkTsTurboModuleProviderRef,
-                       const ComponentManagerBindingByString &&,
+                       const ComponentJSIBinderByString &&,
                        std::shared_ptr<TaskExecutor>,
                        std::vector<std::shared_ptr<TurboModuleFactoryDelegate>>);
 
@@ -36,7 +36,7 @@ class TurboModuleFactory {
 
     virtual SharedTurboModule handleUnregisteredModuleRequest(Context ctx, const std::string &name) const;
 
-    const ComponentManagerBindingByString m_componentManagerBindingByString;
+    const ComponentJSIBinderByString m_componentBinderByString;
     napi_env m_env;
     napi_ref m_arkTsTurboModuleProviderRef;
     std::shared_ptr<TaskExecutor> m_taskExecutor;

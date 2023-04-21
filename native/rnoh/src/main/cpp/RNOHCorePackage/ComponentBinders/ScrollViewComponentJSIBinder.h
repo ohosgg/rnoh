@@ -1,12 +1,12 @@
 #pragma once
 
-#include "RNOHCorePackage/ComponentManagerBindings/ViewManager.h"
+#include "RNOHCorePackage/ComponentBinders/ViewComponentJSIBinder.h"
 
 namespace rnoh {
-class ScrollViewManager : public ViewManager {
+class ScrollViewComponentJSIBinder : public ViewComponentJSIBinder {
   protected:
     facebook::jsi::Object createNativeProps(facebook::jsi::Runtime &rt) override {
-        auto object = ViewManager::createNativeProps(rt);
+        auto object = ViewComponentJSIBinder::createNativeProps(rt);
         object.setProperty(rt, "scrollEnabled", "boolean");
         return object;
     }

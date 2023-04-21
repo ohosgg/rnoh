@@ -2,14 +2,13 @@
 #include "RNOH/UIManagerModule.h"
 
 namespace rnoh {
-class BaseManager : public ComponentManagerBinding {
+class BaseComponentJSIBinder : public ComponentJSIBinder {
   public:
-    facebook::jsi::Object createManager(facebook::jsi::Runtime &rt) override {
+    facebook::jsi::Object createBindings(facebook::jsi::Runtime &rt) override {
         facebook::jsi::Object baseManagerConfig(rt);
         baseManagerConfig.setProperty(rt, "NativeProps", this->createNativeProps(rt));
         baseManagerConfig.setProperty(rt, "Constants", this->createConstants(rt));
         baseManagerConfig.setProperty(rt, "Commands", this->createCommands(rt));
-
         baseManagerConfig.setProperty(rt, "bubblingEventTypes", this->createBubblingEventTypes(rt));
         baseManagerConfig.setProperty(rt, "directEventTypes", this->createDirectEventTypes(rt));
         return baseManagerConfig;

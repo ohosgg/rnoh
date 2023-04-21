@@ -1,12 +1,12 @@
 #include "RNOH/UIManagerModule.h"
-#include "RNOHCorePackage/ComponentManagerBindings/BaseManager.h"
+#include "RNOHCorePackage/ComponentBinders/BaseComponentJSIBinder.h"
 
 using namespace rnoh;
 using namespace facebook;
 
-UIManagerModule::UIManagerModule(TurboModule::Context context, std::string name, const ComponentManagerBindingByString &&componentManagerBindingByName)
+UIManagerModule::UIManagerModule(TurboModule::Context context, std::string name, const ComponentJSIBinderByString &&componentJSIBinderByName)
     : TurboModule(context, name),
-      m_componentManagerBindingByName(componentManagerBindingByName) {
+      m_componentJSIBinderByName(componentJSIBinderByName) {
     MethodMetadata getConstantsMetadata = {.argCount = 0, .invoker = getConstants};
 
     MethodMetadata getConstantsForViewManagerMetadata = {.argCount = 1, .invoker = getConstantsForViewManager};
@@ -29,10 +29,10 @@ facebook::jsi::Value UIManagerModule::getConstantsForViewManager(facebook::jsi::
     auto &self = static_cast<UIManagerModule &>(turboModule);
     std::string name = args[0].asString(rt).utf8(rt);
     LOG(INFO) << "getConstantsForViewManager: " << name;
-    auto viewManagerBinder = self.m_componentManagerBindingByName[name];
-    if (viewManagerBinder) {
-        return viewManagerBinder->createManager(rt);
+    auto componentJSIBinder = self.m_componentJSIBinderByName[name];
+    if (componentJSIBinder) {
+        return componentJSIBinder->createBindings(rt);
     }
-    LOG(ERROR) << "Couldn't find ViewManagerBinder for: " << name;
-    return BaseManager().createManager(rt);
+    LOG(ERROR) << "Couldn't find ComponentJSIBinder for: " << name;
+    return BaseComponentJSIBinder().createBindings(rt);
 }

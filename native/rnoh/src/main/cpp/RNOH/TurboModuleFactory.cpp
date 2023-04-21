@@ -8,12 +8,12 @@ using namespace facebook;
 
 TurboModuleFactory::TurboModuleFactory(napi_env env,
                                        napi_ref arkTsTurboModuleProviderRef,
-                                       const ComponentManagerBindingByString &&componentManagerBindingByString,
+                                       const ComponentJSIBinderByString &&componentBinderByString,
                                        std::shared_ptr<TaskExecutor> taskExecutor,
                                        std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> delegates)
     : m_env(env),
       m_arkTsTurboModuleProviderRef(arkTsTurboModuleProviderRef),
-      m_componentManagerBindingByString(std::move(componentManagerBindingByString)),
+      m_componentBinderByString(std::move(componentBinderByString)),
       m_taskExecutor(taskExecutor),
       m_delegates(delegates) {}
 
@@ -25,7 +25,7 @@ TurboModuleFactory::SharedTurboModule TurboModuleFactory::create(std::shared_ptr
         .arkTsTurboModuleInstanceRef = this->maybeGetArkTsTurboModuleInstanceRef(name),
         .taskExecutor = m_taskExecutor};
     if (name == "UIManager") {
-        return std::make_shared<UIManagerModule>(ctx, name, std::move(m_componentManagerBindingByString));
+        return std::make_shared<UIManagerModule>(ctx, name, std::move(m_componentBinderByString));
     } else {
         auto result = this->delegateCreatingTurboModule(ctx, name);
         if (result != nullptr) {

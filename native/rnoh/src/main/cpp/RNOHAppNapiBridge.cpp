@@ -11,9 +11,9 @@
 #include "RNOH/MutationsToNapiConverter.h"
 #include "RNOH/TurboModuleFactory.h"
 #include "RNOH/ArkTSTurboModule.h"
-#include "RNOHCorePackage/ComponentManagerBindings/ViewManager.h"
-#include "RNOHCorePackage/ComponentManagerBindings/ImageViewManager.h"
-#include "RNOHCorePackage/ComponentManagerBindings/ScrollViewManager.h"
+#include "RNOHCorePackage/ComponentBinders/ViewComponentJSIBinder.h"
+#include "RNOHCorePackage/ComponentBinders/ImageViewComponentJSIBinder.h"
+#include "RNOHCorePackage/ComponentBinders/ScrollViewComponentJSIBinder.h"
 #include "RNOH/PackageProvider.h"
 #include "RNOHCorePackage/RNOHCorePackage.h"
 
@@ -37,14 +37,14 @@ void createRNOHInstance(napi_env env) {
     auto packages = packageProvider.getPackages({});
     packages.insert(packages.begin(), std::make_shared<RNOHCorePackage>(Package::Context {}));
     auto taskExecutor = std::make_shared<TaskExecutor>(env);
-    const ComponentManagerBindingByString componentManagerBindingByName = {
-        {"RCTView", std::make_shared<ViewManager>()},
-        {"RCTImageView", std::make_shared<ImageViewManager>()},
-        {"RCTVirtualText", std::make_shared<ViewManager>()},
-        {"RCTSinglelineTextInputView", std::make_shared<ViewManager>()},
-        {"RCTScrollView", std::make_shared<ScrollViewManager>()}};
+    const ComponentJSIBinderByString componentBinderByName = {
+        {"RCTView", std::make_shared<ViewComponentJSIBinder>()},
+        {"RCTImageView", std::make_shared<ImageViewComponentJSIBinder>()},
+        {"RCTVirtualText", std::make_shared<ViewComponentJSIBinder>()},
+        {"RCTSinglelineTextInputView", std::make_shared<ViewComponentJSIBinder>()},
+        {"RCTScrollView", std::make_shared<ScrollViewComponentJSIBinder>()}};
     auto turboModuleFactory = TurboModuleFactory(env, arkTsTurboModuleProviderRef,
-                                                 std::move(componentManagerBindingByName),
+                                                 std::move(componentBinderByName),
                                                  taskExecutor,
                                                  createTurboModuleFactoryDelegatesFromPackages(packages));
     rnohInstance = std::make_unique<RNInstance>(env,
