@@ -57,6 +57,8 @@ class ArkJS {
 
     bool isPromise(napi_value);
 
+    RNOHNapiObjectBuilder getObjectBuilder(napi_value object);
+
     napi_value getUndefined();
 
     napi_value getNull();
@@ -138,6 +140,8 @@ class RNOHNapiObject {
 class RNOHNapiObjectBuilder {
   public:
     RNOHNapiObjectBuilder(napi_env env, ArkJS arkJs);
+
+    RNOHNapiObjectBuilder(napi_env env, ArkJS arkJs, napi_value object);
 
     RNOHNapiObjectBuilder &addProperty(const char *name, napi_value value);
 

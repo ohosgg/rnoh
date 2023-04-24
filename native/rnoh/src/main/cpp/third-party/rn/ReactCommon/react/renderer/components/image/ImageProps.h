@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#pragma once // RNOH: patch
 #include <react/renderer/components/view/ViewProps.h>
 #include <react/renderer/core/PropsParserContext.h>
 #include <react/renderer/graphics/Color.h>

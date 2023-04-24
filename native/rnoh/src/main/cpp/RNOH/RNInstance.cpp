@@ -15,9 +15,9 @@ using namespace facebook;
 using namespace rnoh;
 
 void RNInstance::registerSurface(
-    MountingManager::TriggerUICallback shadowTreeListener,
+    RNInstance::MutationsListener mutationsListener,
     MountingManager::CommandDispatcher commandDispatcher) {
-    this->onComponentDescriptorTreeChanged = shadowTreeListener;
+    this->mutationsListener = mutationsListener;
     this->commandDispatcher = commandDispatcher;
 }
 
@@ -83,7 +83,7 @@ void RNInstance::initializeScheduler() {
         eventEmitterRegistry,
         [this](react::ShadowViewMutationList mutations) {
             LOG(INFO) << "Triggering ui update";
-            this->onComponentDescriptorTreeChanged(mutations);
+            this->mutationsListener(this->m_mutationsToNapiConverter, mutations);
         },
         [this](auto tag, auto commandName, auto args) {
             this->commandDispatcher(tag, commandName, args);

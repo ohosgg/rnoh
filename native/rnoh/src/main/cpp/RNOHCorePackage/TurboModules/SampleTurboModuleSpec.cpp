@@ -1,6 +1,6 @@
 // NOTE: This entire file should be codegen'ed.
 
-#include "RNOHCorePackage/SampleTurboModuleSpec.h"
+#include "RNOHCorePackage/TurboModules/SampleTurboModuleSpec.h"
 
 using namespace rnoh;
 using namespace facebook;

@@ -6,14 +6,28 @@
 
 namespace rnoh {
 
+class ComponentNapiBinder {
+  public:
+    virtual napi_value createProps(napi_env env, facebook::react::ShadowView const shadowView) {
+        return ArkJS(env).createObjectBuilder().build(); 
+    };
+    virtual napi_value createState(napi_env env, facebook::react::ShadowView const shadowView) {
+        return ArkJS(env).createObjectBuilder().build();
+    };
+};
+
+using ComponentNapiBinderByString = std::unordered_map<std::string, std::shared_ptr<ComponentNapiBinder>>;
+
 class MutationsToNapiConverter {
   public:
-    MutationsToNapiConverter(ArkJS arkJs);
-    napi_value convert(facebook::react::ShadowViewMutationList const &mutations);
+    MutationsToNapiConverter(ComponentNapiBinderByString &&componentNapiBinderByName);
+
+    napi_value convert(napi_env env, facebook::react::ShadowViewMutationList const &mutations);
 
   private:
-    napi_value convertShadowView(facebook::react::ShadowView const shadowView);
-    ArkJS m_arkJs;
+    napi_value convertShadowView(napi_env env, facebook::react::ShadowView const shadowView);
+
+    ComponentNapiBinderByString m_componentNapiBinderByName;
 };
 
 } // namespace rnoh

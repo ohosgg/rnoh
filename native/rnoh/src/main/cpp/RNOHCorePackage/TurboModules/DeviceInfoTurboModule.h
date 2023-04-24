@@ -1,5 +1,3 @@
-// NOTE: This entire file should be codegen'ed.
-
 #pragma once
 
 #include <ReactCommon/TurboModule.h>

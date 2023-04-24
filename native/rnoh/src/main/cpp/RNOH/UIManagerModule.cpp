@@ -1,5 +1,5 @@
 #include "RNOH/UIManagerModule.h"
-#include "RNOHCorePackage/ComponentBinders/BaseComponentJSIBinder.h"
+#include "RNOH/BaseComponentJSIBinder.h"
 
 using namespace rnoh;
 using namespace facebook;

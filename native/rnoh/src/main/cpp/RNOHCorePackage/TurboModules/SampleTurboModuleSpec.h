@@ -1,5 +1,4 @@
 // NOTE: This entire file should be codegen'ed.
-
 #pragma once
 
 #include <ReactCommon/TurboModule.h>
@@ -7,9 +6,9 @@
 
 namespace rnoh {
 
-class JSI_EXPORT PlatformConstantsTurboModule : public ArkTSTurboModule {
+class JSI_EXPORT NativeSampleTurboModuleSpecJSI : public ArkTSTurboModule {
   public:
-    PlatformConstantsTurboModule(const ArkTSTurboModule::Context ctx, const std::string name);
+    NativeSampleTurboModuleSpecJSI(const ArkTSTurboModule::Context ctx, const std::string name);
 };
 
 } // namespace rnoh

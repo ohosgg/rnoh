@@ -26,9 +26,13 @@
 namespace rnoh {
 class RNInstance {
   public:
-    RNInstance(napi_env env, TurboModuleFactory &&turboModuleFactory,
+    using MutationsListener = std::function<void(MutationsToNapiConverter, facebook::react::ShadowViewMutationList const &mutations)>;
+
+    RNInstance(napi_env env,
+               TurboModuleFactory &&turboModuleFactory,
                std::shared_ptr<TaskExecutor> taskExecutor,
-               std::shared_ptr<react::ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry)
+               std::shared_ptr<react::ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry,
+               MutationsToNapiConverter mutationsToNapiConverter)
         : surfaceHandler("rnempty", 1),
           instance(std::make_shared<facebook::react::Instance>()),
           scheduler(nullptr),
@@ -36,10 +40,11 @@ class RNInstance {
           eventEmitterRegistry(std::make_shared<EventEmitterRegistry>()),
           eventEmitterHelper(ArkJS(env), eventEmitterRegistry),
           m_turboModuleFactory(std::move(turboModuleFactory)),
-          m_componentDescriptorProviderRegistry(componentDescriptorProviderRegistry) {}
+          m_componentDescriptorProviderRegistry(componentDescriptorProviderRegistry),
+          m_mutationsToNapiConverter(mutationsToNapiConverter) {}
 
     void registerSurface(
-        MountingManager::TriggerUICallback,
+        MutationsListener,
         MountingManager::CommandDispatcher);
     void start();
     void runApplication(float width, float height);
@@ -49,7 +54,7 @@ class RNInstance {
   private:
     std::shared_ptr<facebook::react::ContextContainer> contextContainer;
     std::shared_ptr<facebook::react::Instance> instance;
-    std::function<void(facebook::react::ShadowViewMutationList const &mutations)> onComponentDescriptorTreeChanged;
+    std::function<void(MutationsToNapiConverter, facebook::react::ShadowViewMutationList const &mutations)> mutationsListener;
     MountingManager::CommandDispatcher commandDispatcher;
     facebook::react::SurfaceHandler surfaceHandler;
     std::unique_ptr<facebook::react::Scheduler> scheduler;
@@ -59,6 +64,7 @@ class RNInstance {
     EventEmitterRegistry::Shared eventEmitterRegistry;
     EventEmitterHelper eventEmitterHelper;
     TurboModuleFactory m_turboModuleFactory;
+    MutationsToNapiConverter m_mutationsToNapiConverter;
 
     void initialize();
     void initializeScheduler();

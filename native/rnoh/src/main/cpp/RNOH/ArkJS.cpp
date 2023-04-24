@@ -113,7 +113,7 @@ napi_ref ArkJS::createReference(napi_value value) {
     return result;
 }
 
-std::function<napi_value(napi_env, std::vector<napi_value>)> *createNapiCallback(std::function<void(std::vector<folly::dynamic>)> &&callback) {    
+std::function<napi_value(napi_env, std::vector<napi_value>)> *createNapiCallback(std::function<void(std::vector<folly::dynamic>)> &&callback) {
     return new std::function([callback = std::move(callback)](napi_env env, std::vector<napi_value> callbackNapiArgs) -> napi_value {
         ArkJS arkJs(env);
         callback(arkJs.getDynamics(callbackNapiArgs));
@@ -336,6 +336,8 @@ RNOHNapiObjectBuilder::RNOHNapiObjectBuilder(napi_env env, ArkJS arkJs) : m_env(
     m_object = obj;
 }
 
+RNOHNapiObjectBuilder::RNOHNapiObjectBuilder(napi_env env, ArkJS arkJs, napi_value object) : m_env(env), m_arkJs(arkJs), m_object(object) {}
+
 RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, napi_value value) {
     napi_set_named_property(m_env, m_object, name, value);
     return *this;
@@ -398,16 +400,20 @@ bool ArkJS::isPromise(napi_value value) {
     return result;
 }
 
+RNOHNapiObjectBuilder ArkJS::getObjectBuilder(napi_value object) {
+    return RNOHNapiObjectBuilder(m_env, *this, object);
+}
+
 Promise::Promise(napi_env env, napi_value value) : m_arkJs(ArkJS(env)), m_value(value) {
 }
 
-Promise& Promise::then(std::function<void(std::vector<folly::dynamic>)> &&callback) {
+Promise &Promise::then(std::function<void(std::vector<folly::dynamic>)> &&callback) {
     auto obj = m_arkJs.getObject(m_value);
     obj.call("then", {m_arkJs.createSingleUseCallback(std::move(callback))});
     return *this;
 }
 
-Promise& Promise::catch_(std::function<void(std::vector<folly::dynamic>)> &&callback) {
+Promise &Promise::catch_(std::function<void(std::vector<folly::dynamic>)> &&callback) {
     auto obj = m_arkJs.getObject(m_value);
     obj.call("catch", {m_arkJs.createSingleUseCallback(std::move(callback))});
     return *this;

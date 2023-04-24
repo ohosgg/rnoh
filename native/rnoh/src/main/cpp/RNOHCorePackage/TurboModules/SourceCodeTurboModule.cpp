@@ -1,4 +1,3 @@
-// NOTE: This entire file should be codegen'ed.
 #include "SourceCodeTurboModule.h"
 
 using namespace rnoh;

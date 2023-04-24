@@ -1,6 +1,6 @@
 #include "RNOH/TurboModuleFactory.h"
 #include "RNOH/UIManagerModule.h"
-#include "RNOHCorePackage/StubModule.h"
+#include "RNOH/StubModule.h"
 #include "TurboModuleFactory.h"
 
 using namespace rnoh;

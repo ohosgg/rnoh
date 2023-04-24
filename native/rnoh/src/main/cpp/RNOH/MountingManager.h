@@ -9,6 +9,7 @@
 #include <react/renderer/mounting/MountingCoordinator.h>
 #include <react/renderer/mounting/TelemetryController.h>
 
+#include "RNOH/MutationsToNapiConverter.h"
 #include "RNOH/TaskExecutor.h"
 #include "RNOH/events/EventEmitterRegistry.h"
 

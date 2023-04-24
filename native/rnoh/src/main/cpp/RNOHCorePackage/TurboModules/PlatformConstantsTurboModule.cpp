@@ -1,7 +1,4 @@
-// NOTE: This entire file should be codegen'ed.
-
-#include "RNOHCorePackage/SampleTurboModuleSpec.h"
-#include "PlatformConstantsTurboModule.h"
+#include "RNOHCorePackage/TurboModules/PlatformConstantsTurboModule.h"
 
 using namespace rnoh;
 using namespace facebook;

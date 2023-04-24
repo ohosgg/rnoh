@@ -1,6 +1,6 @@
 #pragma once
 #include "RNOH/UIManagerModule.h"
-#include "RNOHCorePackage/ComponentBinders/BaseComponentJSIBinder.h"
+#include "RNOH/BaseComponentJSIBinder.h"
 
 namespace rnoh {
 class ViewComponentJSIBinder : public BaseComponentJSIBinder {

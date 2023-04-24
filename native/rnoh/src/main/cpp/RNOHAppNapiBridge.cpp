@@ -36,13 +36,12 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
     listener_ref = arkJs.createReference(args[0]);
     auto commandDispatcherRef = arkJs.createReference(args[1]);
     rnInstance->registerSurface(
-        [env](auto const &mutations) {
-            ArkJS ark_js(env);
-            MutationsToNapiConverter mutationsToNapiConverter(env);
-            auto napiMutations = mutationsToNapiConverter.convert(mutations);
+        [env](MutationsToNapiConverter mutationsToNapiConverter, auto const &mutations) {
+            ArkJS arkJs(env);
+            auto napiMutations = mutationsToNapiConverter.convert(env, mutations);
             std::array<napi_value, 1> args = {napiMutations};
-            auto listener = ark_js.getReferenceValue(listener_ref);
-            ark_js.call(listener, args);
+            auto listener = arkJs.getReferenceValue(listener_ref);
+            arkJs.call(listener, args);
         },
         [env, commandDispatcherRef](auto tag, auto const &commandName, auto args) {
             ArkJS arkJs(env);

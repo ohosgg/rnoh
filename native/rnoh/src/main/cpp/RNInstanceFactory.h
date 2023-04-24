@@ -17,45 +17,44 @@
 #include "RNOH/TurboModuleFactory.h"
 #include "RNOH/ArkTSTurboModule.h"
 #include "RNOH/PackageProvider.h"
-#include "RNOHCorePackage/ComponentBinders/ViewComponentJSIBinder.h"
-#include "RNOHCorePackage/ComponentBinders/ImageViewComponentJSIBinder.h"
-#include "RNOHCorePackage/ComponentBinders/ScrollViewComponentJSIBinder.h"
 #include "RNOHCorePackage/RNOHCorePackage.h"
 
 using namespace rnoh;
-
-std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> createTurboModuleFactoryDelegatesFromPackages(std::vector<std::shared_ptr<Package>> packages) {
-    std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> results;
-    for (auto &package : packages) {
-        results.push_back(package->createTurboModuleFactoryDelegate());
-    }
-    return results;
-}
 
 std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboModuleProviderRef) {
     PackageProvider packageProvider;
     auto packages = packageProvider.getPackages({});
     packages.insert(packages.begin(), std::make_shared<RNOHCorePackage>(Package::Context{}));
     auto taskExecutor = std::make_shared<TaskExecutor>(env);
+
     auto componentDescriptorProviderRegistry = std::make_shared<react::ComponentDescriptorProviderRegistry>();
-    componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::ViewComponentDescriptor>());
-    componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::ImageComponentDescriptor>());
-    componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::TextComponentDescriptor>());
-    componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::RawTextComponentDescriptor>());
-    componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::ParagraphComponentDescriptor>());
-    componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::TextInputComponentDescriptor>());
-    componentDescriptorProviderRegistry->add(react::concreteComponentDescriptorProvider<react::ScrollViewComponentDescriptor>());
-    const ComponentJSIBinderByString componentBinderByName = {
-        {"RCTView", std::make_shared<ViewComponentJSIBinder>()},
-        {"RCTImageView", std::make_shared<ImageViewComponentJSIBinder>()},
-        {"RCTVirtualText", std::make_shared<ViewComponentJSIBinder>()},
-        {"RCTSinglelineTextInputView", std::make_shared<ViewComponentJSIBinder>()},
-        {"RCTScrollView", std::make_shared<ScrollViewComponentJSIBinder>()}};
+    std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> turboModuleFactoryDelegates;
+    ComponentJSIBinderByString componentJSIBinderByName = {};
+    ComponentNapiBinderByString componentNapiBinderByName = {};
+    for (auto &package : packages) {
+        auto turboModuleFactoryDelegate = package->createTurboModuleFactoryDelegate();
+        if (turboModuleFactoryDelegate != nullptr) {
+            turboModuleFactoryDelegates.push_back(std::move(turboModuleFactoryDelegate));
+        }
+        for (auto componentDescriptorProvider : package->createComponentDescriptorProviders()) {
+            componentDescriptorProviderRegistry->add(componentDescriptorProvider);
+        }
+        for (auto [name, componentJSIBinder] : package->createComponentJSIBinderByName()) {
+            componentJSIBinderByName.insert({name, componentJSIBinder});
+        };
+        for (auto [name, componentNapiBinder] : package->createComponentNapiBinderByName()) {
+            componentNapiBinderByName.insert({name, componentNapiBinder});
+        };
+    }
+
     auto turboModuleFactory = TurboModuleFactory(env, arkTsTurboModuleProviderRef,
-                                                 std::move(componentBinderByName),
+                                                 std::move(componentJSIBinderByName),
                                                  taskExecutor,
-                                                 createTurboModuleFactoryDelegatesFromPackages(packages));
+                                                 std::move(turboModuleFactoryDelegates));
     return std::make_unique<RNInstance>(env,
                                         std::move(turboModuleFactory),
-                                        taskExecutor, componentDescriptorProviderRegistry);
+                                        taskExecutor,
+                                        componentDescriptorProviderRegistry,
+                                        MutationsToNapiConverter(std::move(componentNapiBinderByName))
+                                        );
 }
