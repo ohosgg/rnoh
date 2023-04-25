@@ -1,5 +1,8 @@
 # it may cause some issues when building the project when switching branches
-./package-lock.json 
+package-lock.json
+react_native_modules/**/*
+!react_native_modules/rnoh
+!react_native_modules/rnoh/**
 
 # ---
 

@@ -1,18 +1,15 @@
 {
-  "name": "tester",
+  "name": "react-native-harmony-test",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "lint": "eslint .",
-    "start": "react-native start",
-    "preinstall": "cd ../react-native-harmony && npm pack && cd ../tester",
+    "preinstall": "cd ../react-native-harmony && npm run pack:dev && cd ../tester",
     "postinstall": "npm uninstall react-native-harmony && npm i ../react-native-harmony/react-native-harmony-0.0.1.tgz",
-    "install-rn-harmony": "cd ../react-native-harmony && npm pack && cd ../tester && npm uninstall react-native-harmony && npm i ../react-native-harmony/react-native-harmony-0.0.1.tgz",
-    "bundle": "metro build index.js --platform harmony --out bundle.harmony.js --config metro.config.js --minify false",
-    "bundle:clean": "npm run install-rn-harmony && npm run bundle",
-    "sync:native": "node ./updateNative.js bundle.harmony.js ../native/tester/src/main/cpp/jsbundle.h assets ../native/tester/src/main/ets/assets/assets",
-    "dev": "npm run bundle:clean && npm run sync:native",
-    "dev:fast": "npm run bundle && npm run sync:native"
+    "bundle:js:project": "metro build index.js --platform harmony --out bundle.harmony.js --config metro.config.js --minify false",
+    "bundle:js:rn": "npm i && npm run bundle:js:project",
+    "bundle:native": "node ./bundleProject.js bundle.harmony.js ./harmony/entry/src/main/cpp/jsbundle.h assets ./harmony/entry/src/main/ets/assets/assets",
+    "dev:rn": "npm run bundle:js:rn && npm run bundle:native",
+    "dev": "npm run bundle:js:project && npm run bundle:native"
   },
   "dependencies": {
     "chai": "^4.3.7",
@@ -27,6 +24,7 @@
     "@react-native-community/eslint-config": "^3.2.0",
     "@tsconfig/react-native": "^2.0.2",
     "@types/chai": "^4.3.4",
+    "@types/fs-extra": "^11.0.1",
     "@types/jest": "^29.2.1",
     "@types/metro-config": "^0.76.2",
     "@types/react": "^18.0.24",

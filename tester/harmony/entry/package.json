@@ -1,5 +1,5 @@
 {
-  "name": "tester",
+  "name": "entry",
   "version": "1.0.0",
   "ohos": {
     "org": "huawei",
@@ -10,6 +10,6 @@
   "repository": {},
   "license": "ISC",
   "dependencies": {
-    "@ohos/rnoh": "file:../rnoh"
+    "@ohos/rnoh": "file:../react_native_modules/rnoh"
   }
 }

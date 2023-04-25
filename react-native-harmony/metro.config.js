@@ -25,6 +25,9 @@ module.exports = {
     }),
   },
   resolver: {
+
+    /** By default, Metro pickups files from native, "harmony" directory what causes conflicts.  */
+    blockList: [/\\harmony\/.*/],
     resolveRequest: (ctx, moduleName, platform) => {
       if (platform === "harmony") {
         if (moduleName === "react-native") {

@@ -2,3 +2,4 @@
 /.preview
 /build
 /.cxx
+package-lock.json
