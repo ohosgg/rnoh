@@ -10,6 +10,6 @@
   "repository": {},
   "license": "ISC",
   "dependencies": {
-    "@ohos/rnoh": "file:../react_native_modules/rnoh"
+    "@ohos/rnoh": "file:../rnoh"
   }
 }
