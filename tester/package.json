@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "preinstall": "cd ../react-native-harmony && npm run pack:dev && cd ../tester",
-    "postinstall": "npm uninstall react-native-harmony && npm i react-native-harmony@file:../react-native-harmony/rnoh-react-native-harmony-0.0.1.tgz",
+    "postinstall": "npm uninstall react-native-harmony && npm i react-native-harmony@file:../react-native-harmony/rnoh-react-native-harmony-0.0.3.tgz",
     "bundle:js:project": "metro build index.js --platform harmony --out bundle.harmony.js --config metro.config.js --minify false",
     "bundle:js:rn": "npm i && npm run bundle:js:project",
     "bundle:native": "node ./bundleProject.js bundle.harmony.js ./harmony/entry/src/main/cpp/jsbundle.h assets ./harmony/entry/src/main/ets/assets/assets",
@@ -12,11 +12,10 @@
     "dev": "npm run bundle:js:project && npm run bundle:native"
   },
   "dependencies": {
-    "@rnoh/react-native-harmony": "file:../react-native-harmony/rnoh-react-native-harmony-0.0.1.tgz",
     "chai": "^4.3.7",
     "react": "18.2.0",
     "react-native": "0.71.3",
-    "react-native-harmony": "file:../react-native-harmony/rnoh-react-native-harmony-0.0.1.tgz"
+    "react-native-harmony": "file:../react-native-harmony/rnoh-react-native-harmony-0.0.3.tgz"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

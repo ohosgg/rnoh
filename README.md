@@ -4,7 +4,7 @@
 ![](./docs/react-native-open-harmony-app--components-diagram.png)
 
 
-Note: native code lives in the `/tester/harmony/react_native_modules/rnoh` directory to allow fast development cycles.
+Note: native code lives in the `/tester/harmony/rnoh` directory to allow fast development cycles.
 
 ## Running `tester` app
 

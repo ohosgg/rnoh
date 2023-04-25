@@ -3,10 +3,11 @@
   "version": "0.0.3",
   "description": "",
   "scripts": {
-    "pack:dev": "rimraf ./harmony && npm pack",
-    "pack:prod": "node ./scripts/prepare.js && npm pack",
-    "prepublishOnly": "node ./scripts/prepare.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pack:dev": "npm pack",
+    "copy:native": "rimraf ./harmony && mkdir harmony && cp ../tester/harmony/rnoh/*.tgz ./harmony",
+    "pack:native": "cd ../tester/harmony/rnoh && npm pack ../../tester/harmony/rnoh && cd ../",
+    "pack:prod": "npm run pack:native && npm run copy:native && npm pack",
+    "prepublishOnly": "npm run pack:native && npm run copy:native"
   },
   "author": "",
   "license": "ISC",
@@ -22,5 +23,12 @@
     "@types/node": "^18.16.0",
     "fs-extra": "^11.1.1",
     "rimraf": "^5.0.0"
-  }
+  },
+  "files": [
+    "./harmony/*",
+    "./Libraries/**/*",
+    "./types/**/*",
+    "./*.js",
+    "./*.json"
+  ]
 }

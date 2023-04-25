@@ -1,0 +1,6 @@
+.cxx
+.preview
+build
+node_modules
+**/.vscode
+**/.cache
