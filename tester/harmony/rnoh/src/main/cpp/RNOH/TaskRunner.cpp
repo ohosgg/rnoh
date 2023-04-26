@@ -1,3 +1,4 @@
+#include <exception>
 #include <glog/logging.h>
 #include "RNOH/TaskRunner.h"
 
@@ -40,7 +41,12 @@ void TaskRunner::runLoop() {
             auto task = std::move(syncTaskQueue.front());
             syncTaskQueue.pop();
             lock.unlock();
-            task();
+            try {
+                task();
+            } catch (std::exception const &e) {
+                LOG(ERROR) << "Exception thrown in sync task";
+                LOG(ERROR) << e.what();
+            }
             cv.notify_one();
             continue;
         }
@@ -48,7 +54,12 @@ void TaskRunner::runLoop() {
             auto task = std::move(asyncTaskQueue.front());
             asyncTaskQueue.pop();
             lock.unlock();
-            task();
+            try {
+                task();
+            } catch (std::exception const &e) {
+                LOG(ERROR) << "Exception thrown in task";
+                LOG(ERROR) << e.what();
+            }
         }
     }
 }

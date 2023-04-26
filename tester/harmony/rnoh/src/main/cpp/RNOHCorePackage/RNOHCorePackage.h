@@ -12,6 +12,7 @@
 #include "RNOHCorePackage/TurboModules/DeviceInfoTurboModule.h"
 #include "RNOHCorePackage/TurboModules/SourceCodeTurboModule.h"
 #include "RNOHCorePackage/TurboModules/TimingTurboModule.h"
+#include "RNOHCorePackage/TurboModules/ExceptionsManagerTurboModule.h"
 #include "RNOHCorePackage/ComponentBinders/ViewComponentJSIBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ViewComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ImageComponentJSIBinder.h"
@@ -36,6 +37,8 @@ class RNOHCoreTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
             return std::make_shared<SourceCodeTurboModule>(ctx, name);
         } else if (name == "Timing") {
             return std::make_shared<TimingTurboModule>(ctx, name);
+        } else if (name == "ExceptionsManager") {
+            return std::make_shared<ExceptionsManagerTurboModule>(ctx, name);
         }
         return nullptr;
     };
@@ -67,7 +70,8 @@ class RNOHCorePackage : public Package {
             {"RCTImageView", std::make_shared<ImageComponentJSIBinder>()},
             {"RCTVirtualText", std::make_shared<ViewComponentJSIBinder>()},
             {"RCTSinglelineTextInputView", std::make_shared<ViewComponentJSIBinder>()},
-            {"RCTScrollView", std::make_shared<ScrollViewComponentJSIBinder>()}};
+            {"RCTScrollView", std::make_shared<ScrollViewComponentJSIBinder>()},
+            {"RCTScrollContentView", std::make_shared<ViewComponentJSIBinder>()}};
     };
 
     ComponentNapiBinderByString createComponentNapiBinderByName() override {

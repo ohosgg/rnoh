@@ -1,6 +1,8 @@
 #include <hilog/log.h>
 #include "RNOH/LogSink.h"
 
+#define LOG_DOMAIN 0xBEEF
+#define LOG_TAG "RNOH"
 
 LogSink *LogSink::instance = nullptr;
 
@@ -15,10 +17,10 @@ void LogSink::initializeLogging() {
 
 void LogSink::send(
     google::LogSeverity severity,
-    const char *full_filename,
+    const char * /*full_filename*/,
     const char *base_filename,
     int line,
-    const ::tm *tm_time,
+    const ::tm * /*tm_time*/,
     const char *message,
     size_t message_len) {
     std::ostringstream stream;
