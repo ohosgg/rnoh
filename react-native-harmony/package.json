@@ -21,7 +21,6 @@
     "@tsconfig/react-native": "^2.0.3",
     "@types/fs-extra": "^11.0.1",
     "@types/node": "^18.16.0",
-    "fs-extra": "^11.1.1",
     "rimraf": "^5.0.0"
   },
   "files": [
@@ -30,5 +29,10 @@
     "./types/**/*",
     "./*.js",
     "./*.json"
-  ]
+  ],
+  "dependencies": {
+    "fs-extra": "^11.1.1",
+    "metro": "^0.76.3",
+    "metro-config": "^0.76.3"
+  }
 }
