@@ -4,8 +4,8 @@
   "description": "",
   "scripts": {
     "pack:dev": "npm pack",
+    "pack:native": "cd ../tester/harmony/rnoh && npm pack && cd ../../../react-native-harmony",
     "copy:native": "rimraf ./harmony && mkdir harmony && cp ../tester/harmony/rnoh/*.tgz ./harmony",
-    "pack:native": "cd ../tester/harmony/rnoh && npm pack ../../tester/harmony/rnoh && cd ../",
     "pack:prod": "npm run pack:native && npm run copy:native && npm pack",
     "prepublishOnly": "npm run pack:native && npm run copy:native"
   },

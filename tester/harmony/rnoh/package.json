@@ -1,6 +1,6 @@
 {
   "name": "@ohos/rnoh",
-  "description": "a npm package which contains arkUI2.0 page",
+  "description": "React Native for Open Harmony",
   "ohos": {
     "org": ""
   },
@@ -9,8 +9,5 @@
   "types": "",
   "license": "ISC",
   "type": "module",
-  "dependencies": {},
-  "devDependencies": {
-    "@types/librnoh.so": "file:./src/main/cpp/types/librnoh"
-  }
+  "dependencies": {}
 }
