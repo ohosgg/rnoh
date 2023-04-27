@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "preinstall": "cd ../react-native-harmony && npm run pack:dev && cd ../tester",
-    "postinstall": "npm uninstall react-native-harmony && npm i react-native-harmony@file:../react-native-harmony/rnoh-react-native-harmony-0.0.5.tgz",
+    "postinstall": "npm uninstall react-native-harmony && npm i react-native-harmony@file:../react-native-harmony/rnoh-react-native-harmony-0.0.6.tgz",
     "dev:rn": "npm i && npm run dev",
     "dev": "react-native bundle-harmony"
   },
@@ -12,7 +12,7 @@
     "chai": "^4.3.7",
     "react": "18.2.0",
     "react-native": "0.71.3",
-    "react-native-harmony": "file:../react-native-harmony/rnoh-react-native-harmony-0.0.5.tgz"
+    "react-native-harmony": "file:../react-native-harmony/rnoh-react-native-harmony-0.0.6.tgz"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
