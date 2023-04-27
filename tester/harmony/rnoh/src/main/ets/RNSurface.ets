@@ -1,8 +1,8 @@
-import rnohAppNapiBridge from 'librnoh_app_napi_bridge.so'
+import libRNOHApp from 'librnoh_app.so'
 import Device from '@system.device'
 import { DescriptorRegistry } from './DescriptorRegistry'
 import { CommandDispatcher } from './CommandDispatcher'
-import { RNComponentFactory } from './RNComponentFactory'
+import { RNComponentFactory, ComponentBuilderContext } from './RNComponentFactory'
 import { Descriptor } from './descriptor'
 import { ViewProps } from './RNView'
 import { convertColorSegmentsToString } from './cpp-bridge-utils'
@@ -14,6 +14,7 @@ import { RNInstance } from "./RNInstance"
 @Preview
 export struct RNApp {
   @Provide("RNInstance") rnInstance: RNInstance | null = null
+  @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   @State screenDensity: number = 0
   @State shouldShow: boolean = false
   private initialSurfaceWidth: number = 0
@@ -21,7 +22,7 @@ export struct RNApp {
 
   aboutToAppear() {
     // delay running the app so that debugger has a chance to connect before a potential error is thrown
-    this.rnInstance?.setRNOHAppNapiBridge(rnohAppNapiBridge)
+    this.rnInstance?.setLibRNOHApp(libRNOHApp)
     this.rnInstance?.registerTurboModuleProvider();
     setTimeout(() => {
       Device.getInfo({ success: (data) => {
@@ -36,7 +37,7 @@ export struct RNApp {
       } })
       this.rnInstance?.initializeReactNative();
       this.shouldShow = true
-    }, 1000)
+    }, 2000)
 
   }
 
@@ -49,6 +50,7 @@ export struct RNApp {
     Stack() {
       if (this.screenDensity > 0 && this.shouldShow) {
         RNSurface({
+          buildCustomComponent: this.buildCustomComponent,
           screenDensity: this.screenDensity,
           initialSurfaceWidth: this.initialSurfaceWidth,
           initialSurfaceHeight: this.initialSurfaceHeight
@@ -73,6 +75,7 @@ const rootDescriptor: RootDescriptor = {
 @Component
 export struct RNSurface {
   @Consume("RNInstance") rnInstance: RNInstance
+  @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   @State initialSurfaceWidth: number = 0
   @State initialSurfaceHeight: number = 0
   @Prop screenDensity: number
@@ -123,7 +126,7 @@ export struct RNSurface {
       Column() {
         Flex({ direction: FlexDirection.Column }) {
           ForEach(this.descriptor.childrenTags, (childrenTag) => {
-            RNComponentFactory({ tag: childrenTag })
+            RNComponentFactory({ tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
           }, childrenTag => childrenTag)
         }
         .width("100%")

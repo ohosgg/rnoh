@@ -16,9 +16,14 @@ const nullDescriptor = {
   childrenTags: []
 }
 
+export type ComponentBuilderContext = {
+  descriptor: Descriptor
+}
+
 @Component
 export struct RNComponentFactory {
   tag: number = -1
+  @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   @State descriptor: Descriptor = nullDescriptor
   @Consume('__RN_DESCRIPTOR_REGISTRY') descriptorRegistry: DescriptorRegistry
   private cleanupCallback?: () => void = undefined
@@ -43,9 +48,11 @@ export struct RNComponentFactory {
     this.descriptor = newDescriptor
   }
 
+
+
   @Builder renderDescriptors() {
     ForEach(this.descriptor.childrenTags, (childrenTag) => {
-      RNComponentFactory({ tag: childrenTag })
+      RNComponentFactory({ tag: childrenTag, buildCustomComponent: this.buildCustomComponent})
     }, childrenTag => childrenTag)
   }
 
@@ -53,7 +60,7 @@ export struct RNComponentFactory {
     if (this.getDescriptorType() === "View") {
       RNView({
         tag: this.tag,
-        renderDescriptors: this.renderDescriptors,
+        renderDescriptors: this.renderDescriptors.bind(this),
         descriptor: this.descriptor as ViewDescriptor
       })
     } else if (this.getDescriptorType() === "Image") {
@@ -65,9 +72,11 @@ export struct RNComponentFactory {
     } else if (this.getDescriptorType() === "ScrollView") {
       RNScrollView({
         tag: this.tag,
-        renderDescriptors: this.renderDescriptors,
+        renderDescriptors: this.renderDescriptors.bind(this),
         descriptor: this.descriptor as ScrollViewDescriptor
       })
+    } else {
+      this.buildCustomComponent({descriptor: this.descriptor})
     }
   }
 }

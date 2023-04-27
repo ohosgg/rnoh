@@ -9,7 +9,7 @@ export class RNInstance {
   private packages: RNPackage[];
   private ctx: RNPackageContext = { reactNativeVersion: "0.0.0", rnInstance: this };
   private turboModuleProvider: TurboModuleProvider;
-  private rnAppNapiBridge: any;
+  private libRNOHApp: any;
 
   constructor(createPackages: (ctx: RNPackageContext) => RNPackage[]) {
     this.packages = createPackages(this.ctx);
@@ -19,11 +19,11 @@ export class RNInstance {
     }));
   }
 
-  setRNOHAppNapiBridge(rnAppNapiBridge: unknown) {
-    if (this.rnAppNapiBridge) {
-      throw new Error("rnAppNapiBridge has been already set");
+  setLibRNOHApp(libRNOHApp: unknown) {
+    if (this.libRNOHApp) {
+      throw new Error("libRNOHApp has been already set");
     }
-    this.rnAppNapiBridge = rnAppNapiBridge;
+    this.libRNOHApp = libRNOHApp;
   }
 
   getTurboModule<T extends TurboModule>(name: string): T {
@@ -31,29 +31,29 @@ export class RNInstance {
   }
 
   registerTurboModuleProvider() {
-    this.rnAppNapiBridge.registerTurboModuleProvider(this.turboModuleProvider);
+    this.libRNOHApp.registerTurboModuleProvider(this.turboModuleProvider);
   }
 
   initializeReactNative() {
-    this.rnAppNapiBridge.initializeReactNative();
+    this.libRNOHApp.initializeReactNative();
   }
 
   emitEvent(tag: Tag, eventKind: number, event: any) {
-    this.rnAppNapiBridge.emitEvent(tag, eventKind, event);
+    this.libRNOHApp.emitEvent(tag, eventKind, event);
   }
 
   subscribeToShadowTreeChanges(
     mutationsListener: (mutations: Mutation[]) => void,
     dispatchedCommandsListener: (tag: Tag, commandName: string, args: unknown) => void
   ) {
-    this.rnAppNapiBridge.subscribeToShadowTreeChanges(mutationsListener, dispatchedCommandsListener);
+    this.libRNOHApp.subscribeToShadowTreeChanges(mutationsListener, dispatchedCommandsListener);
   }
 
   run(initialSurfaceWidth: number, initialSurfaceHeight: number) {
-    this.rnAppNapiBridge.startReactNative(initialSurfaceWidth, initialSurfaceHeight);
+    this.libRNOHApp.startReactNative(initialSurfaceWidth, initialSurfaceHeight);
   }
 
   callRNFunction(moduleName: string, functionName: string, args: unknown[]): void {
-    this.rnAppNapiBridge.callRNFunction(moduleName, functionName, args);
+    this.libRNOHApp.callRNFunction(moduleName, functionName, args);
   }
 }
