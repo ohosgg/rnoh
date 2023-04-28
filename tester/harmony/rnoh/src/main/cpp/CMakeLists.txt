@@ -394,6 +394,7 @@ add_library(rnoh SHARED
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/DeviceInfoTurboModule.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/SourceCodeTurboModule.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/TimingTurboModule.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/NetworkingTurboModule.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/ExceptionsManagerTurboModule.cpp"
 )
 target_include_directories(rnoh PUBLIC

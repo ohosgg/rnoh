@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet, Image, TextInput, Text } from 'react-native';
 import SampleTurboModule from './SampleTurboModule';
-import { PlatformConstantsTestSuite, PixelRatioTestSuite, ImageTestSuite } from './tests';
+import { PlatformConstantsTestSuite, PixelRatioTestSuite, ImageTestSuite, NetworkingTestSuite } from './tests';
 import { Tester } from './components';
 
 function App() {
@@ -21,6 +21,7 @@ function App() {
         <ImageTestSuite />
         <PixelRatioTestSuite />
         <PlatformConstantsTestSuite />
+        <NetworkingTestSuite />
       </Tester>
       <View
         style={styles.button}

@@ -13,6 +13,7 @@
 #include "RNOHCorePackage/TurboModules/SourceCodeTurboModule.h"
 #include "RNOHCorePackage/TurboModules/TimingTurboModule.h"
 #include "RNOHCorePackage/TurboModules/ExceptionsManagerTurboModule.h"
+#include "RNOHCorePackage/TurboModules/NetworkingTurboModule.h"
 #include "RNOHCorePackage/ComponentBinders/ViewComponentJSIBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ViewComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ImageComponentJSIBinder.h"
@@ -39,6 +40,8 @@ class RNOHCoreTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
             return std::make_shared<TimingTurboModule>(ctx, name);
         } else if (name == "ExceptionsManager") {
             return std::make_shared<ExceptionsManagerTurboModule>(ctx, name);
+        } else if (name == "Networking") {
+            return std::make_shared<NetworkingTurboModule>(ctx, name);
         }
         return nullptr;
     };

@@ -26,6 +26,9 @@ TurboModuleFactory::SharedTurboModule TurboModuleFactory::create(std::shared_ptr
         .taskExecutor = m_taskExecutor};
     if (name == "UIManager") {
         return std::make_shared<UIManagerModule>(ctx, name, std::move(m_componentBinderByString));
+    } else if (name == "BlobModule") {
+        // NOTE: temporary fix to prevent RN from assuming Blobs work
+        return nullptr;
     } else {
         auto result = this->delegateCreatingTurboModule(ctx, name);
         if (result != nullptr) {

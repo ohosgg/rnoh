@@ -46,10 +46,12 @@ export class DescriptorRegistry {
       return [mutation.childTag, mutation.parentTag]
     } else if (mutation.type === MutationType.UPDATE) {
       const currentDescriptor = this.descriptorByTag[mutation.descriptor.tag]
+      const children = currentDescriptor.childrenTags
       this.descriptorByTag[mutation.descriptor.tag] = {
         ...currentDescriptor,
         ...mutation.descriptor,
       }
+      this.descriptorByTag[mutation.descriptor.tag].childrenTags = children
       return [mutation.descriptor.tag]
     } else if (mutation.type === MutationType.REMOVE) {
       const parentDescriptor = this.descriptorByTag[mutation.parentTag]

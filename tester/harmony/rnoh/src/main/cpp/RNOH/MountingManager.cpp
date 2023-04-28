@@ -11,7 +11,6 @@ void MountingManager::performMountInstructions(react::ShadowViewMutationList con
         switch (mutation.type) {
         case react::ShadowViewMutation::Create: {
             auto newChild = mutation.newChildShadowView;
-            LOG(INFO) << "CREATE mutation for tag: " << newChild.tag;
 
             eventEmitterRegistry->setEventEmitter(newChild.tag, newChild.eventEmitter);
             break;
@@ -19,27 +18,21 @@ void MountingManager::performMountInstructions(react::ShadowViewMutationList con
         case react::ShadowViewMutation::Delete: {
             auto oldChild = mutation.oldChildShadowView;
 
-            LOG(INFO) << "DELETE mutation for tag: " << oldChild.tag;
-
             eventEmitterRegistry->clearEventEmitter(oldChild.tag);
             break;
         }
         case react::ShadowViewMutation::Insert: {
             auto newChild = mutation.newChildShadowView;
             auto parent = mutation.parentShadowView;
-            LOG(INFO) << "INSERT mutation for tag: " << newChild.tag << " to parent: " << parent.tag;
             break;
         }
         case react::ShadowViewMutation::Remove: {
             auto oldChild = mutation.oldChildShadowView;
             auto parent = mutation.parentShadowView;
-            LOG(INFO) << "REMOVE mutation for tag: " << oldChild.tag << " from parent: " << parent.tag;
             break;
         }
         case react::ShadowViewMutation::Update: {
             auto newChild = mutation.newChildShadowView;
-
-            LOG(INFO) << "UPDATE mutation for tag: " << newChild.tag;
 
             eventEmitterRegistry->setEventEmitter(newChild.tag, newChild.eventEmitter);
             break;
