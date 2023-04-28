@@ -5,3 +5,4 @@ export * from "./SourceCodeTurboModule";
 export * from "./SampleTurboModule";
 export * from "./TimingTurboModule";
 export * from "./NetworkingTurboModule";
+export * from "./WebSocketTurboModule";

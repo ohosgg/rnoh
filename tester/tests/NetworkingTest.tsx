@@ -2,28 +2,49 @@ import { StyleSheet, Text, View } from "react-native";
 import { TestCase, TestSuite } from "../components";
 import React from "react";
 
-const MovieList = () => {
+const WebSocketEcho = () => {
 
-    type Movie = {
-        id: string;
-        title: string;
-        releaseYear: string;
+    const [status, setStatus] = React.useState("Loading...");
+    const [data, setData] = React.useState<string>();
+
+    const runWebSockSession = () => {
+        // connect to Postman's echo server
+        var ws = new WebSocket('wss://ws.postman-echo.com/raw');
+
+        ws.onopen = () => {
+            setStatus('Connected')
+            ws.send('something');
+        };
+
+        ws.onmessage = e => {
+            setData(JSON.stringify(e))
+            setTimeout(() => {
+                setStatus("Closing...")
+                ws.close()
+            }, 3000)
+        };
+
+        ws.onerror = e => {
+            console.error(e.message);
+            setStatus(`Error ${e.message}`)
+        };
+
+        ws.onclose = e => { 
+            console.log(e.code, e.reason);
+            setStatus(`Closed ${e.code} ${e.reason}`)
+        }
     };
 
-    const [isLoading, setLoading] = React.useState(true);
-    const [data, setData] = React.useState<Movie[]>([]);
-
     React.useEffect(() => {
-        getMovies();
+        runWebSockSession();
     }, []);
 
     return (
-        isLoading ? <Text style={styles.loadingText}>Loading...</Text> : <View>
-            {data.map((movie) => (
-                <Text style={styles.movieDetails}>
-                    {movie.title}, {movie.releaseYear}
-                </Text>
-            ))}
+        <View>
+            <Text style={styles.loadingText}>{status}</Text>
+            {data && <Text style={styles.movieDetails}>
+                {data}
+            </Text>}
         </View>
     )
 }
@@ -48,6 +69,9 @@ export const NetworkingTestSuite = () => {
             const received = await canFetch('https://reactnative.dev/bad_url.json')
             expect(received).to.be.false
         }} />
+        <TestCase itShould="connect to websocks">
+            <WebSocketEcho />
+        </TestCase>
     </TestSuite>)
 };
 

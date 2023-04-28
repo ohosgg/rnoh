@@ -1,6 +1,15 @@
 import { RNPackage, TurboModulesFactory } from "../RNPackage";
 import type { TurboModule, TurboModuleContext } from '../TurboModule';
-import { PlatformConstantsTurboModule, DeviceInfoTurboModule, SourceCodeTurboModule, SampleTurboModule, TimingTurboModule, ExceptionsManagerTurboModule, NetworkingTurboModule } from "./TurboModules";
+import {
+  PlatformConstantsTurboModule,
+  DeviceInfoTurboModule,
+  SourceCodeTurboModule,
+  SampleTurboModule,
+  TimingTurboModule,
+  ExceptionsManagerTurboModule,
+  NetworkingTurboModule,
+  WebSocketTurboModule
+} from "./TurboModules";
 
 
 export class RNOHCorePackage extends RNPackage {
@@ -16,7 +25,8 @@ const TURBO_MODULE_CLASS_BY_NAME: Record<string, typeof TurboModule> = {
   "SourceCode": SourceCodeTurboModule,
   "Timing": TimingTurboModule,
   "Networking": NetworkingTurboModule,
-  "ExceptionsManager": ExceptionsManagerTurboModule
+  "ExceptionsManager": ExceptionsManagerTurboModule,
+  "WebSocketModule": WebSocketTurboModule
 };
 
 class CoreTurboModulesFactory extends TurboModulesFactory {
