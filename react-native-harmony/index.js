@@ -2,6 +2,9 @@ module.exports = {
   get AppRegistry() {
     return require('react-native/Libraries/ReactNative/AppRegistry');
   },
+  get FlatList() {
+    return require('react-native/Libraries/Lists/FlatList');
+  },
   get Image() {
     return require('react-native/Libraries/Image/Image');
   },

@@ -26,9 +26,6 @@ TurboModuleFactory::SharedTurboModule TurboModuleFactory::create(std::shared_ptr
         .taskExecutor = m_taskExecutor};
     if (name == "UIManager") {
         return std::make_shared<UIManagerModule>(ctx, name, std::move(m_componentBinderByString));
-    } else if (name == "BlobModule") {
-        // NOTE: temporary fix to prevent RN from assuming Blobs work
-        return nullptr;
     } else {
         auto result = this->delegateCreatingTurboModule(ctx, name);
         if (result != nullptr) {
@@ -66,6 +63,6 @@ napi_ref TurboModuleFactory::maybeGetArkTsTurboModuleInstanceRef(const std::stri
 }
 
 TurboModuleFactory::SharedTurboModule TurboModuleFactory::handleUnregisteredModuleRequest(Context ctx, const std::string &name) const {
-    LOG(WARNING) << "Turbo Module '" << name << "' not found - providing stub.";
-    return std::make_shared<StubModule>(name, ctx.jsInvoker);
+    LOG(WARNING) << "Turbo Module '" << name << "' not found.";
+    return nullptr;
 }
