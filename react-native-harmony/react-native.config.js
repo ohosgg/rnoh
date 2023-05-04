@@ -68,8 +68,10 @@ function copyHarmonyModuleToHarmonyProject(projectRootPath, harmonyModulePath, h
 }
 
 function copyAssets(srcPath, destPath) {
-  fse.copySync(srcPath, destPath, { overwrite: true });
-  console.log(`[CREATED] ${destPath}`);
+  if (fs.existsSync(srcPath)) {
+    fse.copySync(srcPath, destPath, { overwrite: true });
+    console.log(`[CREATED] ${destPath}`);
+  };
 }
 
 function createHeaderFile(jsBundlePath, headerFilePath) {
