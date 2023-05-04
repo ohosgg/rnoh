@@ -4,13 +4,13 @@
 #include "RNOH/TaskExecutor.h"
 #include "RNOH/TaskRunner.h"
 
-namespace rnoh{
+namespace rnoh {
 
 TaskExecutor::TaskExecutor(napi_env env) : env(env) {
     auto loop = getLoop();
-    asyncHandle.data = (void*)this;
+    asyncHandle.data = (void *)this;
     uv_async_init(loop, &asyncHandle, [](auto handle) {
-        auto executor = static_cast<TaskExecutor*>(handle->data);
+        auto executor = static_cast<TaskExecutor *>(handle->data);
         std::unique_lock<std::mutex> lock(executor->mainThreadTasksMutex);
 
         while (!executor->mainThreadTasks.empty()) {
@@ -22,50 +22,46 @@ TaskExecutor::TaskExecutor(napi_env env) : env(env) {
 }
 
 TaskExecutor::~TaskExecutor() {
-    uv_close(reinterpret_cast<uv_handle_t*>(&asyncHandle), nullptr);
+    uv_close(reinterpret_cast<uv_handle_t *>(&asyncHandle), nullptr);
 }
 
 void TaskExecutor::runTask(TaskThread thread, Task &&task) {
     switch (thread) {
-        case TaskThread::MAIN:
-        {
-            std::unique_lock<std::mutex> lock(mainThreadTasksMutex);
-            mainThreadTasks.push(task);
-            uv_async_send(&asyncHandle);
-            return;
-        }
-        case TaskThread::JS:
-        {
-            jsTaskRunner.runAsyncTask(std::move(task));
-            return;
-        }
-        case TaskThread::BACKGROUND:
-        {
-            backgroundTaskRunner.runAsyncTask(std::move(task));
-            return;
-        }
+    case TaskThread::MAIN: {
+        std::unique_lock<std::mutex> lock(mainThreadTasksMutex);
+        mainThreadTasks.push(task);
+        uv_async_send(&asyncHandle);
+        return;
+    }
+    case TaskThread::JS: {
+        jsTaskRunner.runAsyncTask(std::move(task));
+        return;
+    }
+    case TaskThread::BACKGROUND: {
+        backgroundTaskRunner.runAsyncTask(std::move(task));
+        return;
+    }
     }
 }
 
 void TaskExecutor::runSyncTask(TaskThread thread, Task &&task) {
     switch (thread) {
-        case TaskThread::MAIN: {
-            std::condition_variable cv;
-            std::unique_lock<std::mutex> lock(mainThreadTasksMutex);
-            mainThreadTasks.push([&cv, task = std::move(task)]() {
-                task();
-                cv.notify_one();
-            });
-            uv_async_send(&asyncHandle);
-            cv.wait(lock);
-            return;
-        }
+    case TaskThread::MAIN: {
+        std::condition_variable cv;
+        std::unique_lock<std::mutex> lock(mainThreadTasksMutex);
+        mainThreadTasks.push([&cv, task = std::move(task)]() {
+            task();
+            cv.notify_one();
+        });
+        uv_async_send(&asyncHandle);
+        cv.wait(lock);
+        return;
+    } break;
+    case TaskThread::JS:
+        jsTaskRunner.runSyncTask(std::move(task));
         break;
-        case TaskThread::JS:
-            jsTaskRunner.runSyncTask(std::move(task));
-        break;
-        case TaskThread::BACKGROUND:
-            backgroundTaskRunner.runSyncTask(std::move(task));
+    case TaskThread::BACKGROUND:
+        backgroundTaskRunner.runSyncTask(std::move(task));
         break;
     }
 }
@@ -76,4 +72,4 @@ uv_loop_t *TaskExecutor::getLoop() const {
     return loop;
 }
 
-}
+} // namespace rnoh

@@ -5,7 +5,7 @@
 namespace rnoh {
 
 class JSI_EXPORT TimingTurboModule : public ArkTSTurboModule {
-public:
+  public:
     TimingTurboModule(const ArkTSTurboModule::Context ctx, const std::string name);
 };
 

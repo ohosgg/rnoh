@@ -34,4 +34,4 @@ TimingTurboModule::TimingTurboModule(const ArkTSTurboModule::Context ctx, const 
     };
 }
 
-}
+} // namespace rnoh

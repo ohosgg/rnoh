@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   View,
   ScrollView,
@@ -6,7 +6,7 @@ import {
   Image,
   TextInput,
   Text,
-} from 'react-native'
+} from 'react-native';
 import {
   PlatformConstantsTestSuite,
   PixelRatioTestSuite,
@@ -14,12 +14,12 @@ import {
   NetworkingTestSuite,
   FlatListTestSuite,
   SampleTurboModuleTest,
-} from './tests'
-import { Tester } from './components'
+} from './tests';
+import {Tester} from './components';
 
 function App() {
-  const [username, setUsername] = React.useState('')
-  const scrollRef = React.useRef<ScrollView>(null)
+  const [username, setUsername] = React.useState('');
+  const scrollRef = React.useRef<ScrollView>(null);
 
   return (
     <ScrollView style={styles.container} ref={scrollRef}>
@@ -31,34 +31,31 @@ function App() {
         <PlatformConstantsTestSuite />
         <NetworkingTestSuite />
       </Tester>
-      <UserInfo avatar='https://i.pravatar.cc/100?img=8' />
+      <UserInfo avatar="https://i.pravatar.cc/100?img=8" />
       <View style={styles.centerX}>
         <Chessboard />
       </View>
-      <UserInfo name={username} avatar='https://i.pravatar.cc/100?img=31' />
+      <UserInfo name={username} avatar="https://i.pravatar.cc/100?img=31" />
       <View style={styles.detailContainer}>
         <Text style={styles.label}>Your username</Text>
         <TextInput style={styles.textInput} onChangeText={setUsername} />
       </View>
       <View
         style={styles.button}
-        onTouchEnd={() =>
-          scrollRef.current?.scrollTo({ y: 0, animated: false })
-        }
-      >
+        onTouchEnd={() => scrollRef.current?.scrollTo({y: 0, animated: false})}>
         <Text style={styles.buttonText}>Scroll To Top</Text>
       </View>
     </ScrollView>
-  )
+  );
 }
 
-function UserInfo({ name, avatar }: any) {
+function UserInfo({name, avatar}: any) {
   return (
     <View style={styles.userInfoContainer}>
-      <Image style={styles.placeholder} source={{ uri: avatar }} />
+      <Image style={styles.placeholder} source={{uri: avatar}} />
       <Text style={styles.username}>{name || 'Guest'}</Text>
     </View>
-  )
+  );
 }
 
 const STATE = [
@@ -70,33 +67,32 @@ const STATE = [
   [null, null, null, null, null, null, null, null],
   [null, null, null, null, null, null, null, null],
   [null, 'KNIGHT_LIGHT', null, null, null, null, 'KNIGHT_LIGHT', null],
-] as const
+] as const;
 
 const PIECE_IMAGE_URI_BY_NAME = {
   KNIGHT_LIGHT:
     'https://raw.githubusercontent.com/kasperski95/images/master/reanimated-light.png',
   KNIGHT_DARK:
     'https://raw.githubusercontent.com/kasperski95/images/master/reanimated-dark.png',
-}
+};
 
 function Chessboard() {
-  const rows = ['1', '2', '3', '4', '5', '6', '7', '8']
-  rows.reverse()
-  const cols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+  const rows = ['1', '2', '3', '4', '5', '6', '7', '8'];
+  rows.reverse();
+  const cols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 
   return (
     <View style={styles.chessboardContainer}>
       {rows.map((rowLabel, rowIndex) => (
         <View style={styles.row}>
           {cols.map((colLabel, colIndex) => {
-            const pieceNameMaybe = STATE[rowIndex][colIndex]
+            const pieceNameMaybe = STATE[rowIndex][colIndex];
 
             return (
               <ChessboardCell
                 topLeftText={colIndex === 0 ? rowLabel : undefined}
                 bottomRightText={rowIndex === 7 ? colLabel : undefined}
-                variant={(rowIndex + colIndex) % 2 ? 'light' : 'dark'}
-              >
+                variant={(rowIndex + colIndex) % 2 ? 'light' : 'dark'}>
                 {pieceNameMaybe && (
                   <Image
                     style={styles.pieceImage}
@@ -106,18 +102,18 @@ function Chessboard() {
                   />
                 )}
               </ChessboardCell>
-            )
+            );
           })}
         </View>
       ))}
     </View>
-  )
+  );
 }
 
 const CELL_BG_COLOR_BY_VARIANT = {
-  light: { inactive: 'hsl(62, 42%, 87%)', active: 'hsl(60, 88%, 73%)' },
-  dark: { inactive: 'hsl(89, 27%, 46%)', active: 'hsl(67, 58%, 52%)' },
-} as const
+  light: {inactive: 'hsl(62, 42%, 87%)', active: 'hsl(60, 88%, 73%)'},
+  dark: {inactive: 'hsl(89, 27%, 46%)', active: 'hsl(67, 58%, 52%)'},
+} as const;
 
 function ChessboardCell({
   variant,
@@ -125,17 +121,17 @@ function ChessboardCell({
   topLeftText,
   bottomRightText,
 }: {
-  variant: 'light' | 'dark'
-  children: any
-  topLeftText?: string
-  bottomRightText?: string
+  variant: 'light' | 'dark';
+  children: any;
+  topLeftText?: string;
+  bottomRightText?: string;
 }) {
-  const [isSelected, setIsSelected] = React.useState(false)
-  const oppositeVariant = variant === 'light' ? 'dark' : 'light'
+  const [isSelected, setIsSelected] = React.useState(false);
+  const oppositeVariant = variant === 'light' ? 'dark' : 'light';
   return (
     <View
       onTouchStart={() => {
-        setIsSelected((prev) => !prev)
+        setIsSelected(prev => !prev);
       }}
       style={[
         styles.cell,
@@ -145,8 +141,7 @@ function ChessboardCell({
               isSelected ? 'active' : 'inactive'
             ],
         },
-      ]}
-    >
+      ]}>
       <Text
         style={[
           styles.cornerText,
@@ -155,8 +150,7 @@ function ChessboardCell({
             left: 4,
             color: CELL_BG_COLOR_BY_VARIANT[oppositeVariant].inactive,
           },
-        ]}
-      >
+        ]}>
         {topLeftText}
       </Text>
       <Text
@@ -169,13 +163,12 @@ function ChessboardCell({
             textAlignVertical: 'bottom',
             color: CELL_BG_COLOR_BY_VARIANT[oppositeVariant].inactive,
           },
-        ]}
-      >
+        ]}>
         {bottomRightText}
       </Text>
       {children}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -283,6 +276,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     padding: 8,
   },
-})
+});
 
-export default App
+export default App;

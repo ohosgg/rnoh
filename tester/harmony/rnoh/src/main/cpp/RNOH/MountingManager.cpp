@@ -63,7 +63,7 @@ void MountingManager::performTransaction(facebook::react::MountingCoordinator::S
             this->triggerUICallback(transaction.getMutations());
         });
 }
-    
+
 void MountingManager::dispatchCommand(facebook::react::Tag tag, std::string const &commandName, folly::dynamic const args) {
     this->commandDispatcher(tag, commandName, args);
 }

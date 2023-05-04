@@ -25,4 +25,4 @@ class ScrollViewComponentJSIBinder : public ViewComponentJSIBinder {
         return events;
     }
 };
-}
+} // namespace rnoh

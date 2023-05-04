@@ -20,13 +20,11 @@ static jsi::Value __hostFunction_NetworkingTurboModule_abortRequest(
     return static_cast<ArkTSTurboModule &>(turboModule).call(rt, "abortRequest", args, count);
 }
 
-NetworkingTurboModule::NetworkingTurboModule(const ArkTSTurboModule::Context ctx, const std::string name) 
-    : ArkTSTurboModule(ctx, name) 
-{
+NetworkingTurboModule::NetworkingTurboModule(const ArkTSTurboModule::Context ctx, const std::string name)
+    : ArkTSTurboModule(ctx, name) {
     methodMap_ = {
         {"sendRequest", {2, __hostFunction_NetworkingTurboModule_sendRequest}},
-        {"abortRequest", {1, __hostFunction_NetworkingTurboModule_abortRequest}}
-    };
+        {"abortRequest", {1, __hostFunction_NetworkingTurboModule_abortRequest}}};
 }
 
 } // namespace rnoh

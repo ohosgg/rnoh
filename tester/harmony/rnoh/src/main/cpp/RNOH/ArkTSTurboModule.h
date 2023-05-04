@@ -10,16 +10,19 @@
 #include "RNOH/TaskExecutor.h"
 #include "RNOH/TurboModule.h"
 
-#define ARK_METHOD_CALLER(name)                                                             \
-    [](                                                                                     \
-        jsi::Runtime &rt,                                                                   \
-        react::TurboModule &turboModule,                                                    \
-        const jsi::Value *args,                                                             \
-        size_t count) {                                                                     \
+#define ARK_METHOD_CALLER(name)                                                           \
+    [](                                                                                   \
+        jsi::Runtime &rt,                                                                 \
+        react::TurboModule &turboModule,                                                  \
+        const jsi::Value *args,                                                           \
+        size_t count) {                                                                   \
         return static_cast<ArkTSTurboModule &>(turboModule).call(rt, #name, args, count); \
     }
 
-#define ARK_METHOD_METADATA(name, argc) {#name, {argc, ARK_METHOD_CALLER(name)}}
+#define ARK_METHOD_METADATA(name, argc)          \
+    {                                            \
+#name, { argc, ARK_METHOD_CALLER(name) } \
+    }
 
 namespace rnoh {
 

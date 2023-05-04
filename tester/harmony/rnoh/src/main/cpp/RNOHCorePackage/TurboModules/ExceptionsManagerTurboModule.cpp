@@ -11,6 +11,5 @@ rnoh::ExceptionsManagerTurboModule::ExceptionsManagerTurboModule(const ArkTSTurb
         ARK_METHOD_METADATA(reportSoftException, 3),
         ARK_METHOD_METADATA(reportException, 1),
         ARK_METHOD_METADATA(updateExceptionMessage, 3),
-        ARK_METHOD_METADATA(dismissRedbox, 0)
-    };
+        ARK_METHOD_METADATA(dismissRedbox, 0)};
 }

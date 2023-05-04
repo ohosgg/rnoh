@@ -4,12 +4,11 @@
 #include <ReactCommon/LongLivedObject.h>
 #include "RNOH/LogSink.h"
 
-
 using namespace rnoh;
 using namespace facebook;
 
 TurboModuleProvider::TurboModuleProvider(std::shared_ptr<react::CallInvoker> jsInvoker,
-                                                 TurboModuleFactory &&turboModuleFactory)
+                                         TurboModuleFactory &&turboModuleFactory)
     : m_jsInvoker(jsInvoker),
       m_createTurboModule([factory = std::move(turboModuleFactory)](
                               std::string const &moduleName,
@@ -29,9 +28,9 @@ void TurboModuleProvider::installJSBindings(react::RuntimeExecutor runtimeExecut
     runtimeExecutor(
         [turboModuleProvider = std::move(turboModuleProvider)](facebook::jsi::Runtime &runtime) {
             react::TurboModuleBinding::install(runtime,
-                                        std::move(turboModuleProvider),
-                                        react::TurboModuleBindingMode::HostObject,
-                                        nullptr);
+                                               std::move(turboModuleProvider),
+                                               react::TurboModuleBindingMode::HostObject,
+                                               nullptr);
         });
 }
 

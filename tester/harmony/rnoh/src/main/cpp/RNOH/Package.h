@@ -12,7 +12,7 @@ class Package {
     struct Context {};
 
     Package(Context ctx);
-    virtual ~Package() {};
+    virtual ~Package(){};
 
     virtual std::unique_ptr<TurboModuleFactoryDelegate> createTurboModuleFactoryDelegate();
 

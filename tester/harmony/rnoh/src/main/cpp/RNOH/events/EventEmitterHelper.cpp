@@ -71,9 +71,8 @@ void EventEmitterHelper::emitScrollEvent(facebook::react::Tag tag, napi_value ev
     }
 
     auto event = convertScrollEvent(arkJs, eventObject);
-    
-    switch (getScrollEventType(arkJs, eventObject))
-    {
+
+    switch (getScrollEventType(arkJs, eventObject)) {
     case ScrollEventType::BEGIN:
         eventEmitter->onScrollBeginDrag(event);
         break;
@@ -85,7 +84,7 @@ void EventEmitterHelper::emitScrollEvent(facebook::react::Tag tag, napi_value ev
     case ScrollEventType::SCROLLING:
         eventEmitter->onScroll(event);
         break;
-    
+
     default:
         break;
     }

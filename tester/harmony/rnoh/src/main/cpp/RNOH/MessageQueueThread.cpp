@@ -2,10 +2,10 @@
 
 using namespace rnoh;
 
-MessageQueueThread::MessageQueueThread(std::shared_ptr<TaskExecutor> const &taskExecutor) 
+MessageQueueThread::MessageQueueThread(std::shared_ptr<TaskExecutor> const &taskExecutor)
     : taskExecutor(taskExecutor) {}
 
-MessageQueueThread::~MessageQueueThread() {};
+MessageQueueThread::~MessageQueueThread(){};
 
 void MessageQueueThread::runOnQueue(std::function<void()> &&func) {
     taskExecutor->runTask(TaskThread::JS, std::move(func));

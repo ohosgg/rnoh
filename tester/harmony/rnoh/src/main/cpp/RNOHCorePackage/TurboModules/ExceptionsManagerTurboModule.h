@@ -5,7 +5,7 @@
 namespace rnoh {
 
 class JSI_EXPORT ExceptionsManagerTurboModule : public ArkTSTurboModule {
-public:
+  public:
     ExceptionsManagerTurboModule(const ArkTSTurboModule::Context ctx, const std::string name);
 };
 

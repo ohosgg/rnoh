@@ -12,7 +12,7 @@ namespace rnoh {
 class TurboModuleProvider : public std::enable_shared_from_this<TurboModuleProvider> {
   public:
     TurboModuleProvider(std::shared_ptr<facebook::react::CallInvoker> jsInvoker,
-                            TurboModuleFactory &&turboModuleFactory);
+                        TurboModuleFactory &&turboModuleFactory);
 
     std::shared_ptr<facebook::react::TurboModule> getTurboModule(std::string const &moduleName);
     void installJSBindings(facebook::react::RuntimeExecutor runtimeExecutor);

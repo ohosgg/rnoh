@@ -6,7 +6,8 @@
     "preinstall": "cd ../react-native-harmony && npm run pack:dev && cd ../tester",
     "postinstall": "npm uninstall react-native-harmony && npm i react-native-harmony@file:../react-native-harmony/rnoh-react-native-harmony-0.0.6.tgz",
     "dev:rn": "npm i && npm run dev",
-    "dev": "react-native bundle-harmony"
+    "dev": "react-native bundle-harmony",
+    "format": "prettier App.tsx ./tests -w"
   },
   "dependencies": {
     "chai": "^4.3.7",

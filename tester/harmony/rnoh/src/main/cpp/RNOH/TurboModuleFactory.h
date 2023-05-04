@@ -11,7 +11,7 @@ class TurboModuleFactoryDelegate {
     using Context = ArkTSTurboModule::Context;
     using SharedTurboModule = std::shared_ptr<facebook::react::TurboModule>;
 
-    virtual ~TurboModuleFactoryDelegate() {};
+    virtual ~TurboModuleFactoryDelegate(){};
     virtual SharedTurboModule createTurboModule(Context ctx, const std::string &name) const = 0;
 };
 

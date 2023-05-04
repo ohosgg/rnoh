@@ -9,7 +9,7 @@ namespace rnoh {
 class ComponentNapiBinder {
   public:
     virtual napi_value createProps(napi_env env, facebook::react::ShadowView const shadowView) {
-        return ArkJS(env).createObjectBuilder().build(); 
+        return ArkJS(env).createObjectBuilder().build();
     };
     virtual napi_value createState(napi_env env, facebook::react::ShadowView const shadowView) {
         return ArkJS(env).createObjectBuilder().build();

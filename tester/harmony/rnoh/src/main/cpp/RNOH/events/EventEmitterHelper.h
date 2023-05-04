@@ -20,7 +20,6 @@ class EventEmitterHelper {
 
     void emitEvent(facebook::react::Tag tag, ReactEventKind eventKind, napi_value eventObject);
 
-
   private:
     ArkJS arkJs;
     EventEmitterRegistry::Shared eventEmitterRegistry;

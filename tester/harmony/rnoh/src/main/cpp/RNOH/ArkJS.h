@@ -164,15 +164,15 @@ class RNOHNapiObjectBuilder {
 };
 
 class Promise {
-    public:
-        Promise(napi_env env, napi_value value);
+  public:
+    Promise(napi_env env, napi_value value);
 
-        Promise& then(std::function<void(std::vector<folly::dynamic>)> &&callback);
-        Promise& catch_(std::function<void(std::vector<folly::dynamic>)> &&callback);
+    Promise &then(std::function<void(std::vector<folly::dynamic>)> &&callback);
+    Promise &catch_(std::function<void(std::vector<folly::dynamic>)> &&callback);
 
-    private:
-        ArkJS m_arkJs;
-        napi_value m_value;
+  private:
+    ArkJS m_arkJs;
+    napi_value m_value;
 };
 
 #endif //native_ArkJS_H

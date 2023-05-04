@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-  View,
-  FlatList,
-  StyleSheet,
-  Text,
-} from 'react-native';
-import { TestCase, TestSuite } from "../components";
+import {View, FlatList, StyleSheet, Text} from 'react-native';
+import {TestCase, TestSuite} from '../components';
 
 const DATA = [
   {
@@ -31,17 +26,19 @@ const Item = ({title}: ItemProps) => (
 );
 
 export const FlatListTestSuite = () => {
-  return <TestSuite name="FlatList">
-    <TestCase itShould="display items in the FlatList">
-      <View style={styles.container}>
-        <FlatList
+  return (
+    <TestSuite name="FlatList">
+      <TestCase itShould="display items in the FlatList">
+        <View style={styles.container}>
+          <FlatList
             data={DATA}
             renderItem={({item}) => <Item title={item.title} />}
             keyExtractor={item => item.id}
-        />
-      </View>
-    </TestCase>
-  </TestSuite>;
+          />
+        </View>
+      </TestCase>
+    </TestSuite>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -58,7 +55,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     height: 40,
-    width: "100%"
+    width: '100%',
   },
 });
 

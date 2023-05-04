@@ -64,4 +64,4 @@ void TaskRunner::runLoop() {
     }
 }
 
-}
+} // namespace rnoh

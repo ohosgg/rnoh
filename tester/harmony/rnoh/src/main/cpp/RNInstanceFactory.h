@@ -55,6 +55,5 @@ std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboMo
                                         std::move(turboModuleFactory),
                                         taskExecutor,
                                         componentDescriptorProviderRegistry,
-                                        MutationsToNapiConverter(std::move(componentNapiBinderByName))
-                                        );
+                                        MutationsToNapiConverter(std::move(componentNapiBinderByName)));
 }

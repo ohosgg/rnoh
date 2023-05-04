@@ -10,7 +10,7 @@
 namespace rnoh {
 
 class TaskRunner {
-public:
+  public:
     using Task = std::function<void()>;
 
     TaskRunner(std::string name);
@@ -19,13 +19,13 @@ public:
     void runAsyncTask(Task &&task);
     void runSyncTask(Task &&task);
 
-private:
+  private:
     void runLoop();
 
     bool hasPendingTasks() const {
         return !asyncTaskQueue.empty() || !syncTaskQueue.empty();
     }
-    
+
     std::string name;
     std::atomic_bool running{true};
     std::thread thread;
@@ -35,4 +35,4 @@ private:
     std::condition_variable cv;
 };
 
-}
+} // namespace rnoh
