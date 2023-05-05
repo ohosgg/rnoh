@@ -4,6 +4,12 @@
 ### Text Measurement
 OHOS needs to allow measuring text. It looks like [@ohos.measure.d.ts](https://gitee.com/openharmony/interface_sdk-js/blob/master/api/@ohos.measure.d.ts#L147) will do the job but we need to wait for v10. It's going to be used by  `TextLayoutManager.h`.
 
+## ScrollView issue
+Tiles should stay on the top.
+
+![](./flatlist-issue.mp4)
+
+
 ### DevEco Studio Project
 
 It's not possible to use local npm packages located outside project directory. Symlinks don't do the trick. Harmony project root can't be `react-native-project` because of `package.json` conflicts (and that would break consistency). We may need to copy packages from node_modules to harmony project as a temporary solution.
