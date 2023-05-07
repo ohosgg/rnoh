@@ -1,7 +1,7 @@
 import {PixelRatio} from 'react-native';
-import {TestSuite, TestCase} from '../components';
+import {TestCase, TestSuite} from '@rnoh/testerino';
 
-export const PixelRatioTestSuite = () => {
+export const PixelRatioTest = () => {
   return (
     <TestSuite name="PixelRatio">
       <TestCase

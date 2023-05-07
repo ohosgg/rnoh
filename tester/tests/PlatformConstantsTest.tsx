@@ -1,7 +1,7 @@
 import {Platform} from 'react-native';
-import {TestSuite, TestCase} from '../components';
+import {TestCase, TestSuite} from '@rnoh/testerino';
 
-export function PlatformConstantsTestSuite() {
+export function PlatformConstantsTest() {
   return (
     <TestSuite name="PlatformConstants">
       <TestCase

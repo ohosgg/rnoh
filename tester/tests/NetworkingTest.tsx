@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import {TestCase, TestSuite} from '../components';
+import {TestCase, TestSuite} from '@rnoh/testerino';
 import React from 'react';
 
 const WebSocketEcho = () => {
@@ -46,7 +46,7 @@ const WebSocketEcho = () => {
   );
 };
 
-export const NetworkingTestSuite = () => {
+export const NetworkingTest = () => {
   const canFetch = async (url: string) => {
     try {
       const response = await fetch(url);

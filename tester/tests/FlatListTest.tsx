@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, FlatList, StyleSheet, Text} from 'react-native';
-import {TestCase, TestSuite} from '../components';
+import {TestCase, TestSuite} from '@rnoh/testerino';
 
 const DATA = [
   {
@@ -25,7 +25,7 @@ const Item = ({title}: ItemProps) => (
   </View>
 );
 
-export const FlatListTestSuite = () => {
+export const FlatListTest = () => {
   return (
     <TestSuite name="FlatList">
       <TestCase itShould="display items in the FlatList">
@@ -59,4 +59,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FlatListTestSuite;
+export default FlatListTest;

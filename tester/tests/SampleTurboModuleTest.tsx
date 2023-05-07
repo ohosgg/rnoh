@@ -1,5 +1,4 @@
-import {Platform} from 'react-native';
-import {TestSuite, TestCase} from '../components';
+import {TestCase, TestSuite} from '@rnoh/testerino';
 import type {TurboModule} from 'react-native/Libraries/TurboModule/RCTExport';
 import {TurboModuleRegistry} from 'react-native';
 
