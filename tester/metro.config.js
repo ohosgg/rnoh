@@ -1,8 +1,8 @@
-const { mergeConfig } = require('metro-config');
-const harmonyMetroConfig = require("react-native-harmony/metro.config");
+const {mergeConfig} = require('metro-config');
+const harmonyMetroConfig = require('react-native-harmony/metro.config');
 
 /**
- * @type {import("@types/metro-config").ConfigT}
+ * @type {import("metro-config").ConfigT}
  */
 const config = {
   transformer: {
