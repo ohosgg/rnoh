@@ -27,12 +27,11 @@ Props::Props(
                                                        "nativeID",
                                                        sourceProps.nativeId,
                                                        {}))
-#ifdef ANDROID
+ // RNOH: patch
       ,
       rawProps(
           shouldSetRawProps ? (folly::dynamic)rawProps
                             : /* null */ folly::dynamic())
-#endif
 {
 }
 

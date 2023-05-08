@@ -56,13 +56,13 @@ class Props : public virtual Sealable, public virtual DebugStringConvertible {
 
   std::string nativeId;
 
-#ifdef ANDROID
+// RNOH: patch
   folly::dynamic rawProps = folly::dynamic::object();
 
-  virtual void propsDiffMapBuffer(
-      Props const *oldProps,
-      MapBufferBuilder &builder) const;
-#endif
+//   virtual void propsDiffMapBuffer(
+//       Props const *oldProps,
+//       MapBufferBuilder &builder) const;
+
 };
 
 } // namespace react

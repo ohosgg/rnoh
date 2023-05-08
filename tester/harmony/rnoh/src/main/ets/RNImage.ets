@@ -29,15 +29,15 @@ export struct RNImage {
   }
 
   build() {
-      Image(this.getSource())
-        .interpolation(ImageInterpolation.High)
-        .width(this.descriptor.props.width)
-        .height(this.descriptor.props.height)
-        .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
-        .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
-        .borderWidth(this.descriptor.props.borderWidth)
-        .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
-        .borderRadius(this.descriptor.props.borderRadius)
-        .onTouch((event) => this.onTouchEvent(event))
+    Image(this.getSource())
+      .interpolation(ImageInterpolation.High)
+      .width(this.descriptor.props.width)
+      .height(this.descriptor.props.height)
+      .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
+      .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
+      .borderWidth(this.descriptor.props.borderWidth)
+      .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
+      .borderRadius(this.descriptor.props.borderRadius)
+      .onTouch((event) => this.onTouchEvent(event))
   }
 }

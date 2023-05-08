@@ -35,7 +35,7 @@ export struct RNComponentFactory {
   aboutToAppear() {
     this.descriptor = this.descriptorRegistry.getDescriptor(this.tag)
     this.cleanupCallback = this.descriptorRegistry.registerComponentUpdateCallback(
-      this.tag,
+    this.tag,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
     )
   }
@@ -48,11 +48,9 @@ export struct RNComponentFactory {
     this.descriptor = newDescriptor
   }
 
-
-
   @Builder renderDescriptors() {
     ForEach(this.descriptor.childrenTags, (childrenTag) => {
-      RNComponentFactory({ tag: childrenTag, buildCustomComponent: this.buildCustomComponent})
+      RNComponentFactory({ tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
     }, childrenTag => childrenTag)
   }
 
@@ -76,7 +74,7 @@ export struct RNComponentFactory {
         descriptor: this.descriptor as ScrollViewDescriptor
       })
     } else {
-      this.buildCustomComponent({descriptor: this.descriptor})
+      this.buildCustomComponent({ descriptor: this.descriptor })
     }
   }
 }

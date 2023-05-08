@@ -47,18 +47,21 @@ napi_value MutationsToNapiConverter::convert(napi_env env, react::ShadowViewMuta
 }
 
 napi_value MutationsToNapiConverter::convertShadowView(napi_env env, react::ShadowView const shadowView) {
-    try {
+    ArkJS arkJs(env);
+    auto napiShadowViewBuilder = arkJs.createObjectBuilder();
+    if (m_componentNapiBinderByName.count(shadowView.componentName) > 0) {
         auto componentNapiBinder = m_componentNapiBinderByName.at(shadowView.componentName);
-        ArkJS arkJs(env);
-        return arkJs.createObjectBuilder()
-            .addProperty("tag", shadowView.tag)
-            .addProperty("type", shadowView.componentName)
+        napiShadowViewBuilder
             .addProperty("props", componentNapiBinder->createProps(env, shadowView))
-            .addProperty("state", componentNapiBinder->createState(env, shadowView))
-            .addProperty("childrenTags", arkJs.createArray())
-            .build();
-    } catch (const std::out_of_range &e) {
-        LOG(INFO) << "Couldn't find ComponentNapiBinder for: " << shadowView.componentName;
-        throw e;
+            .addProperty("state", componentNapiBinder->createState(env, shadowView));
+    } else {
+        napiShadowViewBuilder
+            .addProperty("props", arkJs.createFromDynamic(shadowView.props->rawProps))
+            .addProperty("state", arkJs.createObjectBuilder().build());
     }
+    return napiShadowViewBuilder
+        .addProperty("tag", shadowView.tag)
+        .addProperty("type", shadowView.componentName)
+        .addProperty("childrenTags", arkJs.createArray())
+        .build();
 }
