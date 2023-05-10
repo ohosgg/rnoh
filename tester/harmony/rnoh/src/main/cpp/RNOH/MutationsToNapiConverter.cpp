@@ -55,8 +55,15 @@ napi_value MutationsToNapiConverter::convertShadowView(napi_env env, react::Shad
             .addProperty("props", componentNapiBinder->createProps(env, shadowView))
             .addProperty("state", componentNapiBinder->createState(env, shadowView));
     } else {
+        auto rawProps = arkJs.createFromDynamic(shadowView.props->rawProps);
+        auto props = arkJs.getObjectBuilder(rawProps)
+            .addProperty("top", shadowView.layoutMetrics.frame.origin.y)
+            .addProperty("left", shadowView.layoutMetrics.frame.origin.x)
+            .addProperty("width", shadowView.layoutMetrics.frame.size.width)
+            .addProperty("height", shadowView.layoutMetrics.frame.size.height)
+            .build();
         napiShadowViewBuilder
-            .addProperty("props", arkJs.createFromDynamic(shadowView.props->rawProps))
+            .addProperty("props", props)
             .addProperty("state", arkJs.createObjectBuilder().build());
     }
     return napiShadowViewBuilder
