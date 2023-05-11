@@ -40,7 +40,7 @@ export * from 'react-native/Libraries/Image/Image';
 // export * from 'react-native/Libraries/Image/ImageResizeMode';
 // export * from 'react-native/Libraries/Image/ImageSource';
 // export * from 'react-native/Libraries/Interaction/InteractionManager';
-// export * from 'react-native/Libraries/Interaction/PanResponder';
+export * from 'react-native/Libraries/Interaction/PanResponder';
 // export * from 'react-native/Libraries/LayoutAnimation/LayoutAnimation';
 // export * from 'react-native/Libraries/Linking/Linking';
 export * from 'react-native/Libraries/Lists/FlatList';
