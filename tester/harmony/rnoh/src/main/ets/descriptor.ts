@@ -24,4 +24,16 @@ export type Descriptor<TType = string, TProps extends Object = Object, TState = 
   props: TProps
   state: TState
   childrenTags: Tag[]
+  layoutMetrics: {
+    frame: {
+      origin: {
+        x: number
+        y: number
+      },
+      size: {
+        width: number
+        height: number
+      }
+    }
+  }
 }

@@ -13,7 +13,19 @@ const nullDescriptor = {
   tag: -1,
   props: {},
   state: {},
-  childrenTags: []
+  childrenTags: [],
+  layoutMetrics: {
+    frame: {
+      origin: {
+        x: 0,
+        y: 0,
+      },
+      size: {
+        width: 0,
+        height: 0,
+      }
+    }
+  }
 }
 
 export type ComponentBuilderContext = {

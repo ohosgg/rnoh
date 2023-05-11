@@ -55,17 +55,27 @@ napi_value MutationsToNapiConverter::convertShadowView(napi_env env, react::Shad
             .addProperty("props", componentNapiBinder->createProps(env, shadowView))
             .addProperty("state", componentNapiBinder->createState(env, shadowView));
     } else {
-        auto rawProps = arkJs.createFromDynamic(shadowView.props->rawProps);
-        auto props = arkJs.getObjectBuilder(rawProps)
-            .addProperty("top", shadowView.layoutMetrics.frame.origin.y)
-            .addProperty("left", shadowView.layoutMetrics.frame.origin.x)
-            .addProperty("width", shadowView.layoutMetrics.frame.size.width)
-            .addProperty("height", shadowView.layoutMetrics.frame.size.height)
-            .build();
         napiShadowViewBuilder
-            .addProperty("props", props)
+            .addProperty("props", arkJs.createFromDynamic(shadowView.props->rawProps))
             .addProperty("state", arkJs.createObjectBuilder().build());
     }
+    napiShadowViewBuilder
+        .addProperty("layoutMetrics",
+                     arkJs.createObjectBuilder()
+                         .addProperty("frame",
+                                      arkJs.createObjectBuilder()
+                                          .addProperty("origin",
+                                                       arkJs.createObjectBuilder()
+                                                           .addProperty("x", shadowView.layoutMetrics.frame.origin.x)
+                                                           .addProperty("y", shadowView.layoutMetrics.frame.origin.y)
+                                                           .build())
+                                          .addProperty("size",
+                                                       arkJs.createObjectBuilder()
+                                                           .addProperty("width", shadowView.layoutMetrics.frame.size.width)
+                                                           .addProperty("height", shadowView.layoutMetrics.frame.size.height)
+                                                           .build())
+                                          .build())
+                         .build());
     return napiShadowViewBuilder
         .addProperty("tag", shadowView.tag)
         .addProperty("type", shadowView.componentName)

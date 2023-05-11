@@ -69,7 +69,19 @@ const rootDescriptor: RootDescriptor = {
   tag: 1,
   childrenTags: [],
   props: { top: 0, left: 0, width: 0, height: 0 },
-  state: {}
+  state: {},
+  layoutMetrics: {
+    frame: {
+      origin: {
+        x: 0,
+        y: 0,
+      },
+      size: {
+        width: 0,
+        height: 0,
+      }
+    }
+  }
 }
 
 @Component
