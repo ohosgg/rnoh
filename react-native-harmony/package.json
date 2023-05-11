@@ -1,6 +1,6 @@
 {
   "name": "@rnoh/react-native-harmony",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "",
   "scripts": {
     "pack:dev": "npm pack",
