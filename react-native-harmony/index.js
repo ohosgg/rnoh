@@ -39,6 +39,6 @@ module.exports = {
     return require('react-native/Libraries/Components/View/View');
   },
   get PanResponder() {
-    return require('react-native/Libraries/Interaction/PanResponder').default;
+    return require('react-native/Libraries/Interaction/PanResponder');
   },
 };

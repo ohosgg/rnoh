@@ -4,3 +4,4 @@ export * from './ImageTest';
 export * from './NetworkingTest';
 export * from './FlatListTest';
 export * from './SampleTurboModuleTest';
+export * from './PanResponderTest';

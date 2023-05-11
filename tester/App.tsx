@@ -8,6 +8,7 @@ import {
   NetworkingTest,
   FlatListTest,
   SampleTurboModuleTest,
+  PanResponderTest,
 } from './tests';
 import {ChessboardSample} from './ChessboardSample';
 
@@ -17,6 +18,7 @@ function App() {
   return (
     <ScrollView style={styles.container} ref={scrollRef}>
       <Tester>
+        <PanResponderTest />
         <SampleTurboModuleTest />
         <FlatListTest />
         <ImageTest />
