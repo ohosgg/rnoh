@@ -1,6 +1,6 @@
 {
   "name": "@ohos/rnoh",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "React Native for Open Harmony",
   "ohos": {
     "org": ""
