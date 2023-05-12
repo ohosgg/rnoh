@@ -111,7 +111,7 @@ export struct RNSurface {
       this.dispatchCommand(tag, commandName, args)
     });
     this.rnInstance.run(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity)
-    this.cleanup = this.descriptorRegistry.registerComponentUpdateCallback(
+    this.cleanup = this.descriptorRegistry.subscribeToDescriptorChanges(
       1,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
     )

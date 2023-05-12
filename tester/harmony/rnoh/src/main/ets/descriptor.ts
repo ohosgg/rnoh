@@ -21,6 +21,7 @@ export type LayoutProps = {
 export type Descriptor<TType = string, TProps extends Object = Object, TState = {}> = {
   type: TType
   tag: Tag
+  parentTag?: Tag
   props: TProps
   state: TState
   childrenTags: Tag[]

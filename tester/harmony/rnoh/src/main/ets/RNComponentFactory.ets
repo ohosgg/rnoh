@@ -46,7 +46,7 @@ export struct RNComponentFactory {
 
   aboutToAppear() {
     this.descriptor = this.descriptorRegistry.getDescriptor(this.tag)
-    this.cleanupCallback = this.descriptorRegistry.registerComponentUpdateCallback(
+    this.cleanupCallback = this.descriptorRegistry.subscribeToDescriptorChanges(
     this.tag,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
     )
