@@ -1,44 +1,47 @@
 module.exports = {
   get AppRegistry() {
-    return require('react-native/Libraries/ReactNative/AppRegistry');
+    return require('react-native/Libraries/ReactNative/AppRegistry')
   },
   get FlatList() {
-    return require('react-native/Libraries/Lists/FlatList');
+    return require('react-native/Libraries/Lists/FlatList')
   },
   get Image() {
-    return require('react-native/Libraries/Image/Image');
+    return require('react-native/Libraries/Image/Image')
   },
   get NativeModules() {
-    return require('react-native/Libraries/BatchedBridge/NativeModules');
+    return require('react-native/Libraries/BatchedBridge/NativeModules')
   },
   get Platform() {
-    return require('./Libraries/Utilities/Platform');
+    return require('./Libraries/Utilities/Platform')
   },
   get PixelRatio() {
-    return require('react-native/Libraries/Utilities/PixelRatio');
+    return require('react-native/Libraries/Utilities/PixelRatio')
   },
   get ScrollView() {
-    return require('react-native/Libraries/Components/ScrollView/ScrollView');
+    return require('react-native/Libraries/Components/ScrollView/ScrollView')
   },
   get StyleSheet() {
-    return require('react-native/Libraries/StyleSheet/StyleSheet');
+    return require('react-native/Libraries/StyleSheet/StyleSheet')
   },
   get Text() {
-    return require('react-native/Libraries/Text/Text');
+    return require('react-native/Libraries/Text/Text')
   },
   get TextInput() {
-    return require('./Libraries/Components/TextInput/TextInput.harmony');
+    return require('./Libraries/Components/TextInput/TextInput.harmony')
   },
   get TurboModuleRegistry() {
-    return require('react-native/Libraries/TurboModule/TurboModuleRegistry');
+    return require('react-native/Libraries/TurboModule/TurboModuleRegistry')
   },
   get UIManager() {
-    return require('react-native/Libraries/ReactNative/UIManager');
+    return require('react-native/Libraries/ReactNative/UIManager')
   },
   get View() {
-    return require('react-native/Libraries/Components/View/View');
+    return require('react-native/Libraries/Components/View/View')
   },
   get PanResponder() {
-    return require('react-native/Libraries/Interaction/PanResponder');
+    return require('react-native/Libraries/Interaction/PanResponder')
   },
-};
+  get processColor() {
+    return require('react-native/Libraries/StyleSheet/processColor')
+  },
+}

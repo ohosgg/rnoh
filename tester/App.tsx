@@ -1,15 +1,7 @@
 import React from 'react';
 import {Tester} from '@rnoh/testerino';
 import {View, ScrollView, StyleSheet, Text} from 'react-native';
-import {
-  PlatformConstantsTest,
-  PixelRatioTest,
-  ImageTest,
-  NetworkingTest,
-  FlatListTest,
-  SampleTurboModuleTest,
-  PanResponderTest,
-} from './tests';
+import * as tests from './tests';
 import {ChessboardSample} from './ChessboardSample';
 
 function App() {
@@ -18,13 +10,10 @@ function App() {
   return (
     <ScrollView style={styles.container} ref={scrollRef}>
       <Tester>
-        <PanResponderTest />
-        <SampleTurboModuleTest />
-        <FlatListTest />
-        <ImageTest />
-        <PixelRatioTest />
-        <PlatformConstantsTest />
-        <NetworkingTest />
+        {Object.keys(tests).map(testSuiteName => {
+          const TestSuite = tests[testSuiteName as keyof typeof tests];
+          return <TestSuite key={testSuiteName} />;
+        })}
       </Tester>
       <ChessboardSample />
       <View
