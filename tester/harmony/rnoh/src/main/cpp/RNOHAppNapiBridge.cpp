@@ -55,9 +55,9 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
 
 static napi_value startReactNative(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 2);
+    auto args = arkJs.getCallbackArgs(info, 3);
 
-    rnInstance->runApplication(arkJs.getDouble(args[0]), arkJs.getDouble(args[1]));
+    rnInstance->runApplication(arkJs.getDouble(args[0]), arkJs.getDouble(args[1]), arkJs.getString(args[2]));
     return arkJs.getUndefined();
 }
 

@@ -1,0 +1,1 @@
+export { RNAbility } from './src/main/ets/RNAbility'

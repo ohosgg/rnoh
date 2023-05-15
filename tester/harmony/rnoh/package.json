@@ -5,7 +5,10 @@
   "ohos": {
     "org": ""
   },
-  "main": "index.ets",
+  "exports": {
+    ".": "./index.ets",
+    "./RNAbility": "./RNAbility.ts"
+  },
   "types": "",
   "license": "ISC",
   "type": "module",

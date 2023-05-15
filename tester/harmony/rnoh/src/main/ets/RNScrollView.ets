@@ -122,7 +122,7 @@ export struct RNScrollView {
     //    .scrollBar(BarState.On)
     //    .scrollBarColor(Color.Gray)
     //    .scrollBarWidth(30)
-    .edgeEffect(this.descriptor.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
+    //    .edgeEffect(this.descriptor.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
     .onScroll(this.onScroll.bind(this))
     //    .onScrollBegin(this.onScrollBegin.bind(this))
     //    .onScrollEnd(this.onScrollEnd.bind(this))

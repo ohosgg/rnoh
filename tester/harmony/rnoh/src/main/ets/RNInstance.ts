@@ -11,12 +11,16 @@ export class RNInstance {
   private turboModuleProvider: TurboModuleProvider;
   private libRNOHApp: any;
 
-  constructor(createPackages: (ctx: RNPackageContext) => RNPackage[]) {
+  constructor(private bundleUrl: string, createPackages: (ctx: RNPackageContext) => RNPackage[]) {
     this.packages = createPackages(this.ctx);
     this.packages.unshift(new RNOHCorePackage(this.ctx));
     this.turboModuleProvider = new TurboModuleProvider(this.packages.map((pkg) => {
       return pkg.createTurboModulesFactory(this.ctx);
     }));
+  }
+
+  getBundleUrl(): string {
+    return this.bundleUrl;
   }
 
   setLibRNOHApp(libRNOHApp: unknown) {
@@ -49,8 +53,8 @@ export class RNInstance {
     this.libRNOHApp.subscribeToShadowTreeChanges(mutationsListener, dispatchedCommandsListener);
   }
 
-  run(initialSurfaceWidth: number, initialSurfaceHeight: number) {
-    this.libRNOHApp.startReactNative(initialSurfaceWidth, initialSurfaceHeight);
+  run(initialSurfaceWidth: number, initialSurfaceHeight: number, jsBundle: string) {
+    this.libRNOHApp.startReactNative(initialSurfaceWidth, initialSurfaceHeight, jsBundle);
   }
 
   callRNFunction(moduleName: string, functionName: string, args: unknown[]): void {

@@ -9,6 +9,8 @@ import { convertColorSegmentsToString } from './cpp-bridge-utils'
 import { TurboModuleProvider } from './TurboModuleProvider'
 import type { DeviceInfoTurboModule } from "./RNOHCorePackage/TurboModules/DeviceInfoTurboModule"
 import { RNInstance } from "./RNInstance"
+import JavaScriptLoader from "./JavaScriptLoader"
+import RNOHLogger from "./RNOHLogger"
 
 @Component
 @Preview
@@ -53,7 +55,8 @@ export struct RNApp {
           buildCustomComponent: this.buildCustomComponent,
           screenDensity: this.screenDensity,
           initialSurfaceWidth: this.initialSurfaceWidth,
-          initialSurfaceHeight: this.initialSurfaceHeight
+          initialSurfaceHeight: this.initialSurfaceHeight,
+          bundleUrl: this.rnInstance.getBundleUrl()
         })
       } else {
         Text("Loading...")
@@ -92,6 +95,7 @@ export struct RNSurface {
   @State initialSurfaceHeight: number = 0
   @Prop screenDensity: number
   @State descriptor: RootDescriptor = rootDescriptor
+  bundleUrl: string
 
   @Provide('__RN_DESCRIPTOR_REGISTRY') 
   descriptorRegistry: DescriptorRegistry =
@@ -110,7 +114,18 @@ export struct RNSurface {
     }, (tag, commandName, args) => {
       this.dispatchCommand(tag, commandName, args)
     });
-    this.rnInstance.run(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity)
+
+    // TODO: create the JavaScriptLoader in RNAbility,
+    // passing the sandbox path from the ability context,
+    // or pass the context to RNInstance so we can use it as needed
+    new JavaScriptLoader().loadBundle(this.bundleUrl)
+      .then((bundle) => {
+        this.rnInstance.run(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity, bundle)
+      }).catch((error) => {
+        RNOHLogger.error(error)
+        // TODO: don't use empty string as a magic "failure" value
+        this.rnInstance.run(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity, "")
+      });
     this.cleanup = this.descriptorRegistry.subscribeToDescriptorChanges(
       1,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
