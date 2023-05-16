@@ -1,6 +1,6 @@
 import hilog from '@ohos.hilog';
 import window from '@ohos.window';
-import { RNAbility } from '@ohos/rnoh/RNAbility';
+import { RNAbility } from '@ohos/rnoh/ts';
 
 export default class EntryAbility extends RNAbility {
     onWindowStageCreate(windowStage: window.WindowStage) {

@@ -1,0 +1,7 @@
+{
+  module: {
+    name: 'sample_package',
+    type: 'har',
+    deviceTypes: ['default'],
+  },
+}

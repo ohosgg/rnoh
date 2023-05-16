@@ -1,8 +1,8 @@
-import { TurboModule } from "../../TurboModule";
+import {TurboModule} from '@ohos/rnoh/src/main/ets/TurboModule';
 
 export class SampleTurboModule extends TurboModule {
   voidFunc() {
-    console.log("RNOH SampleTurboModule::voidFunc");
+    console.log('RNOH SampleTurboModule::voidFunc');
   }
 
   getBool(arg: boolean): boolean {
@@ -13,14 +13,14 @@ export class SampleTurboModule extends TurboModule {
   getNull(arg: null) {
     console.log(`RNOH SampleTurboModule::getNull(${arg})`);
     return arg;
-  };
+  }
 
   getString(arg: string): string {
     console.log(`RNOH SampleTurboModule::getString(${arg})`);
     return arg;
   }
 
-  getObject(arg: { x: { y: number; }; }): Object {
+  getObject(arg: {x: {y: number}}): Object {
     console.log(`RNOH SampleTurboModule::getString(${arg})`);
     return arg;
   }
@@ -33,7 +33,7 @@ export class SampleTurboModule extends TurboModule {
   registerFunction(onComplete: (value: string) => void): void {
     console.log(`RNOH SampleTurboModule::registerFunction + trigger`);
     setTimeout(() => {
-      onComplete?.("... from native side");
+      onComplete?.('... from native side');
     }, 1000);
   }
 
@@ -41,9 +41,9 @@ export class SampleTurboModule extends TurboModule {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (shouldResolve) {
-          resolve("resolved on native side");
+          resolve('resolved on native side');
         } else {
-          reject("rejected on native side");
+          reject('rejected on native side');
         }
       }, 1000);
     });

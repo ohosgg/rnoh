@@ -7,7 +7,6 @@
 #include <react/renderer/components/textinput/TextInputComponentDescriptor.h>
 #include <react/renderer/components/scrollview/ScrollViewComponentDescriptor.h>
 #include "RNOH/Package.h"
-#include "RNOHCorePackage/TurboModules/SampleTurboModuleSpec.h"
 #include "RNOHCorePackage/TurboModules/PlatformConstantsTurboModule.h"
 #include "RNOHCorePackage/TurboModules/DeviceInfoTurboModule.h"
 #include "RNOHCorePackage/TurboModules/SourceCodeTurboModule.h"
@@ -29,9 +28,7 @@ namespace rnoh {
 class RNOHCoreTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
   public:
     SharedTurboModule createTurboModule(Context ctx, const std::string &name) const override {
-        if (name == "SampleTurboModule") {
-            return std::make_shared<NativeSampleTurboModuleSpecJSI>(ctx, name);
-        } else if (name == "PlatformConstants") {
+        if (name == "PlatformConstants") {
             return std::make_shared<PlatformConstantsTurboModule>(ctx, name);
         } else if (name == "DeviceInfo") {
             return std::make_shared<DeviceInfoTurboModule>(ctx, name);

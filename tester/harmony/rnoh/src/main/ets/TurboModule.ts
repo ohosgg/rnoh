@@ -1,4 +1,4 @@
-import {RNInstance} from './RNInstance'
+import type {RNInstance} from './RNInstance'
 
 export interface TurboModuleContext {
   reactNativeVersion: string;

@@ -26,6 +26,10 @@
     {
       "name": "rnoh",
       "srcPath": "./rnoh"
+    },
+    {
+      "name": "sample_package",
+      "srcPath": "./sample_package"
     }
   ]
 }

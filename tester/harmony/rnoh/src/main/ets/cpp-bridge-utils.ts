@@ -8,12 +8,12 @@ export function convertColorSegmentsToString(colorSegments?: ColorSegments) {
   )}, ${a})`
 }
 
-export function convertColorValueToRGBA(colorValue: number) {
+export function convertColorValueToRGBA(colorValue) {
   const rgba = {
-    r: (colorValue >> 24) & 0xff,
-    g: (colorValue >> 16) & 0xff,
-    b: (colorValue >> 8) & 0xff,
-    a: ((colorValue >> 0) & 0xff) / 255,
+    a: (colorValue >> 24) & 0xff / 255,
+    r: (colorValue >> 16) & 0xff,
+    g: (colorValue >> 8) & 0xff,
+    b: ((colorValue >> 0) & 0xff),
   }
   return `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`
 }

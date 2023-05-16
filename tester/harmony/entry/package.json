@@ -10,6 +10,7 @@
   "repository": {},
   "license": "ISC",
   "dependencies": {
-    "@ohos/rnoh": "file:../rnoh"
+    "@ohos/rnoh": "file:../rnoh",
+    "@ohos/rnoh-sample-package": "file:../sample_package"
   }
 }

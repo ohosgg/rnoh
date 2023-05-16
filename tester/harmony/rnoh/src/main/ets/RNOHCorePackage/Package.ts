@@ -4,7 +4,6 @@ import {
   PlatformConstantsTurboModule,
   DeviceInfoTurboModule,
   SourceCodeTurboModule,
-  SampleTurboModule,
   TimingTurboModule,
   ExceptionsManagerTurboModule,
   NetworkingTurboModule,
@@ -19,7 +18,6 @@ export class RNOHCorePackage extends RNPackage {
 }
 
 const TURBO_MODULE_CLASS_BY_NAME: Record<string, typeof TurboModule> = {
-  "SampleTurboModule": SampleTurboModule,
   "PlatformConstants": PlatformConstantsTurboModule,
   "DeviceInfo": DeviceInfoTurboModule,
   "SourceCode": SourceCodeTurboModule,

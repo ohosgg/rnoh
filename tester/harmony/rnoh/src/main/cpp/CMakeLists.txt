@@ -389,7 +389,6 @@ add_library(rnoh SHARED
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/JsiConversions.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/Package.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/UIManagerModule.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/SampleTurboModuleSpec.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/PlatformConstantsTurboModule.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/DeviceInfoTurboModule.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/SourceCodeTurboModule.cpp"
