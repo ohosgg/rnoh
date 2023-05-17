@@ -4,6 +4,7 @@ import { convertColorSegmentsToString } from './cpp-bridge-utils'
 import { ReactEventKind } from './events'
 import { CommandDispatcher } from './CommandDispatcher'
 import { RNInstance } from "./RNInstance"
+import { RNOHContext } from "./RNOHContext"
 
 export type ScrollViewProps = ViewProps & {
   scrollEnabled?: boolean
@@ -24,15 +25,15 @@ export type ScrollViewDescriptor = Descriptor<"ScrollView", ScrollViewProps, Scr
 @Component
 export struct RNScrollView {
   @Consume("RNInstance") rnInstance: RNInstance
+  @Consume("RNOHContext") ctx: RNOHContext
   @State tag: number = -1
   @BuilderParam renderDescriptors: () => void
   @Prop descriptor: ScrollViewDescriptor
-  @Consume('__RN_COMMAND_DISPATCHER') commandDispatcher: CommandDispatcher
   private scroller = new Scroller()
   private cleanupCommandCallback?: () => void = undefined
 
   aboutToAppear() {
-    this.cleanupCommandCallback = this.commandDispatcher.registerCommandCallback(
+    this.cleanupCommandCallback = this.ctx.commandDispatcher.registerCommandCallback(
     this.tag,
       (command, args) => {
         if (command === 'scrollTo') {

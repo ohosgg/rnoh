@@ -3,6 +3,7 @@ import Device from '@system.device'
 import { DescriptorRegistry } from './DescriptorRegistry'
 import { CommandDispatcher } from './CommandDispatcher'
 import { RNComponentFactory, ComponentBuilderContext } from './RNComponentFactory'
+import { RNOHContext } from "./RNOHContext"
 import { Descriptor } from './descriptor'
 import { ViewProps } from './RNView'
 import { convertColorSegmentsToString } from './cpp-bridge-utils'
@@ -11,6 +12,7 @@ import type { DeviceInfoTurboModule } from "./RNOHCorePackage/TurboModules/Devic
 import { RNInstance } from "./RNInstance"
 import JavaScriptLoader from "./JavaScriptLoader"
 import RNOHLogger from "./RNOHLogger"
+
 
 @Component
 @Preview
@@ -90,22 +92,13 @@ const rootDescriptor: RootDescriptor = {
 @Component
 export struct RNSurface {
   @Consume("RNInstance") rnInstance: RNInstance
+  @Consume("RNOHContext") ctx: RNOHContext
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   @State initialSurfaceWidth: number = 0
   @State initialSurfaceHeight: number = 0
   @Prop screenDensity: number
   @State descriptor: RootDescriptor = rootDescriptor
   bundleUrl: string
-
-  @Provide('__RN_DESCRIPTOR_REGISTRY') 
-  descriptorRegistry: DescriptorRegistry =
-    new DescriptorRegistry({
-      '1': { ...rootDescriptor },
-    });
-
-  @Provide('__RN_COMMAND_DISPATCHER') 
-  commandDispatcher: CommandDispatcher = new CommandDispatcher()
-
   private cleanup?: () => void = undefined
 
   aboutToAppear() {
@@ -126,7 +119,7 @@ export struct RNSurface {
         // TODO: don't use empty string as a magic "failure" value
         this.rnInstance.run(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity, "")
       });
-    this.cleanup = this.descriptorRegistry.subscribeToDescriptorChanges(
+    this.cleanup = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
       1,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
     )
@@ -137,11 +130,11 @@ export struct RNSurface {
   }
 
   updateDescriptorRegistry(mutations) {
-    this.descriptorRegistry.applyMutations(mutations)
+    this.ctx.descriptorRegistry.applyMutations(mutations)
   }
 
   dispatchCommand(tag, commandName, args) {
-    this.commandDispatcher.dispatchCommand(tag, commandName, args)
+    this.ctx.commandDispatcher.dispatchCommand(tag, commandName, args)
   }
 
   onUpdateComponent(newDescriptor: Descriptor) {

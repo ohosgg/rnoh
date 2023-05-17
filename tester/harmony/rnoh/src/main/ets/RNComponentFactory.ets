@@ -5,6 +5,7 @@ import { RNText, TextDescriptor } from "./RNText"
 import { RNScrollView, ScrollViewDescriptor } from "./RNScrollView"
 import { Descriptor } from "./descriptor"
 import { DescriptorRegistry } from "./DescriptorRegistry"
+import { RNOHContext } from "./RNOHContext"
 
 // placeholder value used as the initializer for
 // the `descriptor` @State field in `RNComponentFactory`
@@ -37,7 +38,7 @@ export struct RNComponentFactory {
   tag: number = -1
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   @State descriptor: Descriptor = nullDescriptor
-  @Consume('__RN_DESCRIPTOR_REGISTRY') descriptorRegistry: DescriptorRegistry
+  @Consume("RNOHContext") ctx: RNOHContext
   private cleanupCallback?: () => void = undefined
 
   getDescriptorType() {
@@ -45,8 +46,8 @@ export struct RNComponentFactory {
   }
 
   aboutToAppear() {
-    this.descriptor = this.descriptorRegistry.getDescriptor(this.tag)
-    this.cleanupCallback = this.descriptorRegistry.subscribeToDescriptorChanges(
+    this.descriptor = this.ctx.descriptorRegistry.getDescriptor(this.tag)
+    this.cleanupCallback = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
     this.tag,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
     )

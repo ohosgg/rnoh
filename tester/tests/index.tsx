@@ -1,3 +1,4 @@
+export * from './TimerTest';
 export * from './SampleNativeComponentTest';
 export * from './MiscTest';
 export * from './PlatformConstantsTest';
