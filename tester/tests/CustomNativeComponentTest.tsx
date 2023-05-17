@@ -43,9 +43,9 @@ function NativeComponent({
   );
 }
 
-export function SampleNativeComponentTest() {
+export function CustomNativeComponentTest() {
   return (
-    <TestSuite name="Sample Native Component">
+    <TestSuite name="Custom Native Component">
       <TestCase itShould="render red rectangle">
         <NativeComponent backgroundColor="red" size={64} />
       </TestCase>

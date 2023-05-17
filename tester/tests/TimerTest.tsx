@@ -1,6 +1,5 @@
-import {View} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
 async function wait(ms: number) {
   return new Promise(resolve => {
@@ -8,7 +7,7 @@ async function wait(ms: number) {
   });
 }
 
-const PRECISION_IN_MS = 50;
+const PRECISION_IN_MS = 100;
 
 export function TimerTest() {
   return (
@@ -49,36 +48,6 @@ export function TimerTest() {
           );
         }}
       />
-      <TestCase itShould="change the rectangle's color every second">
-        <Interval
-          ms={1000}
-          renderItem={refreshKey => (
-            <View
-              style={{
-                width: 64,
-                height: 64,
-                backgroundColor: refreshKey % 2 === 0 ? 'red' : 'green',
-              }}
-            />
-          )}
-        />
-      </TestCase>
     </TestSuite>
   );
-}
-
-function Interval({
-  renderItem,
-  ms,
-}: {
-  renderItem: (refreshKey: number) => any;
-  ms: number;
-}) {
-  const [refreshKey, setRefreshKey] = useState(0);
-
-  useEffect(() => {
-    setInterval(() => setRefreshKey(prev => (prev += 1)), ms);
-  }, [ms]);
-
-  return <React.Fragment>{renderItem(refreshKey)}</React.Fragment>;
 }

@@ -3,7 +3,7 @@ import {TestCase, TestSuite} from '@rnoh/testerino';
 
 export const MiscTest = () => {
   return (
-    <TestSuite name="MiscTest">
+    <TestSuite name="Misc">
       <TestCase
         itShould="represent a color as a number"
         fn={({expect}) => {

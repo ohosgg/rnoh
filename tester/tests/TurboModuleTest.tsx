@@ -17,9 +17,9 @@ interface Spec extends TurboModule, SampleTurboModuleProtocol {}
 
 const SampleTurboModule = TurboModuleRegistry.get<Spec>('SampleTurboModule')!;
 
-export function SampleTurboModuleTest() {
+export function TurboModuleTest() {
   return (
-    <TestSuite name="SampleTurboModule">
+    <TestSuite name="TurboModule">
       <TestCase
         itShould="return null when calling voidFunc()"
         fn={({expect}) => {
