@@ -1,8 +1,8 @@
 // export * from 'react-native/Libraries/ActionSheetIOS/ActionSheetIOS';
 // export * from 'react-native/Libraries/Alert/Alert';
-// export * from 'react-native/Libraries/Animated/Animated';
-// export * from 'react-native/Libraries/Animated/Easing';
-// export * from 'react-native/Libraries/Animated/useAnimatedValue';
+export * from 'react-native/Libraries/Animated/Animated';
+export * from 'react-native/Libraries/Animated/Easing';
+export * from 'react-native/Libraries/Animated/useAnimatedValue';
 // export * from 'react-native/Libraries/AppState/AppState';
 export * from 'react-native/Libraries/BatchedBridge/NativeModules'
 // export * from 'react-native/Libraries/Components/AccessibilityInfo/AccessibilityInfo';

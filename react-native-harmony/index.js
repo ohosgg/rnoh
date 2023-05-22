@@ -1,4 +1,10 @@
 module.exports = {
+  get Animated() {
+    return require('react-native/Libraries/Animated/Animated').default
+  },
+  get Easing() {
+    return require('react-native/Libraries/Animated/Easing').default
+  },
   get AppRegistry() {
     return require('react-native/Libraries/ReactNative/AppRegistry')
   },
@@ -34,6 +40,9 @@ module.exports = {
   },
   get UIManager() {
     return require('react-native/Libraries/ReactNative/UIManager')
+  },
+  get useAnimatedValue() {
+    return require('react-native/Libraries/Animated/useAnimatedValue').default
   },
   get View() {
     return require('react-native/Libraries/Components/View/View')

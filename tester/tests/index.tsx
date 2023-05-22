@@ -9,3 +9,4 @@ export * from './FlatListTest';
 export * from './TurboModuleTest';
 export * from './PanResponderTest';
 export * from './RenderingTest';
+export * from './AnimatedTest';
