@@ -1,4 +1,6 @@
 {
+  "license": "ISC",
+  "types": "",
   "name": "@ohos/rnoh",
   "version": "0.0.14",
   "description": "React Native for Open Harmony",

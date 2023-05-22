@@ -12,3 +12,7 @@ package-lock.json
 /.clangd
 /.clang-format
 /.clang-tidy
+/oh_modules
+hvigorw
+hvigorw.bat
+hvigor/hvigor-wrapper.js

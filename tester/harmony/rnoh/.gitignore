@@ -4,3 +4,4 @@
 /.cxx
 ./package-lock.json
 *.tgz
+/oh_modules
