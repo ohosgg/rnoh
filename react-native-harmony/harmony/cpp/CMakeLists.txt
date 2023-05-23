@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.4.1)
 
-set(NATIVERENDER_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
-set(third_party_dir "${CMAKE_CURRENT_SOURCE_DIR}/third-party")
-set(patches_dir "${CMAKE_CURRENT_SOURCE_DIR}/patches")
+set(NATIVERENDER_ROOT_PATH "${RNOH_CPP_DIR}")
+set(third_party_dir "${RNOH_CPP_DIR}/third-party")
+set(patches_dir "${RNOH_CPP_DIR}/patches")
 
 add_compile_options("-Wno-unused-command-line-argument")
 
@@ -286,7 +286,7 @@ set_property(TARGET hermes-engine::libhermes PROPERTY
                 IMPORTED_LOCATION "${third_party_dir}/prebuilt/${OHOS_ARCH}/libhermes.so")
 
 # -------- REACT COMMON --------
-set(REACT_COMMON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third-party/rn/ReactCommon")
+set(REACT_COMMON_DIR "${RNOH_CPP_DIR}/third-party/rn/ReactCommon")
 set(REACT_COMMON_PATCH_DIR "${patches_dir}/react_native_core")
 add_library(folly_runtime ALIAS folly_target)
 add_library(glog ALIAS glog_target)
@@ -373,32 +373,32 @@ target_compile_options(hermes_inspector PRIVATE ${folly_compile_options})
 # ----------------------------------------------------------------------------------------------------------------------
 
 add_library(rnoh SHARED
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/RNInstance.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/MessageQueueThread.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/MutationsToNapiConverter.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/LogSink.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/ArkJS.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/MountingManager.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/events/EventEmitterRegistry.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/events/EventEmitterHelper.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/TaskExecutor.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/TaskRunner.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/TurboModuleProvider.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/TurboModuleFactory.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/ArkTSTurboModule.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/JsiConversions.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/Package.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOH/UIManagerModule.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/PlatformConstantsTurboModule.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/DeviceInfoTurboModule.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/SourceCodeTurboModule.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/TimingTurboModule.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/NetworkingTurboModule.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/ExceptionsManagerTurboModule.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/RNOHCorePackage/TurboModules/WebSocketTurboModule.cpp"
+    "${RNOH_CPP_DIR}/RNOH/RNInstance.cpp"
+    "${RNOH_CPP_DIR}/RNOH/MessageQueueThread.cpp"
+    "${RNOH_CPP_DIR}/RNOH/MutationsToNapiConverter.cpp"
+    "${RNOH_CPP_DIR}/RNOH/LogSink.cpp"
+    "${RNOH_CPP_DIR}/RNOH/ArkJS.cpp"
+    "${RNOH_CPP_DIR}/RNOH/MountingManager.cpp"
+    "${RNOH_CPP_DIR}/RNOH/events/EventEmitterRegistry.cpp"
+    "${RNOH_CPP_DIR}/RNOH/events/EventEmitterHelper.cpp"
+    "${RNOH_CPP_DIR}/RNOH/TaskExecutor.cpp"
+    "${RNOH_CPP_DIR}/RNOH/TaskRunner.cpp"
+    "${RNOH_CPP_DIR}/RNOH/TurboModuleProvider.cpp"
+    "${RNOH_CPP_DIR}/RNOH/TurboModuleFactory.cpp"
+    "${RNOH_CPP_DIR}/RNOH/ArkTSTurboModule.cpp"
+    "${RNOH_CPP_DIR}/RNOH/JsiConversions.cpp"
+    "${RNOH_CPP_DIR}/RNOH/Package.cpp"
+    "${RNOH_CPP_DIR}/RNOH/UIManagerModule.cpp"
+    "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/PlatformConstantsTurboModule.cpp"
+    "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/DeviceInfoTurboModule.cpp"
+    "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/SourceCodeTurboModule.cpp"
+    "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/TimingTurboModule.cpp"
+    "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/NetworkingTurboModule.cpp"
+    "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/ExceptionsManagerTurboModule.cpp"
+    "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/WebSocketTurboModule.cpp"
 )
 target_include_directories(rnoh PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${RNOH_CPP_DIR}"
     "${REACT_COMMON_DIR}"
     "${REACT_COMMON_DIR}/jsiexecutor"
     "${folly_include_dir}"

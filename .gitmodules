@@ -1,15 +1,15 @@
 [submodule "native/rnoh/src/main/cpp/folly"]
-	path = tester/harmony/rnoh/src/main/cpp/third-party/folly
+	path = react-native-harmony/harmony/cpp/third-party/folly
 	url = https://github.com/facebook/folly
 [submodule "native/rnoh/src/main/cpp/fmt"]
-	path = tester/harmony/rnoh/src/main/cpp/third-party/fmt
+	path = react-native-harmony/harmony/cpp/third-party/fmt
 	url = https://github.com/fmtlib/fmt
 [submodule "native/rnoh/src/main/cpp/third-party/hermes"]
-	path = tester/harmony/rnoh/src/main/cpp/third-party/hermes
+	path = react-native-harmony/harmony/cpp/third-party/hermes
 	url = https://github.com/facebook/hermes
 [submodule "native/rnoh/src/main/cpp/third-party/boost"]
-	path = tester/harmony/rnoh/src/main/cpp/third-party/boost
+	path = react-native-harmony/harmony/cpp/third-party/boost
 	url = https://github.com/boostorg/boost.git
 [submodule "native/rnoh/src/main/cpp/third-party/libevent-sub"]
-	path = tester/harmony/rnoh/src/main/cpp/third-party/libevent
+	path = react-native-harmony/harmony/cpp/third-party/libevent
 	url = https://github.com/libevent/libevent
