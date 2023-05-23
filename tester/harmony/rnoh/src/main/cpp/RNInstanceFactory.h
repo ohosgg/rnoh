@@ -21,7 +21,7 @@
 
 using namespace rnoh;
 
-std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboModuleProviderRef) {
+std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboModuleProviderRef, std::string appName) {
     PackageProvider packageProvider;
     auto packages = packageProvider.getPackages({});
     packages.insert(packages.begin(), std::make_shared<RNOHCorePackage>(Package::Context{}));
@@ -55,5 +55,6 @@ std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboMo
                                         std::move(turboModuleFactory),
                                         taskExecutor,
                                         componentDescriptorProviderRegistry,
-                                        MutationsToNapiConverter(std::move(componentNapiBinderByName)));
+                                        MutationsToNapiConverter(std::move(componentNapiBinderByName)),
+                                        appName);
 }

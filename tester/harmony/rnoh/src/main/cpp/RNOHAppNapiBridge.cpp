@@ -18,7 +18,8 @@ std::unique_ptr<RNInstance> rnInstance;
 
 static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    rnInstance = createRNInstance(env, arkTsTurboModuleProviderRef);
+    auto args = arkJs.getCallbackArgs(info, 1);
+    rnInstance = createRNInstance(env, arkTsTurboModuleProviderRef, arkJs.getString(args[0]));
     rnInstance->start();
     return arkJs.getUndefined();
 }

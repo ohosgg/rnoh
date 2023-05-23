@@ -32,8 +32,9 @@ class RNInstance {
                TurboModuleFactory &&turboModuleFactory,
                std::shared_ptr<TaskExecutor> taskExecutor,
                std::shared_ptr<react::ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry,
-               MutationsToNapiConverter mutationsToNapiConverter)
-        : surfaceHandler("rnempty", 1),
+               MutationsToNapiConverter mutationsToNapiConverter,
+               std::string appName)
+        : surfaceHandler(appName, 1),
           instance(std::make_shared<facebook::react::Instance>()),
           scheduler(nullptr),
           taskExecutor(taskExecutor),

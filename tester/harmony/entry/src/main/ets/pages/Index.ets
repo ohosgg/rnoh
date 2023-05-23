@@ -17,7 +17,9 @@ struct Index {
   build() {
     Column() {
       RNApp({
-        rnInstance: new RNInstance(BUNDLE_URL, (ctx) => [
+        rnInstance: new RNInstance(BUNDLE_URL,
+          "app_name",
+          (ctx) => [
           new SamplePackage(ctx)
         ]),
         buildCustomComponent: this.buildCustomComponent.bind(this)

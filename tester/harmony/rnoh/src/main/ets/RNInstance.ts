@@ -11,7 +11,7 @@ export class RNInstance {
   private turboModuleProvider: TurboModuleProvider;
   private libRNOHApp: any;
 
-  constructor(private bundleUrl: string, createPackages: (ctx: RNPackageContext) => RNPackage[]) {
+  constructor(private bundleUrl: string, private appName: string, createPackages: (ctx: RNPackageContext) => RNPackage[]) {
     this.packages = createPackages(this.ctx);
     this.packages.unshift(new RNOHCorePackage(this.ctx));
     this.turboModuleProvider = new TurboModuleProvider(this.packages.map((pkg) => {
@@ -22,6 +22,10 @@ export class RNInstance {
   getBundleUrl(): string {
     return this.bundleUrl;
   }
+  getAppName(): string {
+    return this.appName;
+  }
+
 
   setLibRNOHApp(libRNOHApp: unknown) {
     if (this.libRNOHApp) {
@@ -39,7 +43,7 @@ export class RNInstance {
   }
 
   initializeReactNative() {
-    this.libRNOHApp.initializeReactNative();
+    this.libRNOHApp.initializeReactNative(this.appName);
   }
 
   emitEvent(tag: Tag, eventKind: number, event: any) {
