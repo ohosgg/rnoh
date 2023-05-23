@@ -1,0 +1,27 @@
+{
+  "name": "@rnoh/react-native-harmony-cli",
+  "version": "0.0.2",
+  "description": "",
+  "scripts": {
+    "build": "tsc --outDir dist",
+    "prepack": "npm run build",
+    "verify": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "metro": "*"
+  },
+  "main": "dist/index.js",
+  "devDependencies": {
+    "@react-native-community/cli-types": "^11.3.0",
+    "@tsconfig/recommended": "^1.0.2",
+    "@types/fs-extra": "^11.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "fs-extra": "^11.1.1"
+  }
+}
