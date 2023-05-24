@@ -5,6 +5,84 @@
 
 Note: native code lives in the `/tester/harmony/rnoh` directory to allow fast development cycles.
 
+## Current exports 
+
+### Components
+
+- [ ] AccesibilityInfo
+- [ ] ActivityIndicator
+- [ ] Button
+- [x] FlatList
+- [x] Image
+- [ ] ImageBackground
+- [ ] InputAccessoryView
+- [ ] KeyboardAvoidingView
+- [ ] Modal
+- [ ] Pressable
+- [ ] RefreshControl
+- [ ] SafeAreaView
+- [x] ScrollView
+- [x] SectionList
+- [ ] StatusBar
+- [ ] Switch
+- [x] Text
+- [x] TextInput
+- [ ] Touchable
+- [ ] TouchableHighlight
+- [ ] TouchableNativeFeedback
+- [ ] TouchableOpacity
+- [ ] TouchableWithoutFeedback
+- [x] View
+- [ ] VirtualizedList
+- [ ] VirtualizedSectionList
+
+### Apis
+- [ ] Alert
+- [x] Animated
+- [ ] Appearance
+- [x] AppRegistry
+- [ ] AppState
+- [ ] BackHandler
+- [ ] DeviceInfo
+- [ ] DevSettings
+- [ ] Dimensions
+- [x] Easing
+- [ ] findNodeHandle
+- [ ] I18nManager
+- [ ] findNodeHandle
+- [ ] InteractionManager
+- [ ] Keyboard
+- [ ] Linking
+- [ ] LogBox
+- [ ] NativeEventEmitter
+- [ ] Networking
+- [x] PanResponder
+- [x] PixelRatio
+- [ ] Settings
+- [ ] Share
+- [x] StyleSheet
+- [ ] Systrace
+- [x] TurboModuleRegistry
+- [x] UIManager
+- [ ] unstable_batchedUpdates
+- [x] useAnimatedValue
+- [ ] useColorScheme
+- [ ] useWindowDimensions
+- [ ] UTFSequence
+- [ ] Vibration
+- [ ] YellowBox
+
+### Plugins
+- [ ] DeviceEventEmitter
+- [ ] NativeAppEventEmitter
+- [x] NativeModules
+- [x] Platform
+- [ ] PlatformColor
+- [x] processColor
+- [ ] requireNativeComponent
+- [ ] RootTagContext
+
+
 ## Prerequisites
 ### DevEco Studio setup
 Currently we use DevEco Studio 3.1. Beta 1 for development. Follow steps below to install the IDE and required SDKs.
