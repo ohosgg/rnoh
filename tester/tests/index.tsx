@@ -6,6 +6,7 @@ export * from './PixelRatioTest';
 export * from './ImageTest';
 export * from './NetworkingTest';
 export * from './FlatListTest';
+export * from './SectionListTest';
 export * from './TurboModuleTest';
 export * from './PanResponderTest';
 export * from './RenderingTest';

@@ -53,4 +53,7 @@ module.exports = {
   get processColor() {
     return require('react-native/Libraries/StyleSheet/processColor')
   },
+  get SectionList() {
+    return require('react-native/Libraries/Lists/SectionList').default
+  },
 }
