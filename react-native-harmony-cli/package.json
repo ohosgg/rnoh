@@ -1,11 +1,14 @@
 {
   "name": "@rnoh/react-native-harmony-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "scripts": {
-    "build": "tsc --outDir dist",
+    "build": "tsc --outDir dist -p tsconfig.build.json",
     "prepack": "npm run build",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit && jest",
+    "test": "npm run build && jest",
+    "rn": "npm run build && react-native",
+    "prepublishOnly": "npm run verify"
   },
   "keywords": [],
   "author": "",
@@ -16,12 +19,24 @@
   "main": "dist/index.js",
   "devDependencies": {
     "@react-native-community/cli-types": "^11.3.0",
-    "@tsconfig/recommended": "^1.0.2",
     "@types/fs-extra": "^11.0.1",
+    "@types/jest": "^29.5.1",
+    "@types/tar": "^6.1.5",
+    "@types/tmp": "^0.2.3",
+    "directory-tree": "^3.5.1",
+    "execa": "npm:@esm2cjs/execa@^6.1.1-cjs.1",
+    "jest": "^29.5.0",
+    "react-native": "^0.71.3",
+    "tmp": "^0.2.1",
+    "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "fs-extra": "^11.1.1"
+    "@tsconfig/recommended": "^1.0.2",
+    "fs-extra": "^11.1.1",
+    "glob": "^10.2.6",
+    "json5": "^2.2.3",
+    "tar": "^6.1.15"
   }
 }

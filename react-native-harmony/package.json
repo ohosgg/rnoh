@@ -3,11 +3,9 @@
   "version": "0.0.14",
   "description": "",
   "scripts": {
-    "pack:dev": "npm pack",
-    "pack:native": "cd ../tester/harmony/rnoh && npm pack && cd ../../../react-native-harmony",
-    "copy:native": "rimraf ./harmony && mkdir harmony && cp ../tester/harmony/rnoh/*.tgz ./harmony",
-    "pack:prod": "npm run pack:native && npm run copy:native && npm pack",
-    "prepublishOnly": "npm run pack:native && npm run copy:native"
+    "pack:harmony": "react-native pack-harmony --oh-module-path ../tester/harmony/rnoh --harmony-dir-path ./harmony",
+    "pack:prod": "npm run pack:harmony && npm pack",
+    "prepublishOnly": "npm run pack:harmony"
   },
   "author": "",
   "license": "ISC",
@@ -24,14 +22,14 @@
     "rimraf": "^5.0.0"
   },
   "files": [
-    "./harmony/*",
+    "./harmony.tar.gz",
     "./Libraries/**/*",
     "./types/**/*",
     "./*.js",
     "./*.json"
   ],
   "dependencies": {
-    "@rnoh/react-native-harmony-cli": "0.0.2",
+    "@rnoh/react-native-harmony-cli": "^0.0.3",
     "fs-extra": "^11.1.1",
     "metro": "^0.76.3",
     "metro-config": "^0.76.3"

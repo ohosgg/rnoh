@@ -1,4 +1,5 @@
 node_modules
 scripts
-*.tgz
+rnoh-react-native-harmony-*.tgz
+harmony
 .npmrc
