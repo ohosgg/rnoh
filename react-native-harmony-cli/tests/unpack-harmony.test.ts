@@ -62,7 +62,11 @@ it('should pack and unpack package', () => {
     )
   );
 
-  rnFixture.unpackHarmony({
+  const unpackingResult = rnFixture.unpackHarmony({
+    nodeModulesPath: 'rn-project/node_modules',
+    outputDir: 'rn-project/harmony',
+  });
+  const unpackingAgainResult = rnFixture.unpackHarmony({
     nodeModulesPath: 'rn-project/node_modules',
     outputDir: 'rn-project/harmony',
   });
@@ -91,4 +95,6 @@ it('should pack and unpack package', () => {
       )
     )
   ).toBeFalsy();
+  expect(unpackingResult).toContain('[UNPACKED]');
+  expect(unpackingAgainResult).not.toContain('[UNPACKED]');
 });

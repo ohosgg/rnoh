@@ -44,18 +44,23 @@ async function unpack(nodeModulesPath: string, outputDirPath: string) {
   for (const nodeModuleName of nodeModuleNames) {
     const nodeModulePath = pathUtils.join(nodeModulesPath, nodeModuleName);
     const harmonyArchivePath = pathUtils.join(nodeModulePath, 'harmony.tar.gz');
-    if (fs.existsSync(harmonyArchivePath)) {
-      const pkgHarmonyDirPath = pathUtils.join(nodeModulePath, 'harmony');
+    const pkgHarmonyDirPath = pathUtils.join(nodeModulePath, 'harmony');
+    if (
+      fs.existsSync(harmonyArchivePath) &&
+      !fs.existsSync(pkgHarmonyDirPath)
+    ) {
+      console.log(`[UNPACKED] ${nodeModuleName}/harmony.tar.gz`);
       await unpackTarGz(harmonyArchivePath, pkgHarmonyDirPath);
       const names = fs.readdirSync(pkgHarmonyDirPath);
       for (const name of names) {
         if (name.endsWith('.tar.gz')) {
           const archivePath = pathUtils.join(pkgHarmonyDirPath, name);
           const moduleName = pathUtils.parse(archivePath).name.split('.')[0];
-          await unpackTarGz(
-            archivePath,
-            pathUtils.join(outputDirPath, moduleName)
-          );
+          const modulePath = pathUtils.join(outputDirPath, moduleName);
+          if (!fs.existsSync(modulePath)) {
+            console.log(`[UNPACKED] ${nodeModuleName}/harmony/${name}`);
+            await unpackTarGz(archivePath, modulePath);
+          }
         }
       }
     }
