@@ -41,7 +41,6 @@ it('should pack and unpack package', () => {
       },
     },
     'rn-project': {
-      harmony: {},
       node_modules: {},
     },
   });

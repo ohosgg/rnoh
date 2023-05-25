@@ -19,7 +19,7 @@ export const commandUnpackHarmony: Command = {
     {
       name: '--output-dir <string>',
       description: 'Output directory to which OH modules should be unpacked to',
-      default: './harmony',
+      default: './harmony/react_native_modules',
     },
   ],
   func: async (argv, config, args: any) => {
