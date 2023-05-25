@@ -1,12 +1,13 @@
 {
-  "name": "@ohos/rnoh-sample-package",
-  "description": "",
-  "version": "0.0.1",
-  "main": "index.ets",
-  "types": "",
   "license": "ISC",
-  "type": "module",
+  "types": "",
   "devDependencies": {
     "@ohos/rnoh": "file:../rnoh"
-  }
+  },
+  "name": "@ohos/rnoh-sample-package",
+  "description": "",
+  "main": "index.ets",
+  "type": "module",
+  "version": "0.0.1",
+  "dependencies": {}
 }

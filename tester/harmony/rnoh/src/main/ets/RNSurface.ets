@@ -12,6 +12,7 @@ import type { DeviceInfoTurboModule } from "./RNOHCorePackage/TurboModules/Devic
 import { RNInstance } from "./RNInstance"
 import JavaScriptLoader from "./JavaScriptLoader"
 import RNOHLogger from "./RNOHLogger"
+import {startTrace, finishTrace} from './tracer';
 
 
 @Component
@@ -21,11 +22,13 @@ export struct RNApp {
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   @State screenDensity: number = 0
   @State shouldShow: boolean = false
+  @State dev: boolean = false
   private initialSurfaceWidth: number = 0
   private initialSurfaceHeight: number = 0
 
   aboutToAppear() {
     // delay running the app so that debugger has a chance to connect before a potential error is thrown
+    startTrace("INITIALIZATION")
     this.rnInstance?.setLibRNOHApp(libRNOHApp)
     this.rnInstance?.registerTurboModuleProvider();
     setTimeout(() => {
@@ -41,7 +44,8 @@ export struct RNApp {
       } })
       this.rnInstance?.initializeReactNative();
       this.shouldShow = true
-    }, 2000)
+      finishTrace("INITIALIZATION")
+    }, this.dev ? 2000: 0)
 
   }
 
@@ -49,6 +53,7 @@ export struct RNApp {
     this.initialSurfaceWidth = constraint.maxWidth
     this.initialSurfaceHeight = constraint.maxHeight
   }
+
 
   build() {
     Stack() {
@@ -160,4 +165,3 @@ export struct RNSurface {
     .alignItems(VerticalAlign.Top)
   }
 }
-

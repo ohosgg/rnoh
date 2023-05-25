@@ -24,4 +24,5 @@ export class RNAbility extends UIAbility {
         // Ability has back to background
         RNOHLogger.info('Ability onBackground');
     }
+
 }
