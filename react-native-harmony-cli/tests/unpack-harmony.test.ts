@@ -22,17 +22,21 @@ it('should pack and unpack package', () => {
   createFileStructure(tmpDir, {
     'react-native-harmony': {
       harmony: {
-        '.tarignore': 'ignored*',
+        '.tarignore': 'ignored/',
         'file.txt': 'file',
-        'ignored.txt': 'ignored',
+        ignored: {
+          'ignored.txt': 'ignored',
+        },
       },
     },
     tester: {
       harmony: {
         rnoh: {
-          '.tarignore': 'ignored*',
+          '.tarignore': 'ignored/',
           'file.txt': 'file',
-          'ignored.txt': 'ignored',
+          ignored: {
+            'ignored.txt': 'ignored',
+          },
         },
       },
     },
@@ -68,7 +72,7 @@ it('should pack and unpack package', () => {
   ).toBeTruthy();
   expect(
     fse.existsSync(
-      pathUtils.join(tmpDir, 'rn-project/harmony/rnoh/ignored.txt')
+      pathUtils.join(tmpDir, 'rn-project/harmony/rnoh/ignored/ignored.txt')
     )
   ).toBeFalsy();
   expect(
@@ -83,7 +87,7 @@ it('should pack and unpack package', () => {
     fse.existsSync(
       pathUtils.join(
         tmpDir,
-        'rn-project/node_modules/react-native-harmony/harmony/ignored.txt'
+        'rn-project/node_modules/react-native-harmony/harmony/ignored/ignored.txt'
       )
     )
   ).toBeFalsy();

@@ -4,6 +4,7 @@ import pathUtils from 'path';
 import tar from 'tar';
 import fs from 'fs';
 import { ValidationError } from '../core';
+import ignore, { Ignore } from 'ignore';
 
 export const commandPackHarmony: Command = {
   name: 'pack-harmony',
@@ -50,23 +51,19 @@ async function pack(harmonyDirPath: string, ohModulePath: string) {
 }
 
 async function createTGZFromDir(dirPath: string, outputFilePath: string) {
-  const ignorePatterns = maybeGetIgnorePatterns(
-    pathUtils.join(dirPath, '.tarignore')
-  );
+  const ig = getIgnoreUtil(pathUtils.join(dirPath, '.tarignore'));
   const filesToInclude = globSync('**', {
-    ignore: ignorePatterns ?? [],
     cwd: dirPath,
     nodir: true,
-  });
+  }).filter((path) => !ig.ignores(path));
   await createArchive(outputFilePath, dirPath, filesToInclude);
 }
 
-function maybeGetIgnorePatterns(tarignorePath: string): string[] | null {
+function getIgnoreUtil(tarignorePath: string): Ignore {
   if (!fs.existsSync(tarignorePath)) {
-    return null;
+    return ignore();
   }
-  const tarignoreContent = fs.readFileSync(tarignorePath, 'utf-8');
-  return tarignoreContent.split('\n').filter(Boolean);
+  return ignore().add(fs.readFileSync(tarignorePath).toString());
 }
 
 async function createArchive(

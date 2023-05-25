@@ -36,6 +36,7 @@
     "@tsconfig/recommended": "^1.0.2",
     "fs-extra": "^11.1.1",
     "glob": "^10.2.6",
+    "ignore": "^5.2.4",
     "json5": "^2.2.3",
     "tar": "^6.1.15"
   }
