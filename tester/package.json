@@ -7,6 +7,7 @@
     "postinstall": "npm uninstall react-native-harmony && npm i react-native-harmony@file:../react-native-harmony/rnoh-react-native-harmony-0.0.16.tgz",
     "dev:rn": "npm i && npm run dev",
     "dev": "react-native bundle-harmony",
+    "dev:android": "react-native run-android",
     "format": "prettier App.tsx ./tests -w",
     "start": "react-native start"
   },
