@@ -30,7 +30,7 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 
 - [ ] AccesibilityInfo
 - [ ] ActivityIndicator
-- [ ] Button
+- [ ] Button*
 - [x] FlatList
 - [x] Image
 - [ ] ImageBackground
@@ -44,8 +44,8 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 - [x] SectionList
 - [ ] StatusBar
 - [ ] Switch
-- [x] Text
-- [x] TextInput
+- [x] Text*
+- [x] TextInput*
 - [ ] Touchable
 - [ ] TouchableHighlight
 - [ ] TouchableNativeFeedback
@@ -54,6 +54,8 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 - [x] View
 - [ ] VirtualizedList
 - [ ] VirtualizedSectionList
+
+* Text measuring is not implemented. Width and height must be provided.
 
 ### Apis
 - [ ] Alert
@@ -67,13 +69,13 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 - [ ] Dimensions
 - [x] Easing
 - [ ] findNodeHandle
-- [ ] I18nManager
+- [x] I18nManager
 - [ ] findNodeHandle
 - [ ] InteractionManager
 - [ ] Keyboard
 - [ ] Linking
 - [ ] LogBox
-- [ ] NativeEventEmitter
+- [x] NativeEventEmitter
 - [ ] Networking
 - [x] PanResponder
 - [x] PixelRatio

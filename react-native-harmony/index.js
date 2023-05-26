@@ -17,6 +17,9 @@ module.exports = {
   get I18nManager() {
     return require('react-native/Libraries/ReactNative/I18nManager')
   },
+  get NativeEventEmitter() {
+    return require('react-native/Libraries/EventEmitter/NativeEventEmitter').default;
+  },
   get NativeModules() {
     return require('react-native/Libraries/BatchedBridge/NativeModules')
   },

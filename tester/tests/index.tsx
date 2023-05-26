@@ -4,6 +4,7 @@ export * from './FlatListTest';
 export * from './I18nManagerTest';
 export * from './ImageTest';
 export * from './MiscTest';
+export * from './NativeEventEmitterTest';
 export * from './NetworkingTest';
 export * from './PanResponderTest';
 export * from './PixelRatioTest';
