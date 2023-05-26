@@ -56,6 +56,9 @@ module.exports = {
   get View() {
     return require('react-native/Libraries/Components/View/View')
   },
+  get InteractionManager() {
+    return require('react-native/Libraries/Interaction/InteractionManager')
+  },
   get PanResponder() {
     return require('react-native/Libraries/Interaction/PanResponder')
   },
