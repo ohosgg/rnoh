@@ -1,9 +1,28 @@
 # React Native Open Harmony
 
-## Components diagram
+## How to add `harmony` platform to your React Native project
+1. Follow the instructions in the [Prerequisites](#prerequisites) section
+1. Copy `tester/.npmrc` to your project
+1. Create access token and set `RNOH_NPM_TOKEN` by following instructions above
+1. Install react-native-harmony: `npm i react-native-harmony@npm:@rnoh/react-native-harmony`
+1. Copy `metro.config.js` to your project
+1. Create a new Harmony project in `<YOUR_PROJECT>/harmony` 
+1. Copy `tester/harmony/entry` module to `<YOUR_PROJECT>/harmony/entry`
+1. Run `./node_modules/.bin/react-native unpack-harmony` - it make take a while
+1. Add `"postinstall": "react-native unpack-harmony"` to npm's scripts
+1. Update `tester/harmony/entry/src/main/ets/pages/Index.ets`
+   1. Unregister `SampleView` and `SamplePackage`
+   1. Update "app_name" to match the name specified in `<YOUR_PROJECT>/app.json::name`
+1. Update `tester/harmony/entry/src/main/cpp/CMakeLists.txt`
+   1. Update `RNOH_CPP_DIR` - `set(RNOH_CPP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../node_modules/react-native-harmony/harmony/cpp")`
+   1. Unregister `SamplePackage`
+1. Create `jsbundle.h` by running `./node_modules/.bin/react-native bundle-harmony`
+1. Open `harmony` project in DevEcoStudio and run the project
+
+## Architecture
 ![](./docs/react-native-open-harmony-app--components-diagram.png)
 
-Note: native code lives in the `/tester/harmony/rnoh` directory to allow fast development cycles.
+Note: native code lives in the `/tester/harmony/rnoh` directory (native code must be in the project directory).
 
 ## Current exports 
 
@@ -85,10 +104,10 @@ Note: native code lives in the `/tester/harmony/rnoh` directory to allow fast de
 
 ## Prerequisites
 ### DevEco Studio setup
-Currently we use DevEco Studio 3.1. Beta 1 for development. Follow steps below to install the IDE and required SDKs.
+Currently we use DevEco Studio 3.1. Release for development. Follow steps below to install the IDE and required SDKs.
 #### IDE Installation
 1. Open [a website with DevEco Studio releases](https://developer.harmonyos.com/cn/develop/deveco-studio/archive/)
-1. Find the DevEco Studio 3.1 Beta1 download link for your operating system and download the IDE 
+1. Find the DevEco Studio 3.1 Release download link for your operating system and download the IDE 
 *(we recommend using a computer with Windows OS because the Local Emulator is not supported in the MacOS version of the IDE)*
 1. Unzip the downloaded compressed folder and double click the `deveco-Studio-3.1.0.200.exe` executable to open the installer
 1. Go through the setup and wait for the installation to complete
@@ -97,9 +116,9 @@ Currently we use DevEco Studio 3.1. Beta 1 for development. Follow steps below t
 Before starting the development you have to install required SDKs. 
 
 ##### Additional setup (only for developers outside of China)
-The DevEco Studio 3.1 Beta 1 version isn't globally supported yet. If your system language isn't Chinese and region code is different than CN, you will have to do some additional setup:
+If your system language isn't Chinese and region code is different than CN, you will have to do some additional setup:
 1. Close the DevEco Studio IDE
-1. Open the `C:\Users\<username>\AppData\Roaming\Huawei\DevEcoStudio3.1\options\country.region.xml` file in your text editor (replace `<username>` with your Windows account username)
+1. Open the `C:\Users\<username>\AppData\Roaming\Huawei\DevEcoStudio3.1\options\country.region.xml` file in your text editor
 1. Change the `name` value of `countryregion` to `CN`. After making a change, the `country.region.xml` should have the following content:
     ```xml
     <application>
@@ -152,19 +171,11 @@ More details about GitLab access tokens can be found [in the docs](https://docs.
 ## Running `tester` app
 ### Dependencies installation
 1. Go to the `react-native-harmony` directory
-1. Create the package by running the `npm run pack:dev` command
+1. Create the package by running the `npm pack` command
 1. Go to the `../tester` directory
 1. Run the `npm i` command to install dependencies
-1. Open the `/tester/harmony` in the DevEco Studio
-1. Wait for IDE to finish downloading all the dependencies
-
-#### If the IDE is stuck at indexing files
-You may encounter an indexing problem when your IDE gets stuck at indexing project files. This issue is caused when DevEco Studio treats libraries files as project files and starts indexing them. To fix this issue, you may need to exclude directories with libraries files from your project.
-
-1. Find the `third-party` directory in the project explorer: `rnoh` -> `src` -> `cpp` -> `third-party`
-1. Right click on the directory and press: `Mark directory as` -> `Excluded`
-1. Open the `package.json` file in the root directory
-1. If you see the banner on the top saying that Synchronization failed, press the `Try again` button to start synchronization
+1. Open the `/tester/harmony/entry/oh_package.json5` in the DevEco Studio
+1. Click "Sync" on the pop-up at the top
 
 ### Creating the Local Emulator (up to 3.1.0 DevEco Studio version only)
 Before you start the project, you have to setup the device on which you will be able to run the application. Up to 3.1.0 version of the DevEco Studio IDE, you can create the Local Emulator to test the app on your computer.
@@ -199,7 +210,4 @@ If `hdc` is not in your `PATH`, it can be found under `%USERPROFILE%/AppData/Loc
 1. Go to the `/react-native-harmony`
 1. Run `npm run pack:prod`
 
-Note: Creating NPM package may take a while. Package installation is also slow - it takes ~5 minutes.
 
-## Related docs
-[Platform Problems and Limitations](./docs/platform-problems-and-limitations.md)
