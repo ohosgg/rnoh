@@ -13,3 +13,4 @@ export * from './RenderingTest';
 export * from './SectionListTest';
 export * from './TimerTest';
 export * from './TurboModuleTest';
+export * from './VirtualizedListTest';

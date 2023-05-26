@@ -52,7 +52,7 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 - [ ] TouchableOpacity
 - [ ] TouchableWithoutFeedback
 - [x] View
-- [ ] VirtualizedList
+- [x] VirtualizedList
 - [ ] VirtualizedSectionList
 
 * Text measuring is not implemented. Width and height must be provided.

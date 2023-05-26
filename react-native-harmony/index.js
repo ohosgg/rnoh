@@ -62,4 +62,7 @@ module.exports = {
   get SectionList() {
     return require('react-native/Libraries/Lists/SectionList').default
   },
+  get VirtualizedList() {
+    return require('react-native/Libraries/Lists/VirtualizedList').default;
+  },
 }
