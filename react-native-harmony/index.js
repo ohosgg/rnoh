@@ -14,6 +14,9 @@ module.exports = {
   get Image() {
     return require('react-native/Libraries/Image/Image')
   },
+  get I18nManager() {
+    return require('react-native/Libraries/ReactNative/I18nManager')
+  },
   get NativeModules() {
     return require('react-native/Libraries/BatchedBridge/NativeModules')
   },

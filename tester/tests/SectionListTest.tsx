@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, SectionList, StyleSheet, Text } from 'react-native';
-import { TestCase, TestSuite } from '@rnoh/testerino';
+import {View, SectionList, StyleSheet, Text} from 'react-native';
+import {TestCase, TestSuite} from '@rnoh/testerino';
 
 interface SectionData {
   title: string;
@@ -26,7 +26,6 @@ const DATA: SectionData[] = [
   },
 ];
 
-
 export const SectionListTest = () => {
   return (
     <TestSuite name="SectionList">
@@ -35,16 +34,15 @@ export const SectionListTest = () => {
           <SectionList
             sections={DATA}
             keyExtractor={(item, index) => item + index}
-            renderItem={({ item }) => (
+            renderItem={({item}) => (
               <View style={styles.item}>
                 <Text style={styles.title}>{item}</Text>
               </View>
             )}
-            renderSectionHeader={({ section: { title } }) => (
+            renderSectionHeader={({section: {title}}) => (
               <Text style={styles.title}>{title}</Text>
             )}
           />
-
         </View>
       </TestCase>
     </TestSuite>

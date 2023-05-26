@@ -3,7 +3,6 @@
     "@tsconfig/react-native/tsconfig.json",
   ],
   "compilerOptions": {
-    "jsx": "react",
     "paths": {
       "react-native": [
         "./node_modules/react-native-harmony"
