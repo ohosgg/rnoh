@@ -23,11 +23,14 @@ module.exports = {
   get NativeModules() {
     return require('react-native/Libraries/BatchedBridge/NativeModules')
   },
+  get PixelRatio() {
+    return require('react-native/Libraries/Utilities/PixelRatio')
+  },
   get Platform() {
     return require('./Libraries/Utilities/Platform')
   },
-  get PixelRatio() {
-    return require('react-native/Libraries/Utilities/PixelRatio')
+  get Pressable() {
+    return require('react-native/Libraries/Components/Pressable/Pressable').default
   },
   get ScrollView() {
     return require('react-native/Libraries/Components/ScrollView/ScrollView')

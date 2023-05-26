@@ -12,7 +12,7 @@ export * from 'react-native/Libraries/BatchedBridge/NativeModules';
 // export * from 'react-native/Libraries/Components/DrawerAndroid/DrawerLayoutAndroid';
 // export * from 'react-native/Libraries/Components/Keyboard/Keyboard';
 // export * from 'react-native/Libraries/Components/Keyboard/KeyboardAvoidingView';
-// export * from 'react-native/Libraries/Components/Pressable/Pressable';
+export * from 'react-native/Libraries/Components/Pressable/Pressable';
 // export * from 'react-native/Libraries/Components/ProgressBarAndroid/ProgressBarAndroid';
 // export * from 'react-native/Libraries/Components/ProgressViewIOS/ProgressViewIOS';
 // export * from 'react-native/Libraries/Components/RefreshControl/RefreshControl';
