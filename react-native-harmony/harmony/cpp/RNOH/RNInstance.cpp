@@ -86,7 +86,9 @@ void RNInstance::initializeScheduler() {
             this->mutationsListener(this->m_mutationsToNapiConverter, mutations);
         },
         [this](auto tag, auto commandName, auto args) {
-            this->commandDispatcher(tag, commandName, args);
+            this->taskExecutor->runTask(TaskThread::MAIN, [this, tag, commandName = std::move(commandName), args = std::move(args)]() {
+                this->commandDispatcher(tag, commandName, args);
+            });
         }));
     this->scheduler = std::make_unique<react::Scheduler>(schedulerToolbox, nullptr, schedulerDelegate.get());
 }
