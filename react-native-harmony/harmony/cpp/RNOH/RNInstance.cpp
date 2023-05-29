@@ -5,7 +5,6 @@
 #include "RNOH/EventBeat.h"
 #include "RNOH/LogSink.h"
 #include "hermes/executor/HermesExecutorFactory.h"
-#include "jsbundle.h"
 #include <react/renderer/componentregistry/ComponentDescriptorProvider.h>
 #include "RNOH/events/EventEmitterRegistry.h"
 #include "RNOH/TurboModuleProvider.h"
@@ -97,11 +96,7 @@ void RNInstance::runApplication(float width, float height, std::string &&bundle)
     this->taskExecutor->runTask(TaskThread::JS, [this, width, height, bundle = std::move(bundle)]() {
         try {
             std::unique_ptr<react::JSBigStdString> jsBundle;
-            if (bundle.length() == 0) {
-                jsBundle = std::make_unique<react::JSBigStdString>(JS_BUNDLE);
-            } else {
-                jsBundle = std::make_unique<react::JSBigStdString>(std::move(bundle));
-            }
+            jsBundle = std::make_unique<react::JSBigStdString>(std::move(bundle));
             instance->loadScriptFromString(std::move(jsBundle), "bundle.harmony.js", true);
             folly::dynamic config = folly::dynamic::object("rootTag", 1)("fabric", true);
             this->surfaceHandler.setProps(std::move(config));

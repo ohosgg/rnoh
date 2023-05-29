@@ -1,5 +1,5 @@
-import { RNApp, RNInstance, ComponentBuilderContext, RNOHContext, Tag } from '@ohos/rnoh'
-import { SampleView, SAMPLE_VIEW_TYPE, SampleViewDescriptor, SamplePackage } from "@ohos/rnoh-sample-package"
+import { RNApp, RNInstance, ComponentBuilderContext, RNOHContext } from '@ohos/rnoh'
+import { SampleView, SAMPLE_VIEW_TYPE, SamplePackage } from "@ohos/rnoh-sample-package"
 
 const BUNDLE_URL = "http://localhost:8081/index.bundle?platform=harmony&dev=false&minify=false"
 
@@ -17,7 +17,8 @@ struct Index {
   build() {
     Column() {
       RNApp({
-        rnInstance: new RNInstance(BUNDLE_URL,
+        rnInstance: new RNInstance(
+          BUNDLE_URL,
           "app_name",
           (ctx) => [
           new SamplePackage(ctx)

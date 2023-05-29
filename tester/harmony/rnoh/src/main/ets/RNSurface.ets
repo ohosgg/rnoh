@@ -1,18 +1,15 @@
 import libRNOHApp from 'librnoh_app.so'
 import Device from '@system.device'
-import { DescriptorRegistry } from './DescriptorRegistry'
-import { CommandDispatcher } from './CommandDispatcher'
 import { RNComponentFactory, ComponentBuilderContext } from './RNComponentFactory'
 import { RNOHContext } from "./RNOHContext"
 import { Descriptor } from './descriptor'
 import { ViewProps } from './RNView'
 import { convertColorSegmentsToString } from './cpp-bridge-utils'
-import { TurboModuleProvider } from './TurboModuleProvider'
 import type { DeviceInfoTurboModule } from "./RNOHCorePackage/TurboModules/DeviceInfoTurboModule"
 import { RNInstance } from "./RNInstance"
 import JavaScriptLoader from "./JavaScriptLoader"
 import RNOHLogger from "./RNOHLogger"
-import {startTrace, finishTrace} from './tracer';
+import { startTrace, finishTrace } from './tracer';
 
 
 @Component
@@ -45,7 +42,7 @@ export struct RNApp {
       this.rnInstance?.initializeReactNative();
       this.shouldShow = true
       finishTrace("INITIALIZATION")
-    }, this.dev ? 2000: 0)
+    }, this.dev ? 2000 : 0)
 
   }
 
@@ -53,7 +50,6 @@ export struct RNApp {
     this.initialSurfaceWidth = constraint.maxWidth
     this.initialSurfaceHeight = constraint.maxHeight
   }
-
 
   build() {
     Stack() {
@@ -113,17 +109,22 @@ export struct RNSurface {
       this.dispatchCommand(tag, commandName, args)
     });
 
-    // TODO: create the JavaScriptLoader in RNAbility,
-    // passing the sandbox path from the ability context,
-    // or pass the context to RNInstance so we can use it as needed
-    new JavaScriptLoader().loadBundle(this.bundleUrl)
-      .then((bundle) => {
-        this.rnInstance.run(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity, bundle)
-      }).catch((error) => {
-        RNOHLogger.error(error)
-        // TODO: don't use empty string as a magic "failure" value
-        this.rnInstance.run(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity, "")
-      });
+    const javaScriptLoader = new JavaScriptLoader();
+    javaScriptLoader.loadBundle(this.bundleUrl)
+      .catch((error) => {
+        // NOTE: temporary fallback to local bundle file,
+        // until we figure out how to pass bundle URL as launch param
+        // to the Ark app
+        RNOHLogger.error(error);
+        RNOHLogger.info("Falling back to local bundle.");
+        return javaScriptLoader.loadBundle("bundle.harmony.js")
+      }).then((bundle) => {
+      this.rnInstance.run(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity, bundle)
+    }).catch((error) => {
+      RNOHLogger.error(error)
+      // TODO: don't use empty string as a magic "failure" value
+      this.rnInstance.run(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity, "")
+    });
     this.cleanup = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
       1,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
