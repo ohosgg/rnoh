@@ -21,3 +21,6 @@ export * from './TimerTest';
 export * from './TouchablesTest';
 export * from './TurboModuleTest';
 export * from './VirtualizedListTest';
+export * from './AnimatedTest';
+export * from './ButtonTest';
+//export * from './SwitchTest';

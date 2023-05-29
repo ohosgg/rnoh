@@ -1,4 +1,7 @@
 module.exports = {
+  // get Switch() {
+  //   return require('react-native/Libraries/Components/Switch/Switch').default;
+  // },
   get Animated() {
     return require('react-native/Libraries/Animated/Animated').default;
   },
@@ -10,6 +13,9 @@ module.exports = {
   },
   get BackHandler() {
     return require('react-native/Libraries/Utilities/BackHandler');
+  },
+  get Button(): Button {
+    return require('react-native/Libraries/Components/Button');
   },
   get FlatList() {
     return require('react-native/Libraries/Lists/FlatList');

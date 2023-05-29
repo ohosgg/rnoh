@@ -30,7 +30,7 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 
 - [ ] AccesibilityInfo
 - [ ] ActivityIndicator
-- [ ] Button*
+- [x] Button*
 - [x] FlatList
 - [x] Image
 - [ ] ImageBackground
