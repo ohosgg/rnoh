@@ -14,6 +14,7 @@ export * from './PanResponderTest';
 export * from './PixelRatioTest';
 export * from './PlatformConstantsTest';
 export * from './PressableTest';
+export * from './RefreshControlTest';
 export * from './RenderingTest';
 export * from './SectionListTest';
 export * from './TimerTest';

@@ -38,7 +38,7 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 - [ ] KeyboardAvoidingView
 - [ ] Modal
 - [x] Pressable
-- [ ] RefreshControl
+- [x] RefreshControl (stub)
 - [ ] SafeAreaView
 - [x] ScrollView
 - [x] SectionList

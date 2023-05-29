@@ -43,6 +43,9 @@ module.exports = {
     return require('react-native/Libraries/Components/Pressable/Pressable')
       .default;
   },
+  get RefreshControl() {
+    return require('react-native/Libraries/Components/RefreshControl/RefreshControl');
+  },
   get ScrollView() {
     return require('react-native/Libraries/Components/ScrollView/ScrollView');
   },
