@@ -42,7 +42,7 @@ export * from 'react-native/Libraries/Image/Image';
 export * from 'react-native/Libraries/Interaction/InteractionManager';
 export * from 'react-native/Libraries/Interaction/PanResponder';
 export * from 'react-native/Libraries/LayoutAnimation/LayoutAnimation';
-// export * from 'react-native/Libraries/Linking/Linking';
+export * from 'react-native/Libraries/Linking/Linking';
 export * from 'react-native/Libraries/Lists/FlatList';
 export * from 'react-native/Libraries/Lists/SectionList';
 export * from 'react-native/Libraries/Lists/VirtualizedList';

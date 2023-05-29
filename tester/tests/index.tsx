@@ -5,6 +5,7 @@ export * from './I18nManagerTest';
 export * from './ImageTest';
 export * from './InteractionManagerTest';
 export * from './LayoutAnimationsTest';
+export * from './LinkingTest';
 export * from './MiscTest';
 export * from './NativeEventEmitterTest';
 export * from './NetworkingTest';

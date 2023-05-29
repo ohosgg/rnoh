@@ -2,6 +2,9 @@
   "extends": [
     "@tsconfig/react-native/tsconfig.json",
   ],
+  "exclude": [
+    "./harmony/cpp"
+  ],
   "compilerOptions": {
     "types": [
       "node", // Removes an error when exporting with module.exports.

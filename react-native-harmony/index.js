@@ -20,6 +20,9 @@ module.exports = {
   get LayoutAnimation() {
     return require('react-native/Libraries/LayoutAnimation/LayoutAnimation');
   },
+  get Linking() {
+    return require('./Libraries/Linking/Linking');
+  },
   get NativeEventEmitter() {
     return require('react-native/Libraries/EventEmitter/NativeEventEmitter')
       .default;
