@@ -8,6 +8,9 @@ module.exports = {
   get AppRegistry() {
     return require('react-native/Libraries/ReactNative/AppRegistry');
   },
+  get BackHandler() {
+    return require('react-native/Libraries/Utilities/BackHandler');
+  },
   get FlatList() {
     return require('react-native/Libraries/Lists/FlatList');
   },

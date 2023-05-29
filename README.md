@@ -63,7 +63,7 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 - [ ] Appearance
 - [x] AppRegistry
 - [ ] AppState
-- [ ] BackHandler
+- [x] BackHandler (stub)
 - [ ] DeviceInfo
 - [ ] DevSettings
 - [ ] Dimensions

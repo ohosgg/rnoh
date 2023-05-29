@@ -1,4 +1,5 @@
 export * from './AnimatedTest';
+export * from './BackHandlerTest';
 export * from './CustomNativeComponentTest';
 export * from './FlatListTest';
 export * from './I18nManagerTest';

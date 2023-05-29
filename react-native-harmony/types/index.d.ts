@@ -69,7 +69,7 @@ export * from 'react-native/Libraries/Text/Text';
 export * as TurboModuleRegistry from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 // export * from 'react-native/Libraries/Types/CoreEventTypes';
 // export * from 'react-native/Libraries/Utilities/Appearance';
-// export * from 'react-native/Libraries/Utilities/BackHandler';
+export * from 'react-native/Libraries/Utilities/BackHandler';
 // export * from 'react-native/Libraries/Utilities/DevSettings';
 // export * from 'react-native/Libraries/Utilities/Dimensions';
 export * from 'react-native/Libraries/Utilities/PixelRatio';
