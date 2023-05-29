@@ -74,7 +74,7 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 - [x] InteractionManager
 - [ ] Keyboard
 - [x] LayoutAnimation (stub)
-- [ ] Linking
+- [x] Linking (stub)
 - [ ] LogBox
 - [x] NativeEventEmitter
 - [ ] Networking
