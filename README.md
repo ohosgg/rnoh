@@ -9,7 +9,7 @@
 1. Create a new Harmony project in `<YOUR_PROJECT>/harmony` 
 1. Copy `tester/harmony/entry` module to `<YOUR_PROJECT>/harmony/entry`
 1. Run `./node_modules/.bin/react-native unpack-harmony` - it make take a while
-1. Add `"postinstall": "react-native unpack-harmony"` to npm's scripts
+1. Add `"postinstall": "react-native unpack-harmony"` to `package.json`'s script section
 1. Update `tester/harmony/entry/src/main/ets/pages/Index.ets`
    1. Unregister `SampleView` and `SamplePackage`
    1. Update "app_name" to match the name specified in `<YOUR_PROJECT>/app.json::name`
