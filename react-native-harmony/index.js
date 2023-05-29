@@ -32,6 +32,9 @@ module.exports = {
   get Linking() {
     return require('./Libraries/Linking/Linking');
   },
+  get Keyboard() {
+    return require('react-native/Libraries/Components/Keyboard/Keyboard');
+  },
   get NativeEventEmitter() {
     return require('react-native/Libraries/EventEmitter/NativeEventEmitter')
       .default;

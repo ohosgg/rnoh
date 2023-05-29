@@ -5,6 +5,7 @@ export * from './FlatListTest';
 export * from './I18nManagerTest';
 export * from './ImageTest';
 export * from './InteractionManagerTest';
+export * from './KeyboardTest';
 export * from './LayoutAnimationsTest';
 export * from './LinkingTest';
 export * from './MiscTest';
