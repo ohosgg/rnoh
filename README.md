@@ -46,11 +46,11 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 - [ ] Switch
 - [x] Text*
 - [x] TextInput*
-- [ ] Touchable
-- [ ] TouchableHighlight
-- [ ] TouchableNativeFeedback
-- [ ] TouchableOpacity
-- [ ] TouchableWithoutFeedback
+- [x] Touchable
+- [x] TouchableHighlight
+- [x] TouchableNativeFeedback (Android) - exported but not tested
+- [x] TouchableOpacity
+- [x] TouchableWithoutFeedback - handlers are not called
 - [x] View
 - [x] VirtualizedList
 - [ ] VirtualizedSectionList

@@ -12,6 +12,7 @@ class ViewComponentNapiBinder : public BaseComponentNapiBinder {
             return ArkJS(env)
                 .getObjectBuilder(napiBaseProps)
                 .addProperty("backgroundColor", props->backgroundColor)
+                .addProperty("opacity", props->opacity)
                 .addProperty("borderWidth", borderMetrics.borderWidths.top)
                 .addProperty("borderColor", borderMetrics.borderColors.top)
                 .addProperty("borderRadius", borderMetrics.borderRadii.topLeft)

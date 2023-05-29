@@ -52,6 +52,21 @@ module.exports = {
   get TextInput() {
     return require('./Libraries/Components/TextInput/TextInput.harmony');
   },
+  get Touchable() {
+    return require('react-native/Libraries/Components/Touchable/Touchable');
+  },
+  get TouchableHighlight() {
+    return require('react-native/Libraries/Components/Touchable/TouchableHighlight');
+  },
+  get TouchableNativeFeedback() {
+    return require('react-native/Libraries/Components/Touchable/TouchableNativeFeedback');
+  },
+  get TouchableOpacity() {
+    return require('react-native/Libraries/Components/Touchable/TouchableOpacity');
+  },
+  get TouchableWithoutFeedback() {
+    return require('react-native/Libraries/Components/Touchable/TouchableWithoutFeedback');
+  },
   get TurboModuleRegistry() {
     return require('react-native/Libraries/TurboModule/TurboModuleRegistry');
   },

@@ -8,6 +8,7 @@ export type ViewProps = LayoutProps & {
   borderWidth?: number
   borderColor?: ColorSegments
   borderRadius?: number
+  opacity?: number
 }
 
 export type ViewDescriptor = Descriptor<"View", ViewProps>
@@ -35,5 +36,6 @@ export struct RNView {
     .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
     .borderRadius(this.descriptor.props.borderRadius)
     .onTouch((event) => this.onTouchEvent(event))
+    .opacity(this.descriptor.props.opacity)
   }
 }
