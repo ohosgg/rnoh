@@ -36,9 +36,14 @@ export type UpdateMutation = {
   descriptor: Descriptor
 }
 
+export type RemoveDeleteTreeMutation = {
+  type: MutationType.REMOVE_DELETE_TREE
+}
+
 export type Mutation =
-  | CreateMutation
+| CreateMutation
   | DeleteMutation
   | InsertMutation
   | RemoveMutation
   | UpdateMutation
+  | RemoveDeleteTreeMutation

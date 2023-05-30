@@ -4,6 +4,7 @@ import {View, ScrollView, StyleSheet, Text} from 'react-native';
 import * as tests from './tests';
 import {ChessboardSample} from './ChessboardSample';
 import {NavigationContainer, Page} from './components';
+import {Benchmarker, DeepTree} from './benchmarks';
 
 function App() {
   const scrollRef = React.useRef<ScrollView>(null);
@@ -27,8 +28,13 @@ function App() {
           </View>
         </ScrollView>
       </Page>
-      <Page name="CHESSBOARD_EXAMPLE">
+      <Page name="CHESSBOARD EXAMPLE">
         <ChessboardSample />
+      </Page>
+      <Page name="DEEP TREE BENCHMARK">
+        <Benchmarker samplesCount={20}>
+          <DeepTree depth={6} breadth={2} id={0} wrap={1} />
+        </Benchmarker>
       </Page>
     </NavigationContainer>
   );

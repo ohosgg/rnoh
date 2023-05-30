@@ -25,6 +25,7 @@ export class DescriptorRegistry {
     const uniqueUpdated = [...new Set(updatedComponents)];
     uniqueUpdated.forEach(tag => {
       const updatedDescriptor = this.getDescriptor(tag);
+      if (!updatedDescriptor) return;
       this.descriptorListenersSetByTag.get(tag)?.forEach(cb => {
         // NOTE: we use the spread operator here, to create a shallow
         // copy of the descriptor object. This will cause the subscribed
@@ -102,6 +103,7 @@ export class DescriptorRegistry {
   }
 
   private applyMutation(mutation: Mutation): Tag[] {
+    console.log("RNOH::mutation", JSON.stringify(mutation))
     if (mutation.type === MutationType.CREATE) {
       this.descriptorByTag[mutation.descriptor.tag] = mutation.descriptor;
       return [];
@@ -130,8 +132,9 @@ export class DescriptorRegistry {
     } else if (mutation.type === MutationType.DELETE) {
       delete this.descriptorByTag[mutation.tag];
       return [];
+    } else if (mutation.type === MutationType.REMOVE_DELETE_TREE) {
+      return [];
     }
-
     return [];
   }
 }
