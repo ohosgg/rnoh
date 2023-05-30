@@ -5,7 +5,7 @@ export function ChessboardSample() {
   const [username, setUsername] = React.useState('');
 
   return (
-    <>
+    <View style={{backgroundColor: '#333', height: '100%'}}>
       <UserInfo avatar="https://i.pravatar.cc/100?img=8" />
       <View style={styles.centerX}>
         <Chessboard />
@@ -15,7 +15,7 @@ export function ChessboardSample() {
         <Text style={styles.label}>Your username</Text>
         <TextInput style={styles.textInput} onChangeText={setUsername} />
       </View>
-    </>
+    </View>
   );
 }
 

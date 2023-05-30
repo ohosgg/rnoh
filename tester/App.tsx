@@ -3,25 +3,34 @@ import {Tester} from '@rnoh/testerino';
 import {View, ScrollView, StyleSheet, Text} from 'react-native';
 import * as tests from './tests';
 import {ChessboardSample} from './ChessboardSample';
+import {NavigationContainer, Page} from './components';
 
 function App() {
   const scrollRef = React.useRef<ScrollView>(null);
 
   return (
-    <ScrollView style={styles.container} ref={scrollRef}>
-      <Tester>
-        {Object.keys(tests).map(testSuiteName => {
-          const TestSuite = tests[testSuiteName as keyof typeof tests];
-          return <TestSuite key={testSuiteName} />;
-        })}
-      </Tester>
-      <ChessboardSample />
-      <View
-        style={styles.button}
-        onTouchEnd={() => scrollRef.current?.scrollTo({y: 0, animated: false})}>
-        <Text style={styles.buttonText}>Scroll To Top</Text>
-      </View>
-    </ScrollView>
+    <NavigationContainer>
+      <Page name="TESTS">
+        <ScrollView style={styles.container} ref={scrollRef}>
+          <Tester>
+            {Object.keys(tests).map(testSuiteName => {
+              const TestSuite = tests[testSuiteName as keyof typeof tests];
+              return <TestSuite key={testSuiteName} />;
+            })}
+          </Tester>
+          <View
+            style={styles.button}
+            onTouchEnd={() =>
+              scrollRef.current?.scrollTo({y: 0, animated: false})
+            }>
+            <Text style={styles.buttonText}>Scroll To Top</Text>
+          </View>
+        </ScrollView>
+      </Page>
+      <Page name="CHESSBOARD_EXAMPLE">
+        <ChessboardSample />
+      </Page>
+    </NavigationContainer>
   );
 }
 
