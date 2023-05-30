@@ -4,7 +4,7 @@ import {View, ScrollView, StyleSheet, Text} from 'react-native';
 import * as tests from './tests';
 import {ChessboardSample} from './ChessboardSample';
 import {NavigationContainer, Page} from './components';
-import {Benchmarker, DeepTree} from './benchmarks';
+import {Benchmarker, DeepTree, SierpinskiTriangle} from './benchmarks';
 
 function App() {
   const scrollRef = React.useRef<ScrollView>(null);
@@ -31,15 +31,39 @@ function App() {
       <Page name="CHESSBOARD EXAMPLE">
         <ChessboardSample />
       </Page>
-      <Page name="DEEP TREE BENCHMARK (1)">
-        <Benchmarker samplesCount={1}>
-          <DeepTree depth={8} breadth={2} id={0} wrap={1} />
-        </Benchmarker>
+      <Page name="BENCHMARK: DEEP TREE">
+        <Benchmarker
+          samplesCount={0}
+          renderContent={refreshKey =>
+            refreshKey % 2 === 0 ? (
+              <DeepTree depth={8} breadth={2} id={0} wrap={1} />
+            ) : null
+          }
+        />
       </Page>
-      <Page name="DEEP TREE BENCHMARK (20)">
-        <Benchmarker samplesCount={20}>
-          <DeepTree depth={6} breadth={2} id={0} wrap={1} />
-        </Benchmarker>
+      <Page name="BENCHMARK: DEEP TREE (20 samples)">
+        <Benchmarker
+          samplesCount={20}
+          renderContent={refreshKey =>
+            refreshKey % 2 === 0 ? (
+              <DeepTree depth={6} breadth={2} id={0} wrap={1} />
+            ) : null
+          }
+        />
+      </Page>
+      <Page name="BENCHMARK: UPDATING COLORS">
+        <Benchmarker
+          samplesCount={100}
+          renderContent={refreshKey => (
+            <SierpinskiTriangle
+              s={150}
+              x={150}
+              y={75}
+              depth={1}
+              renderCount={refreshKey}
+            />
+          )}
+        />
       </Page>
     </NavigationContainer>
   );

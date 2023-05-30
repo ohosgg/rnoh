@@ -3,9 +3,9 @@ import {Text, TouchableOpacity, View} from 'react-native';
 
 export function Benchmarker({
   samplesCount,
-  children,
+  renderContent,
 }: {
-  children: any;
+  renderContent: (refreshKey: number) => any;
   samplesCount: number;
 }) {
   const [status, setStatus] = useState<'READY' | 'RUNNING' | 'FINISHED'>(
@@ -25,7 +25,7 @@ export function Benchmarker({
     if (status === 'READY') return;
     setTimeout(() => {
       setRefreshKey(prevKey => {
-        if (prevKey >= samplesCount * 2) {
+        if (prevKey >= samplesCount) {
           setStatus('FINISHED');
           setEndDateTime(new Date());
           return prevKey;
@@ -45,19 +45,23 @@ export function Benchmarker({
     <View style={{height: '100%', padding: 16}}>
       <TouchableOpacity onPress={start}>
         <Text
-          style={{width: 128, height: 32, fontWeight: 'bold', color: 'blue'}}>
-          {status === 'RUNNING'
-            ? 'Running...'
-            : `Start (${samplesCount} samples)`}
+          style={{
+            width: 200,
+            height: 32,
+            fontWeight: 'bold',
+            color: status !== 'RUNNING' ? 'blue' : 'black',
+          }}>
+          {status === 'RUNNING' ? 'Running...' : `Start`}
         </Text>
       </TouchableOpacity>
-      {status === 'FINISHED' && durationInMs > 0 && (
+
+      <View
+        style={{opacity: status === 'FINISHED' && durationInMs > 0 ? 1 : 0}}>
         <Text style={{width: 128, height: 32}}>Duration {durationInMs} ms</Text>
-      )}
+      </View>
+
       {status !== 'READY' && (
-        <View style={{height: 600}}>
-          {refreshKey % 2 === 0 ? children : null}
-        </View>
+        <View style={{height: 600}}>{renderContent(refreshKey)}</View>
       )}
     </View>
   );
