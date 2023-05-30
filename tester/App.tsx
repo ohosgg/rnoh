@@ -31,7 +31,12 @@ function App() {
       <Page name="CHESSBOARD EXAMPLE">
         <ChessboardSample />
       </Page>
-      <Page name="DEEP TREE BENCHMARK">
+      <Page name="DEEP TREE BENCHMARK (1)">
+        <Benchmarker samplesCount={1}>
+          <DeepTree depth={8} breadth={2} id={0} wrap={1} />
+        </Benchmarker>
+      </Page>
+      <Page name="DEEP TREE BENCHMARK (20)">
         <Benchmarker samplesCount={20}>
           <DeepTree depth={6} breadth={2} id={0} wrap={1} />
         </Benchmarker>
