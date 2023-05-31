@@ -2,7 +2,7 @@ import React from 'react';
 import {Tester} from '@rnoh/testerino';
 import {View, ScrollView, StyleSheet, Text} from 'react-native';
 import * as tests from './tests';
-import {ChessboardSample} from './ChessboardSample';
+import {AnimationsExample, ChessboardExample} from './examples';
 import {NavigationContainer, Page} from './components';
 import {Benchmarker, DeepTree, SierpinskiTriangle} from './benchmarks';
 
@@ -28,15 +28,12 @@ function App() {
           </View>
         </ScrollView>
       </Page>
-      <Page name="CHESSBOARD EXAMPLE">
-        <ChessboardSample />
-      </Page>
       <Page name="BENCHMARK: DEEP TREE">
         <Benchmarker
           samplesCount={0}
           renderContent={refreshKey =>
             refreshKey % 2 === 0 ? (
-              <DeepTree depth={8} breadth={2} id={0} wrap={1} />
+              <DeepTree depth={9} breadth={2} id={0} wrap={1} />
             ) : null
           }
         />
@@ -64,6 +61,26 @@ function App() {
             />
           )}
         />
+      </Page>
+      <Page name="BENCHMARK: UPDATING LAYOUT">
+        <Benchmarker
+          samplesCount={200}
+          renderContent={refreshKey => (
+            <SierpinskiTriangle
+              s={refreshKey}
+              x={160}
+              y={75}
+              depth={1}
+              renderCount={refreshKey}
+            />
+          )}
+        />
+      </Page>
+      <Page name="EXAMPLE: CHESSBOARD">
+        <ChessboardExample />
+      </Page>
+      <Page name="EXAMPLE: ANIMATIONS">
+        <AnimationsExample />
       </Page>
     </NavigationContainer>
   );

@@ -55,10 +55,10 @@ export function Benchmarker({
         </Text>
       </TouchableOpacity>
 
-      <View
+      {/* <View
         style={{opacity: status === 'FINISHED' && durationInMs > 0 ? 1 : 0}}>
         <Text style={{width: 128, height: 32}}>Duration {durationInMs} ms</Text>
-      </View>
+      </View> */}
 
       {status !== 'READY' && (
         <View style={{height: 600}}>{renderContent(refreshKey)}</View>

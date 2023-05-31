@@ -1,0 +1,11 @@
+# Performance
+
+|                         | react-native-harmony                                                                                                                                                                                                     | react-native-android                 |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------ |
+| Recording               | ![](./rn-harmony.mp4)                                                                                                                                                                                                    | ![](./rn-android.mp4)                |
+| Tests page              | Noticeable judders when scrolling and test cases mount/unmount components. It may be caused by communicating with Timer turbo module which lives on the main thread. Animations aren't as smooth as they are on Android. | Scrolling and animations are smooth. |
+| Mounting Deep Tree      | **3.46 s (+34 %)**                                                                                                                                                                                                       | **2.58 s**                           |
+| Mounting Deep Tree (20) | Components mount/unmount once. Maybe ArkTS optimizes this behavior or this RN implementation doesn't handle mutations properly.                                                                                          | -                                    |
+| Updating Colors         | **4.85 s**                                                                                                                                                                                                               | **5.66 s (+17 %)**                   |
+| Updating Layout         | **17.46 s (+36 %)**                                                                                                                                                                                                      | **12.83 s**                          |
+
