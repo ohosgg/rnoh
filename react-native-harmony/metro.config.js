@@ -165,16 +165,20 @@ function findHarmonyNodeModulePaths(projectRootPath) {
   return fs
     .readdirSync(nodeModulesPath)
     .map((dirName) => `${nodeModulesPath}${pathUtils.sep}${dirName}`)
-    .filter(hasNodeModulePathHarmonyDir);
+    .filter(hasNodeModulePathHarmonyCode);
 }
 
 /**
  * @param nodeModulePath {string}
  * @returns {boolean}
  */
-function hasNodeModulePathHarmonyDir(nodeModulePath) {
+function hasNodeModulePathHarmonyCode(nodeModulePath) {
   if (!fs.lstatSync(nodeModulePath).isDirectory()) return false;
-  return fs.readdirSync(nodeModulePath).includes('harmony');
+  const nodeModuleContentNames = fs.readdirSync(nodeModulePath);
+  return (
+    nodeModuleContentNames.includes('harmony') ||
+    nodeModuleContentNames.includes('harmony.tar.gz')
+  );
 }
 
 /**
