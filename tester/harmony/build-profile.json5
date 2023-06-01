@@ -30,6 +30,18 @@
     {
       "name": "sample_package",
       "srcPath": "./sample_package"
+    },
+    {
+      "name": "checkerboard",
+      "srcPath": "./checkerboard",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
     }
   ]
 }

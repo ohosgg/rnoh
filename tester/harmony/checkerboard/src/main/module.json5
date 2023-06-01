@@ -1,0 +1,30 @@
+{
+  module: {
+    name: 'checkerboard',
+    type: 'entry',
+    description: '$string:module_desc',
+    mainElement: 'CheckerboardAbility',
+    deviceTypes: ['phone'],
+    deliveryWithInstall: true,
+    installationFree: false,
+    pages: '$profile:main_pages',
+    abilities: [
+      {
+        name: 'CheckerboardExampleAbility',
+        srcEntry: './ets/checkerboard/CheckerboardAbility.ts',
+        description: '$string:CheckerboardExampleAbility_desc',
+        icon: '$media:icon',
+        label: '$string:CheckerboardExampleAbility_label',
+        startWindowIcon: '$media:icon',
+        startWindowBackground: '$color:start_window_background',
+        exported: true,
+        skills: [
+          {
+            entities: ['entity.system.home'],
+            actions: ['action.system.home'],
+          },
+        ],
+      },
+    ],
+  },
+}

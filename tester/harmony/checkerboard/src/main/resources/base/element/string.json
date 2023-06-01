@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "CheckerboardExampleAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "CheckerboardExampleAbility_label",
+      "value": "label"
+    }
+  ]
+}
