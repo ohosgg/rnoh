@@ -9,8 +9,6 @@ export class TimingTurboModule extends TurboModule {
         jsSchedulingTime: number,
         repeats: boolean
     ): void {
-        console.log(`RNOH TimingTurboModule::createTimer(${id}, ${duration}, ${jsSchedulingTime}, ${repeats})`);
-
         const triggerTimer = () =>
             this.ctx.rnInstance.callRNFunction("JSTimers", "callTimers", [[id]]);
 
@@ -26,7 +24,6 @@ export class TimingTurboModule extends TurboModule {
     }
 
     deleteTimer(id: number): void {
-        console.log(`RNOH TimingTurboModule::deleteTimer(${id})`);
 
         const timer = this.nativeTimerMap.get(id);
         if (!timer) {

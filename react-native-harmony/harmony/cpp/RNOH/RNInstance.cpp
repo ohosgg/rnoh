@@ -81,7 +81,6 @@ void RNInstance::initializeScheduler() {
         taskExecutor,
         eventEmitterRegistry,
         [this](react::ShadowViewMutationList mutations) {
-            LOG(INFO) << "Triggering ui update";
             this->mutationsListener(this->m_mutationsToNapiConverter, mutations);
         },
         [this](auto tag, auto commandName, auto args) {
