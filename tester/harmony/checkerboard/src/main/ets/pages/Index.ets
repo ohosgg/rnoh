@@ -1,5 +1,5 @@
-const N_ROWS = 256
-const N_COLS = 128
+const N_ROWS = 100
+const N_COLS = 100
 const SIZE = 3
 
 @Entry

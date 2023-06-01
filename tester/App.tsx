@@ -2,7 +2,11 @@ import React from 'react';
 import {Tester} from '@rnoh/testerino';
 import {View, ScrollView, StyleSheet, Text} from 'react-native';
 import * as tests from './tests';
-import {AnimationsExample, ChessboardExample} from './examples';
+import {
+  AnimationsExample,
+  CheckerboardExample,
+  ChessboardExample,
+} from './examples';
 import {NavigationContainer, Page} from './components';
 import {Benchmarker, DeepTree, SierpinskiTriangle} from './benchmarks';
 
@@ -81,6 +85,9 @@ function App() {
       </Page>
       <Page name="EXAMPLE: ANIMATIONS">
         <AnimationsExample />
+      </Page>
+      <Page name="EXAMPLE: CHECKERBOARD">
+        <CheckerboardExample />
       </Page>
     </NavigationContainer>
   );
