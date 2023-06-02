@@ -3,7 +3,7 @@
 ## Testing session #1
 
 - Environment: HarmonyOS System-image-phone 3.1.0.306 Release, AMD Ryzen 5900X, 32 GB RAM
-- Measurement method: manual recording analysis
+- Measurement method: recording analysis
 - react-native-android run in development mode and with the Fabric renderer turned off whereas react-native-harmony run with the development mode turned off and the Fabric renderer turned on.
 - This session contains only one sample so it may not be statistically significant. 
 
@@ -21,11 +21,10 @@ Mounting Deep Tree scenario checks how quickly complex component with nested vie
 ## Testing session #2
 
 
-
 - Environment: HarmonyOS System-image-phone 3.1.0.306 Release, AMD Ryzen 5900X, 32 GB RAM
-- Measurement method: manual recording analysis
+- Measurement method: recording analysis
 
-The checkerboard example depicts an extreme case of rendering 10,000 views on the performance.
+Rendering **~10,000** views.
 
 ![](./checkerboard-example-preview.png)
 
@@ -40,3 +39,23 @@ The checkerboard example depicts an extreme case of rendering 10,000 views on th
 | Margin of error (T-Student) [ms] | 87                                                                                                      | 756                                                                                                               | 81                                                                                                                |
 | Upper limit [ms]                 | 1675                                                                                                    | 67261                                                                                                             | 4389                                                                                                              |
 | Lower limit [ms]                 | 1501                                                                                                    | 65749                                                                                                             | 4226                                                                                                              |
+
+## Testing session #3
+
+- Environment: HarmonyOS System-image-phone 3.1.0.306 Release, AMD Ryzen 5900X, 32 GB RAM
+- Measurement method: recording analysis
+
+Rendering **~2500** views.
+
+![](./2500-views.png)
+
+|                                  | ArkUI                                                                                               | react-native-harmony                                                                                          | react-native-android                                                                                          |
+| -------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Recording                        | [arkui-2500-views.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/arkui-2500-views.mp4) | [rn-harmony-2500-views.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/rn-harmony-2500-views.mp4) | [rn-android-2500-views.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/rn-android-2500-views.mp4) |
+| Mean [ms]                        | **436**                                                                                             | **5900 (~14 times slower than ArkUI)**                                                                        | **1104  (~2.5 times slower than ArkUI)**                                                                      |
+| Sample size                      | 5                                                                                                   | 5                                                                                                             | 5                                                                                                             |
+| Standard Dev. [ms]               | 121                                                                                                 | 166                                                                                                           | 36                                                                                                            |
+| Confidence level                 | 95%                                                                                                 | 95%                                                                                                           | 95%                                                                                                           |
+| Margin of error (T-Student) [ms] | 150                                                                                                 | 206                                                                                                           | 45                                                                                                            |
+| Upper limit [ms]                 | 586                                                                                                 | 6106                                                                                                          | 1149                                                                                                          |
+| Lower limit [ms]                 | 285                                                                                                 | 5694                                                                                                          | 1059                                                                                                          |
