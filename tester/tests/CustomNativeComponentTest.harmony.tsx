@@ -36,6 +36,7 @@ function NativeComponent({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        borderColor: 'pink',
       }}
       size={size}
       children={children}

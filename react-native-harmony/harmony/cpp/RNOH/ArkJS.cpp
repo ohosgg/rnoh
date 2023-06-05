@@ -375,6 +375,11 @@ RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, std:
     return *this;
 }
 
+RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, folly::dynamic value) {
+    napi_set_named_property(m_env, m_object, name, m_arkJs.createFromDynamic(value));
+    return *this;
+}
+
 napi_value RNOHNapiObjectBuilder::build() {
     return m_object;
 }

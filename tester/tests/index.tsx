@@ -22,5 +22,6 @@ export * from './SectionListTest';
 export * from './TimerTest';
 export * from './TouchablesTest';
 export * from './TurboModuleTest';
+export * from './ViewTest';
 export * from './VirtualizedListTest';
 //export * from './SwitchTest';

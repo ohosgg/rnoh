@@ -1,5 +1,5 @@
 import { ColorSegments, Descriptor, Tag } from './descriptor'
-import { convertColorSegmentsToString } from './cpp-bridge-utils'
+import { convertColorSegmentsToString, convertColorValueToRGBA } from './cpp-bridge-utils'
 import { DescriptorRegistry } from './DescriptorRegistry'
 import { ReactEventKind } from './events'
 import { ViewProps } from './RNView'
@@ -29,11 +29,11 @@ export struct RNTextInput {
       .width(this.descriptor.props.width)
       .height(this.descriptor.props.height)
       .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
-      .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
+      .backgroundColor(convertColorValueToRGBA(this.descriptor.props.backgroundColor))
       .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
       .fontSize(this.descriptor.props.fontSize)
       .borderWidth(this.descriptor.props.borderWidth)
-      .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
+      .borderColor(convertColorValueToRGBA(this.descriptor.props.borderColor))
       .borderRadius(this.descriptor.props.borderRadius)
       .onChange((event) => this.relayChangeEvent(event))
   }

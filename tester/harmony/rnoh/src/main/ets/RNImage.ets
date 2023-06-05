@@ -1,9 +1,7 @@
-import { ColorSegments, Descriptor, Tag } from './descriptor'
-import { DescriptorRegistry } from './DescriptorRegistry'
+import { Descriptor } from './descriptor'
 import { ReactEventKind } from './events'
-import { convertColorSegmentsToString } from './cpp-bridge-utils'
+import { convertColorValueToRGBA } from './cpp-bridge-utils'
 import { ViewProps } from './RNView'
-import { RNInstance } from "./RNInstance"
 import { RNOHContext } from './RNOHContext'
 
 export type ImageProps = ViewProps & {
@@ -35,9 +33,9 @@ export struct RNImage {
       .width(this.descriptor.props.width)
       .height(this.descriptor.props.height)
       .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
-      .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
+      .backgroundColor(convertColorValueToRGBA(this.descriptor.props.backgroundColor))
       .borderWidth(this.descriptor.props.borderWidth)
-      .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
+      .borderColor(convertColorValueToRGBA(this.descriptor.props.borderColor))
       .borderRadius(this.descriptor.props.borderRadius)
       .onTouch((event) => this.onTouchEvent(event))
   }

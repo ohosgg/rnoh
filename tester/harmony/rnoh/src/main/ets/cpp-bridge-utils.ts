@@ -1,4 +1,4 @@
-import { ColorSegments } from './descriptor'
+import { ColorSegments, ColorValue } from './descriptor'
 
 export function convertColorSegmentsToString(colorSegments?: ColorSegments) {
   if (!colorSegments) return undefined
@@ -8,7 +8,8 @@ export function convertColorSegmentsToString(colorSegments?: ColorSegments) {
   )}, ${a})`
 }
 
-export function convertColorValueToRGBA(colorValue) {
+export function convertColorValueToRGBA(colorValue: ColorValue | undefined, defaultColor: string = "rgba(0,0,0,0.0)") {
+  if (colorValue === undefined) return defaultColor;
   const rgba = {
     a: (colorValue >> 24) & 0xff / 255,
     r: (colorValue >> 16) & 0xff,

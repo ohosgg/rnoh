@@ -155,6 +155,8 @@ class RNOHNapiObjectBuilder {
 
     RNOHNapiObjectBuilder &addProperty(const char *name, std::string value);
 
+    RNOHNapiObjectBuilder &addProperty(const char *name, folly::dynamic value);
+
     napi_value build();
 
   private:

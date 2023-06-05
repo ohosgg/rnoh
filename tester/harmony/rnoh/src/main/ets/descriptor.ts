@@ -9,6 +9,8 @@ export type ColorSegments = [
   NormalizedScalar,
 ];
 
+export type ColorValue = number;
+
 export type Tag = number;
 
 export type LayoutProps = {

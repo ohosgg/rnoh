@@ -4,14 +4,11 @@ import { RNComponentFactory, ComponentBuilderContext } from './RNComponentFactor
 import { RNOHContext } from "./RNOHContext"
 import { Descriptor } from './descriptor'
 import { ViewProps } from './RNView'
-import { convertColorSegmentsToString } from './cpp-bridge-utils'
+import { convertColorValueToRGBA } from './cpp-bridge-utils'
 import type { DeviceInfoTurboModule } from "./RNOHCorePackage/TurboModules/DeviceInfoTurboModule"
-import { RNInstance } from "./RNInstance"
 import JavaScriptLoader from "./JavaScriptLoader"
 import RNOHLogger from "./RNOHLogger"
 import { startTrace, finishTrace } from './tracer';
-import {DescriptorRegistry} from './DescriptorRegistry'
-import {CommandDispatcher} from './CommandDispatcher'
 
 
 @Component
@@ -157,6 +154,6 @@ export struct RNSurface {
     }
     .width("100%")
     .height("100%")
-    .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
+    .backgroundColor(convertColorValueToRGBA(this.descriptor.props.backgroundColor))
   }
 }
