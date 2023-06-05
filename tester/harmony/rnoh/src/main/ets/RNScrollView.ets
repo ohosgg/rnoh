@@ -24,8 +24,7 @@ export type ScrollViewDescriptor = Descriptor<"ScrollView", ScrollViewProps, Scr
 
 @Component
 export struct RNScrollView {
-  @Consume("RNInstance") rnInstance: RNInstance
-  @Consume("RNOHContext") ctx: RNOHContext
+  ctx: RNOHContext
   @State tag: number = -1
   @BuilderParam renderDescriptors: () => void
   @Prop descriptor: ScrollViewDescriptor
@@ -75,7 +74,7 @@ export struct RNScrollView {
   onScroll(xOffset: number, yOffset: number) {
     const offset = this.scroller.currentOffset()
 
-    this.rnInstance.emitEvent(
+    this.ctx.rnInstance.emitEvent(
     this.descriptor.tag,
     ReactEventKind.SCROLL,
     this.createScrollEvent("scroll", offset.xOffset, offset.yOffset)
@@ -83,7 +82,7 @@ export struct RNScrollView {
   }
 
   onScrollBegin(dx: number, dy: number) {
-    this.rnInstance.emitEvent(
+    this.ctx.rnInstance.emitEvent(
     this.descriptor.tag,
     ReactEventKind.SCROLL,
     this.createScrollEvent(
@@ -96,7 +95,7 @@ export struct RNScrollView {
   }
 
   onScrollEnd() {
-    this.rnInstance.emitEvent(
+    this.ctx.rnInstance.emitEvent(
     this.descriptor.tag,
     ReactEventKind.SCROLL,
     this.createScrollEvent(

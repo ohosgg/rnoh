@@ -30,15 +30,16 @@ const nullDescriptor = {
 }
 
 export type ComponentBuilderContext = {
+  rnohContext: RNOHContext
   descriptor: Descriptor
 }
 
 @Component
 export struct RNComponentFactory {
+  ctx: RNOHContext
   tag: number = -1
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   @State descriptor: Descriptor = nullDescriptor
-  @Consume("RNOHContext") ctx: RNOHContext
   private cleanupCallback?: () => void = undefined
 
   getDescriptorType() {
@@ -63,31 +64,33 @@ export struct RNComponentFactory {
 
   @Builder renderDescriptors() {
     ForEach(this.descriptor.childrenTags, (childrenTag) => {
-      RNComponentFactory({ tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
+      RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
     }, childrenTag => childrenTag)
   }
 
   build() {
     if (this.getDescriptorType() === "View") {
       RNView({
+        ctx: this.ctx,
         tag: this.tag,
         renderDescriptors: this.renderDescriptors.bind(this),
         descriptor: this.descriptor as ViewDescriptor
       })
     } else if (this.getDescriptorType() === "Image") {
-      RNImage({ tag: this.tag, descriptor: this.descriptor as ImageDescriptor })
+      RNImage({ ctx: this.ctx, tag: this.tag, descriptor: this.descriptor as ImageDescriptor })
     } else if (this.getDescriptorType() === "TextInput") {
-      RNTextInput({ tag: this.tag, descriptor: this.descriptor as TextInputDescriptor })
+      RNTextInput({ ctx: this.ctx, tag: this.tag, descriptor: this.descriptor as TextInputDescriptor })
     } else if (this.getDescriptorType() === "Paragraph") {
-      RNText({ tag: this.tag, descriptor: this.descriptor as TextDescriptor })
+      RNText({ ctx: this.ctx, tag: this.tag, descriptor: this.descriptor as TextDescriptor })
     } else if (this.getDescriptorType() === "ScrollView") {
       RNScrollView({
+        ctx: this.ctx,
         tag: this.tag,
         renderDescriptors: this.renderDescriptors.bind(this),
         descriptor: this.descriptor as ScrollViewDescriptor
       })
     } else {
-      this.buildCustomComponent({ descriptor: this.descriptor })
+      this.buildCustomComponent({ rnohContext: this.ctx, descriptor: this.descriptor })
     }
   }
 }

@@ -6,23 +6,25 @@ const BUNDLE_URL = "http://localhost:8081/index.bundle?platform=harmony&dev=fals
 @Entry
 @Component
 struct Index {
-  @Provide("RNOHContext") rnohContext: RNOHContext = new RNOHContext();
+  rnInstance = new RNInstance(
+    BUNDLE_URL,
+    "app_name",
+    (ctx) => [
+      new SamplePackage(ctx)
+    ]
+  );
+  rnohContext: RNOHContext = new RNOHContext(this.rnInstance);
 
   @Builder buildCustomComponent(ctx: ComponentBuilderContext) {
     if (ctx.descriptor.type === SAMPLE_VIEW_TYPE) {
-      SampleView({ tag: ctx.descriptor.tag, buildCustomComponent: this.buildCustomComponent.bind(this) })
+      SampleView({ ctx: ctx.rnohContext, tag: ctx.descriptor.tag, buildCustomComponent: this.buildCustomComponent.bind(this) })
     }
   }
 
   build() {
     Column() {
       RNApp({
-        rnInstance: new RNInstance(
-          BUNDLE_URL,
-          "app_name",
-          (ctx) => [
-          new SamplePackage(ctx)
-        ]),
+        rnohContext: this.rnohContext,
         buildCustomComponent: this.buildCustomComponent.bind(this)
       })
     }

@@ -2,6 +2,8 @@ import { ColorSegments, Descriptor, LayoutProps, Tag } from './descriptor'
 import { convertColorSegmentsToString } from './cpp-bridge-utils'
 import { ReactEventKind } from './events'
 import { RNInstance } from "./RNInstance"
+import RNOHLogger from './RNOHLogger'
+import { RNOHContext } from './RNOHContext'
 
 export type ViewProps = LayoutProps & {
   backgroundColor?: ColorSegments
@@ -15,13 +17,13 @@ export type ViewDescriptor = Descriptor<"View", ViewProps>
 
 @Component
 export struct RNView {
-  @Consume("RNInstance") rnInstance: RNInstance
+  ctx: RNOHContext
   @State tag: number = -1
   @BuilderParam renderDescriptors: () => void
   @Prop descriptor: ViewDescriptor
 
   onTouchEvent(event: TouchEvent) {
-    this.rnInstance.emitEvent(this.descriptor.tag, ReactEventKind.TOUCH, event)
+    this.ctx.rnInstance.emitEvent(this.descriptor.tag, ReactEventKind.TOUCH, event)
   }
 
   build() {

@@ -3,7 +3,6 @@ import {
   ComponentBuilderContext,
   RNComponentFactory,
   convertColorValueToRGBA,
-  DescriptorRegistry,
   RNOHContext,
 } from '@ohos/rnoh'
 
@@ -17,7 +16,7 @@ export class SampleViewDescriptor extends DescriptorClass<typeof SAMPLE_VIEW_TYP
 
 @Component
 export struct SampleView {
-  @Consume("RNOHContext") ctx: RNOHContext
+  ctx: RNOHContext
   tag: number
   @BuilderParam buildCustomComponent: (componentBuilderContext: ComponentBuilderContext) => void
   @State descriptor: SampleViewDescriptor = {} as SampleViewDescriptor
@@ -40,7 +39,7 @@ export struct SampleView {
     Stack() {
       Text(JSON.stringify(this.descriptor.childrenTags)).fontColor("blue")
       ForEach(this.descriptor.childrenTags, (tag) => {
-        RNComponentFactory({ tag: tag, buildCustomComponent: this.buildCustomComponent })
+        RNComponentFactory({ ctx: this.ctx, tag: tag, buildCustomComponent: this.buildCustomComponent })
       }, tag => tag)
     }
     .alignContent(Alignment.TopStart)

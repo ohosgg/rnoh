@@ -10,12 +10,14 @@ import { RNInstance } from "./RNInstance"
 import JavaScriptLoader from "./JavaScriptLoader"
 import RNOHLogger from "./RNOHLogger"
 import { startTrace, finishTrace } from './tracer';
+import {DescriptorRegistry} from './DescriptorRegistry'
+import {CommandDispatcher} from './CommandDispatcher'
 
 
 @Component
 @Preview
 export struct RNApp {
-  @Provide("RNInstance") rnInstance: RNInstance | null = null
+  rnohContext: RNOHContext
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   @State screenDensity: number = 0
   @State shouldShow: boolean = false
@@ -26,12 +28,12 @@ export struct RNApp {
   aboutToAppear() {
     // delay running the app so that debugger has a chance to connect before a potential error is thrown
     startTrace("INITIALIZATION")
-    this.rnInstance?.setLibRNOHApp(libRNOHApp)
-    this.rnInstance?.registerTurboModuleProvider();
+    this.rnohContext.rnInstance.setLibRNOHApp(libRNOHApp)
+    this.rnohContext.rnInstance.registerTurboModuleProvider();
     setTimeout(() => {
       Device.getInfo({ success: (data) => {
         this.screenDensity = data.screenDensity
-        const deviceInfoTurboModule = this.rnInstance.getTurboModule<DeviceInfoTurboModule>("DeviceInfo")
+        const deviceInfoTurboModule = this.rnohContext.rnInstance.getTurboModule<DeviceInfoTurboModule>("DeviceInfo")
         deviceInfoTurboModule.setInitialDeviceMetrics({
           width: data.windowWidth,
           height: data.windowHeight,
@@ -39,7 +41,7 @@ export struct RNApp {
           fontScale: data.screenDensity,
         })
       } })
-      this.rnInstance?.initializeReactNative();
+      this.rnohContext.rnInstance.initializeReactNative();
       this.shouldShow = true
       finishTrace("INITIALIZATION")
     }, this.dev ? 2000 : 0)
@@ -55,11 +57,12 @@ export struct RNApp {
     Stack() {
       if (this.screenDensity > 0 && this.shouldShow) {
         RNSurface({
+          ctx: this.rnohContext,
           buildCustomComponent: this.buildCustomComponent,
           screenDensity: this.screenDensity,
           initialSurfaceWidth: this.initialSurfaceWidth,
           initialSurfaceHeight: this.initialSurfaceHeight,
-          bundleUrl: this.rnInstance.getBundleUrl()
+          bundleUrl: this.rnohContext.rnInstance.getBundleUrl()
         })
       } else {
         Text("Loading...")
@@ -92,8 +95,7 @@ const rootDescriptor: RootDescriptor = {
 
 @Component
 export struct RNSurface {
-  @Consume("RNInstance") rnInstance: RNInstance
-  @Consume("RNOHContext") ctx: RNOHContext
+  ctx: RNOHContext
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   @State initialSurfaceWidth: number = 0
   @State initialSurfaceHeight: number = 0
@@ -103,7 +105,7 @@ export struct RNSurface {
   private cleanup?: () => void = undefined
 
   aboutToAppear() {
-    this.rnInstance.subscribeToShadowTreeChanges((mutations) => {
+    this.ctx.rnInstance.subscribeToShadowTreeChanges((mutations) => {
       this.updateDescriptorRegistry(mutations)
     }, (tag, commandName, args) => {
       this.dispatchCommand(tag, commandName, args)
@@ -119,11 +121,11 @@ export struct RNSurface {
         RNOHLogger.info("Falling back to local bundle.");
         return javaScriptLoader.loadBundle("bundle.harmony.js")
       }).then((bundle) => {
-      this.rnInstance.run(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity, bundle)
+      this.ctx.rnInstance.run(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity, bundle)
     }).catch((error) => {
       RNOHLogger.error(error)
       // TODO: don't use empty string as a magic "failure" value
-      this.rnInstance.run(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity, "")
+      this.ctx.rnInstance.run(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity, "")
     });
     this.cleanup = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
       1,
@@ -148,21 +150,13 @@ export struct RNSurface {
   }
 
   build() {
-    Row() {
-      Column() {
-        Flex({ direction: FlexDirection.Column }) {
-          ForEach(this.descriptor.childrenTags, (childrenTag) => {
-            RNComponentFactory({ tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
-          }, childrenTag => childrenTag)
-        }
-        .width("100%")
-        .height("100%")
-        .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
-      }
-      .height("100%")
-      .width('100%')
+    Stack() {
+      ForEach(this.descriptor.childrenTags, (childrenTag) => {
+        RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
+      }, childrenTag => childrenTag)
     }
-    .height('100%')
-    .alignItems(VerticalAlign.Top)
+    .width("100%")
+    .height("100%")
+    .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
   }
 }

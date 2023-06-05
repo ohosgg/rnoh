@@ -4,6 +4,7 @@ import { DescriptorRegistry } from './DescriptorRegistry'
 import { ReactEventKind } from './events'
 import { ViewProps } from './RNView'
 import { RNInstance } from "./RNInstance"
+import { RNOHContext } from './RNOHContext'
 
 export type TextInputProps = ViewProps & {
   fontColor?: ColorSegments
@@ -15,12 +16,12 @@ export type TextInputDescriptor = Descriptor<"TextInput", TextInputProps>
 
 @Component
 export struct RNTextInput {
-  @Consume("RNInstance") rnInstance: RNInstance
+  ctx: RNOHContext
   @State tag: number = -1
   @Prop descriptor: TextInputDescriptor
 
   relayChangeEvent(value: string) {
-    this.rnInstance.emitEvent(this.descriptor.tag, ReactEventKind.TEXT_INPUT_CHANGE, value)
+    this.ctx.rnInstance.emitEvent(this.descriptor.tag, ReactEventKind.TEXT_INPUT_CHANGE, value)
   }
 
   build() {

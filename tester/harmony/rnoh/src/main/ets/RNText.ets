@@ -3,7 +3,8 @@ import { DescriptorRegistry } from './DescriptorRegistry'
 import { ReactEventKind } from './events'
 import { convertColorSegmentsToString } from './cpp-bridge-utils'
 import { ViewProps } from './RNView'
-import type { RNInstance } from './RNInstance'
+import { RNInstance } from './RNInstance'
+import { RNOHContext } from './RNOHContext'
 
 export type TextProps = ViewProps & {
   text?: string
@@ -16,12 +17,12 @@ export type TextDescriptor = Descriptor<"Paragraph", TextProps>
 
 @Component
 export struct RNText {
-  @Consume("RNInstance") rnInstance: RNInstance
+  ctx: RNOHContext
   @State tag: number = -1
   @Prop descriptor: TextDescriptor
 
   onTouchEvent(event: TouchEvent) {
-    this.rnInstance.emitEvent(this.descriptor.tag, ReactEventKind.TOUCH, event)
+    this.ctx.rnInstance.emitEvent(this.descriptor.tag, ReactEventKind.TOUCH, event)
   }
 
   build() {
