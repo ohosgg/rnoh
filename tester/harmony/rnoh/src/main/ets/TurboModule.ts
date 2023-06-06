@@ -1,4 +1,4 @@
-import type {RNInstance} from './RNInstance'
+import type { RNInstance } from './RNInstance'
 
 export interface TurboModuleContext {
   reactNativeVersion: string;
@@ -6,14 +6,17 @@ export interface TurboModuleContext {
 }
 
 export class TurboModule {
-  constructor(protected ctx: TurboModuleContext) { };
+  constructor(protected ctx: TurboModuleContext) {
+  };
 }
 
 export abstract class EventEmittingTurboModule extends TurboModule {
   supportedEvents: string[]
   listenerCount: number = 0
 
-  constructor(protected ctx: TurboModuleContext) { super(ctx); };
+  constructor(protected ctx: TurboModuleContext) {
+    super(ctx);
+  };
 
   addListener(eventName: string) {
     if (this.supportedEvents.indexOf(eventName) === -1) {

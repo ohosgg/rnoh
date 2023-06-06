@@ -11,9 +11,9 @@ export const PixelRatioTest = () => {
         }}
       />
       <TestCase
-        itShould="return the same value as pixel ratio"
+        itShould="return fontScale used in emulator (1)"
         fn={({expect}) => {
-          expect(PixelRatio.getFontScale()).to.be.eq(3);
+          expect(PixelRatio.getFontScale()).to.be.eq(1);
         }}
       />
     </TestSuite>

@@ -9,6 +9,7 @@ import type { DeviceInfoTurboModule } from "./RNOHCorePackage/TurboModules/Devic
 import JavaScriptLoader from "./JavaScriptLoader"
 import RNOHLogger from "./RNOHLogger"
 import { startTrace, finishTrace } from './tracer';
+import common from '@ohos.app.ability.common'
 
 
 @Component
@@ -21,24 +22,42 @@ export struct RNApp {
   @State dev: boolean = false
   private initialSurfaceWidth: number = 0
   private initialSurfaceHeight: number = 0
+  private context = getContext(this) as common.UIAbilityContext;
 
   aboutToAppear() {
     // delay running the app so that debugger has a chance to connect before a potential error is thrown
     startTrace("INITIALIZATION")
-    this.rnohContext.rnInstance.setLibRNOHApp(libRNOHApp)
-    this.rnohContext.rnInstance.registerTurboModuleProvider();
+    this.rnohContext.rnInstance?.setLibRNOHApp(libRNOHApp)
+    this.rnohContext.rnInstance?.registerTurboModuleProvider();
+    this.context;
     setTimeout(() => {
       Device.getInfo({ success: (data) => {
         this.screenDensity = data.screenDensity
         const deviceInfoTurboModule = this.rnohContext.rnInstance.getTurboModule<DeviceInfoTurboModule>("DeviceInfo")
-        deviceInfoTurboModule.setInitialDeviceMetrics({
-          width: data.windowWidth,
-          height: data.windowHeight,
-          scale: data.screenDensity,
-          fontScale: data.screenDensity,
-        })
-      } })
-      this.rnohContext.rnInstance.initializeReactNative();
+        deviceInfoTurboModule.setInitialParameters({
+          screenPhysicalPixels: {
+            width: data.windowWidth,
+            height: data.windowHeight,
+            scale: data.screenDensity,
+            fontScale: 1,
+            densityDpi: 1,
+          },
+          windowPhysicalPixels: {
+            width: data.windowWidth,
+            height: data.windowHeight,
+            scale: data.screenDensity,
+            fontScale: 1,
+            densityDpi: 1,
+          }
+        }, this.context)
+      },
+      })
+      const deviceInfoTurboModule = this.rnohContext.rnInstance.getTurboModule<DeviceInfoTurboModule>("DeviceInfo")
+      let eventHub = this.context.eventHub;
+      eventHub.on('CONFIGURATION_UPDATE', (_) => {
+        deviceInfoTurboModule.updateDeviceMetrics();
+      });
+      this.rnohContext.rnInstance?.initializeReactNative();
       this.shouldShow = true
       finishTrace("INITIALIZATION")
     }, this.dev ? 2000 : 0)

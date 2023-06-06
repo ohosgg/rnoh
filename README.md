@@ -89,7 +89,7 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 - [ ] unstable_batchedUpdates
 - [x] useAnimatedValue
 - [ ] useColorScheme
-- [ ] useWindowDimensions
+- [x] useWindowDimensions
 - [ ] UTFSequence
 - [ ] Vibration
 - [ ] YellowBox

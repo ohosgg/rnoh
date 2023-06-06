@@ -20,6 +20,11 @@ export class RNAbility extends UIAbility {
         RNOHLogger.info('Ability onWindowStageDestroy');
     }
 
+    onConfigurationUpdate(config) {
+        this.context.eventHub.emit('CONFIGURATION_UPDATE');
+        console.info('onConfigurationUpdate, config:' + JSON.stringify(config));
+    }
+
     onForeground() {
         // Ability has brought to foreground
         RNOHLogger.info('Ability onForeground');

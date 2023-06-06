@@ -14,8 +14,11 @@ module.exports = {
   get BackHandler() {
     return require('react-native/Libraries/Utilities/BackHandler');
   },
-  get Button(): Button {
+  get Button(){
     return require('react-native/Libraries/Components/Button');
+  },
+  get Dimensions(){
+    return require('react-native/Libraries/Utilities/Dimensions');
   },
   get FlatList() {
     return require('react-native/Libraries/Lists/FlatList');
@@ -90,6 +93,9 @@ module.exports = {
   },
   get useAnimatedValue() {
     return require('react-native/Libraries/Animated/useAnimatedValue').default;
+  },
+  get useWindowDimensions(){
+    return require('react-native/Libraries/Utilities/useWindowDimensions').default;
   },
   get View() {
     return require('react-native/Libraries/Components/View/View');
