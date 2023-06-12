@@ -1,4 +1,5 @@
 #include "RNOH/Package.h"
+#include "Package.h"
 
 using namespace rnoh;
 using namespace facebook;
@@ -19,5 +20,9 @@ ComponentJSIBinderByString rnoh::Package::createComponentJSIBinderByName() {
 }
 
 ComponentNapiBinderByString rnoh::Package::createComponentNapiBinderByName() {
+    return {};
+}
+
+EventEmitRequestHandlerByString rnoh::Package::createEventEmitRequestHandlerByName() {
     return {};
 }

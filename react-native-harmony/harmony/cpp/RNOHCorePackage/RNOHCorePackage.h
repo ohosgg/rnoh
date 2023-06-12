@@ -22,6 +22,9 @@
 #include "RNOHCorePackage/ComponentBinders/ScrollViewComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/TextComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/TextInputComponentNapiBinder.h"
+#include "RNOHCorePackage/EventEmitRequestHandlers/TouchEventEmitRequestHandler.h"
+#include "RNOHCorePackage/EventEmitRequestHandlers/TextInputChangeEventEmitRequestHandler.h"
+#include "RNOHCorePackage/EventEmitRequestHandlers/ScrollEventEmitRequestHandler.h"
 
 namespace rnoh {
 
@@ -86,6 +89,12 @@ class RNOHCorePackage : public Package {
             {"ScrollView", std::make_shared<ScrollViewComponentNapiBinder>()},
             {"TextInput", std::make_shared<TextInputComponentNapiBinder>()}};
     };
+
+    EventEmitRequestHandlerByString createEventEmitRequestHandlerByName() override {
+        return {{"Touch", std::make_shared<TouchEventEmitRequestHandler>()},
+                {"TextInputChange", std::make_shared<TextInputChangeEventEmitRequestHandler>()},
+                {"Scroll", std::make_shared<ScrollEventEmitRequestHandler>()}};
+    }
 };
 
 } // namespace rnoh

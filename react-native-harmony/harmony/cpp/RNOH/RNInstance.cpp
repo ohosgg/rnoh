@@ -6,9 +6,10 @@
 #include "RNOH/LogSink.h"
 #include "hermes/executor/HermesExecutorFactory.h"
 #include <react/renderer/componentregistry/ComponentDescriptorProvider.h>
-#include "RNOH/events/EventEmitterRegistry.h"
+#include "RNOH/EventEmitterRegistry.h"
 #include "RNOH/TurboModuleProvider.h"
 #include "RNOH/TurboModuleFactory.h"
+#include "RNInstance.h"
 
 using namespace facebook;
 using namespace rnoh;
@@ -114,8 +115,15 @@ void RNInstance::runApplication(float width, float height, std::string &&bundle)
     });
 }
 
-void RNInstance::emitEvent(react::Tag tag, ReactEventKind eventKind, napi_value eventObject) {
-    this->eventEmitterHelper.emitEvent(tag, eventKind, eventObject);
+void rnoh::RNInstance::emitComponentEvent(napi_env env, react::Tag tag, std::string eventEmitRequestHandlerName, napi_value payload) {
+    if (m_eventEmitRequestHandlerByName.count(eventEmitRequestHandlerName) > 0) {
+        m_eventEmitRequestHandlerByName.at(eventEmitRequestHandlerName)->handleEvent({
+            .env = env,
+            .tag = tag,
+            .payload = payload,
+            .eventEmitterRegistry = this->eventEmitterRegistry,
+        });
+    }
 }
 
 void RNInstance::callFunction(std::string &&module, std::string &&method, folly::dynamic &&params) {

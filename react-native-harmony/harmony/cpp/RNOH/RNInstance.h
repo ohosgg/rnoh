@@ -19,9 +19,9 @@
 #include "RNOH/MessageQueueThread.h"
 #include "RNOH/SchedulerDelegate.h"
 #include "RNOH/TaskExecutor.h"
-#include "RNOH/events/EventEmitterRegistry.h"
-#include "RNOH/events/EventEmitterHelper.h"
+#include "RNOH/EventEmitterRegistry.h"
 #include "RNOH/TurboModuleFactory.h"
+#include "RNOH/EventEmitRequestHandler.h"
 
 namespace rnoh {
 class RNInstance {
@@ -33,24 +33,25 @@ class RNInstance {
                std::shared_ptr<TaskExecutor> taskExecutor,
                std::shared_ptr<react::ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry,
                MutationsToNapiConverter mutationsToNapiConverter,
-               std::string appName)
+               std::string appName,
+               EventEmitRequestHandlerByString eventEmitRequestHandlerByName)
         : surfaceHandler(appName, 1),
           instance(std::make_shared<facebook::react::Instance>()),
           scheduler(nullptr),
           taskExecutor(taskExecutor),
           eventEmitterRegistry(std::make_shared<EventEmitterRegistry>()),
-          eventEmitterHelper(ArkJS(env), eventEmitterRegistry),
           m_turboModuleFactory(std::move(turboModuleFactory)),
           m_componentDescriptorProviderRegistry(componentDescriptorProviderRegistry),
-          m_mutationsToNapiConverter(mutationsToNapiConverter) {}
+          m_mutationsToNapiConverter(mutationsToNapiConverter),
+          m_eventEmitRequestHandlerByName(eventEmitRequestHandlerByName) {}
 
     void registerSurface(
         MutationsListener,
         MountingManager::CommandDispatcher);
     void start();
     void runApplication(float width, float height, std::string &&bundle);
-    void emitEvent(facebook::react::Tag tag, ReactEventKind eventKind, napi_value eventObject);
     void callFunction(std::string &&module, std::string &&method, folly::dynamic &&params);
+    void emitComponentEvent(napi_env env, react::Tag tag, std::string eventEmitRequestHandlerName, napi_value payload);
 
   private:
     std::shared_ptr<facebook::react::ContextContainer> contextContainer;
@@ -63,9 +64,9 @@ class RNInstance {
     std::shared_ptr<TaskExecutor> taskExecutor;
     std::shared_ptr<react::ComponentDescriptorProviderRegistry> m_componentDescriptorProviderRegistry;
     EventEmitterRegistry::Shared eventEmitterRegistry;
-    EventEmitterHelper eventEmitterHelper;
     TurboModuleFactory m_turboModuleFactory;
     MutationsToNapiConverter m_mutationsToNapiConverter;
+    EventEmitRequestHandlerByString m_eventEmitRequestHandlerByName;
 
     void initialize();
     void initializeScheduler();

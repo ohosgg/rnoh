@@ -1,7 +1,6 @@
 import { Descriptor } from './descriptor'
-import { ReactEventKind } from './events'
 import { convertColorValueToRGBA } from './cpp-bridge-utils'
-import { ViewProps } from './RNView'
+import { ViewProps, handleTouchEvent } from './RNView'
 import { RNOHContext } from './RNOHContext'
 
 export type ImageProps = ViewProps & {
@@ -16,8 +15,8 @@ export struct RNImage {
   @State tag: number = -1
   @Prop descriptor: ImageDescriptor
 
-  onTouchEvent(event: TouchEvent) {
-    this.ctx.rnInstance.emitEvent(this.descriptor.tag, ReactEventKind.TOUCH, event)
+  onTouchEvent(e: TouchEvent) {
+    handleTouchEvent(this.ctx, e, this.tag)
   }
 
   getSource() {

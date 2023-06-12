@@ -1,8 +1,7 @@
 import { ColorSegments, Descriptor, LayoutProps, Tag } from './descriptor'
 import { DescriptorRegistry } from './DescriptorRegistry'
-import { ReactEventKind } from './events'
 import { convertColorSegmentsToString } from './cpp-bridge-utils'
-import { ViewProps } from './RNView'
+import { ViewProps, handleTouchEvent } from './RNView'
 import { RNInstance } from './RNInstance'
 import { RNOHContext } from './RNOHContext'
 
@@ -21,8 +20,8 @@ export struct RNText {
   @State tag: number = -1
   @Prop descriptor: TextDescriptor
 
-  onTouchEvent(event: TouchEvent) {
-    this.ctx.rnInstance.emitEvent(this.descriptor.tag, ReactEventKind.TOUCH, event)
+  onTouchEvent(e: TouchEvent) {
+    handleTouchEvent(this.ctx, e, this.descriptor.tag)
   }
 
   build() {

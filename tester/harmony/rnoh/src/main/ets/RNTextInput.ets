@@ -1,10 +1,8 @@
-import { ColorSegments, Descriptor, Tag } from './descriptor'
+import { ColorSegments, Descriptor } from './descriptor'
 import { convertColorSegmentsToString, convertColorValueToRGBA } from './cpp-bridge-utils'
-import { DescriptorRegistry } from './DescriptorRegistry'
-import { ReactEventKind } from './events'
 import { ViewProps } from './RNView'
-import { RNInstance } from "./RNInstance"
 import { RNOHContext } from './RNOHContext'
+import { RNOHEventEmitRequestHandlerName } from "./RNOHCorePackage"
 
 export type TextInputProps = ViewProps & {
   fontColor?: ColorSegments
@@ -20,8 +18,8 @@ export struct RNTextInput {
   @State tag: number = -1
   @Prop descriptor: TextInputDescriptor
 
-  relayChangeEvent(value: string) {
-    this.ctx.rnInstance.emitEvent(this.descriptor.tag, ReactEventKind.TEXT_INPUT_CHANGE, value)
+  handleChangeEvent(value: string) {
+    this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, RNOHEventEmitRequestHandlerName.TextInputChange, value)
   }
 
   build() {
@@ -35,6 +33,6 @@ export struct RNTextInput {
       .borderWidth(this.descriptor.props.borderWidth)
       .borderColor(convertColorValueToRGBA(this.descriptor.props.borderColor))
       .borderRadius(this.descriptor.props.borderRadius)
-      .onChange((event) => this.relayChangeEvent(event))
+      .onChange((event) => this.handleChangeEvent(event))
   }
 }

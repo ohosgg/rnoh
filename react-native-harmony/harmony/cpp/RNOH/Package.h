@@ -4,6 +4,7 @@
 #include "RNOH/TurboModuleFactory.h"
 #include "RNOH/UIManagerModule.h"
 #include "RNOH/MutationsToNapiConverter.h"
+#include "RNOH/EventEmitRequestHandler.h"
 
 namespace rnoh {
 
@@ -21,6 +22,8 @@ class Package {
     virtual ComponentJSIBinderByString createComponentJSIBinderByName();
 
     virtual ComponentNapiBinderByString createComponentNapiBinderByName();
+
+    virtual EventEmitRequestHandlerByString createEventEmitRequestHandlerByName();
 
   protected:
     Context m_ctx;

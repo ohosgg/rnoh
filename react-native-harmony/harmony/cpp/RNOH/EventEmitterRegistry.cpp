@@ -1,4 +1,4 @@
-#include "RNOH/events/EventEmitterRegistry.h"
+#include "RNOH/EventEmitterRegistry.h"
 
 namespace rnoh {
 

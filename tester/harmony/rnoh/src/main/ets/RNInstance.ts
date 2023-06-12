@@ -22,6 +22,7 @@ export class RNInstance {
   getBundleUrl(): string {
     return this.bundleUrl;
   }
+
   getAppName(): string {
     return this.appName;
   }
@@ -46,8 +47,8 @@ export class RNInstance {
     this.libRNOHApp.initializeReactNative(this.appName);
   }
 
-  emitEvent(tag: Tag, eventKind: number, event: any) {
-    this.libRNOHApp.emitEvent(tag, eventKind, event);
+  emitComponentEvent(tag: Tag, eventEmitRequestHandlerName: string, payload: any) {
+    this.libRNOHApp.emitComponentEvent(tag, eventEmitRequestHandlerName, payload);
   }
 
   subscribeToShadowTreeChanges(

@@ -62,15 +62,13 @@ static napi_value startReactNative(napi_env env, napi_callback_info info) {
     return arkJs.getUndefined();
 }
 
-static napi_value emitEvent(napi_env env, napi_callback_info info) {
+static napi_value emitComponentEvent(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 3);
-    double tag, eventKind;
-    napi_get_value_double(env, args[0], &tag);
-    napi_get_value_double(env, args[1], &eventKind);
-
-    rnInstance->emitEvent(tag, (rnoh::ReactEventKind)eventKind, args[2]);
-
+    rnInstance->emitComponentEvent(env,
+                                   arkJs.getDouble(args[0]),
+                                   arkJs.getString(args[1]),
+                                   args[2]);
     return arkJs.getUndefined();
 }
 
@@ -92,7 +90,7 @@ static napi_value Init(napi_env env, napi_value exports) {
         {"subscribeToShadowTreeChanges", nullptr, subscribeToShadowTreeChanges, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"initializeReactNative", nullptr, initializeReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"startReactNative", nullptr, startReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
-        {"emitEvent", nullptr, emitEvent, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"emitComponentEvent", nullptr, emitComponentEvent, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"registerTurboModuleProvider", nullptr, registerTurboModuleProvider, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"callRNFunction", nullptr, callRNFunction, nullptr, nullptr, nullptr, napi_default, nullptr}};
 

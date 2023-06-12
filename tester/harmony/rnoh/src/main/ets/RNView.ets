@@ -1,9 +1,7 @@
-import { Descriptor, LayoutProps, ColorValue } from './descriptor'
-import { convertColorSegmentsToString, convertColorValueToRGBA } from './cpp-bridge-utils'
-import { ReactEventKind } from './events'
-import { RNInstance } from "./RNInstance"
-import RNOHLogger from './RNOHLogger'
+import { Descriptor, LayoutProps, ColorValue, Tag } from './descriptor'
+import { convertColorValueToRGBA } from './cpp-bridge-utils'
 import { RNOHContext } from './RNOHContext'
+import { RNOHEventEmitRequestHandlerName } from "./RNOHCorePackage"
 
 export type ViewProps = LayoutProps & {
   backgroundColor?: ColorValue
@@ -15,6 +13,10 @@ export type ViewProps = LayoutProps & {
 
 export type ViewDescriptor = Descriptor<"View", ViewProps>
 
+export function handleTouchEvent(ctx: RNOHContext, event: TouchEvent, tag: Tag) {
+  ctx.rnInstance.emitComponentEvent(tag, RNOHEventEmitRequestHandlerName.Touch, event)
+}
+
 @Component
 export struct RNView {
   ctx: RNOHContext
@@ -23,7 +25,7 @@ export struct RNView {
   @Prop descriptor: ViewDescriptor
 
   onTouchEvent(event: TouchEvent) {
-    this.ctx.rnInstance.emitEvent(this.descriptor.tag, ReactEventKind.TOUCH, event)
+    handleTouchEvent(this.ctx, event, this.descriptor.tag)
   }
 
   build() {

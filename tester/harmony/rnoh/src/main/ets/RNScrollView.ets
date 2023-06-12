@@ -1,8 +1,8 @@
 import { Descriptor } from './descriptor'
 import { ViewProps } from './RNView'
 import { convertColorValueToRGBA } from './cpp-bridge-utils'
-import { ReactEventKind } from './events'
 import { RNOHContext } from "./RNOHContext"
+import { RNOHEventEmitRequestHandlerName } from "./RNOHCorePackage"
 
 export type ScrollViewProps = ViewProps & {
   scrollEnabled?: boolean
@@ -72,17 +72,17 @@ export struct RNScrollView {
   onScroll(xOffset: number, yOffset: number) {
     const offset = this.scroller.currentOffset()
 
-    this.ctx.rnInstance.emitEvent(
+    this.ctx.rnInstance.emitComponentEvent(
       this.descriptor.tag,
-      ReactEventKind.SCROLL,
+      RNOHEventEmitRequestHandlerName.Scroll,
       this.createScrollEvent("scroll", offset.xOffset, offset.yOffset)
     )
   }
 
   onScrollBegin(dx: number, dy: number) {
-    this.ctx.rnInstance.emitEvent(
+    this.ctx.rnInstance.emitComponentEvent(
       this.descriptor.tag,
-      ReactEventKind.SCROLL,
+      RNOHEventEmitRequestHandlerName.Scroll,
       this.createScrollEvent(
         "begin",
         this.descriptor.state.contentOffsetX,
@@ -93,9 +93,9 @@ export struct RNScrollView {
   }
 
   onScrollEnd() {
-    this.ctx.rnInstance.emitEvent(
+    this.ctx.rnInstance.emitComponentEvent(
       this.descriptor.tag,
-      ReactEventKind.SCROLL,
+      "Scroll",
       this.createScrollEvent(
         "end",
         this.descriptor.state.contentOffsetX,

@@ -18,6 +18,7 @@
 #include "RNOH/ArkTSTurboModule.h"
 #include "RNOH/PackageProvider.h"
 #include "RNOHCorePackage/RNOHCorePackage.h"
+#include "RNOH/EventEmitRequestHandler.h"
 
 using namespace rnoh;
 
@@ -31,6 +32,8 @@ std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboMo
     std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> turboModuleFactoryDelegates;
     ComponentJSIBinderByString componentJSIBinderByName = {};
     ComponentNapiBinderByString componentNapiBinderByName = {};
+    EventEmitRequestHandlerByString eventEmitRequestHandlerByName = {};
+
     for (auto &package : packages) {
         auto turboModuleFactoryDelegate = package->createTurboModuleFactoryDelegate();
         if (turboModuleFactoryDelegate != nullptr) {
@@ -45,6 +48,9 @@ std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboMo
         for (auto [name, componentNapiBinder] : package->createComponentNapiBinderByName()) {
             componentNapiBinderByName.insert({name, componentNapiBinder});
         };
+        for (auto [name, eventEmitRequestHandler] : package->createEventEmitRequestHandlerByName()) {
+            eventEmitRequestHandlerByName.insert({name, eventEmitRequestHandler});
+        };
     }
 
     auto turboModuleFactory = TurboModuleFactory(env, arkTsTurboModuleProviderRef,
@@ -56,5 +62,6 @@ std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboMo
                                         taskExecutor,
                                         componentDescriptorProviderRegistry,
                                         MutationsToNapiConverter(std::move(componentNapiBinderByName)),
-                                        appName);
+                                        appName,
+                                        eventEmitRequestHandlerByName);
 }

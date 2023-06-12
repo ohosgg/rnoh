@@ -39,3 +39,9 @@ class CoreTurboModulesFactory extends TurboModulesFactory {
     return name in TURBO_MODULE_CLASS_BY_NAME;
   }
 }
+
+export enum RNOHEventEmitRequestHandlerName {
+  Scroll = "Scroll",
+  Touch = "Touch",
+  TextInputChange = "TextInputChange"
+}

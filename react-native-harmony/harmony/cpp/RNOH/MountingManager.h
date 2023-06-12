@@ -11,7 +11,7 @@
 
 #include "RNOH/MutationsToNapiConverter.h"
 #include "RNOH/TaskExecutor.h"
-#include "RNOH/events/EventEmitterRegistry.h"
+#include "RNOH/EventEmitterRegistry.h"
 
 namespace rnoh {
 
