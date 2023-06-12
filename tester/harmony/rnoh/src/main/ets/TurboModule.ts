@@ -1,8 +1,10 @@
 import type { RNInstance } from './RNInstance'
+import common from '@ohos.app.ability.common'
 
 export interface TurboModuleContext {
   reactNativeVersion: string;
   rnInstance: RNInstance;
+  uiAbilityContext: common.UIAbilityContext;
 }
 
 export class TurboModule {

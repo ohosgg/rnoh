@@ -5,11 +5,11 @@ module.exports = {
   get Animated() {
     return require('react-native/Libraries/Animated/Animated').default;
   },
-  get Easing() {
-    return require('react-native/Libraries/Animated/Easing').default;
-  },
   get AppRegistry() {
     return require('react-native/Libraries/ReactNative/AppRegistry');
+  },
+  get AppState() {
+    return require('react-native/Libraries/AppState/AppState');
   },
   get BackHandler() {
     return require('react-native/Libraries/Utilities/BackHandler');
@@ -19,6 +19,9 @@ module.exports = {
   },
   get Dimensions(){
     return require('react-native/Libraries/Utilities/Dimensions');
+  },
+  get Easing() {
+    return require('react-native/Libraries/Animated/Easing').default;
   },
   get FlatList() {
     return require('react-native/Libraries/Lists/FlatList');

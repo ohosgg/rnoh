@@ -3,7 +3,7 @@
 export * from 'react-native/Libraries/Animated/Animated';
 export * from 'react-native/Libraries/Animated/Easing';
 export * from 'react-native/Libraries/Animated/useAnimatedValue';
-// export * from 'react-native/Libraries/AppState/AppState';
+export * from 'react-native/Libraries/AppState/AppState';
 export * from 'react-native/Libraries/BatchedBridge/NativeModules';
 // export * from 'react-native/Libraries/Components/AccessibilityInfo/AccessibilityInfo';
 // export * from 'react-native/Libraries/Components/ActivityIndicator/ActivityIndicator';

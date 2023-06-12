@@ -388,6 +388,7 @@ add_library(rnoh SHARED
     "${RNOH_CPP_DIR}/RNOH/JsiConversions.cpp"
     "${RNOH_CPP_DIR}/RNOH/Package.cpp"
     "${RNOH_CPP_DIR}/RNOH/UIManagerModule.cpp"
+    "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/AppStateTurboModule.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/PlatformConstantsTurboModule.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/DeviceInfoTurboModule.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/SourceCodeTurboModule.cpp"

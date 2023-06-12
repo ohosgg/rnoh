@@ -25,4 +25,5 @@ export * from './TurboModuleTest';
 export * from './UseWindowDimensionsTest';
 export * from './ViewTest';
 export * from './VirtualizedListTest';
+export * from './AppStateTest';
 //export * from './SwitchTest';

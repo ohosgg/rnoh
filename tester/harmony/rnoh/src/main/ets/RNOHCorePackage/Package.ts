@@ -1,6 +1,7 @@
 import { RNPackage, TurboModulesFactory } from "../RNPackage";
 import type { TurboModule, TurboModuleContext } from '../TurboModule';
 import {
+  AppStateTurboModule,
   PlatformConstantsTurboModule,
   DeviceInfoTurboModule,
   SourceCodeTurboModule,
@@ -19,6 +20,7 @@ export class RNOHCorePackage extends RNPackage {
 
 const TURBO_MODULE_CLASS_BY_NAME: Record<string, typeof TurboModule> = {
   "PlatformConstants": PlatformConstantsTurboModule,
+  "AppState": AppStateTurboModule,
   "DeviceInfo": DeviceInfoTurboModule,
   "SourceCode": SourceCodeTurboModule,
   "Timing": TimingTurboModule,

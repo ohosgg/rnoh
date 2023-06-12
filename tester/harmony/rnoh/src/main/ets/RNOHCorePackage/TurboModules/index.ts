@@ -1,3 +1,4 @@
+export * from "./AppStateTurboModule";
 export * from "./PlatformConstantsTurboModule";
 export * from "./DeviceInfoTurboModule";
 export * from "./ExceptionsManagerTurboModule";

@@ -22,18 +22,16 @@ export struct RNApp {
   @State dev: boolean = false
   private initialSurfaceWidth: number = 0
   private initialSurfaceHeight: number = 0
-  private context = getContext(this) as common.UIAbilityContext;
 
   aboutToAppear() {
     // delay running the app so that debugger has a chance to connect before a potential error is thrown
     startTrace("INITIALIZATION")
     this.rnohContext.rnInstance?.setLibRNOHApp(libRNOHApp)
     this.rnohContext.rnInstance?.registerTurboModuleProvider();
-    this.context;
     setTimeout(() => {
       Device.getInfo({ success: (data) => {
         this.screenDensity = data.screenDensity
-        const deviceInfoTurboModule = this.rnohContext.rnInstance.getTurboModule<DeviceInfoTurboModule>("DeviceInfo")
+        const deviceInfoTurboModule = this.rnohContext.rnInstance.getTurboModule<DeviceInfoTurboModule>("DeviceInfo");
         deviceInfoTurboModule.setInitialParameters({
           screenPhysicalPixels: {
             width: data.windowWidth,
@@ -49,14 +47,9 @@ export struct RNApp {
             fontScale: 1,
             densityDpi: 1,
           }
-        }, this.context)
+        });
       },
       })
-      const deviceInfoTurboModule = this.rnohContext.rnInstance.getTurboModule<DeviceInfoTurboModule>("DeviceInfo")
-      let eventHub = this.context.eventHub;
-      eventHub.on('CONFIGURATION_UPDATE', (_) => {
-        deviceInfoTurboModule.updateDeviceMetrics();
-      });
       this.rnohContext.rnInstance?.initializeReactNative();
       this.shouldShow = true
       finishTrace("INITIALIZATION")

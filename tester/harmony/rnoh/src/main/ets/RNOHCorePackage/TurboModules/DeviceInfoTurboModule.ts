@@ -2,6 +2,7 @@ import display from '@ohos.display';
 import window from '@ohos.window';
 import common from "@ohos.app.ability.common"
 import RNOHLogger from "../../RNOHLogger"
+import { RNAbility } from '../../RNAbility';
 
 import { EventEmittingTurboModule, TurboModuleContext } from "../../TurboModule";
 
@@ -38,13 +39,19 @@ const defaultDisplayMetrics: DisplayMetrics = {
 } as const;
 
 export class DeviceInfoTurboModule extends EventEmittingTurboModule {
-  supportedEvents: string[] = ["didUpdateDimensions"];
+  private static readonly UPDATE_DIMENSIONS_EVENT = "didUpdateDimensions";
+
+
+  supportedEvents: string[] = [DeviceInfoTurboModule.UPDATE_DIMENSIONS_EVENT];
 
   private displayMetrics?: DisplayMetrics = null;
-  private context?: common.UIAbilityContext = null;
 
   constructor(protected ctx: TurboModuleContext) {
     super(ctx);
+
+    this.ctx.uiAbilityContext.eventHub.on(RNAbility.CONFIGURATION_UPDATE_EVENT, (_) => {
+      this.updateDeviceMetrics();
+    });
   }
 
   getConstants() {
@@ -59,16 +66,15 @@ export class DeviceInfoTurboModule extends EventEmittingTurboModule {
     };
   }
 
-  setInitialParameters(displayMetrics: DisplayMetrics, context: common.UIAbilityContext) {
+  setInitialParameters(displayMetrics: DisplayMetrics) {
     this.displayMetrics = displayMetrics;
-    this.context = context;
   }
 
   async updateDeviceMetrics() {
     try {
       const displayInstances = await display.getAllDisplays()
       const displayInstance = displayInstances[0];
-      const windowInstance = await window.getLastWindow(this.context);
+      const windowInstance = await window.getLastWindow(this.ctx.uiAbilityContext);
       const windowProperties = windowInstance.getWindowProperties();
 
       this.displayMetrics.screenPhysicalPixels = {
@@ -85,7 +91,7 @@ export class DeviceInfoTurboModule extends EventEmittingTurboModule {
         scale: displayInstance.densityPixels,
         fontScale: 1,
       }
-      this.sendEvent('didUpdateDimensions', this.displayMetrics);
+      this.sendEvent(DeviceInfoTurboModule.UPDATE_DIMENSIONS_EVENT, this.displayMetrics);
     } catch (err) {
       RNOHLogger.error('Failed to update display size ' + JSON.stringify(err));
     }

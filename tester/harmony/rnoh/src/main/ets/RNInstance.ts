@@ -3,16 +3,18 @@ import { RNOHCorePackage } from "./RNOHCorePackage";
 import { TurboModuleProvider } from "./TurboModuleProvider";
 import { TurboModule } from "./TurboModule";
 import { Mutation } from "./mutations";
+import common from '@ohos.app.ability.common'
 import { Tag } from "./descriptor";
 
 export class RNInstance {
   private packages: RNPackage[];
-  private ctx: RNPackageContext = { reactNativeVersion: "0.0.0", rnInstance: this };
+  private ctx: RNPackageContext = { reactNativeVersion: "0.0.0", rnInstance: this, uiAbilityContext: null };
   private turboModuleProvider: TurboModuleProvider;
   private libRNOHApp: any;
 
-  constructor(private bundleUrl: string, private appName: string, createPackages: (ctx: RNPackageContext) => RNPackage[]) {
+  constructor(private bundleUrl: string, private appName: string, private uiAbilityContext: common.UIAbilityContext, createPackages: (ctx: RNPackageContext) => RNPackage[]) {
     this.packages = createPackages(this.ctx);
+    this.ctx.uiAbilityContext = uiAbilityContext;
     this.packages.unshift(new RNOHCorePackage(this.ctx));
     this.turboModuleProvider = new TurboModuleProvider(this.packages.map((pkg) => {
       return pkg.createTurboModulesFactory(this.ctx);
