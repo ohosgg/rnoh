@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "preinstall": "cd ../react-native-harmony && npm pack && cd ../tester",
-    "postinstall": "npm uninstall react-native-harmony && npm i react-native-harmony@file:../react-native-harmony/rnoh-react-native-harmony-0.0.17.tgz",
+    "postinstall": "npm uninstall react-native-harmony && npm i react-native-harmony@file:../react-native-harmony/rnoh-react-native-harmony-0.0.18.tgz",
     "dev:rn": "npm i && npm run dev",
     "dev": "react-native bundle-harmony",
     "android": "react-native run-android",
@@ -16,7 +16,7 @@
     "d3-scale-chromatic": "^3.0.0",
     "react": "18.2.0",
     "react-native": "0.71.3",
-    "react-native-harmony": "file:../react-native-harmony/rnoh-react-native-harmony-0.0.17.tgz"
+    "react-native-harmony": "file:../react-native-harmony/rnoh-react-native-harmony-0.0.18.tgz"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
