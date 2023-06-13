@@ -28,30 +28,33 @@ export enum LifecycleState {
   READY,
 }
 
+interface LifecycleEventListenerByName {
+  CONFIGURATION_UPDATE: (...args: Parameters<UIAbility["onConfigurationUpdate"]>) => void;
+  FOREGROUND: () => void;
+  BACKGROUND: () => void;
+}
+
 export interface RNInstanceManager {
   getLifecycleState(): LifecycleState
 
   getBundleURL(): string
 
   getInitialProps(): Record<string, any>
+
+  subscribeToLifecycleEvents: <TEventName extends keyof LifecycleEventListenerByName>(
+    eventName: TEventName,
+    listener: LifecycleEventListenerByName[TEventName]
+  ) => () => void
 }
 
 
 export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, RNInstanceManager {
-  // TODO: figure out a way to pass this to the application
-  // without storing in a static
-  public static abilityContext: UIAbility['context'];
-  static readonly FOREGROUND_EVENT = 'ON_FOREGROUND';
-  static readonly BACKGROUND_EVENT = 'ON_BACKGROUND';
-  static readonly CONFIGURATION_UPDATE_EVENT = 'CONFIGURATION_UPDATE';
-
   protected storage: LocalStorage
   protected rnInstance: RNInstance = null
   protected lifecycleState = LifecycleState.BEFORE_CREATE
   protected turboModuleProvider: TurboModuleProvider
 
   onCreate(want, param) {
-    RNAbility.abilityContext = this.context;
     this.storage = new LocalStorage()
     this.rnInstance = new RNInstance()
     this.turboModuleProvider = this.processPackages(this.rnInstance).turboModuleProvider
@@ -75,6 +78,13 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
     }
   }
 
+  subscribeToLifecycleEvents<TEventName extends keyof LifecycleEventListenerByName>(type: TEventName, listener: LifecycleEventListenerByName[TEventName]) {
+    this.context.eventHub.on(type, listener);
+    return () => {
+      this.context.eventHub.off(type, listener)
+    }
+  }
+
   getInitialProps() {
     return {}
   }
@@ -89,18 +99,22 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
     });
   }
 
+  private emitLifecycleEvent<TEventName extends keyof LifecycleEventListenerByName>(type: TEventName, ...data: Parameters<LifecycleEventListenerByName[TEventName]>) {
+    this.context.eventHub.emit(type, ...data)
+  }
+
   onConfigurationUpdate(config) {
-    this.context.eventHub.emit(RNAbility.CONFIGURATION_UPDATE_EVENT);
+    this.emitLifecycleEvent("CONFIGURATION_UPDATE", config);
   }
 
   onForeground() {
     this.lifecycleState = LifecycleState.READY
-    this.context.eventHub.emit(RNAbility.FOREGROUND_EVENT);
+    this.emitLifecycleEvent("FOREGROUND");
   }
 
   onBackground() {
-    this.lifecycleState = LifecycleState.PAUSED
-    this.context.eventHub.emit(RNAbility.BACKGROUND_EVENT);
+    this.lifecycleState = LifecycleState.PAUSED;
+    this.emitLifecycleEvent("BACKGROUND");
   }
 
   abstract getPagePath(): string
@@ -122,7 +136,7 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
   }
 
   onSurfaceAboutToAppear(ctx: SurfaceAboutToAppearContext) {
-    const javaScriptLoader = new JavaScriptLoader();
+    const javaScriptLoader = new JavaScriptLoader(this.context.resourceManager);
     javaScriptLoader.loadBundle(this.getBundleURL())
       .catch((error) => {
         // NOTE: temporary fallback to local bundle file,

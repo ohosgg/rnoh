@@ -19,13 +19,15 @@ export class AppStateTurboModule extends EventEmittingTurboModule {
     super(ctx);
     this.appState = this.ctx.rnInstanceManager.getLifecycleState() === LifecycleState.READY
       ? AppStateTurboModule.APP_STATE_ACTIVE : AppStateTurboModule.APP_STATE_BACKGROUND
+    this.subscribeListeners()
+  }
 
-    let eventHub = ctx.uiAbilityContext.eventHub;
-    eventHub.on(RNAbility.FOREGROUND_EVENT, (_) => {
-      this.setAppStateActive();
+  private subscribeListeners() {
+    this.ctx.rnInstanceManager.subscribeToLifecycleEvents("FOREGROUND", () => {
+      this.setAppStateActive()
     })
-    eventHub.on(RNAbility.BACKGROUND_EVENT, (_) => {
-      this.setAppStateBackground();
+    this.ctx.rnInstanceManager.subscribeToLifecycleEvents("BACKGROUND", () => {
+      this.setAppStateBackground()
     })
   }
 

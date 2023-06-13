@@ -1,10 +1,14 @@
 import http from '@ohos.net.http';
 import util from '@ohos.util';
+import resmgr from "@ohos.resourceManager";
 
 import RNOHLogger from './RNOHLogger'
 import { RNAbility } from './RNAbility';
 
 export default class JavaScriptLoader {
+  constructor(private resourceManager: resmgr.ResourceManager) {
+  }
+  
   public async loadBundle(uriString: string): Promise<string> {
     if (uriString.startsWith("http")) {
       return this.loadFromNetwork(uriString);
@@ -15,8 +19,7 @@ export default class JavaScriptLoader {
 
   async loadFromFile(bundlePath: string): Promise<string> {
     try {
-      const resourceManager = RNAbility.abilityContext.resourceManager;
-      const bundleFileContent = await resourceManager.getRawFileContent(bundlePath);
+      const bundleFileContent = await this.resourceManager.getRawFileContent(bundlePath);
       const bundle = util.TextDecoder.create("utf-8").decodeWithStream(bundleFileContent);
       return bundle;
     } catch (err) {

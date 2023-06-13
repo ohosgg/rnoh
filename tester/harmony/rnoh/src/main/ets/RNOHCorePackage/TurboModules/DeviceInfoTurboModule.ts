@@ -48,8 +48,7 @@ export class DeviceInfoTurboModule extends EventEmittingTurboModule {
 
   constructor(protected ctx: TurboModuleContext) {
     super(ctx);
-
-    this.ctx.uiAbilityContext.eventHub.on(RNAbility.CONFIGURATION_UPDATE_EVENT, (_) => {
+    this.ctx.rnInstanceManager.subscribeToLifecycleEvents("CONFIGURATION_UPDATE", () => {
       this.updateDeviceMetrics();
     });
   }
