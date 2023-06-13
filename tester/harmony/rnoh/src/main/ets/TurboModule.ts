@@ -15,16 +15,17 @@ export class TurboModule {
   };
 }
 
-export abstract class EventEmittingTurboModule extends TurboModule {
-  supportedEvents: string[]
+export abstract class EventEmittingTurboModule<TSupportedEventName extends string> extends TurboModule {
   listenerCount: number = 0
 
   constructor(protected ctx: TurboModuleContext) {
     super(ctx);
   };
 
-  addListener(eventName: string) {
-    if (this.supportedEvents.indexOf(eventName) === -1) {
+  protected abstract getSupportedEvents(): readonly TSupportedEventName[];
+
+  addListener(eventName: TSupportedEventName) {
+    if (this.getSupportedEvents().indexOf(eventName) === -1) {
       throw new Error(`Trying to subscribe to unknown event: "${eventName}"`);
     }
 
@@ -35,7 +36,7 @@ export abstract class EventEmittingTurboModule extends TurboModule {
     this.listenerCount -= count;
   }
 
-  protected sendEvent(eventName: string, params: any) {
-    this.ctx.rnInstance.callRNFunction("RCTDeviceEventEmitter", "emit", [eventName, params]);
+  protected sendEvent(eventName: TSupportedEventName, params: any) {
+    this.ctx.rnInstanceManager.emitDeviceEvent(eventName, params)
   }
 }

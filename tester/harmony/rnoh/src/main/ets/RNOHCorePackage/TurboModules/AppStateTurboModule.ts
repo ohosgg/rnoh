@@ -1,61 +1,38 @@
 import { EventEmittingTurboModule, TurboModuleContext } from "../../TurboModule";
-import RNOHLogger from "../../RNOHLogger"
-import { RNAbility, LifecycleState } from '../../RNAbility';
+import { LifecycleState } from '../../RNAbility';
 
+const APP_STATE_EVENT_NAMES = ["appStateDidChange"] as const
 
-type AppStateCallback = (appState: { app_state: string }) => void;
-type ErrorCallback = (error: Error) => void;
-
-export class AppStateTurboModule extends EventEmittingTurboModule {
-  private static readonly APP_STATE_CHANGE_EVENT = "appStateDidChange";
-  private static readonly APP_STATE_ACTIVE = "active";
-  private static readonly APP_STATE_BACKGROUND = "background";
-
-  supportedEvents: string[] = [AppStateTurboModule.APP_STATE_CHANGE_EVENT];
-
-  private appState: string
-
-  constructor(ctx: TurboModuleContext) {
+export class AppStateTurboModule extends EventEmittingTurboModule<typeof APP_STATE_EVENT_NAMES[number]> {
+  constructor(protected ctx: TurboModuleContext) {
     super(ctx);
-    this.appState = this.ctx.rnInstanceManager.getLifecycleState() === LifecycleState.READY
-      ? AppStateTurboModule.APP_STATE_ACTIVE : AppStateTurboModule.APP_STATE_BACKGROUND
-    this.subscribeListeners()
+    this.subscribeListeners();
   }
 
   private subscribeListeners() {
     this.ctx.rnInstanceManager.subscribeToLifecycleEvents("FOREGROUND", () => {
-      this.setAppStateActive()
+      this.sendEvent("appStateDidChange", { app_state: this.getAppState() });
     })
     this.ctx.rnInstanceManager.subscribeToLifecycleEvents("BACKGROUND", () => {
-      this.setAppStateBackground()
+      this.sendEvent("appStateDidChange", { app_state: this.getAppState() });
     })
   }
 
-  setAppStateActive() {
-    this.appState = AppStateTurboModule.APP_STATE_ACTIVE;
-    this.sendEvent(AppStateTurboModule.APP_STATE_CHANGE_EVENT, {
-      app_state: this.appState,
-    });
+  private getAppState() {
+    return this.ctx.rnInstanceManager.getLifecycleState() === LifecycleState.READY
+      ? "active" : "background"
   }
 
-  setAppStateBackground() {
-    this.appState = AppStateTurboModule.APP_STATE_BACKGROUND;
-    this.sendEvent(AppStateTurboModule.APP_STATE_CHANGE_EVENT, {
-      app_state: this.appState,
-    });
+  protected getSupportedEvents() {
+    return APP_STATE_EVENT_NAMES;
   }
 
   getConstants() {
-    if (!this.appState) {
-      RNOHLogger.error("AppState not set");
-    }
-    return {
-      initialAppState: this.appState,
-    };
+    return { initialAppState: this.getAppState() };
   }
 
-  getCurrentAppState(success: AppStateCallback, error: ErrorCallback) {
-    success({ app_state: this.appState });
+  getCurrentAppState(success: (appState: { app_state: string }) => void, error: (error: Error) => void) {
+    success({ app_state: this.getAppState() });
   };
 }
 

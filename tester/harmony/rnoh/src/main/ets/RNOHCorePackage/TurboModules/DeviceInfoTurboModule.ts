@@ -1,10 +1,7 @@
 import display from '@ohos.display';
 import window from '@ohos.window';
-import common from "@ohos.app.ability.common"
 import RNOHLogger from "../../RNOHLogger"
-import { RNAbility } from '../../RNAbility';
-
-import { EventEmittingTurboModule, TurboModuleContext } from "../../TurboModule";
+import { TurboModule, TurboModuleContext } from "../../TurboModule";
 
 export type DisplayMetrics = {
   windowPhysicalPixels: PhysicalPixels,
@@ -38,12 +35,7 @@ const defaultDisplayMetrics: DisplayMetrics = {
 
 } as const;
 
-export class DeviceInfoTurboModule extends EventEmittingTurboModule {
-  private static readonly UPDATE_DIMENSIONS_EVENT = "didUpdateDimensions";
-
-
-  supportedEvents: string[] = [DeviceInfoTurboModule.UPDATE_DIMENSIONS_EVENT];
-
+export class DeviceInfoTurboModule extends TurboModule {
   private displayMetrics?: DisplayMetrics = null;
 
   constructor(protected ctx: TurboModuleContext) {
@@ -90,7 +82,7 @@ export class DeviceInfoTurboModule extends EventEmittingTurboModule {
         scale: displayInstance.densityPixels,
         fontScale: 1,
       }
-      this.sendEvent(DeviceInfoTurboModule.UPDATE_DIMENSIONS_EVENT, this.displayMetrics);
+      this.ctx.rnInstanceManager.emitDeviceEvent("didUpdateDimensions", this.displayMetrics);
     } catch (err) {
       RNOHLogger.error('Failed to update display size ' + JSON.stringify(err));
     }

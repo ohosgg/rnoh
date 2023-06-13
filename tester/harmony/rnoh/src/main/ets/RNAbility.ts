@@ -45,6 +45,10 @@ export interface RNInstanceManager {
     eventName: TEventName,
     listener: LifecycleEventListenerByName[TEventName]
   ) => () => void
+
+  emitDeviceEvent: (eventName: string, payload: any) => void
+
+  emitComponentEvent: (tag: Tag, eventEmitRequestHandlerName: string, payload: any) => void
 }
 
 
@@ -133,6 +137,10 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
 
   emitComponentEvent(tag: Tag, eventEmitRequestHandlerName: string, payload: any) {
     this.rnInstance.emitComponentEvent(tag, eventEmitRequestHandlerName, payload)
+  }
+
+  emitDeviceEvent(eventName: string, params: any) {
+    this.rnInstance.callRNFunction("RCTDeviceEventEmitter", "emit", [eventName, params]);
   }
 
   onSurfaceAboutToAppear(ctx: SurfaceAboutToAppearContext) {
