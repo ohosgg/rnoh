@@ -1,18 +1,19 @@
-import hilog from '@ohos.hilog';
-import window from '@ohos.window';
 import { RNAbility } from '@ohos/rnoh/ts';
+import { SamplePackage } from "@ohos/rnoh-sample-package/ts"
+
 
 export default class EntryAbility extends RNAbility {
-    onWindowStageCreate(windowStage: window.WindowStage) {
-        // Main window is created, set main page for this ability
-        hilog.info(0x0000, 'RNOH', '%{public}s', 'Ability onWindowStageCreate');
+  getPagePath() {
+    return "pages/Index"
+  }
 
-        windowStage.loadContent('pages/Index', (err, data) => {
-            if (err.code) {
-                hilog.error(0x0000, 'RNOH', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
-                return;
-            }
-            hilog.info(0x0000, 'RNOH', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
-        });
-    }
+  getBundleURL() {
+    return "http://localhost:8081/index.bundle?platform=harmony&dev=false&minify=false"
+  }
+
+  createPackages(ctx) {
+    return [
+      new SamplePackage(ctx)
+    ]
+  }
 };

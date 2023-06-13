@@ -6,16 +6,14 @@ import { Descriptor } from './descriptor'
 import { ViewProps } from './RNView'
 import { convertColorValueToRGBA } from './cpp-bridge-utils'
 import type { DeviceInfoTurboModule } from "./RNOHCorePackage/TurboModules/DeviceInfoTurboModule"
-import JavaScriptLoader from "./JavaScriptLoader"
-import RNOHLogger from "./RNOHLogger"
 import { startTrace, finishTrace } from './tracer';
-import common from '@ohos.app.ability.common'
 
 
 @Component
 @Preview
 export struct RNApp {
   rnohContext: RNOHContext
+  appName: string
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   @State screenDensity: number = 0
   @State shouldShow: boolean = false
@@ -67,11 +65,11 @@ export struct RNApp {
       if (this.screenDensity > 0 && this.shouldShow) {
         RNSurface({
           ctx: this.rnohContext,
+          appName: this.appName,
           buildCustomComponent: this.buildCustomComponent,
           screenDensity: this.screenDensity,
           initialSurfaceWidth: this.initialSurfaceWidth,
           initialSurfaceHeight: this.initialSurfaceHeight,
-          bundleUrl: this.rnohContext.rnInstance.getBundleUrl()
         })
       } else {
         Text("Loading...")
@@ -105,12 +103,12 @@ const rootDescriptor: RootDescriptor = {
 @Component
 export struct RNSurface {
   ctx: RNOHContext
+  appName: string
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   @State initialSurfaceWidth: number = 0
   @State initialSurfaceHeight: number = 0
   @Prop screenDensity: number
   @State descriptor: RootDescriptor = rootDescriptor
-  bundleUrl: string
   private cleanup?: () => void = undefined
 
   aboutToAppear() {
@@ -119,23 +117,12 @@ export struct RNSurface {
     }, (tag, commandName, args) => {
       this.dispatchCommand(tag, commandName, args)
     });
-
-    const javaScriptLoader = new JavaScriptLoader();
-    javaScriptLoader.loadBundle(this.bundleUrl)
-      .catch((error) => {
-        // NOTE: temporary fallback to local bundle file,
-        // until we figure out how to pass bundle URL as launch param
-        // to the Ark app
-        RNOHLogger.error(error);
-        RNOHLogger.info("Falling back to local bundle.");
-        return javaScriptLoader.loadBundle("bundle.harmony.js")
-      }).then((bundle) => {
-      this.ctx.rnInstance.run(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity, bundle)
-    }).catch((error) => {
-      RNOHLogger.error(error)
-      // TODO: don't use empty string as a magic "failure" value
-      this.ctx.rnInstance.run(this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity, "")
-    });
+    this.ctx.surfaceLifecycle.onSurfaceAboutToAppear({
+      appName: this.appName,
+      width: this.initialSurfaceWidth,
+      height: this.initialSurfaceHeight,
+      screenDensity: this.screenDensity
+    })
     this.cleanup = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
       1,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)

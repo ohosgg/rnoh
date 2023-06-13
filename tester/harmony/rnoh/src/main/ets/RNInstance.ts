@@ -1,34 +1,21 @@
-import { RNPackage, RNPackageContext } from "./RNPackage";
-import { RNOHCorePackage } from "./RNOHCorePackage";
 import { TurboModuleProvider } from "./TurboModuleProvider";
 import { TurboModule } from "./TurboModule";
 import { Mutation } from "./mutations";
-import common from '@ohos.app.ability.common'
 import { Tag } from "./descriptor";
 
+/**
+ * Object stereotype: Interfacer
+ *
+ * All communication with CPP side flows via methods of this class. If you are a package developer,
+ * please use `RNInstanceManager` if possible, as it provides more stable interface.
+ */
 export class RNInstance {
-  private packages: RNPackage[];
-  private ctx: RNPackageContext = { reactNativeVersion: "0.0.0", rnInstance: this, uiAbilityContext: null };
-  private turboModuleProvider: TurboModuleProvider;
   private libRNOHApp: any;
+  private turboModuleProvider: TurboModuleProvider | null = null
 
-  constructor(private bundleUrl: string, private appName: string, private uiAbilityContext: common.UIAbilityContext, createPackages: (ctx: RNPackageContext) => RNPackage[]) {
-    this.packages = createPackages(this.ctx);
-    this.ctx.uiAbilityContext = uiAbilityContext;
-    this.packages.unshift(new RNOHCorePackage(this.ctx));
-    this.turboModuleProvider = new TurboModuleProvider(this.packages.map((pkg) => {
-      return pkg.createTurboModulesFactory(this.ctx);
-    }));
+  setTurboModuleProvider(turboModuleProvider: TurboModuleProvider) {
+    this.turboModuleProvider = turboModuleProvider
   }
-
-  getBundleUrl(): string {
-    return this.bundleUrl;
-  }
-
-  getAppName(): string {
-    return this.appName;
-  }
-
 
   setLibRNOHApp(libRNOHApp: unknown) {
     if (this.libRNOHApp) {
@@ -46,7 +33,7 @@ export class RNInstance {
   }
 
   initializeReactNative() {
-    this.libRNOHApp.initializeReactNative(this.appName);
+    this.libRNOHApp.initializeReactNative();
   }
 
   emitComponentEvent(tag: Tag, eventEmitRequestHandlerName: string, payload: any) {
@@ -60,8 +47,8 @@ export class RNInstance {
     this.libRNOHApp.subscribeToShadowTreeChanges(mutationsListener, dispatchedCommandsListener);
   }
 
-  run(initialSurfaceWidth: number, initialSurfaceHeight: number, jsBundle: string) {
-    this.libRNOHApp.startReactNative(initialSurfaceWidth, initialSurfaceHeight, jsBundle);
+  run(initialSurfaceWidth: number, initialSurfaceHeight: number, jsBundle: string, appName: string) {
+    this.libRNOHApp.startSurface(initialSurfaceWidth, initialSurfaceHeight, jsBundle, appName);
   }
 
   callRNFunction(moduleName: string, functionName: string, args: unknown[]): void {

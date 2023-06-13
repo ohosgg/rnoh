@@ -1,6 +1,6 @@
 import { EventEmittingTurboModule, TurboModuleContext } from "../../TurboModule";
 import RNOHLogger from "../../RNOHLogger"
-import { RNAbility } from '../../RNAbility';
+import { RNAbility, LifecycleState } from '../../RNAbility';
 
 
 type AppStateCallback = (appState: { app_state: string }) => void;
@@ -11,14 +11,14 @@ export class AppStateTurboModule extends EventEmittingTurboModule {
   private static readonly APP_STATE_ACTIVE = "active";
   private static readonly APP_STATE_BACKGROUND = "background";
 
-
   supportedEvents: string[] = [AppStateTurboModule.APP_STATE_CHANGE_EVENT];
 
-  //TODO: don't hardcode this - Issue: #72
   private appState?: string = AppStateTurboModule.APP_STATE_ACTIVE;
 
-  constructor(protected ctx: TurboModuleContext) {
+  constructor(ctx: TurboModuleContext) {
     super(ctx);
+    this.appState = this.ctx.rnInstanceManager.getLifecycleState() === LifecycleState.READY
+      ? AppStateTurboModule.APP_STATE_ACTIVE : AppStateTurboModule.APP_STATE_BACKGROUND
 
     let eventHub = ctx.uiAbilityContext.eventHub;
     eventHub.on(RNAbility.FOREGROUND_EVENT, (_) => {

@@ -92,22 +92,23 @@ void RNInstance::initializeScheduler() {
     this->scheduler = std::make_unique<react::Scheduler>(schedulerToolbox, nullptr, schedulerDelegate.get());
 }
 
-void RNInstance::runApplication(float width, float height, std::string &&bundle) {
-    this->taskExecutor->runTask(TaskThread::JS, [this, width, height, bundle = std::move(bundle)]() {
+void RNInstance::runApplication(float width, float height, std::string &&bundle, std::string const &moduleName) {
+    this->taskExecutor->runTask(TaskThread::JS, [this, width, height, bundle = std::move(bundle), moduleName]() {
         try {
+            facebook::react::SurfaceHandler surfaceHandler(moduleName, 1);
             std::unique_ptr<react::JSBigStdString> jsBundle;
             jsBundle = std::make_unique<react::JSBigStdString>(std::move(bundle));
             instance->loadScriptFromString(std::move(jsBundle), "bundle.harmony.js", true);
             folly::dynamic config = folly::dynamic::object("rootTag", 1)("fabric", true);
-            this->surfaceHandler.setProps(std::move(config));
-            auto layoutConstraints = this->surfaceHandler.getLayoutConstraints();
+            surfaceHandler.setProps(std::move(config));
+            auto layoutConstraints = surfaceHandler.getLayoutConstraints();
             layoutConstraints.layoutDirection = react::LayoutDirection::LeftToRight;
             layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
                 .width = width,
                 .height = height};
-            this->surfaceHandler.constraintLayout(layoutConstraints, this->surfaceHandler.getLayoutContext());
-            this->scheduler->registerSurface(this->surfaceHandler);
-            this->surfaceHandler.start();
+            surfaceHandler.constraintLayout(layoutConstraints, surfaceHandler.getLayoutContext());
+            scheduler->registerSurface(surfaceHandler);
+            surfaceHandler.start();
         } catch (const std::exception &e) {
             LOG(ERROR) << "runApplication: " << e.what() << "\n";
             throw e;

@@ -33,10 +33,8 @@ class RNInstance {
                std::shared_ptr<TaskExecutor> taskExecutor,
                std::shared_ptr<react::ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry,
                MutationsToNapiConverter mutationsToNapiConverter,
-               std::string appName,
                EventEmitRequestHandlerByString eventEmitRequestHandlerByName)
-        : surfaceHandler(appName, 1),
-          instance(std::make_shared<facebook::react::Instance>()),
+        : instance(std::make_shared<facebook::react::Instance>()),
           scheduler(nullptr),
           taskExecutor(taskExecutor),
           eventEmitterRegistry(std::make_shared<EventEmitterRegistry>()),
@@ -49,7 +47,7 @@ class RNInstance {
         MutationsListener,
         MountingManager::CommandDispatcher);
     void start();
-    void runApplication(float width, float height, std::string &&bundle);
+    void runApplication(float width, float height, std::string &&bundle, std::string const &moduleName);
     void callFunction(std::string &&module, std::string &&method, folly::dynamic &&params);
     void emitComponentEvent(napi_env env, react::Tag tag, std::string eventEmitRequestHandlerName, napi_value payload);
 
@@ -58,7 +56,6 @@ class RNInstance {
     std::shared_ptr<facebook::react::Instance> instance;
     std::function<void(MutationsToNapiConverter, facebook::react::ShadowViewMutationList const &mutations)> mutationsListener;
     MountingManager::CommandDispatcher commandDispatcher;
-    facebook::react::SurfaceHandler surfaceHandler;
     std::unique_ptr<facebook::react::Scheduler> scheduler;
     std::unique_ptr<SchedulerDelegate> schedulerDelegate;
     std::shared_ptr<TaskExecutor> taskExecutor;

@@ -18,8 +18,8 @@ std::unique_ptr<RNInstance> rnInstance;
 
 static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 1);
-    rnInstance = createRNInstance(env, arkTsTurboModuleProviderRef, arkJs.getString(args[0]));
+    auto args = arkJs.getCallbackArgs(info, 0);
+    rnInstance = createRNInstance(env, arkTsTurboModuleProviderRef);
     rnInstance->start();
     return arkJs.getUndefined();
 }
@@ -54,11 +54,10 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
     return arkJs.getUndefined();
 }
 
-static napi_value startReactNative(napi_env env, napi_callback_info info) {
+static napi_value startSurface(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 3);
-
-    rnInstance->runApplication(arkJs.getDouble(args[0]), arkJs.getDouble(args[1]), arkJs.getString(args[2]));
+    auto args = arkJs.getCallbackArgs(info, 4);
+    rnInstance->runApplication(arkJs.getDouble(args[0]), arkJs.getDouble(args[1]), arkJs.getString(args[2]), arkJs.getString(args[3]));
     return arkJs.getUndefined();
 }
 
@@ -89,7 +88,7 @@ static napi_value Init(napi_env env, napi_value exports) {
     napi_property_descriptor desc[] = {
         {"subscribeToShadowTreeChanges", nullptr, subscribeToShadowTreeChanges, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"initializeReactNative", nullptr, initializeReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
-        {"startReactNative", nullptr, startReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"startSurface", nullptr, startSurface, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"emitComponentEvent", nullptr, emitComponentEvent, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"registerTurboModuleProvider", nullptr, registerTurboModuleProvider, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"callRNFunction", nullptr, callRNFunction, nullptr, nullptr, nullptr, napi_default, nullptr}};
