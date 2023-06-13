@@ -1,4 +1,5 @@
 export * from './AnimatedTest';
+export * from './AppRegistryTest';
 export * from './AppStateTest';
 export * from './BackHandlerTest';
 export * from './ButtonTest';

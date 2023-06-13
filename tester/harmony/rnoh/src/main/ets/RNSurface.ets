@@ -52,7 +52,6 @@ export struct RNApp {
       this.shouldShow = true
       finishTrace("INITIALIZATION")
     }, this.dev ? 2000 : 0)
-
   }
 
   onLayout(children, constraint) {

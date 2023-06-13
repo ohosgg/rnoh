@@ -56,8 +56,12 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
 
 static napi_value startSurface(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 4);
-    rnInstance->runApplication(arkJs.getDouble(args[0]), arkJs.getDouble(args[1]), arkJs.getString(args[2]), arkJs.getString(args[3]));
+    auto args = arkJs.getCallbackArgs(info, 5);
+    rnInstance->runApplication(arkJs.getDouble(args[0]),
+                               arkJs.getDouble(args[1]),
+                               arkJs.getString(args[2]),
+                               arkJs.getString(args[3]),
+                               arkJs.getDynamic(args[4]));
     return arkJs.getUndefined();
 }
 

@@ -13,7 +13,7 @@ export class AppStateTurboModule extends EventEmittingTurboModule {
 
   supportedEvents: string[] = [AppStateTurboModule.APP_STATE_CHANGE_EVENT];
 
-  private appState?: string = AppStateTurboModule.APP_STATE_ACTIVE;
+  private appState: string
 
   constructor(ctx: TurboModuleContext) {
     super(ctx);
@@ -41,9 +41,7 @@ export class AppStateTurboModule extends EventEmittingTurboModule {
     this.sendEvent(AppStateTurboModule.APP_STATE_CHANGE_EVENT, {
       app_state: this.appState,
     });
-
   }
-
 
   getConstants() {
     if (!this.appState) {

@@ -30,7 +30,10 @@ export enum LifecycleState {
 
 export interface RNInstanceManager {
   getLifecycleState(): LifecycleState
+
   getBundleURL(): string
+
+  getInitialProps(): Record<string, any>
 }
 
 
@@ -70,6 +73,10 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
         return pkg.createTurboModulesFactory(ctx);
       }))
     }
+  }
+
+  getInitialProps() {
+    return {}
   }
 
   onWindowStageCreate(windowStage: window.WindowStage) {
@@ -125,11 +132,19 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
         RNOHLogger.info("Falling back to local bundle.");
         return javaScriptLoader.loadBundle("bundle.harmony.js")
       }).then((bundle) => {
-      this.rnInstance.run(ctx.width / ctx.screenDensity, ctx.height / ctx.screenDensity, bundle, ctx.appName)
+      this.rnInstance.run(ctx.width / ctx.screenDensity,
+        ctx.height / ctx.screenDensity,
+        bundle,
+        ctx.appName,
+        this.getInitialProps())
     }).catch((error) => {
       RNOHLogger.error(error)
       // TODO: don't use empty string as a magic "failure" value
-      this.rnInstance.run(ctx.width / ctx.screenDensity, ctx.height / ctx.screenDensity, "", ctx.appName)
+      this.rnInstance.run(ctx.width / ctx.screenDensity,
+        ctx.height / ctx.screenDensity,
+        "",
+        ctx.appName,
+        this.getInitialProps())
     });
     this.lifecycleState = LifecycleState.READY
   }
