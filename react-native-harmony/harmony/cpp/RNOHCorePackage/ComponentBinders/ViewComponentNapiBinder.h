@@ -1,6 +1,8 @@
 #pragma once
 #include "RNOH/BaseComponentNapiBinder.h"
 #include <react/renderer/components/view/ViewProps.h>
+#include <react/renderer/graphics/platform/cxx/react/renderer/graphics/Color.h>
+
 namespace rnoh {
 
 class ViewComponentNapiBinder : public BaseComponentNapiBinder {
@@ -11,22 +13,12 @@ class ViewComponentNapiBinder : public BaseComponentNapiBinder {
             auto borderMetrics = props->resolveBorderMetrics(shadowView.layoutMetrics);
             auto rawProps = shadowView.props->rawProps;
 
-            auto backgroundColor = 0;
-            if (rawProps.count("backgroundColor") > 0) {
-                backgroundColor = rawProps["backgroundColor"].asInt();
-            }
-
-            auto borderColor = 0;
-            if (rawProps.count("borderColor") > 0) {
-                borderColor = rawProps["borderColor"].asInt();
-            }
-
             return ArkJS(env)
                 .getObjectBuilder(napiBaseProps)
-                .addProperty("backgroundColor", backgroundColor)
+                .addProperty("backgroundColor", props->backgroundColor)
                 .addProperty("opacity", props->opacity)
                 .addProperty("borderWidth", borderMetrics.borderWidths.top)
-                .addProperty("borderColor", borderColor)
+                .addProperty("borderColor", borderMetrics.borderColors.top)
                 .addProperty("borderRadius", borderMetrics.borderRadii.topLeft)
                 .build();
         }

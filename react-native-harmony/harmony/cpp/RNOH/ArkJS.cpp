@@ -132,9 +132,9 @@ napi_value singleUseCallback(napi_env env, napi_callback_info info) {
 }
 
 /*
-* The callback will be deallocated after is called. It cannot be called more than once. Creates memory leaks if the callback is not called.
-* Consider changing this implementation when adding napi finalizers is supported. .
-*/
+ * The callback will be deallocated after is called. It cannot be called more than once. Creates memory leaks if the callback is not called.
+ * Consider changing this implementation when adding napi finalizers is supported. .
+ */
 napi_value ArkJS::createSingleUseCallback(std::function<void(std::vector<folly::dynamic>)> &&callback) {
     std::string fnName = "callback";
     napi_value result;
@@ -359,6 +359,10 @@ RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, char
 }
 
 RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, facebook::react::SharedColor value) {
+    // for some unknown reason, (undefined) transparent colors don't work properly without this check, even though
+    // there's basically the same check in colorComponentsFromColor
+    if (!value)
+        value = facebook::react::clearColor();
     auto colorComponents = colorComponentsFromColor(value);
     napi_value n_value;
     napi_create_array(m_env, &n_value);

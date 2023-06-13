@@ -27,11 +27,11 @@ export struct RNTextInput {
       .width(this.descriptor.props.width)
       .height(this.descriptor.props.height)
       .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
-      .backgroundColor(convertColorValueToRGBA(this.descriptor.props.backgroundColor))
+      .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
       .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
       .fontSize(this.descriptor.props.fontSize)
       .borderWidth(this.descriptor.props.borderWidth)
-      .borderColor(convertColorValueToRGBA(this.descriptor.props.borderColor))
+      .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
       .borderRadius(this.descriptor.props.borderRadius)
       .onChange((event) => this.handleChangeEvent(event))
   }

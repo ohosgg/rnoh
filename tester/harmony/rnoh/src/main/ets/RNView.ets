@@ -1,12 +1,12 @@
-import { Descriptor, LayoutProps, ColorValue, Tag } from './descriptor'
-import { convertColorValueToRGBA } from './cpp-bridge-utils'
+import { Descriptor, LayoutProps, ColorValue, Tag, ColorSegments } from './descriptor'
+import { convertColorSegmentsToString, convertColorValueToRGBA } from './cpp-bridge-utils'
 import { RNOHContext } from './RNOHContext'
 import { RNOHEventEmitRequestHandlerName } from "./RNOHCorePackage"
 
 export type ViewProps = LayoutProps & {
-  backgroundColor?: ColorValue
+  backgroundColor?: ColorSegments
   borderWidth?: number
-  borderColor?: ColorValue
+  borderColor?: ColorSegments
   borderRadius?: number
   opacity?: number
 }
@@ -34,10 +34,10 @@ export struct RNView {
     }
     .width(this.descriptor.props.width)
     .height(this.descriptor.props.height)
-    .backgroundColor(convertColorValueToRGBA(this.descriptor.props.backgroundColor))
+    .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
     .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
     .borderWidth(this.descriptor.props.borderWidth)
-    .borderColor(convertColorValueToRGBA(this.descriptor.props.borderColor))
+    .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
     .borderRadius(this.descriptor.props.borderRadius)
     .onTouch((event) => this.onTouchEvent(event))
     .opacity(this.descriptor.props.opacity)

@@ -1,6 +1,6 @@
 import { Descriptor } from './descriptor'
 import { ViewProps } from './RNView'
-import { convertColorValueToRGBA } from './cpp-bridge-utils'
+import { convertColorSegmentsToString, convertColorValueToRGBA } from './cpp-bridge-utils'
 import { RNOHContext } from "./RNOHContext"
 import { RNOHEventEmitRequestHandlerName } from "./RNOHCorePackage"
 
@@ -124,6 +124,6 @@ export struct RNScrollView {
     .onScroll(this.onScroll.bind(this))
     //    .onScrollBegin(this.onScrollBegin.bind(this))
     //    .onScrollEnd(this.onScrollEnd.bind(this))
-    .backgroundColor(convertColorValueToRGBA(this.descriptor.props.backgroundColor))
+    .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
   }
 }

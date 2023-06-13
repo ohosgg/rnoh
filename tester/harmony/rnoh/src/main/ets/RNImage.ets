@@ -1,5 +1,5 @@
 import { Descriptor } from './descriptor'
-import { convertColorValueToRGBA } from './cpp-bridge-utils'
+import { convertColorSegmentsToString, convertColorValueToRGBA } from './cpp-bridge-utils'
 import { ViewProps, handleTouchEvent } from './RNView'
 import { RNOHContext } from './RNOHContext'
 
@@ -32,9 +32,9 @@ export struct RNImage {
       .width(this.descriptor.props.width)
       .height(this.descriptor.props.height)
       .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
-      .backgroundColor(convertColorValueToRGBA(this.descriptor.props.backgroundColor))
+      .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
       .borderWidth(this.descriptor.props.borderWidth)
-      .borderColor(convertColorValueToRGBA(this.descriptor.props.borderColor))
+      .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
       .borderRadius(this.descriptor.props.borderRadius)
       .onTouch((event) => this.onTouchEvent(event))
   }
