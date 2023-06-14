@@ -2,6 +2,7 @@ import { Descriptor, LayoutProps, ColorValue, Tag, ColorSegments } from './descr
 import { convertColorSegmentsToString, convertColorValueToRGBA } from './cpp-bridge-utils'
 import { RNOHContext } from './RNOHContext'
 import { RNOHEventEmitRequestHandlerName } from "./RNOHCorePackage"
+import { ScrollViewState } from './RNScrollView'
 
 export type ViewProps = LayoutProps & {
   backgroundColor?: ColorSegments
@@ -13,7 +14,34 @@ export type ViewProps = LayoutProps & {
 
 export type ViewDescriptor = Descriptor<"View", ViewProps>
 
+function getPageOffset(ctx: RNOHContext, tag: Tag) {
+  let x = 0;
+  let y = 0;
+
+  while (tag) {
+    const descriptor = ctx.descriptorRegistry.getDescriptor(tag);
+    if (descriptor?.type === "ScrollView") {
+      const state = descriptor.state as ScrollViewState;
+      x += state.contentOffsetX;
+      y += state.contentOffsetY;
+    }
+    tag = descriptor?.parentTag;
+  }
+
+  return {x, y}
+}
+
 export function handleTouchEvent(ctx: RNOHContext, event: TouchEvent, tag: Tag) {
+  event?.stopPropagation();
+  const {x, y} = getPageOffset(ctx, tag);
+  for (const touch of event.touches) {
+    touch['pageX'] = touch.screenX + x;
+    touch['pageY'] = touch.screenY + y;
+  }
+  for (const touch of event.changedTouches) {
+    touch['pageX'] = touch.screenX + x;
+    touch['pageY'] = touch.screenY + y;
+  }
   ctx.rnInstance.emitComponentEvent(tag, RNOHEventEmitRequestHandlerName.Touch, event)
 }
 

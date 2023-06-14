@@ -396,6 +396,7 @@ add_library(rnoh SHARED
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/NetworkingTurboModule.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/ExceptionsManagerTurboModule.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/WebSocketTurboModule.cpp"
+    "${RNOH_CPP_DIR}/RNOHCorePackage/EventEmitRequestHandlers/TouchEventEmitRequestHandler.cpp"
 )
 target_include_directories(rnoh PUBLIC
     "${RNOH_CPP_DIR}"

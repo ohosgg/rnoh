@@ -72,6 +72,9 @@ export struct RNScrollView {
   onScroll(xOffset: number, yOffset: number) {
     const offset = this.scroller.currentOffset()
 
+    this.descriptor.state.contentOffsetX = offset.xOffset;
+    this.descriptor.state.contentOffsetY = offset.yOffset;
+
     this.ctx.rnInstance.emitComponentEvent(
       this.descriptor.tag,
       RNOHEventEmitRequestHandlerName.Scroll,
@@ -113,6 +116,7 @@ export struct RNScrollView {
       .height(this.descriptor.state.contentSizeHeight)
       .backgroundColor(Color.Transparent)
     }
+    .align(Alignment.TopStart)
     .width(this.descriptor.props.width)
     .height(this.descriptor.props.height)
     .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })

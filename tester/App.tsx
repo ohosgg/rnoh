@@ -6,6 +6,7 @@ import {
   AnimationsExample,
   CheckerboardExample,
   ChessboardExample,
+  CursorExample,
 } from './examples';
 import {NavigationContainer, Page} from './components';
 import {Benchmarker, DeepTree, SierpinskiTriangle} from './benchmarks';
@@ -88,6 +89,9 @@ function App() {
       </Page>
       <Page name="EXAMPLE: CHECKERBOARD">
         <CheckerboardExample />
+      </Page>
+      <Page name="EXAMPLE: CURSOR">
+        <CursorExample />
       </Page>
     </NavigationContainer>
   );

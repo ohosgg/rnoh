@@ -6,6 +6,8 @@ namespace rnoh {
 
 TaskRunner::TaskRunner(std::string name) : name(name) {
     thread = std::thread([this] { runLoop(); });
+    auto handle = thread.native_handle();
+    pthread_setname_np(handle, name.c_str());
 }
 
 TaskRunner::~TaskRunner() {
