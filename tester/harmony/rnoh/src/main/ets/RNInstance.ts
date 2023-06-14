@@ -47,8 +47,12 @@ export class RNInstance {
     this.libRNOHApp.subscribeToShadowTreeChanges(mutationsListener, dispatchedCommandsListener);
   }
 
-  run(initialSurfaceWidth: number, initialSurfaceHeight: number, jsBundle: string, appName: string, initialProps: any) {
-    this.libRNOHApp.startSurface(initialSurfaceWidth, initialSurfaceHeight, jsBundle, appName, initialProps);
+  loadScriptFromString(script: string, sourceURL = "bundle.harmony.js") {
+    this.libRNOHApp.loadScriptFromString(script, sourceURL);
+  }
+
+  run(initialSurfaceWidth: number, initialSurfaceHeight: number, appName: string, initialProps: any) {
+    this.libRNOHApp.startSurface(initialSurfaceWidth, initialSurfaceHeight, appName, initialProps);
   }
 
   callRNFunction(moduleName: string, functionName: string, args: unknown[]): void {

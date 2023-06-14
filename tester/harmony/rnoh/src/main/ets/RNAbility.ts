@@ -36,19 +36,15 @@ interface LifecycleEventListenerByName {
 
 export interface RNInstanceManager {
   getLifecycleState(): LifecycleState
-
   getBundleURL(): string
-
   getInitialProps(): Record<string, any>
-
   subscribeToLifecycleEvents: <TEventName extends keyof LifecycleEventListenerByName>(
     eventName: TEventName,
     listener: LifecycleEventListenerByName[TEventName]
   ) => () => void
-
-  emitDeviceEvent: (eventName: string, payload: any) => void
-
-  emitComponentEvent: (tag: Tag, eventEmitRequestHandlerName: string, payload: any) => void
+  emitDeviceEvent(eventName: string, payload: any): void
+  emitComponentEvent(tag: Tag, eventEmitRequestHandlerName: string, payload: any): void
+  loadScriptFromString(script: string, sourceURL?: string);
 }
 
 
@@ -143,6 +139,10 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
     this.rnInstance.callRNFunction("RCTDeviceEventEmitter", "emit", [eventName, params]);
   }
 
+  loadScriptFromString(script: string, sourceURL = "bundle.harmony.js") {
+    this.rnInstance.loadScriptFromString(script, sourceURL);
+  }
+
   onSurfaceAboutToAppear(ctx: SurfaceAboutToAppearContext) {
     const javaScriptLoader = new JavaScriptLoader(this.context.resourceManager);
     javaScriptLoader.loadBundle(this.getBundleURL())
@@ -154,17 +154,17 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
         RNOHLogger.info("Falling back to local bundle.");
         return javaScriptLoader.loadBundle("bundle.harmony.js")
       }).then((bundle) => {
+      this.loadScriptFromString(bundle)
       this.rnInstance.run(ctx.width / ctx.screenDensity,
         ctx.height / ctx.screenDensity,
-        bundle,
         ctx.appName,
         this.getInitialProps())
     }).catch((error) => {
       RNOHLogger.error(error)
       // TODO: don't use empty string as a magic "failure" value
+      this.loadScriptFromString("")
       this.rnInstance.run(ctx.width / ctx.screenDensity,
         ctx.height / ctx.screenDensity,
-        "",
         ctx.appName,
         this.getInitialProps())
     });

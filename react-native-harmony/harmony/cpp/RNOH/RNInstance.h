@@ -47,7 +47,8 @@ class RNInstance {
         MutationsListener,
         MountingManager::CommandDispatcher);
     void start();
-    void runApplication(float width, float height, std::string &&bundle, std::string const &moduleName, folly::dynamic &&initialProps);
+    void loadScriptFromString(std::string const &&bundle, std::string const sourceURL);
+    void runApplication(float width, float height, std::string const &moduleName, folly::dynamic &&initialProps);
     void callFunction(std::string &&module, std::string &&method, folly::dynamic &&params);
     void emitComponentEvent(napi_env env, react::Tag tag, std::string eventEmitRequestHandlerName, napi_value payload);
 

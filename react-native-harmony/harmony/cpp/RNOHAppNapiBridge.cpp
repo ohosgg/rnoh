@@ -54,14 +54,22 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
     return arkJs.getUndefined();
 }
 
+static napi_value loadScriptFromString(napi_env env, napi_callback_info info) {
+    ArkJS arkJs(env);
+    auto args = arkJs.getCallbackArgs(info, 2);
+    rnInstance->loadScriptFromString(
+        arkJs.getString(args[0]),
+        arkJs.getString(args[1]));
+    return arkJs.getUndefined();
+}
+
 static napi_value startSurface(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 5);
+    auto args = arkJs.getCallbackArgs(info, 4);
     rnInstance->runApplication(arkJs.getDouble(args[0]),
                                arkJs.getDouble(args[1]),
                                arkJs.getString(args[2]),
-                               arkJs.getString(args[3]),
-                               arkJs.getDynamic(args[4]));
+                               arkJs.getDynamic(args[3]));
     return arkJs.getUndefined();
 }
 
@@ -92,6 +100,7 @@ static napi_value Init(napi_env env, napi_value exports) {
     napi_property_descriptor desc[] = {
         {"subscribeToShadowTreeChanges", nullptr, subscribeToShadowTreeChanges, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"initializeReactNative", nullptr, initializeReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"loadScriptFromString", nullptr, loadScriptFromString, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"startSurface", nullptr, startSurface, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"emitComponentEvent", nullptr, emitComponentEvent, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"registerTurboModuleProvider", nullptr, registerTurboModuleProvider, nullptr, nullptr, nullptr, napi_default, nullptr},

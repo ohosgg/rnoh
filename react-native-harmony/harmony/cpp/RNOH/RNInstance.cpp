@@ -92,13 +92,18 @@ void RNInstance::initializeScheduler() {
     this->scheduler = std::make_unique<react::Scheduler>(schedulerToolbox, nullptr, schedulerDelegate.get());
 }
 
-void RNInstance::runApplication(float width, float height, std::string &&bundle, std::string const &moduleName, folly::dynamic &&initialProps) {
-    this->taskExecutor->runTask(TaskThread::JS, [this, width, height, bundle = std::move(bundle), moduleName, initialProps = std::move(initialProps)]() {
+void RNInstance::loadScriptFromString(std::string const &&bundle, std::string const sourceURL) {
+    this->taskExecutor->runTask(TaskThread::JS, [this, bundle = std::move(bundle), sourceURL]() {
+        std::unique_ptr<react::JSBigStdString> jsBundle;
+        jsBundle = std::make_unique<react::JSBigStdString>(std::move(bundle));
+        this->instance->loadScriptFromString(std::move(jsBundle), sourceURL, true);
+    });
+}
+
+void RNInstance::runApplication(float width, float height, std::string const &moduleName, folly::dynamic &&initialProps) {
+    this->taskExecutor->runTask(TaskThread::JS, [this, width, height, moduleName, initialProps = std::move(initialProps)]() {
         try {
             facebook::react::SurfaceHandler surfaceHandler(moduleName, 1);
-            std::unique_ptr<react::JSBigStdString> jsBundle;
-            jsBundle = std::make_unique<react::JSBigStdString>(std::move(bundle));
-            instance->loadScriptFromString(std::move(jsBundle), "bundle.harmony.js", true);
             surfaceHandler.setProps(std::move(initialProps));
             auto layoutConstraints = surfaceHandler.getLayoutConstraints();
             layoutConstraints.layoutDirection = react::LayoutDirection::LeftToRight;
