@@ -70,10 +70,8 @@ export struct RNApp {
           initialSurfaceWidth: this.initialSurfaceWidth,
           initialSurfaceHeight: this.initialSurfaceHeight,
         })
-      } else {
-        Text("Loading...")
       }
-    }.width("100%").height("100%").backgroundColor("#EEE")
+    }.width("100%").height("100%")
   }
 }
 
