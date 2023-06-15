@@ -1,16 +1,16 @@
-import { RNPackage, TurboModulesFactory } from "../RNPackage";
-import type { TurboModule, TurboModuleContext } from '../TurboModule';
+import {RNPackage, TurboModulesFactory} from '../RNPackage';
+import type {TurboModule, TurboModuleContext} from '../TurboModule';
 import {
   AppStateTurboModule,
-  PlatformConstantsTurboModule,
   DeviceInfoTurboModule,
-  SourceCodeTurboModule,
-  TimingTurboModule,
   ExceptionsManagerTurboModule,
   NetworkingTurboModule,
-  WebSocketTurboModule
-} from "./TurboModules";
-
+  PlatformConstantsTurboModule,
+  SourceCodeTurboModule,
+  StatusBarTurboModule,
+  TimingTurboModule,
+  WebSocketTurboModule,
+} from './TurboModules';
 
 export class RNOHCorePackage extends RNPackage {
   createTurboModulesFactory(ctx: TurboModuleContext): TurboModulesFactory {
@@ -19,14 +19,15 @@ export class RNOHCorePackage extends RNPackage {
 }
 
 const TURBO_MODULE_CLASS_BY_NAME: Record<string, typeof TurboModule> = {
-  "PlatformConstants": PlatformConstantsTurboModule,
-  "AppState": AppStateTurboModule,
-  "DeviceInfo": DeviceInfoTurboModule,
-  "SourceCode": SourceCodeTurboModule,
-  "Timing": TimingTurboModule,
-  "Networking": NetworkingTurboModule,
-  "ExceptionsManager": ExceptionsManagerTurboModule,
-  "WebSocketModule": WebSocketTurboModule
+  AppState: AppStateTurboModule,
+  DeviceInfo: DeviceInfoTurboModule,
+  ExceptionsManager: ExceptionsManagerTurboModule,
+  Networking: NetworkingTurboModule,
+  PlatformConstants: PlatformConstantsTurboModule,
+  SourceCode: SourceCodeTurboModule,
+  StatusBarManager: StatusBarTurboModule,
+  Timing: TimingTurboModule,
+  WebSocketModule: WebSocketTurboModule,
 };
 
 class CoreTurboModulesFactory extends TurboModulesFactory {
@@ -43,7 +44,7 @@ class CoreTurboModulesFactory extends TurboModulesFactory {
 }
 
 export enum RNOHEventEmitRequestHandlerName {
-  Scroll = "Scroll",
-  Touch = "Touch",
-  TextInputChange = "TextInputChange"
+  Scroll = 'Scroll',
+  Touch = 'Touch',
+  TextInputChange = 'TextInputChange',
 }

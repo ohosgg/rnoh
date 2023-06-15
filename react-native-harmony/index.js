@@ -64,6 +64,9 @@ module.exports = {
   get ScrollView() {
     return require('react-native/Libraries/Components/ScrollView/ScrollView');
   },
+  get StatusBar() {
+    return require('./Libraries/Components/StatusBar/StatusBar.harmony');
+  },
   get StyleSheet() {
     return require('react-native/Libraries/StyleSheet/StyleSheet');
   },

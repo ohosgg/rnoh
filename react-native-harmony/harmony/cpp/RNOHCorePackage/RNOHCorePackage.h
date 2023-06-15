@@ -8,12 +8,13 @@
 #include <react/renderer/components/scrollview/ScrollViewComponentDescriptor.h>
 #include "RNOH/Package.h"
 #include "RNOHCorePackage/TurboModules/AppStateTurboModule.h"
-#include "RNOHCorePackage/TurboModules/PlatformConstantsTurboModule.h"
 #include "RNOHCorePackage/TurboModules/DeviceInfoTurboModule.h"
-#include "RNOHCorePackage/TurboModules/SourceCodeTurboModule.h"
-#include "RNOHCorePackage/TurboModules/TimingTurboModule.h"
 #include "RNOHCorePackage/TurboModules/ExceptionsManagerTurboModule.h"
 #include "RNOHCorePackage/TurboModules/NetworkingTurboModule.h"
+#include "RNOHCorePackage/TurboModules/PlatformConstantsTurboModule.h"
+#include "RNOHCorePackage/TurboModules/SourceCodeTurboModule.h"
+#include "RNOHCorePackage/TurboModules/StatusBarTurboModule.h"
+#include "RNOHCorePackage/TurboModules/TimingTurboModule.h"
 #include "RNOHCorePackage/TurboModules/WebSocketTurboModule.h"
 #include "RNOHCorePackage/ComponentBinders/ViewComponentJSIBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ViewComponentNapiBinder.h"
@@ -34,18 +35,20 @@ class RNOHCoreTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
     SharedTurboModule createTurboModule(Context ctx, const std::string &name) const override {
         if (name == "AppState") {
             return std::make_shared<AppStateTurboModule>(ctx, name);
-        }else if (name == "PlatformConstants") {
-            return std::make_shared<PlatformConstantsTurboModule>(ctx, name);
         } else if (name == "DeviceInfo") {
             return std::make_shared<DeviceInfoTurboModule>(ctx, name);
-        } else if (name == "SourceCode") {
-            return std::make_shared<SourceCodeTurboModule>(ctx, name);
-        } else if (name == "Timing") {
-            return std::make_shared<TimingTurboModule>(ctx, name);
         } else if (name == "ExceptionsManager") {
             return std::make_shared<ExceptionsManagerTurboModule>(ctx, name);
         } else if (name == "Networking") {
             return std::make_shared<NetworkingTurboModule>(ctx, name);
+        } else if (name == "PlatformConstants") {
+            return std::make_shared<PlatformConstantsTurboModule>(ctx, name);
+        } else if (name == "SourceCode") {
+            return std::make_shared<SourceCodeTurboModule>(ctx, name);
+        } else if (name == "StatusBarManager") {
+            return std::make_shared<StatusBarTurboModule>(ctx, name);
+        } else if (name == "Timing") {
+            return std::make_shared<TimingTurboModule>(ctx, name);
         } else if (name == "WebSocketModule") {
             return std::make_shared<WebSocketTurboModule>(ctx, name);
         }

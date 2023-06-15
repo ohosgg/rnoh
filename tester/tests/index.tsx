@@ -21,6 +21,7 @@ export * from './PressableTest';
 export * from './RefreshControlTest';
 export * from './RenderingTest';
 export * from './SectionListTest';
+export * from './StatusBarTest';
 export * from './TimerTest';
 export * from './TouchablesTest';
 export * from './TurboModuleTest';

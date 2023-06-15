@@ -42,7 +42,7 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 - [ ] SafeAreaView
 - [x] ScrollView
 - [x] SectionList
-- [ ] StatusBar
+- [x] StatusBar
 - [ ] Switch
 - [x] Text*
 - [x] TextInput*

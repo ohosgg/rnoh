@@ -1,9 +1,10 @@
 {
+  "license": "",
+  "devDependencies": {},
+  "author": "",
   "name": "checkerboard",
-  "version": "1.0.0",
   "description": "Please describe the basic information.",
   "main": "",
-  "author": "",
-  "license": "",
+  "version": "1.0.0",
   "dependencies": {}
 }
