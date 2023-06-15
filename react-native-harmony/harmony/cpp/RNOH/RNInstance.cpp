@@ -29,7 +29,6 @@ void RNInstance::start() {
 
 void RNInstance::initialize() {
     std::vector<std::unique_ptr<react::NativeModule>> modules;
-    this->contextContainer = std::make_shared<react::ContextContainer>();
     auto instanceCallback = std::make_unique<react::InstanceCallback>();
     auto jsExecutorFactory = std::make_shared<react::HermesExecutorFactory>(
         // runtime installer, which is run when the runtime
@@ -52,7 +51,7 @@ void RNInstance::initialize() {
 
 void RNInstance::initializeScheduler() {
     auto reactConfig = std::make_shared<react::EmptyReactNativeConfig>();
-    this->contextContainer->insert("ReactNativeConfig", std::move(reactConfig));
+    m_contextContainer->insert("ReactNativeConfig", std::move(reactConfig));
 
     react::EventBeat::Factory eventBeatFactory = [taskExecutor = std::weak_ptr(taskExecutor), runtimeExecutor = this->instance->getRuntimeExecutor()](auto ownerBox) {
         return std::make_unique<EventBeat>(taskExecutor, runtimeExecutor, ownerBox);
@@ -70,7 +69,7 @@ void RNInstance::initializeScheduler() {
     };
 
     react::SchedulerToolbox schedulerToolbox{
-        .contextContainer = this->contextContainer,
+        .contextContainer = m_contextContainer,
         .componentRegistryFactory = componentRegistryFactory,
         .runtimeExecutor = this->instance->getRuntimeExecutor(),
         .asynchronousEventBeatFactory = eventBeatFactory,

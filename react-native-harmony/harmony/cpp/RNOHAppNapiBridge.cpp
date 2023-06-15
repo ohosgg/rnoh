@@ -13,13 +13,15 @@ using namespace rnoh;
 
 static napi_ref listener_ref;
 static napi_ref arkTsTurboModuleProviderRef;
+static napi_ref measureTextFnRef;
 
 std::unique_ptr<RNInstance> rnInstance;
 
 static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 0);
-    rnInstance = createRNInstance(env, arkTsTurboModuleProviderRef);
+    auto args = arkJs.getCallbackArgs(info, 1);
+    measureTextFnRef = arkJs.createReference(args[0]);
+    rnInstance = createRNInstance(env, arkTsTurboModuleProviderRef, measureTextFnRef);
     rnInstance->start();
     return arkJs.getUndefined();
 }

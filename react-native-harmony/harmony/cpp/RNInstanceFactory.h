@@ -19,14 +19,18 @@
 #include "RNOH/PackageProvider.h"
 #include "RNOHCorePackage/RNOHCorePackage.h"
 #include "RNOH/EventEmitRequestHandler.h"
+#include "RNOH/TextMeasurer.h"
 
 using namespace rnoh;
 
-std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboModuleProviderRef) {
+std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboModuleProviderRef, napi_ref measureTextFnRef) {
+    auto contextContainer = std::make_shared<react::ContextContainer>();
+    auto taskExecutor = std::make_shared<TaskExecutor>(env);
+    auto textMeasurer = std::make_shared<TextMeasurer>(env, measureTextFnRef, taskExecutor);
+    contextContainer->insert("textLayoutManagerDelegate", textMeasurer);
     PackageProvider packageProvider;
     auto packages = packageProvider.getPackages({});
     packages.insert(packages.begin(), std::make_shared<RNOHCorePackage>(Package::Context{}));
-    auto taskExecutor = std::make_shared<TaskExecutor>(env);
 
     auto componentDescriptorProviderRegistry = std::make_shared<react::ComponentDescriptorProviderRegistry>();
     std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> turboModuleFactoryDelegates;
@@ -57,7 +61,7 @@ std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboMo
                                                  std::move(componentJSIBinderByName),
                                                  taskExecutor,
                                                  std::move(turboModuleFactoryDelegates));
-    return std::make_unique<RNInstance>(env,
+    return std::make_unique<RNInstance>(contextContainer,
                                         std::move(turboModuleFactory),
                                         taskExecutor,
                                         componentDescriptorProviderRegistry,

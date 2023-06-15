@@ -353,7 +353,7 @@ add_react_common_subdir(react/renderer/components/text)
 # add_react_common_subdir(react/renderer/components/modal)
 add_react_common_subdir(react/renderer/components/scrollview)
 add_react_common_subdir(react/renderer/leakchecker)
-add_react_common_subdir(react/renderer/textlayoutmanager)
+add_subdirectory(${REACT_COMMON_PATCH_DIR}/react/renderer/textlayoutmanager)
 add_react_common_subdir(react/utils)
 add_react_common_subdir(react/bridging)
 add_react_common_subdir(react/renderer/mapbuffer)
@@ -388,6 +388,7 @@ add_library(rnoh SHARED
     "${RNOH_CPP_DIR}/RNOH/JsiConversions.cpp"
     "${RNOH_CPP_DIR}/RNOH/Package.cpp"
     "${RNOH_CPP_DIR}/RNOH/UIManagerModule.cpp"
+    "${RNOH_CPP_DIR}/RNOH/TextMeasurer.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/AppStateTurboModule.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/DeviceInfoTurboModule.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/ExceptionsManagerTurboModule.cpp"

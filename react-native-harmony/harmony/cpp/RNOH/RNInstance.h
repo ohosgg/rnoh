@@ -28,13 +28,14 @@ class RNInstance {
   public:
     using MutationsListener = std::function<void(MutationsToNapiConverter, facebook::react::ShadowViewMutationList const &mutations)>;
 
-    RNInstance(napi_env env,
+    RNInstance(std::shared_ptr<react::ContextContainer> contextContainer,
                TurboModuleFactory &&turboModuleFactory,
                std::shared_ptr<TaskExecutor> taskExecutor,
                std::shared_ptr<react::ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry,
                MutationsToNapiConverter mutationsToNapiConverter,
                EventEmitRequestHandlerByString eventEmitRequestHandlerByName)
         : instance(std::make_shared<facebook::react::Instance>()),
+          m_contextContainer(contextContainer),
           scheduler(nullptr),
           taskExecutor(taskExecutor),
           eventEmitterRegistry(std::make_shared<EventEmitterRegistry>()),
@@ -53,7 +54,7 @@ class RNInstance {
     void emitComponentEvent(napi_env env, react::Tag tag, std::string eventEmitRequestHandlerName, napi_value payload);
 
   private:
-    std::shared_ptr<facebook::react::ContextContainer> contextContainer;
+    std::shared_ptr<facebook::react::ContextContainer> m_contextContainer;
     std::shared_ptr<facebook::react::Instance> instance;
     std::function<void(MutationsToNapiConverter, facebook::react::ShadowViewMutationList const &mutations)> mutationsListener;
     MountingManager::CommandDispatcher commandDispatcher;
