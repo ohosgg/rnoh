@@ -17,6 +17,22 @@ export function ViewTest() {
           />
         </View>
       </TestCase>
+      <TestCase itShould="render square with rounded corners with different radii">
+        <View style={{width: '100%', height: 100, backgroundColor: 'gray'}}>
+          <View
+            style={{
+              width: 100,
+              height: 100,
+              borderWidth: 3,
+              borderColor: 'white',
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 20,
+              borderBottomRightRadius: 30,
+              borderBottomLeftRadius: 40,
+            }}
+          />
+        </View>
+      </TestCase>
       <TestCase itShould="display component dimensions">
         <View style={{width: '100%', height: 96}}>
           <DimensionsDisplayer />

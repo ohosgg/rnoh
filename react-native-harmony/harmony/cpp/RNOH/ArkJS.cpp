@@ -373,6 +373,17 @@ RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, face
     napi_set_named_property(m_env, m_object, name, n_value);
     return *this;
 }
+RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, facebook::react::RectangleCorners<float> value) {
+    napi_value n_value;
+    napi_create_object(m_env, &n_value);
+
+    napi_set_named_property(m_env, n_value, "topLeft", m_arkJs.createDouble(value.topLeft));
+    napi_set_named_property(m_env, n_value, "topRight", m_arkJs.createDouble(value.topRight));
+    napi_set_named_property(m_env, n_value, "bottomLeft", m_arkJs.createDouble(value.bottomLeft));
+    napi_set_named_property(m_env, n_value, "bottomRight", m_arkJs.createDouble(value.bottomRight));
+    napi_set_named_property(m_env, m_object, name, n_value);
+    return *this;
+}
 
 RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, std::string value) {
     napi_set_named_property(m_env, m_object, name, m_arkJs.createString(value));

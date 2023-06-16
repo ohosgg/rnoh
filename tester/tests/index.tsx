@@ -20,6 +20,7 @@ export * from './PlatformConstantsTest';
 export * from './PressableTest';
 export * from './RefreshControlTest';
 export * from './RenderingTest';
+export * from './ScrollViewTest';
 export * from './SectionListTest';
 export * from './StatusBarTest';
 export * from './TextTest';

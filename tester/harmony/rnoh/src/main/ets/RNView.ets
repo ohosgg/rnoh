@@ -8,8 +8,15 @@ export type ViewProps = LayoutProps & {
   backgroundColor?: ColorSegments
   borderWidth?: number
   borderColor?: ColorSegments
-  borderRadius?: number
+  borderRadius?: BorderRadii
   opacity?: number
+}
+
+type BorderRadii = {
+  topLeft?: number
+  topRight?: number
+  bottomLeft?: number
+  bottomRight?: number
 }
 
 export type ViewDescriptor = Descriptor<"View", ViewProps>
@@ -28,7 +35,7 @@ function getPageOffset(ctx: RNOHContext, tag: Tag) {
     tag = descriptor?.parentTag;
   }
 
-  return {x, y}
+  return { x, y }
 }
 
 export function handleTouchEvent(ctx: RNOHContext, event: TouchEvent, tag: Tag) {

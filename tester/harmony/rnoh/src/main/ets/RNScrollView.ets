@@ -129,5 +129,8 @@ export struct RNScrollView {
     //    .onScrollBegin(this.onScrollBegin.bind(this))
     //    .onScrollEnd(this.onScrollEnd.bind(this))
     .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
+    .borderWidth(this.descriptor.props.borderWidth)
+    .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
+    .borderRadius(this.descriptor.props.borderRadius)
   }
 }

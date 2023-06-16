@@ -10,6 +10,7 @@
 #include <folly/dynamic.h>
 #include <react/renderer/graphics/Float.h>
 #include <react/renderer/graphics/Color.h>
+#include <react/renderer/graphics/RectangleCorners.h>
 
 class RNOHNapiObjectBuilder;
 class RNOHNapiObject;
@@ -153,6 +154,8 @@ class RNOHNapiObjectBuilder {
 
     RNOHNapiObjectBuilder &addProperty(const char *name, facebook::react::SharedColor value);
 
+    RNOHNapiObjectBuilder &addProperty(const char *name, facebook::react::RectangleCorners<float> value);
+
     RNOHNapiObjectBuilder &addProperty(const char *name, std::string value);
 
     RNOHNapiObjectBuilder &addProperty(const char *name, folly::dynamic value);
@@ -177,4 +180,4 @@ class Promise {
     napi_value m_value;
 };
 
-#endif //native_ArkJS_H
+#endif // native_ArkJS_H

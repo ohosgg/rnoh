@@ -2,6 +2,7 @@
 #include "RNOH/BaseComponentNapiBinder.h"
 #include <react/renderer/components/view/ViewProps.h>
 #include <react/renderer/graphics/platform/cxx/react/renderer/graphics/Color.h>
+#include <react/renderer/graphics/RectangleCorners.h>
 
 namespace rnoh {
 
@@ -19,7 +20,7 @@ class ViewComponentNapiBinder : public BaseComponentNapiBinder {
                 .addProperty("opacity", props->opacity)
                 .addProperty("borderWidth", borderMetrics.borderWidths.top)
                 .addProperty("borderColor", borderMetrics.borderColors.top)
-                .addProperty("borderRadius", borderMetrics.borderRadii.topLeft)
+                .addProperty("borderRadius", borderMetrics.borderRadii)
                 .build();
         }
         return napiBaseProps;
