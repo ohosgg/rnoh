@@ -6,7 +6,7 @@ using namespace rnoh;
 
 react::Size TextMeasurer::measure(std::string textContent) {
     react::Size result = {};
-    m_taskExecutor->runSyncTask(TaskThread::WORKER, [&result, measureTextRef = m_measureTextFnRef, env = m_env, &textContent]() {
+    m_taskExecutor->runSyncTask(TaskThread::MAIN, [&result, measureTextRef = m_measureTextFnRef, env = m_env, &textContent]() {
         ArkJS arkJs(env);
         auto measureTextNapiValue = arkJs.getReferenceValue(measureTextRef);
         auto resultNapiValue = arkJs.call(measureTextNapiValue, {arkJs.createObjectBuilder()

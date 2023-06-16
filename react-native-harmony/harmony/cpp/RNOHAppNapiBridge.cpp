@@ -28,6 +28,8 @@ std::unique_ptr<RNInstance> rnInstance;
 
 static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
+    auto args = arkJs.getCallbackArgs(info, 1);
+    measureTextFnRef = arkJs.createReference(args[0]);
     rnInstance = createRNInstance(env, env /* TODO: use workerEnv once worker registration works */, arkTsTurboModuleProviderRef, measureTextFnRef);
     rnInstance->start();
     return arkJs.getUndefined();

@@ -2,6 +2,7 @@ import { TurboModuleProvider } from "./TurboModuleProvider";
 import { TurboModule } from "./TurboModule";
 import { Mutation } from "./mutations";
 import { Tag } from "./descriptor";
+import TextMeasurer from "@ohos.measure"
 
 /**
  * Object stereotype: Interfacer
@@ -33,7 +34,9 @@ export class RNInstance {
   }
 
   initializeReactNative() {
-    this.libRNOHApp.initializeReactNative();
+    this.libRNOHApp.initializeReactNative((config: { textContent: string }) => {
+      return { width: TextMeasurer.measureText({ textContent: config.textContent }), height: 0 }
+    });
   }
 
   emitComponentEvent(tag: Tag, eventEmitRequestHandlerName: string, payload: any) {

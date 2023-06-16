@@ -18,6 +18,7 @@ TextMeasurement TextLayoutManager::measure(
     AttributedStringBox attributedStringBox,
     ParagraphAttributes paragraphAttributes,
     LayoutConstraints layoutConstraints) const {
+    attributedStringBox.getValue().getString();
     TextMeasurement::Attachments attachments;
     for (auto const &fragment : attributedStringBox.getValue().getFragments()) {
         if (fragment.isAttachment()) {
@@ -25,8 +26,7 @@ TextMeasurement TextLayoutManager::measure(
                 TextMeasurement::Attachment{{{0, 0}, {0, 0}}, false});
         }
     }
-    // m_textLayoutManagerDelegate->measure("foo"); // TODO: Fix deadlock. Currently TextMeasurer measures the text synchronously on the main thread.
-    return TextMeasurement{{0, 0}, attachments};
+    return TextMeasurement{m_textLayoutManagerDelegate->measure(attributedStringBox.getValue().getString()), attachments};
 }
 
 LinesMeasurements TextLayoutManager::measureLines(
