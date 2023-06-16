@@ -23,7 +23,6 @@ export struct RNApp {
 
   aboutToAppear() {
     // delay running the app so that debugger has a chance to connect before a potential error is thrown
-    startTrace("INITIALIZATION")
     this.rnohContext.rnInstance?.setLibRNOHApp(libRNOHApp)
     this.rnohContext.rnInstance?.registerTurboModuleProvider();
     setTimeout(() => {
@@ -46,11 +45,9 @@ export struct RNApp {
             densityDpi: 1,
           }
         });
-      },
-      })
-      this.rnohContext.rnInstance?.initializeReactNative();
-      this.shouldShow = true
-      finishTrace("INITIALIZATION")
+        this.rnohContext.rnInstance?.initializeReactNative(data.screenDensity);
+        this.shouldShow = true
+      }})
     }, this.dev ? 2000 : 0)
   }
 

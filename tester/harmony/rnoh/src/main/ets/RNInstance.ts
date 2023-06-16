@@ -33,9 +33,9 @@ export class RNInstance {
     this.libRNOHApp.registerTurboModuleProvider(this.turboModuleProvider);
   }
 
-  initializeReactNative() {
+  initializeReactNative(screenDensity: number) {
     this.libRNOHApp.initializeReactNative((config: { textContent: string }) => {
-      return { width: TextMeasurer.measureText({ textContent: config.textContent }), height: 0 }
+      return { width: TextMeasurer.measureText({ textContent: config.textContent }) / (screenDensity || 1), height: 0 }
     });
   }
 
