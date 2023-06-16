@@ -3,6 +3,7 @@
 #include <react/renderer/components/text/ParagraphState.h>
 #include <react/renderer/components/text/ParagraphProps.h>
 #include <react/renderer/core/ConcreteState.h>
+#define EnumToString(x) #x
 
 namespace rnoh {
 
@@ -24,6 +25,10 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                 if (fontWeight.has_value()) {
                     propsObjBuilder.addProperty("fontWeight", static_cast<int>(fontWeight.value()));
                 }
+                auto textAlign = textAttributes.alignment;
+                if (textAlign.has_value()) {
+                    propsObjBuilder.addProperty("textAlign", textAlignmentToString(textAlign.value()));
+                }
                 // NOTE: This is a temporary solution. Nesting <Text> component's won't work as expected.
                 break;
             }
@@ -31,6 +36,22 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
         }
         return napiViewProps;
     };
+
+  private:
+    std::string textAlignmentToString(facebook::react::TextAlignment alignment) {
+        switch (alignment) {
+        case facebook::react::TextAlignment::Natural:
+            return "natural";
+        case facebook::react::TextAlignment::Left:
+            return "left";
+        case facebook::react::TextAlignment::Right:
+            return "right";
+        case facebook::react::TextAlignment::Center:
+            return "center";
+        case facebook::react::TextAlignment::Justified:
+            return "justified";
+        }
+    }
 };
 
 } // namespace rnoh
