@@ -4,8 +4,8 @@
 #include <ReactCommon/TurboModuleUtils.h>
 
 #include "RNOH/JsiConversions.h"
-#include "RNOH/TaskExecutor.h"
 #include "RNOH/ArkTSTurboModule.h"
+#include "RNOH/TaskExecutor/TaskExecutor.h"
 #include "ArkTSTurboModule.h"
 
 using namespace rnoh;

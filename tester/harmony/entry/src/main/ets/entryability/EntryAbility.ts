@@ -1,9 +1,14 @@
 import { RNAbility } from '@ohos/rnoh/ts';
 import { SamplePackage } from "@ohos/rnoh-sample-package/ts"
+import worker from '@ohos.worker';
 
 export default class EntryAbility extends RNAbility {
   getPagePath() {
     return "pages/Index"
+  }
+
+  getWorkerPath() {
+    return "entry/ets/RNWorker.ts"
   }
 
   getBundleURL() {

@@ -18,10 +18,10 @@
 
 #include "RNOH/MessageQueueThread.h"
 #include "RNOH/SchedulerDelegate.h"
-#include "RNOH/TaskExecutor.h"
 #include "RNOH/EventEmitterRegistry.h"
 #include "RNOH/TurboModuleFactory.h"
 #include "RNOH/EventEmitRequestHandler.h"
+#include "RNOH/TaskExecutor/TaskExecutor.h"
 
 namespace rnoh {
 class RNInstance {

@@ -1,38 +1,48 @@
+#include <atomic>
 #include <exception>
 #include <glog/logging.h>
-#include "RNOH/TaskRunner.h"
+#include "ThreadTaskRunner.h"
 
 namespace rnoh {
 
-TaskRunner::TaskRunner(std::string name) : name(name) {
+ThreadTaskRunner::ThreadTaskRunner(std::string name) : name(name) {
     thread = std::thread([this] { runLoop(); });
     auto handle = thread.native_handle();
     pthread_setname_np(handle, name.c_str());
 }
 
-TaskRunner::~TaskRunner() {
+ThreadTaskRunner::~ThreadTaskRunner() {
     LOG(INFO) << "Shutting down thread runner " << name;
     running = false;
-    cv.notify_one();
+    cv.notify_all();
     thread.join();
 }
 
-void TaskRunner::runAsyncTask(Task &&task) {
+void ThreadTaskRunner::runAsyncTask(Task &&task) {
     {
         std::unique_lock<std::mutex> lock(mutex);
         asyncTaskQueue.emplace(std::move(task));
     }
+    // NOTE: this should be fine:
+    // the only threads waiting on the condition variable are the
+    // runner thread and the thread that called runSyncTask,
+    // and if some thread is waiting in runSyncTask,
+    // the runner thread should be running executing its task
     cv.notify_one();
 }
 
-void TaskRunner::runSyncTask(Task &&task) {
+void ThreadTaskRunner::runSyncTask(Task &&task) {
     std::unique_lock<std::mutex> lock(mutex);
-    syncTaskQueue.emplace(std::move(task));
+    std::atomic_bool done{false};
+    syncTaskQueue.emplace([task = std::move(task), &done] {
+        task();
+        done = true;
+    });
     cv.notify_one();
-    cv.wait(lock, [this] { return syncTaskQueue.empty(); });
+    cv.wait(lock, [this, &done] { return done.load(); });
 }
 
-void TaskRunner::runLoop() {
+void ThreadTaskRunner::runLoop() {
     while (running) {
         std::unique_lock<std::mutex> lock(mutex);
         cv.wait(lock, [this] { return hasPendingTasks() || !running; });
@@ -49,7 +59,11 @@ void TaskRunner::runLoop() {
                 LOG(ERROR) << "Exception thrown in sync task";
                 LOG(ERROR) << e.what();
             }
-            cv.notify_one();
+            // notify the threads that called runSyncTask.
+            // it's not enough to notify one thread,
+            // because there could be multiple threads calling runSyncTask
+            // at the same time
+            cv.notify_all();
             continue;
         }
         if (!asyncTaskQueue.empty()) {

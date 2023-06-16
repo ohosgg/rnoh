@@ -10,7 +10,7 @@
 #include <react/renderer/mounting/TelemetryController.h>
 
 #include "RNOH/MutationsToNapiConverter.h"
-#include "RNOH/TaskExecutor.h"
+#include "RNOH/TaskExecutor/TaskExecutor.h"
 #include "RNOH/EventEmitterRegistry.h"
 
 namespace rnoh {

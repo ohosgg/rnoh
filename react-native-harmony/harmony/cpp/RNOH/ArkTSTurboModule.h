@@ -7,8 +7,8 @@
 #include <ReactCommon/TurboModuleUtils.h>
 
 #include "ArkJS.h"
-#include "RNOH/TaskExecutor.h"
 #include "RNOH/TurboModule.h"
+#include "RNOH/TaskExecutor/TaskExecutor.h"
 
 #define ARK_METHOD_CALLER(name)                                                           \
     [](                                                                                   \

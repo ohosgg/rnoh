@@ -9,6 +9,7 @@ import window from '@ohos.window';
 import hilog from '@ohos.hilog';
 import { TurboModuleProvider } from "./TurboModuleProvider"
 import { RNOHCorePackage } from "./RNOHCorePackage";
+import worker from '@ohos.worker';
 
 
 export type SurfaceAboutToAppearContext = {
@@ -36,14 +37,20 @@ interface LifecycleEventListenerByName {
 
 export interface RNInstanceManager {
   getLifecycleState(): LifecycleState
+
   getBundleURL(): string
+
   getInitialProps(): Record<string, any>
+
   subscribeToLifecycleEvents: <TEventName extends keyof LifecycleEventListenerByName>(
     eventName: TEventName,
     listener: LifecycleEventListenerByName[TEventName]
   ) => () => void
+
   emitDeviceEvent(eventName: string, payload: any): void
+
   emitComponentEvent(tag: Tag, eventEmitRequestHandlerName: string, payload: any): void
+
   loadScriptFromString(script: string, sourceURL?: string);
 }
 
@@ -53,14 +60,22 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
   protected rnInstance: RNInstance = null
   protected lifecycleState = LifecycleState.BEFORE_CREATE
   protected turboModuleProvider: TurboModuleProvider
+  protected worker: worker.ThreadWorker | undefined
 
   onCreate(want, param) {
+    this.initializeWorker()
     this.storage = new LocalStorage()
     this.rnInstance = new RNInstance()
     this.turboModuleProvider = this.processPackages(this.rnInstance).turboModuleProvider
     this.rnInstance.setTurboModuleProvider(this.turboModuleProvider)
     this.storage.setOrCreate('RNOHContext', new RNOHContext(this.rnInstance, this, this))
   }
+
+  initializeWorker() {
+    this.worker = new worker.ThreadWorker(this.getWorkerPath());
+  }
+
+  abstract getWorkerPath(): string;
 
   private processPackages(rnInstance: RNInstance) {
     const ctx: RNPackageContext = {
@@ -90,13 +105,13 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
   }
 
   onWindowStageCreate(windowStage: window.WindowStage) {
-    windowStage.loadContent(this.getPagePath(), this.storage, (err, data) => {
-      if (err.code) {
-        hilog.error(0x0000, 'RNOH', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
-        return;
-      }
-      hilog.info(0x0000, 'RNOH', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
-    });
+      windowStage.loadContent(this.getPagePath(), this.storage, (err, data) => {
+        if (err.code) {
+          hilog.error(0x0000, 'RNOH', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
+          return;
+        }
+        hilog.info(0x0000, 'RNOH', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
+      });
   }
 
   private emitLifecycleEvent<TEventName extends keyof LifecycleEventListenerByName>(type: TEventName, ...data: Parameters<LifecycleEventListenerByName[TEventName]>) {

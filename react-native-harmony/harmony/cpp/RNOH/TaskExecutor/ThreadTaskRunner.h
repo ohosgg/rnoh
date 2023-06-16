@@ -7,17 +7,17 @@
 #include <queue>
 #include <thread>
 
+#include "AbstractTaskRunner.h"
+
 namespace rnoh {
 
-class TaskRunner {
+class ThreadTaskRunner : public AbstractTaskRunner {
   public:
-    using Task = std::function<void()>;
+    ThreadTaskRunner(std::string name);
+    ~ThreadTaskRunner() override;
 
-    TaskRunner(std::string name);
-    ~TaskRunner();
-
-    void runAsyncTask(Task &&task);
-    void runSyncTask(Task &&task);
+    void runAsyncTask(Task &&task) override;
+    void runSyncTask(Task &&task) override;
 
   private:
     void runLoop();

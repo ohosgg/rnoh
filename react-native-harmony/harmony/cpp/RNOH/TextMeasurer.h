@@ -3,7 +3,7 @@
 #include <react/renderer/textlayoutmanager/TextLayoutManager.h>
 #include <string>
 #include "napi/native_api.h"
-#include "RNOH/TaskExecutor.h"
+#include "RNOH/TaskExecutor/TaskExecutor.h"
 
 namespace rnoh {
 class TextMeasurer : public facebook::react::TextLayoutManagerDelegate {
