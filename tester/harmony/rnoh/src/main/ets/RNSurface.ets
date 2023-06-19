@@ -1,12 +1,10 @@
-import libRNOHApp from 'librnoh_app.so'
 import Device from '@system.device'
 import { RNComponentFactory, ComponentBuilderContext } from './RNComponentFactory'
 import { RNOHContext } from "./RNOHContext"
 import { Descriptor } from './descriptor'
 import { ViewProps } from './RNView'
-import { convertColorSegmentsToString, convertColorValueToRGBA } from './cpp-bridge-utils'
+import { convertColorSegmentsToString } from './cpp-bridge-utils'
 import type { DeviceInfoTurboModule } from "./RNOHCorePackage/TurboModules/DeviceInfoTurboModule"
-import { startTrace, finishTrace } from './tracer';
 
 
 @Component
@@ -23,7 +21,6 @@ export struct RNApp {
 
   aboutToAppear() {
     // delay running the app so that debugger has a chance to connect before a potential error is thrown
-    this.rnohContext.rnInstance?.setLibRNOHApp(libRNOHApp)
     this.rnohContext.rnInstance?.registerTurboModuleProvider();
     setTimeout(() => {
       Device.getInfo({ success: (data) => {

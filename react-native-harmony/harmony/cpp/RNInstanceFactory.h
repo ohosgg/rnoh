@@ -26,7 +26,7 @@ using namespace rnoh;
 std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_env workerEnv, napi_ref arkTsTurboModuleProviderRef, napi_ref measureTextFnRef) {
     auto contextContainer = std::make_shared<react::ContextContainer>();
     auto taskExecutor = std::make_shared<TaskExecutor>(env, workerEnv);
-    auto textMeasurer = std::make_shared<TextMeasurer>(workerEnv, measureTextFnRef, taskExecutor);
+    auto textMeasurer = std::make_shared<TextMeasurer>(env, measureTextFnRef, taskExecutor);
     contextContainer->insert("textLayoutManagerDelegate", textMeasurer);
     PackageProvider packageProvider;
     auto packages = packageProvider.getPackages({});

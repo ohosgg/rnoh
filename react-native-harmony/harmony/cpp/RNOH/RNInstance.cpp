@@ -3,7 +3,6 @@
 #include "RNOH/MessageQueueThread.h"
 #include "RNOH/RNInstance.h"
 #include "RNOH/EventBeat.h"
-#include "RNOH/LogSink.h"
 #include "hermes/executor/HermesExecutorFactory.h"
 #include <react/renderer/componentregistry/ComponentDescriptorProvider.h>
 #include "RNOH/EventEmitterRegistry.h"
@@ -22,7 +21,6 @@ void RNInstance::registerSurface(
 }
 
 void RNInstance::start() {
-    LogSink::initializeLogging();
     this->initialize();
     this->initializeScheduler();
 }

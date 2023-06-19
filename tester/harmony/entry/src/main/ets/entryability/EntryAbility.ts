@@ -1,6 +1,5 @@
 import { RNAbility } from '@ohos/rnoh/ts';
-import { SamplePackage } from "@ohos/rnoh-sample-package/ts"
-import worker from '@ohos.worker';
+import { createRNPackages } from "../RNPackagesFactory"
 
 export default class EntryAbility extends RNAbility {
   getPagePath() {
@@ -20,8 +19,6 @@ export default class EntryAbility extends RNAbility {
   }
 
   createPackages(ctx) {
-    return [
-      new SamplePackage(ctx)
-    ]
+    return createRNPackages(ctx)
   }
 };

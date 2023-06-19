@@ -1,23 +1,34 @@
-import worker, {ThreadWorkerGlobalScope, MessageEvents} from '@ohos.worker';
+import worker, { ThreadWorkerGlobalScope, MessageEvents } from '@ohos.worker';
+import libRNOHApp from 'librnoh_app.so'
+import { RNPackageContext, RNPackage } from "./RNPackage"
+import RNOHLogger from "./RNOHLogger"
+
 
 export class RNWorker {
-  static create() {
-    const w = new RNWorker(worker.workerPort);
+  static create(createPackages: (rnPackageCtx: RNPackageContext) => RNPackage[]) {
+    const w = new RNWorker(worker.workerPort, createPackages({}));
     w.start()
     return w;
   }
 
-  constructor(private workerPort: ThreadWorkerGlobalScope) {}
+  private syncIntervalId: any
 
-  start() {
-    this.workerPort.onmessage = (message: MessageEvents) => {
-      this.onMessage(message.data);
-    };
-    this.workerPort.dispatchEvent({
-      type: 'READY',
-      timeStamp: new Date().getDate(),
-    });
+  constructor(private workerPort: ThreadWorkerGlobalScope,
+              private packages: RNPackage[]) {
   }
 
-  onMessage(data: any) {}
+  start() {
+    const x = libRNOHApp.add(1, 2)
+    this.workerPort.onmessage = (message) => {
+      if (message.data === "RNOH_SYNC_ACK") {
+        RNOHLogger.info(`Worker received: ${message.data}`)
+        clearInterval(this.syncIntervalId)
+      }
+    };
+    libRNOHApp.registerWorker()
+    this.syncIntervalId = setInterval(() => {
+      RNOHLogger.info(`Worker dispatches event: RNOH_SYNC`)
+      this.workerPort.postMessage("RNOH_SYNC")
+    }, 100)
+  }
 }

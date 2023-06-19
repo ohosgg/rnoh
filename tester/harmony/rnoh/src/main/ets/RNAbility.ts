@@ -10,7 +10,7 @@ import hilog from '@ohos.hilog';
 import { TurboModuleProvider } from "./TurboModuleProvider"
 import { RNOHCorePackage } from "./RNOHCorePackage";
 import worker from '@ohos.worker';
-
+import libRNOHApp from 'librnoh_app.so'
 
 export type SurfaceAboutToAppearContext = {
   appName: string
@@ -63,32 +63,27 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
   protected worker: worker.ThreadWorker | undefined
 
   onCreate(want, param) {
-    this.initializeWorker()
+    this.worker = new worker.ThreadWorker(this.getWorkerPath());
     this.storage = new LocalStorage()
-    this.rnInstance = new RNInstance()
+    this.rnInstance = new RNInstance(libRNOHApp)
     this.turboModuleProvider = this.processPackages(this.rnInstance).turboModuleProvider
     this.rnInstance.setTurboModuleProvider(this.turboModuleProvider)
     this.storage.setOrCreate('RNOHContext', new RNOHContext(this.rnInstance, this, this))
   }
 
-  initializeWorker() {
-    this.worker = new worker.ThreadWorker(this.getWorkerPath());
-  }
-
   abstract getWorkerPath(): string;
 
   private processPackages(rnInstance: RNInstance) {
-    const ctx: RNPackageContext = {
-      reactNativeVersion: "0.0.0",
-      rnInstance: rnInstance,
-      uiAbilityContext: this.context,
-      rnInstanceManager: this
-    };
-    const packages = this.createPackages(ctx);
-    packages.unshift(new RNOHCorePackage(ctx));
+    const packages = this.createPackages({});
+    packages.unshift(new RNOHCorePackage({}));
     return {
       turboModuleProvider: new TurboModuleProvider(packages.map((pkg) => {
-        return pkg.createTurboModulesFactory(ctx);
+        return pkg.createTurboModulesFactory({
+          reactNativeVersion: "0.0.0",
+          rnInstance: rnInstance,
+          uiAbilityContext: this.context,
+          rnInstanceManager: this
+        });
       }))
     }
   }
@@ -105,13 +100,20 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
   }
 
   onWindowStageCreate(windowStage: window.WindowStage) {
-      windowStage.loadContent(this.getPagePath(), this.storage, (err, data) => {
-        if (err.code) {
-          hilog.error(0x0000, 'RNOH', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
-          return;
-        }
-        hilog.info(0x0000, 'RNOH', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
-      });
+    this.worker.onmessage = (e) => {
+      if (e.data === "RNOH_SYNC") {
+        RNOHLogger.info(`UI thread received: ${e.data}`)
+        RNOHLogger.info("UI dispatches event: RNOH_SYNC_ACK")
+        this.worker.postMessage("RNOH_SYNC_ACK")
+        windowStage.loadContent(this.getPagePath(), this.storage, (err, data) => {
+          if (err.code) {
+            hilog.error(0x0000, 'RNOH', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
+            return;
+          }
+          hilog.info(0x0000, 'RNOH', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
+        });
+      }
+    }
   }
 
   private emitLifecycleEvent<TEventName extends keyof LifecycleEventListenerByName>(type: TEventName, ...data: Parameters<LifecycleEventListenerByName[TEventName]>) {
