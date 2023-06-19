@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  ViewProps,
 } from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import {useState} from 'react';
@@ -38,7 +39,7 @@ export const TouchablesTest = () => {
           expect(TouchableNativeFeedback).to.be.not.undefined;
         }}
       />
-      <TestCase itShould="[FAILS] handle press without showing feedback">
+      <TestCase itShould="handle press without showing feedback">
         <TouchableWithoutFeedbackDemo />
       </TestCase>
     </TestSuite>
@@ -48,15 +49,15 @@ export const TouchablesTest = () => {
 function TouchableWithoutFeedbackDemo() {
   const [counter, setCounter] = useState(0);
   return (
-    <TouchableWithoutFeedback onPressIn={() => setCounter(prev => prev++)}>
-      <PressMe endLabel={counter} />
+    <TouchableWithoutFeedback onPressIn={() => setCounter(prev => prev+1)}>
+        <PressMe endLabel={counter} />
     </TouchableWithoutFeedback>
   );
 }
 
-function PressMe(props: {endLabel?: string | number}) {
+function PressMe(props: ViewProps & {endLabel?: string | number}) {
   return (
-    <View style={{padding: 16, borderWidth: 1}}>
+    <View {...props} style={{padding: 16, borderWidth: 1}}>
       <Text style={{color: 'blue', height: 24, width: '100%'}}>
         Press me{props.endLabel !== undefined ? ` (${props.endLabel})` : ''}
       </Text>
