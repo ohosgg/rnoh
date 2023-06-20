@@ -1,17 +1,13 @@
 import webSocket from '@ohos.net.webSocket'
 import util from '@ohos.util'
-import { TurboModuleContext, EventEmittingTurboModule } from "../../TurboModule";
+import { TurboModule } from "../../TurboModule";
 import RNOHLogger from '../../RNOHLogger';
 
 const WEB_SOCKET_SUPPORTED_EVENT_NAMES = ["websocketOpen", "websocketClosed", "websocketFailed", "websocketMessage"] as const;
 
-export class WebSocketTurboModule extends EventEmittingTurboModule<typeof WEB_SOCKET_SUPPORTED_EVENT_NAMES[number]> {
+export class WebSocketTurboModule extends TurboModule {
     private socketsById: Map<number, webSocket.WebSocket> = new Map();
     private base64 = new util.Base64()
-
-    constructor(protected ctx: TurboModuleContext) {
-        super(ctx);
-    }
 
     getSupportedEvents() {
         return WEB_SOCKET_SUPPORTED_EVENT_NAMES
@@ -21,7 +17,7 @@ export class WebSocketTurboModule extends EventEmittingTurboModule<typeof WEB_SO
         const ws = webSocket.createWebSocket();
 
         ws.on('open', (data) => {
-            this.sendEvent("websocketOpen", {
+            this.ctx.rnInstanceManager.emitDeviceEvent("websocketOpen", {
                 id: socketID,
                 protocol: "",
             });
@@ -30,7 +26,7 @@ export class WebSocketTurboModule extends EventEmittingTurboModule<typeof WEB_SO
         ws.on('error', (err) => this.handleError(socketID, err));
         ws.on('message', (err, data) => {
             if (typeof data === "string") {
-                this.sendEvent("websocketMessage", {
+                this.ctx.rnInstanceManager.emitDeviceEvent("websocketMessage", {
                     id: socketID,
                     type: "text",
                     data: data,
@@ -38,7 +34,7 @@ export class WebSocketTurboModule extends EventEmittingTurboModule<typeof WEB_SO
             } else if (data instanceof ArrayBuffer) {
                 const base64Data = this.base64.encodeSync(new Uint8Array(data));
 
-                this.sendEvent("websocketMessage", {
+                this.ctx.rnInstanceManager.emitDeviceEvent("websocketMessage", {
                     id: socketID,
                     type: "binary",
                     data: base64Data,
@@ -47,7 +43,7 @@ export class WebSocketTurboModule extends EventEmittingTurboModule<typeof WEB_SO
         });
 
         ws.on('close', (err, data) => {
-            this.sendEvent("websocketClosed", {
+            this.ctx.rnInstanceManager.emitDeviceEvent("websocketClosed", {
                 id: socketID,
                 ...data,
             })
@@ -98,7 +94,7 @@ export class WebSocketTurboModule extends EventEmittingTurboModule<typeof WEB_SO
     private handleError(socketID: number, err) {
         if (err) {
             RNOHLogger.info(`WebSocketTurboModule::handleError ${JSON.stringify(err)}`);
-            this.sendEvent("websocketFailed", { id: socketID, message: JSON.stringify(err) });
+            this.ctx.rnInstanceManager.emitDeviceEvent("websocketFailed", { id: socketID, message: JSON.stringify(err) });
             this.socketsById.delete(socketID);
         }
     }
