@@ -21,11 +21,10 @@ export struct RNApp {
 
   aboutToAppear() {
     // delay running the app so that debugger has a chance to connect before a potential error is thrown
-    this.rnohContext.rnInstance?.registerTurboModuleProvider();
     setTimeout(() => {
       Device.getInfo({ success: (data) => {
         this.screenDensity = data.screenDensity
-        const deviceInfoTurboModule = this.rnohContext.rnInstance.getTurboModule<DeviceInfoTurboModule>("DeviceInfo");
+        const deviceInfoTurboModule = this.rnohContext.rnInstanceManager.getTurboModule<DeviceInfoTurboModule>("DeviceInfo");
         deviceInfoTurboModule.setInitialParameters({
           screenPhysicalPixels: {
             width: data.windowWidth,

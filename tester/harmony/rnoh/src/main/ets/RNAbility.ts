@@ -1,12 +1,13 @@
 import UIAbility from '@ohos.app.ability.UIAbility';
 import { RNPackage, RNPackageContext } from "./RNPackage";
 import { RNOHContext } from "./RNOHContext"
-import { RNInstance } from "./RNInstance"
+import { NapiBridge } from "./RNInstance"
 import { Tag } from "./descriptor"
 import RNOHLogger from "./RNOHLogger"
 import JavaScriptLoader from "./JavaScriptLoader"
 import window from '@ohos.window';
 import hilog from '@ohos.hilog';
+import { TurboModule } from "./TurboModule"
 import { TurboModuleProvider } from "./TurboModuleProvider"
 import { RNOHCorePackage } from "./RNOHCorePackage";
 import worker from '@ohos.worker';
@@ -52,12 +53,14 @@ export interface RNInstanceManager {
   emitComponentEvent(tag: Tag, eventEmitRequestHandlerName: string, payload: any): void
 
   loadScriptFromString(script: string, sourceURL?: string);
+
+  getTurboModule<T extends TurboModule>(name: string): T
 }
 
 
 export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, RNInstanceManager {
   protected storage: LocalStorage
-  protected rnInstance: RNInstance = null
+  protected napiBridge: NapiBridge = null
   protected lifecycleState = LifecycleState.BEFORE_CREATE
   protected turboModuleProvider: TurboModuleProvider
   protected worker: worker.ThreadWorker | undefined
@@ -65,22 +68,23 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
   onCreate(want, param) {
     this.worker = new worker.ThreadWorker(this.getWorkerPath());
     this.storage = new LocalStorage()
-    this.rnInstance = new RNInstance(libRNOHApp)
-    this.turboModuleProvider = this.processPackages(this.rnInstance).turboModuleProvider
-    this.rnInstance.setTurboModuleProvider(this.turboModuleProvider)
-    this.storage.setOrCreate('RNOHContext', new RNOHContext(this.rnInstance, this, this))
+    this.napiBridge = new NapiBridge(libRNOHApp)
+    this.turboModuleProvider = this.processPackages(this.napiBridge).turboModuleProvider
+    this.napiBridge.registerTurboModuleProvider(this.turboModuleProvider)
+    this.storage.setOrCreate('RNOHContext', new RNOHContext(this.napiBridge, this.napiBridge, this, this))
   }
 
   abstract getWorkerPath(): string;
 
-  private processPackages(rnInstance: RNInstance) {
+  private processPackages(napiBridge: NapiBridge) {
     const packages = this.createPackages({});
     packages.unshift(new RNOHCorePackage({}));
     return {
       turboModuleProvider: new TurboModuleProvider(packages.map((pkg) => {
         return pkg.createTurboModulesFactory({
           reactNativeVersion: "0.0.0",
-          rnInstance: rnInstance,
+          rnInstance: napiBridge,
+          __napiBridge: napiBridge,
           uiAbilityContext: this.context,
           rnInstanceManager: this
         });
@@ -149,15 +153,15 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
   }
 
   emitComponentEvent(tag: Tag, eventEmitRequestHandlerName: string, payload: any) {
-    this.rnInstance.emitComponentEvent(tag, eventEmitRequestHandlerName, payload)
+    this.napiBridge.emitComponentEvent(tag, eventEmitRequestHandlerName, payload)
   }
 
   emitDeviceEvent(eventName: string, params: any) {
-    this.rnInstance.callRNFunction("RCTDeviceEventEmitter", "emit", [eventName, params]);
+    this.napiBridge.callRNFunction("RCTDeviceEventEmitter", "emit", [eventName, params]);
   }
 
   loadScriptFromString(script: string, sourceURL = "bundle.harmony.js") {
-    this.rnInstance.loadScriptFromString(script, sourceURL);
+    this.napiBridge.loadScriptFromString(script, sourceURL);
   }
 
   onSurfaceAboutToAppear(ctx: SurfaceAboutToAppearContext) {
@@ -172,7 +176,7 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
         return javaScriptLoader.loadBundle("bundle.harmony.js")
       }).then((bundle) => {
       this.loadScriptFromString(bundle)
-      this.rnInstance.run(ctx.width / ctx.screenDensity,
+      this.napiBridge.run(ctx.width / ctx.screenDensity,
         ctx.height / ctx.screenDensity,
         ctx.appName,
         this.getInitialProps())
@@ -180,11 +184,15 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
       RNOHLogger.error(error)
       // TODO: don't use empty string as a magic "failure" value
       this.loadScriptFromString("")
-      this.rnInstance.run(ctx.width / ctx.screenDensity,
+      this.napiBridge.run(ctx.width / ctx.screenDensity,
         ctx.height / ctx.screenDensity,
         ctx.appName,
         this.getInitialProps())
     });
     this.lifecycleState = LifecycleState.READY
+  }
+
+  getTurboModule<T extends TurboModule>(name: string): T {
+    return this.turboModuleProvider.getModule(name);
   }
 }

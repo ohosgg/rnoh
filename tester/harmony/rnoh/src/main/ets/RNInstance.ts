@@ -1,29 +1,16 @@
 import { TurboModuleProvider } from "./TurboModuleProvider";
-import { TurboModule } from "./TurboModule";
 import { Mutation } from "./mutations";
 import { Tag } from "./descriptor";
 import TextMeasurer from "@ohos.measure"
 
-/**
- * Object stereotype: Interfacer
- *
- * Communication with CPP side flows via this class. If you are a package developer, please use `RNInstanceManager` instead.
- */
+/*
+ @deprecated - Use NapiBridge or RNInstanceManager
+ * */
 export class RNInstance {
-  private turboModuleProvider: TurboModuleProvider | null = null
-
   constructor(private libRNOHApp: any) {}
 
-  setTurboModuleProvider(turboModuleProvider: TurboModuleProvider) {
-    this.turboModuleProvider = turboModuleProvider
-  }
-
-  getTurboModule<T extends TurboModule>(name: string): T {
-    return this.turboModuleProvider?.getModule<T>(name);
-  }
-
-  registerTurboModuleProvider() {
-    this.libRNOHApp?.registerTurboModuleProvider(this.turboModuleProvider);
+  registerTurboModuleProvider(turboModuleProvider: TurboModuleProvider) {
+    this.libRNOHApp?.registerTurboModuleProvider(turboModuleProvider);
   }
 
   initializeReactNative(screenDensity: number) {
@@ -60,3 +47,4 @@ export class RNInstance {
   }
 }
 
+export class NapiBridge extends RNInstance {}
