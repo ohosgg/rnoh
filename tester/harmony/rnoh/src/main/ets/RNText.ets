@@ -5,21 +5,33 @@ import { ViewProps, handleTouchEvent } from './RNView'
 import { RNInstance } from './RNInstance'
 import { RNOHContext } from './RNOHContext'
 
-export type TextProps = ViewProps & {
+export type AttributedFragment = {
   text?: string
-  textAlign?: string
   fontColor?: ColorSegments
   fontWeight?: number
   fontSize?: number
+  fontStyle?: string
 }
 
-function convertAlignmentStringToEnum(alignment: string) {
-  if(alignment==='center')
+export type TextProps = ViewProps & {
+  textAlign?: string
+  fragments: AttributedFragment[]
+}
+
+function stringToAlignment(alignment: string) {
+  if (alignment === 'center')
     return TextAlign.Center
-  else if(alignment==='right')
+  else if (alignment === 'right')
     return TextAlign.End
   else
     return TextAlign.Start
+}
+
+function stringToFontStyle(style: string | undefined): FontStyle {
+  if (style === 'italic') {
+    return FontStyle.Italic;
+  }
+  return FontStyle.Normal;
 }
 
 export type TextDescriptor = Descriptor<"Paragraph", TextProps>
@@ -35,14 +47,19 @@ export struct RNText {
   }
 
   build() {
-    Text(this.descriptor.props.text)
-      .width(this.descriptor.props.width)
-      .height(this.descriptor.props.height)
-      .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
-      .textAlign(convertAlignmentStringToEnum(this.descriptor.props.textAlign))
-      .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
-      .fontWeight(this.descriptor.props.fontWeight)
-      .fontSize(this.descriptor.props.fontSize)
-      .onTouch((event) => this.onTouchEvent(event))
+    Text() {
+      ForEach(this.descriptor.props.fragments, fragment => {
+        Span(fragment.text)
+          .fontColor(convertColorSegmentsToString(fragment.fontColor))
+          .fontWeight(fragment.fontWeight)
+          .fontSize(fragment.fontSize)
+          .fontStyle(stringToFontStyle(fragment.fontStyle))
+      })
+    }
+    .width(this.descriptor.props.width)
+    .height(this.descriptor.props.height)
+    .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
+    .textAlign(stringToAlignment(this.descriptor.props.textAlign))
+    .onTouch((event) => this.onTouchEvent(event))
   }
 }

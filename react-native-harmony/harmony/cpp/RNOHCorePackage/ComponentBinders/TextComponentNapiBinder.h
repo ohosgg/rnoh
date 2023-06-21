@@ -15,23 +15,37 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
             auto data = state->getData();
             ArkJS arkJs(env);
             auto propsObjBuilder = arkJs.getObjectBuilder(napiViewProps);
-            propsObjBuilder.addProperty("text", data.attributedString.getString());
-            for (auto fragment : data.attributedString.getFragments()) {
+            auto fragmentsPayload = std::vector<napi_value>();
+            auto fragments = data.attributedString.getFragments();
+            
+            if (auto props = std::dynamic_pointer_cast<const react::BaseTextProps>(shadowView.props)) {
+                auto textAlign = props->textAttributes.alignment;   
+                if (textAlign.has_value()) {
+                    propsObjBuilder.addProperty("textAlign", textAlignmentToString(textAlign.value()));
+                }
+            }
+            
+            for (auto fragment : fragments) {
+                auto fragmentObjBuilder = arkJs.createObjectBuilder();
                 auto textAttributes = fragment.textAttributes;
-                propsObjBuilder
+                fragmentObjBuilder
+                    .addProperty("text", fragment.string)
                     .addProperty("fontColor", textAttributes.foregroundColor)
                     .addProperty("fontSize", textAttributes.fontSize);
                 auto fontWeight = textAttributes.fontWeight;
                 if (fontWeight.has_value()) {
-                    propsObjBuilder.addProperty("fontWeight", static_cast<int>(fontWeight.value()));
+                    fragmentObjBuilder.addProperty("fontWeight", static_cast<int>(fontWeight.value()));
                 }
                 auto textAlign = textAttributes.alignment;
-                if (textAlign.has_value()) {
-                    propsObjBuilder.addProperty("textAlign", textAlignmentToString(textAlign.value()));
+                if (textAttributes.fontStyle == facebook::react::FontStyle::Italic) {
+                    fragmentObjBuilder.addProperty("fontStyle", "italic");
+                } else {
+                    fragmentObjBuilder.addProperty("fontStyle", "normal");
                 }
-                // NOTE: This is a temporary solution. Nesting <Text> component's won't work as expected.
-                break;
+                fragmentsPayload.push_back(fragmentObjBuilder.build());
             }
+            auto fragmentsArray = arkJs.createArray(fragmentsPayload);
+            propsObjBuilder.addProperty("fragments", fragmentsArray);
             return propsObjBuilder.build();
         }
         return napiViewProps;

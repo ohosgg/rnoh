@@ -18,6 +18,16 @@ export function TextTest() {
           <Text style={{...styles.text, textAlign: 'right'}}>Right</Text>
         </View>
       </TestCase>
+      <TestCase itShould="format nested Text components">
+        <View style={styles.container}>
+          <Text style={[styles.text, {textAlign: 'right'}]}>
+            <Text style={{fontWeight: 'bold'}}>Bold</Text>
+            <Text style={{fontStyle: 'italic'}}>
+              Italic
+            </Text>
+          </Text>
+        </View>
+      </TestCase>
     </TestSuite>
   );
 }
