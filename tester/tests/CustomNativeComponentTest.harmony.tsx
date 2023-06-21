@@ -5,6 +5,7 @@ import {register} from 'react-native/Libraries/Renderer/shims/ReactNativeViewCon
 import ReactNativeViewAttributes from 'react-native/Libraries/Components/View/ReactNativeViewAttributes';
 import {useEffect, useState} from 'react';
 import React from 'react';
+import {Button} from '../components';
 
 const SampleView = register('SampleView', () => {
   return {
@@ -55,7 +56,7 @@ export function CustomNativeComponentTest() {
           <NativeComponent backgroundColor="green" size={32} />
         </NativeComponent>
       </TestCase>
-      <TestCase itShould="render green rectangle blinking every second">
+      <TestCase itShould="show/hide green rectangle">
         <NativeComponent backgroundColor="red" size={64}>
           <Blinker>
             <NativeComponent backgroundColor="green" size={32} />
@@ -69,14 +70,15 @@ export function CustomNativeComponentTest() {
 function Blinker({children}: any) {
   const [isVisible, setIsVisible] = useState(true);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setIsVisible(prev => !prev);
-    }, 1000);
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
-
-  return <React.Fragment>{isVisible && children}</React.Fragment>;
+  return (
+    <React.Fragment>
+      <Button
+        label="Run"
+        onPress={() => {
+          setIsVisible(prev => !prev);
+        }}
+      />
+      {isVisible && children}
+    </React.Fragment>
+  );
 }

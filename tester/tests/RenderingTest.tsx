@@ -1,13 +1,14 @@
 import {TestSuite, TestCase} from '@rnoh/testerino';
 import React from 'react';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {View} from 'react-native';
+import {Button} from '../components';
 
 export function RenderingTest() {
   return (
     <TestSuite name="Rendering">
       <TestCase itShould="change the rectangle's color every second">
-        <Interval
+        <Timeout
           ms={1000}
           renderItem={refreshKey => (
             <Rectangle
@@ -17,7 +18,7 @@ export function RenderingTest() {
         />
       </TestCase>
       <TestCase itShould="show and hide rectangle every second">
-        <Interval
+        <Timeout
           ms={1000}
           renderItem={refreshKey => (
             <View style={{height: 64}}>
@@ -44,7 +45,7 @@ function Rectangle({backgroundColor}: {backgroundColor: string}) {
   );
 }
 
-function Interval({
+function Timeout({
   renderItem,
   ms,
 }: {
@@ -53,9 +54,13 @@ function Interval({
 }) {
   const [refreshKey, setRefreshKey] = useState(0);
 
-  useEffect(() => {
-    setInterval(() => setRefreshKey(prev => (prev += 1)), ms);
-  }, [ms]);
-
-  return <React.Fragment>{renderItem(refreshKey)}</React.Fragment>;
+  return (
+    <React.Fragment>
+      <Button
+        label="Run"
+        onPress={() => setTimeout(() => setRefreshKey(prev => (prev += 1)), ms)}
+      />
+      {renderItem(refreshKey)}
+    </React.Fragment>
+  );
 }
