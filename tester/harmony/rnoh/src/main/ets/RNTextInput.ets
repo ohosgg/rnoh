@@ -1,5 +1,5 @@
 import { ColorSegments, Descriptor } from './descriptor'
-import { convertColorSegmentsToString, convertColorValueToRGBA } from './cpp-bridge-utils'
+import { convertColorSegmentsToString } from './cpp-bridge-utils'
 import { ViewProps } from './RNView'
 import { RNOHContext } from './RNOHContext'
 import { RNOHEventEmitRequestHandlerName } from "./RNOHCorePackage"
@@ -15,11 +15,25 @@ export type TextInputDescriptor = Descriptor<"TextInput", TextInputProps>
 @Component
 export struct RNTextInput {
   ctx: RNOHContext
-  @State tag: number = -1
-  @Prop descriptor: TextInputDescriptor
+  tag: number
+  @State descriptor: TextInputDescriptor = {} as TextInputDescriptor
+  private unregisterDescriptorChangesListener?: () => void = undefined
 
   handleChangeEvent(value: string) {
     this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, RNOHEventEmitRequestHandlerName.TextInputChange, value)
+  }
+
+  aboutToAppear() {
+    this.descriptor = this.ctx.descriptorRegistry.getDescriptor<TextInputDescriptor>(this.tag)
+    this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
+      (newDescriptor) => {
+        this.descriptor = (newDescriptor as TextInputDescriptor)
+      }
+    )
+  }
+
+  aboutToDisappear() {
+    this.unregisterDescriptorChangesListener?.()
   }
 
   build() {

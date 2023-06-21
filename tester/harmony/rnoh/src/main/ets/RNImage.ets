@@ -12,8 +12,23 @@ export type ImageDescriptor = Descriptor<"Image", ImageProps>
 @Component
 export struct RNImage {
   ctx: RNOHContext
-  @State tag: number = -1
-  @Prop descriptor: ImageDescriptor
+  tag: number
+  @State descriptor: ImageDescriptor = {} as ImageDescriptor
+
+  private unregisterDescriptorChangesListener?: () => void = undefined
+
+  aboutToAppear() {
+    this.descriptor = this.ctx.descriptorRegistry.getDescriptor<ImageDescriptor>(this.tag)
+    this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
+      (newDescriptor) => {
+        this.descriptor = (newDescriptor as ImageDescriptor)
+      }
+    )
+  }
+
+  aboutToDisappear() {
+    this.unregisterDescriptorChangesListener?.()
+  }
 
   onTouchEvent(e: TouchEvent) {
     handleTouchEvent(this.ctx, e, this.tag)

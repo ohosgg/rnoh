@@ -57,7 +57,21 @@ export struct RNView {
   ctx: RNOHContext
   @State tag: number = -1
   @BuilderParam renderDescriptors: () => void
-  @Prop descriptor: ViewDescriptor
+  @State descriptor: ViewDescriptor = {} as ViewDescriptor
+  private unregisterDescriptorChangesListener?: () => void = undefined
+
+  aboutToAppear() {
+    this.descriptor = this.ctx.descriptorRegistry.getDescriptor<ViewDescriptor>(this.tag)
+    this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
+      (newDescriptor) => {
+        this.descriptor = (newDescriptor as ViewDescriptor)
+      }
+    )
+  }
+
+  aboutToDisappear() {
+    this.unregisterDescriptorChangesListener?.()
+  }
 
   onTouchEvent(event: TouchEvent) {
     handleTouchEvent(this.ctx, event, this.descriptor.tag)

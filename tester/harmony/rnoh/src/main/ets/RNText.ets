@@ -39,8 +39,23 @@ export type TextDescriptor = Descriptor<"Paragraph", TextProps>
 @Component
 export struct RNText {
   ctx: RNOHContext
-  @State tag: number = -1
-  @Prop descriptor: TextDescriptor
+  tag: number
+  @State descriptor: TextDescriptor = {} as TextDescriptor
+
+  private unregisterDescriptorChangesListener?: () => void = undefined
+
+  aboutToAppear() {
+    this.descriptor = this.ctx.descriptorRegistry.getDescriptor<TextDescriptor>(this.tag)
+    this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
+      (newDescriptor) => {
+        this.descriptor = (newDescriptor as TextDescriptor)
+      }
+    )
+  }
+
+  aboutToDisappear() {
+    this.unregisterDescriptorChangesListener?.()
+  }
 
   onTouchEvent(e: TouchEvent) {
     handleTouchEvent(this.ctx, e, this.descriptor.tag)

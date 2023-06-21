@@ -27,10 +27,7 @@ export class DescriptorRegistry {
       const updatedDescriptor = this.getDescriptor(tag);
       if (!updatedDescriptor) return;
       this.descriptorListenersSetByTag.get(tag)?.forEach(cb => {
-        // NOTE: we use the spread operator here, to create a shallow
-        // copy of the descriptor object. This will cause the subscribed
-        // component to update
-        cb({...updatedDescriptor});
+        cb(updatedDescriptor)
       });
     });
     this.callSubtreeListeners(uniqueUpdated);

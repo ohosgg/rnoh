@@ -1,10 +1,9 @@
-import { RNView, ViewDescriptor } from "./RNView"
+import { RNView, ViewDescriptor, handleTouchEvent } from "./RNView"
 import { RNImage, ImageDescriptor } from "./RNImage"
 import { RNTextInput, TextInputDescriptor } from "./RNTextInput"
 import { RNText, TextDescriptor } from "./RNText"
 import { RNScrollView, ScrollViewDescriptor } from "./RNScrollView"
 import { Descriptor } from "./descriptor"
-import { DescriptorRegistry } from "./DescriptorRegistry"
 import { RNOHContext } from "./RNOHContext"
 
 // placeholder value used as the initializer for
@@ -37,7 +36,7 @@ export type ComponentBuilderContext = {
 @Component
 export struct RNComponentFactory {
   ctx: RNOHContext
-  tag: number = -1
+  tag: number
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   @State descriptor: Descriptor = nullDescriptor
   private cleanupCallback?: () => void = undefined
@@ -49,7 +48,7 @@ export struct RNComponentFactory {
   aboutToAppear() {
     this.descriptor = this.ctx.descriptorRegistry.getDescriptor(this.tag)
     this.cleanupCallback = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
-    this.tag,
+      this.tag,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
     )
   }

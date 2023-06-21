@@ -1,6 +1,6 @@
 import { Descriptor } from './descriptor'
 import { ViewProps } from './RNView'
-import { convertColorSegmentsToString, convertColorValueToRGBA } from './cpp-bridge-utils'
+import { convertColorSegmentsToString } from './cpp-bridge-utils'
 import { RNOHContext } from "./RNOHContext"
 import { RNOHEventEmitRequestHandlerName } from "./RNOHCorePackage"
 
@@ -23,13 +23,21 @@ export type ScrollViewDescriptor = Descriptor<"ScrollView", ScrollViewProps, Scr
 @Component
 export struct RNScrollView {
   ctx: RNOHContext
-  @State tag: number = -1
+  tag: number
   @BuilderParam renderDescriptors: () => void
-  @Prop descriptor: ScrollViewDescriptor
+  @State descriptor: ScrollViewDescriptor = {} as ScrollViewDescriptor
   private scroller = new Scroller()
   private cleanupCommandCallback?: () => void = undefined
 
+  private unregisterDescriptorChangesListener?: () => void = undefined
+
   aboutToAppear() {
+    this.descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag)
+    this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
+      (newDescriptor) => {
+        this.descriptor = (newDescriptor as ScrollViewDescriptor)
+      }
+    )
     this.cleanupCommandCallback = this.ctx.commandDispatcher.registerCommandCallback(
       this.tag,
       (command, args) => {
@@ -41,6 +49,7 @@ export struct RNScrollView {
 
   aboutToDisappear() {
     this.cleanupCommandCallback?.();
+    this.unregisterDescriptorChangesListener?.()
   }
 
   scrollTo(xOffset, yOffset, animated) {
