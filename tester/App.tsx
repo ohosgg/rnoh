@@ -1,6 +1,6 @@
 import React from 'react';
 import {Tester} from '@rnoh/testerino';
-import {View, ScrollView, StyleSheet, Text} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 import * as tests from './tests';
 import {
   AnimationsExample,
@@ -8,7 +8,7 @@ import {
   ChessboardExample,
   CursorExample,
 } from './examples';
-import {NavigationContainer, Page} from './components';
+import {Button, NavigationContainer, Page} from './components';
 import {Benchmarker, DeepTree, SierpinskiTriangle} from './benchmarks';
 
 function App() {
@@ -24,13 +24,12 @@ function App() {
               return <TestSuite key={testSuiteName} />;
             })}
           </Tester>
-          <View
-            style={styles.button}
-            onTouchEnd={() =>
-              scrollRef.current?.scrollTo({y: 0, animated: false})
-            }>
-            <Text style={styles.buttonText}>Scroll To Top</Text>
-          </View>
+          <Button
+            label="Scroll to Top"
+            onPress={() => {
+              scrollRef.current?.scrollTo({y: 0, animated: false});
+            }}
+          />
         </ScrollView>
       </Page>
       <Page name="BENCHMARK: DEEP TREE">
@@ -102,19 +101,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: '#333',
-  },
-  button: {
-    width: 160,
-    height: 36,
-    backgroundColor: 'hsl(190, 50%, 70%)',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  buttonText: {
-    width: '100%',
-    height: '100%',
-    fontWeight: 'bold',
   },
 });
 
