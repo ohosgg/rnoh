@@ -1,6 +1,5 @@
 import display from '@ohos.display';
 import window from '@ohos.window';
-import RNOHLogger from "../../RNOHLogger"
 import { TurboModule, TurboModuleContext } from "../../TurboModule";
 
 export type DisplayMetrics = {
@@ -47,7 +46,7 @@ export class DeviceInfoTurboModule extends TurboModule {
 
   getConstants() {
     if (!this.displayMetrics) {
-      RNOHLogger.error("JS Display Metrics not set");
+      this.ctx.logger.error("JS Display Metrics not set");
     }
     return {
       Dimensions: {
@@ -84,7 +83,7 @@ export class DeviceInfoTurboModule extends TurboModule {
       }
       this.ctx.rnInstanceManager.emitDeviceEvent("didUpdateDimensions", this.displayMetrics);
     } catch (err) {
-      RNOHLogger.error('Failed to update display size ' + JSON.stringify(err));
+      this.ctx.logger.error('Failed to update display size ' + JSON.stringify(err));
     }
   }
 }

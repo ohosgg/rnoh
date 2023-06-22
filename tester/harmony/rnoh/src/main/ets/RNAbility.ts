@@ -3,7 +3,7 @@ import { RNPackage, RNPackageContext } from "./RNPackage";
 import { RNOHContext } from "./RNOHContext"
 import { NapiBridge } from "./RNInstance"
 import { Tag } from "./descriptor"
-import RNOHLogger from "./RNOHLogger"
+import { StandardRNOHLogger, RNOHLogger } from "./RNOHLogger"
 import JavaScriptLoader from "./JavaScriptLoader"
 import window from '@ohos.window';
 import hilog from '@ohos.hilog';
@@ -62,15 +62,20 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
   protected napiBridge: NapiBridge = null
   protected lifecycleState = LifecycleState.BEFORE_CREATE
   protected turboModuleProvider: TurboModuleProvider
+  protected logger: RNOHLogger
 
   onCreate(want, param) {
+    this.logger = this.createLogger()
     this.storage = new LocalStorage()
     this.napiBridge = new NapiBridge(libRNOHApp)
     this.turboModuleProvider = this.processPackages(this.napiBridge).turboModuleProvider
     this.napiBridge.registerTurboModuleProvider(this.turboModuleProvider)
-    this.storage.setOrCreate('RNOHContext', new RNOHContext(this.napiBridge, this.napiBridge, this, this))
+    this.storage.setOrCreate('RNOHContext', new RNOHContext(this.napiBridge, this.napiBridge, this, this, this.logger))
   }
 
+  public createLogger(): RNOHLogger {
+    return new StandardRNOHLogger();
+  }
 
   private processPackages(napiBridge: NapiBridge) {
     const packages = this.createPackages({});
@@ -82,7 +87,8 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
           rnInstance: napiBridge,
           __napiBridge: napiBridge,
           uiAbilityContext: this.context,
-          rnInstanceManager: this
+          rnInstanceManager: this,
+          logger: this.logger
         });
       }))
     }
@@ -154,14 +160,14 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
   }
 
   onSurfaceAboutToAppear(ctx: SurfaceAboutToAppearContext) {
-    const javaScriptLoader = new JavaScriptLoader(this.context.resourceManager);
+    const javaScriptLoader = new JavaScriptLoader(this.context.resourceManager, this.logger);
     javaScriptLoader.loadBundle(this.getBundleURL())
       .catch((error) => {
         // NOTE: temporary fallback to local bundle file,
         // until we figure out how to pass bundle URL as launch param
         // to the Ark app
-        RNOHLogger.error(error);
-        RNOHLogger.info("Falling back to local bundle.");
+        this.logger.error(error);
+        this.logger.info("Falling back to local bundle.");
         return javaScriptLoader.loadBundle("bundle.harmony.js")
       }).then((bundle) => {
       this.loadScriptFromString(bundle)
@@ -170,7 +176,7 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
         ctx.appName,
         this.getInitialProps())
     }).catch((error) => {
-      RNOHLogger.error(error)
+      this.logger.error(error)
       // TODO: don't use empty string as a magic "failure" value
       this.loadScriptFromString("")
       this.napiBridge.run(ctx.width / ctx.screenDensity,

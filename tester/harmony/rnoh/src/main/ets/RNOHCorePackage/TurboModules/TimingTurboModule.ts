@@ -40,6 +40,6 @@ export class TimingTurboModule extends TurboModule {
     }
 
     setSendIdleEvents(enabled: boolean): void {
-        console.warn(`RNOH TimingTurboModule::setSendIdleEvents(${enabled}): not implemented`);
+        this.ctx.logger.warn(`TimingTurboModule::setSendIdleEvents(${enabled}): not implemented`);
     }
 }

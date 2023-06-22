@@ -2,11 +2,10 @@ import http from '@ohos.net.http';
 import util from '@ohos.util';
 import resmgr from "@ohos.resourceManager";
 
-import RNOHLogger from './RNOHLogger'
-import { RNAbility } from './RNAbility';
+import { RNOHLogger } from './RNOHLogger'
 
 export default class JavaScriptLoader {
-  constructor(private resourceManager: resmgr.ResourceManager) {
+  constructor(private resourceManager: resmgr.ResourceManager, private logger: RNOHLogger) {
   }
   
   public async loadBundle(uriString: string): Promise<string> {
@@ -23,7 +22,7 @@ export default class JavaScriptLoader {
       const bundle = util.TextDecoder.create("utf-8").decodeWithStream(bundleFileContent);
       return bundle;
     } catch (err) {
-      RNOHLogger.fatal("Failed to load local bundle: " + bundlePath);
+      this.logger.fatal("Failed to load local bundle: " + bundlePath);
       throw err;
     }
   }
@@ -31,7 +30,7 @@ export default class JavaScriptLoader {
   async loadFromNetwork(uriString: string): Promise<string> {
     const httpRequest = http.createHttp();
     try {
-      RNOHLogger.info('loading bundle ' + uriString)
+      this.logger.info('loading bundle ' + uriString)
       const data = await httpRequest.request(
         uriString,
         {
@@ -40,12 +39,12 @@ export default class JavaScriptLoader {
           },
         }
       );
-      RNOHLogger.info('code:' + data.responseCode);
-      RNOHLogger.info('header:' + JSON.stringify(data.header));
-      RNOHLogger.info('cookies:' + data.cookies);
+      this.logger.info('code:' + data.responseCode);
+      this.logger.info('header:' + JSON.stringify(data.header));
+      this.logger.info('cookies:' + data.cookies);
       return data.result as string;
     } catch (err) {
-      RNOHLogger.error('Bundle load error: ' + JSON.stringify(err));
+      this.logger.error('Bundle load error: ' + JSON.stringify(err));
       throw err;
     } finally {
       httpRequest.destroy();

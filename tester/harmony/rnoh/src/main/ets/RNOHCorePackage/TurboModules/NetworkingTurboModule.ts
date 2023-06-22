@@ -1,7 +1,6 @@
 import http from '@ohos.net.http'
 
 import { TurboModule } from "../../TurboModule";
-import RNOHLogger from '../../RNOHLogger'
 
 interface Query {
     method: string,
@@ -30,7 +29,7 @@ export class NetworkingTurboModule extends TurboModule {
     }
 
     sendRequest(query: Query, callback: (requestId: number) => void) {
-        RNOHLogger.info(`NetworkingTurboModule::sendRequest(${query})`);
+        this.ctx.logger.info(`NetworkingTurboModule::sendRequest(${query})`);
         const requestId = this.createId()
 
         const onFinish = (status: number, headers: Object,  response: string | Object | ArrayBuffer) => {
@@ -56,10 +55,10 @@ export class NetworkingTurboModule extends TurboModule {
             },
             (err, data) => {
                 if (!err) {
-                    RNOHLogger.info(`NetworkingTurboModule::sendRequest finished ${JSON.stringify(data)}`);
+                    this.ctx.logger.info(`NetworkingTurboModule::sendRequest finished ${JSON.stringify(data)}`);
                     onFinish(data.responseCode, {}, data.result);
                 } else {
-                    RNOHLogger.info(`NetworkingTurboModule::sendRequest errored ${JSON.stringify(err)}`);
+                    this.ctx.logger.info(`NetworkingTurboModule::sendRequest errored ${JSON.stringify(err)}`);
                     onError(data?.responseCode ?? 0, {}, err.toString());
                 }
                 httpRequest.destroy();
@@ -72,7 +71,7 @@ export class NetworkingTurboModule extends TurboModule {
     }
 
     abortRequest(requestId: number) {
-        RNOHLogger.info(`NetworkingTurboModule::abortRequest(${requestId})`);
+        this.ctx.logger.info(`NetworkingTurboModule::abortRequest(${requestId})`);
         const httpRequest = this.requestMap.get(requestId);
         if (httpRequest) {
             httpRequest.destroy()

@@ -2,6 +2,7 @@ import { DescriptorRegistry } from './DescriptorRegistry';
 import { CommandDispatcher } from './CommandDispatcher';
 import { Descriptor } from './descriptor';
 import { RNInstance, NapiBridge } from './RNInstance';
+import { RNOHLogger } from "./RNOHLogger";
 import type { SurfaceLifecycle, RNInstanceManager } from "./RNAbility"
 
 export type RootDescriptor = Descriptor<"RootView", any>
@@ -34,7 +35,8 @@ export class RNOHContext {
   constructor(public rnInstance: RNInstance,
               public __napiBridge: NapiBridge,
               public surfaceLifecycle: SurfaceLifecycle,
-              public rnInstanceManager: RNInstanceManager) {
+              public rnInstanceManager: RNInstanceManager,
+              public logger: RNOHLogger) {
     this.descriptorRegistry = new DescriptorRegistry({
       '1': { ...rootDescriptor },
     });

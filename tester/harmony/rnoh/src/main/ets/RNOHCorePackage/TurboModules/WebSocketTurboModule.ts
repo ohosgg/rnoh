@@ -1,7 +1,6 @@
 import webSocket from '@ohos.net.webSocket'
 import util from '@ohos.util'
 import { TurboModule } from "../../TurboModule";
-import RNOHLogger from '../../RNOHLogger';
 
 const WEB_SOCKET_SUPPORTED_EVENT_NAMES = ["websocketOpen", "websocketClosed", "websocketFailed", "websocketMessage"] as const;
 
@@ -78,7 +77,7 @@ export class WebSocketTurboModule extends TurboModule {
             throw new Error(`Trying to send a ping on websocket "${socketID}" but there is no socket.`);
         }
 
-        RNOHLogger.warn("WebSocketTurboModule::ping not implemented");
+        this.ctx.logger.warn("WebSocketTurboModule::ping not implemented");
     }
 
     close(code: number, reason: string, socketID: number) {
@@ -93,7 +92,7 @@ export class WebSocketTurboModule extends TurboModule {
 
     private handleError(socketID: number, err) {
         if (err) {
-            RNOHLogger.info(`WebSocketTurboModule::handleError ${JSON.stringify(err)}`);
+            this.ctx.logger.info(`WebSocketTurboModule::handleError ${JSON.stringify(err)}`);
             this.ctx.rnInstanceManager.emitDeviceEvent("websocketFailed", { id: socketID, message: JSON.stringify(err) });
             this.socketsById.delete(socketID);
         }

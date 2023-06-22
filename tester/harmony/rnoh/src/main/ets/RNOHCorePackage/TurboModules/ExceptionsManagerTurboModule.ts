@@ -1,5 +1,4 @@
 import { TurboModule } from "../../TurboModule";
-import RNOHLogger from "../../RNOHLogger";
 
 export type StackFrame = {
   column?: number,
@@ -22,25 +21,25 @@ export type ExceptionData = {
 
 export class ExceptionsManagerTurboModule extends TurboModule {
   reportFatalException(message: string, stack: StackFrame[], exceptionId: number): void {
-    RNOHLogger.error(`ExceptionsManager::reportFatalException ${message}`);
+    this.ctx.logger.error(`ExceptionsManager::reportFatalException ${message}`);
     stack.forEach((frame) => {
-      RNOHLogger.error(JSON.stringify(frame));
+      this.ctx.logger.error(JSON.stringify(frame));
     });
 
     throw new Error(message);
   }
 
   reportSoftException(message: string, stack: StackFrame[], exceptionId: number): void {
-    RNOHLogger.error(`ExceptionsManager::reportSoftException ${message}`);
+    this.ctx.logger.error(`ExceptionsManager::reportSoftException ${message}`);
     stack.forEach((frame) => {
-      RNOHLogger.error(JSON.stringify(frame));
+      this.ctx.logger.error(JSON.stringify(frame));
     });
   }
 
   reportException(data: ExceptionData): void {
-    RNOHLogger.error(`ExceptionsManager::reportException ${data.message}`);
+    this.ctx.logger.error(`ExceptionsManager::reportException ${data.message}`);
     data.stack.forEach((frame) => {
-      RNOHLogger.error(JSON.stringify(frame));
+      this.ctx.logger.error(JSON.stringify(frame));
     });
 
     if (data.isFatal) {
@@ -49,9 +48,9 @@ export class ExceptionsManagerTurboModule extends TurboModule {
   }
 
   updateExceptionMessage(message: string, stack: StackFrame[], exceptionId: number): void {
-    RNOHLogger.error(`ExceptionsManager::updateExceptionMessage ${message}`);
+    this.ctx.logger.error(`ExceptionsManager::updateExceptionMessage ${message}`);
     stack.forEach((frame) => {
-      RNOHLogger.error(JSON.stringify(frame));
+      this.ctx.logger.error(JSON.stringify(frame));
     });
   }
 
