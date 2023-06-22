@@ -1,8 +1,8 @@
-import { ColorSegments, Descriptor } from './descriptor'
-import { convertColorSegmentsToString } from './cpp-bridge-utils'
+import { ColorSegments, Descriptor } from '../../RNOH/DescriptorBase'
+import { convertColorSegmentsToString } from '../../RNOH'
 import { ViewProps } from './RNView'
-import { RNOHContext } from './RNOHContext'
-import { RNOHEventEmitRequestHandlerName } from "./RNOHCorePackage"
+import { RNOHContext } from '../../RNOH/RNOHContext'
+import { RNOHEventEmitRequestHandlerName } from "./.."
 
 export type TextInputProps = ViewProps & {
   fontColor?: ColorSegments

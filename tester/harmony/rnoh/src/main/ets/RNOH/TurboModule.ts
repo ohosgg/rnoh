@@ -1,7 +1,7 @@
-import type { RNInstance, NapiBridge } from './RNInstance'
-import type { RNInstanceManager } from "./RNAbility"
 import common from '@ohos.app.ability.common'
-import type {RNOHLogger} from "./RNOHLogger"
+import type { RNInstance, NapiBridge } from './NapiBridge'
+import type { RNInstanceManager } from "./RNAbility"
+import type { RNOHLogger } from "./RNOHLogger"
 
 export interface TurboModuleContext {
   reactNativeVersion: string;

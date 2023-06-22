@@ -1,7 +1,7 @@
 import Device from '@system.device'
 import { ComponentBuilderContext } from './RNComponentFactory'
-import { RNOHContext } from "./RNOHContext"
-import type { DeviceInfoTurboModule } from "./RNOHCorePackage/TurboModules/DeviceInfoTurboModule"
+import { RNOHContext } from "./RNOH/RNOHContext"
+import type { DeviceInfoTurboModule } from "./RNOHCorePackage/turboModules/DeviceInfoTurboModule"
 import { RNSurface } from "./RNSurface"
 
 

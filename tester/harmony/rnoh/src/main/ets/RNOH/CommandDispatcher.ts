@@ -1,4 +1,4 @@
-import { Tag } from './descriptor'
+import { Tag } from './DescriptorBase'
 
 export type CommandCallback = (command: string, args: unknown) => void
 

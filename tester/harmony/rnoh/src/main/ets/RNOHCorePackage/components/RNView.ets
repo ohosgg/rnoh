@@ -1,7 +1,7 @@
-import { Descriptor, LayoutProps, Tag, ColorSegments } from './descriptor'
-import { convertColorSegmentsToString } from './cpp-bridge-utils'
-import { RNOHContext } from './RNOHContext'
-import { RNOHEventEmitRequestHandlerName } from "./RNOHCorePackage"
+import { Descriptor, LayoutProps, Tag, ColorSegments } from '../../RNOH/DescriptorBase'
+import { convertColorSegmentsToString } from '../../RNOH'
+import { RNOHContext } from '../../RNOH/RNOHContext'
+import { RNOHEventEmitRequestHandlerName } from "./../RNOHEventEmitRequestHandler"
 import { ScrollViewState } from './RNScrollView'
 
 export type ViewProps = LayoutProps & {

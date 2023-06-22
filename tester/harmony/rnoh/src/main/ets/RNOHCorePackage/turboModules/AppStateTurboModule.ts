@@ -1,5 +1,5 @@
-import { TurboModule, TurboModuleContext } from "../../TurboModule";
-import { LifecycleState } from '../../RNAbility';
+import { TurboModule, TurboModuleContext } from "../../RNOH/TurboModule";
+import { LifecycleState } from '../../RNOH/RNAbility';
 
 export class AppStateTurboModule extends TurboModule {
   constructor(protected ctx: TurboModuleContext) {

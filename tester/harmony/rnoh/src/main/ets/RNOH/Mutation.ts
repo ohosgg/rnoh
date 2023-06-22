@@ -1,4 +1,4 @@
-import { Tag, Descriptor } from './descriptor'
+import { Tag, Descriptor } from './DescriptorBase'
 
 export enum MutationType {
   CREATE = 1,

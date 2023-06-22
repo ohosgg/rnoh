@@ -1,7 +1,7 @@
-import { Descriptor } from './descriptor'
-import { convertColorSegmentsToString } from './cpp-bridge-utils'
+import { Descriptor } from '../../RNOH/DescriptorBase'
+import { convertColorSegmentsToString } from '../../RNOH'
 import { ViewProps, handleTouchEvent } from './RNView'
-import { RNOHContext } from './RNOHContext'
+import { RNOHContext } from '../../RNOH/RNOHContext'
 
 export type ImageProps = ViewProps & {
   uri: string

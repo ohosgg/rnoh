@@ -1,7 +1,7 @@
-import { TurboModule, TurboModuleContext } from "../../TurboModule";
+import { TurboModule, TurboModuleContext } from "../../RNOH/TurboModule";
 import window from '@ohos.window';
 import display from '@ohos.display';
-import { convertColorValueToHex } from '../../cpp-bridge-utils';
+import { convertColorValueToHex } from '../../RNOH';
 
 type StatusBarConstants = {
   DEFAULT_BACKGROUND_COLOR: string,

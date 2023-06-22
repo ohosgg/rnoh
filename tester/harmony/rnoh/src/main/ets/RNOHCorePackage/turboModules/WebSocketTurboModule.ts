@@ -1,6 +1,6 @@
 import webSocket from '@ohos.net.webSocket'
 import util from '@ohos.util'
-import { TurboModule } from "../../TurboModule";
+import { TurboModule } from "../../RNOH/TurboModule";
 
 const WEB_SOCKET_SUPPORTED_EVENT_NAMES = ["websocketOpen", "websocketClosed", "websocketFailed", "websocketMessage"] as const;
 

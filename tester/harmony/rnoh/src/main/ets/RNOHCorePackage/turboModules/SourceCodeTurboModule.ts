@@ -1,4 +1,4 @@
-import { TurboModule } from "../../TurboModule";
+import { TurboModule } from "../../RNOH/TurboModule";
 
 export class SourceCodeTurboModule extends TurboModule {
   getConstants(): { scriptURL: string | null; } {

@@ -1,5 +1,5 @@
-import {RNPackage, TurboModulesFactory} from '../RNPackage';
-import type {TurboModule, TurboModuleContext} from '../TurboModule';
+import {RNPackage, TurboModulesFactory} from '../RNOH/RNPackage';
+import type {TurboModule, TurboModuleContext} from '../RNOH/TurboModule';
 import {
   AppStateTurboModule,
   DeviceInfoTurboModule,
@@ -10,7 +10,7 @@ import {
   StatusBarTurboModule,
   TimingTurboModule,
   WebSocketTurboModule,
-} from './TurboModules';
+} from './turboModules';
 
 export class RNOHCorePackage extends RNPackage {
   createTurboModulesFactory(ctx: TurboModuleContext): TurboModulesFactory {
@@ -41,10 +41,4 @@ class CoreTurboModulesFactory extends TurboModulesFactory {
   hasTurboModule(name: string): boolean {
     return name in TURBO_MODULE_CLASS_BY_NAME;
   }
-}
-
-export enum RNOHEventEmitRequestHandlerName {
-  Scroll = 'Scroll',
-  Touch = 'Touch',
-  TextInputChange = 'TextInputChange',
 }

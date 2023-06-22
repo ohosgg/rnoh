@@ -1,15 +1,15 @@
 import UIAbility from '@ohos.app.ability.UIAbility';
 import { RNPackage, RNPackageContext } from "./RNPackage";
 import { RNOHContext } from "./RNOHContext"
-import { NapiBridge } from "./RNInstance"
-import { Tag } from "./descriptor"
+import { NapiBridge } from "./NapiBridge"
+import { Tag } from "./DescriptorBase"
 import { StandardRNOHLogger, RNOHLogger } from "./RNOHLogger"
 import JavaScriptLoader from "./JavaScriptLoader"
 import window from '@ohos.window';
 import hilog from '@ohos.hilog';
 import { TurboModule } from "./TurboModule"
 import { TurboModuleProvider } from "./TurboModuleProvider"
-import { RNOHCorePackage } from "./RNOHCorePackage";
+import { RNOHCorePackage } from "../RNOHCorePackage";
 import libRNOHApp from 'librnoh_app.so'
 
 export type SurfaceAboutToAppearContext = {

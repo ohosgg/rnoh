@@ -1,6 +1,6 @@
 import http from '@ohos.net.http'
 
-import { TurboModule } from "../../TurboModule";
+import { TurboModule } from "../../RNOH/TurboModule";
 
 interface Query {
     method: string,

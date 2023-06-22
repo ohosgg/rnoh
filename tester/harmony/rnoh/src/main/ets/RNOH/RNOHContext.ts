@@ -1,7 +1,7 @@
 import { DescriptorRegistry } from './DescriptorRegistry';
 import { CommandDispatcher } from './CommandDispatcher';
-import { Descriptor } from './descriptor';
-import { RNInstance, NapiBridge } from './RNInstance';
+import { Descriptor } from './DescriptorBase';
+import { RNInstance, NapiBridge } from './NapiBridge';
 import { RNOHLogger } from "./RNOHLogger";
 import type { SurfaceLifecycle, RNInstanceManager } from "./RNAbility"
 

@@ -1,5 +1,5 @@
 import deviceInfo from "@ohos.deviceInfo";
-import { TurboModule } from "../../TurboModule";
+import { TurboModule } from "../../RNOH/TurboModule";
 
 export class PlatformConstantsTurboModule extends TurboModule {
   getConstants() {

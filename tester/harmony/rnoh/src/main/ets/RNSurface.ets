@@ -1,8 +1,8 @@
 import { RNComponentFactory, ComponentBuilderContext } from './RNComponentFactory'
-import { RNOHContext } from "./RNOHContext"
-import { Descriptor } from './descriptor'
-import { ViewProps } from './RNView'
-import { convertColorSegmentsToString } from './cpp-bridge-utils'
+import { RNOHContext } from "./RNOH"
+import { Descriptor } from './RNOH'
+import { ViewProps } from './RNOHCorePackage/Components/RNView'
+import { convertColorSegmentsToString } from './RNOH'
 
 
 export type RootDescriptor = Descriptor<"RootView", ViewProps>

@@ -1,5 +1,5 @@
-import { Tag, Descriptor } from './descriptor';
-import { MutationType, Mutation } from './mutations';
+import { Tag, Descriptor } from './DescriptorBase';
+import { MutationType, Mutation } from './Mutation';
 
 type SubtreeListener = () => void;
 export class DescriptorRegistry {

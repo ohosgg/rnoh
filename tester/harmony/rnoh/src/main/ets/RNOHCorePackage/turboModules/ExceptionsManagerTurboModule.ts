@@ -1,4 +1,4 @@
-import { TurboModule } from "../../TurboModule";
+import { TurboModule } from "../../RNOH/TurboModule";
 
 export type StackFrame = {
   column?: number,

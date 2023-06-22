@@ -1,8 +1,8 @@
-import { Descriptor } from './descriptor'
+import { Descriptor } from '../../RNOH/DescriptorBase'
 import { ViewProps } from './RNView'
-import { convertColorSegmentsToString } from './cpp-bridge-utils'
-import { RNOHContext } from "./RNOHContext"
-import { RNOHEventEmitRequestHandlerName } from "./RNOHCorePackage"
+import { convertColorSegmentsToString } from '../../RNOH'
+import { RNOHContext } from "../../RNOH/RNOHContext"
+import { RNOHEventEmitRequestHandlerName } from "./.."
 
 export type ScrollViewProps = ViewProps & {
   scrollEnabled?: boolean

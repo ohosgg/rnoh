@@ -1,6 +1,6 @@
 import { TurboModuleProvider } from "./TurboModuleProvider";
-import { Mutation } from "./mutations";
-import { Tag } from "./descriptor";
+import { Mutation } from "./Mutation";
+import { Tag } from "./DescriptorBase";
 import TextMeasurer from "@ohos.measure"
 
 /*

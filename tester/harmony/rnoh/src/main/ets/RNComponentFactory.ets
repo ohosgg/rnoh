@@ -1,10 +1,10 @@
-import { RNView, ViewDescriptor, handleTouchEvent } from "./RNView"
-import { RNImage, ImageDescriptor } from "./RNImage"
-import { RNTextInput, TextInputDescriptor } from "./RNTextInput"
-import { RNText, TextDescriptor } from "./RNText"
-import { RNScrollView, ScrollViewDescriptor } from "./RNScrollView"
-import { Descriptor } from "./descriptor"
-import { RNOHContext } from "./RNOHContext"
+import { RNView, ViewDescriptor, handleTouchEvent } from "./RNOHCorePackage/Components/RNView"
+import { RNImage, ImageDescriptor } from "./RNOHCorePackage/Components/RNImage"
+import { RNTextInput, TextInputDescriptor } from "./RNOHCorePackage/Components/RNTextInput"
+import { RNText, TextDescriptor } from "./RNOHCorePackage/Components/RNText"
+import { RNScrollView, ScrollViewDescriptor } from "./RNOHCorePackage/Components/RNScrollView"
+import { Descriptor } from "./RNOH/DescriptorBase"
+import { RNOHContext } from "./RNOH/RNOHContext"
 
 // placeholder value used as the initializer for
 // the `descriptor` @State field in `RNComponentFactory`

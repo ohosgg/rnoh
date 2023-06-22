@@ -1,4 +1,4 @@
-import { TurboModule } from "../../TurboModule";
+import { TurboModule } from "../../RNOH/TurboModule";
 
 export class TimingTurboModule extends TurboModule {
     private nativeTimerMap: Map<number, { nativeTimerId: number, repeats: boolean }> = new Map();

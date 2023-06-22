@@ -1,4 +1,4 @@
-import { ColorSegments, ColorValue } from './descriptor'
+import { ColorSegments, ColorValue } from './DescriptorBase'
 
 export function convertColorSegmentsToString(colorSegments?: ColorSegments) {
   if (!colorSegments) return undefined
