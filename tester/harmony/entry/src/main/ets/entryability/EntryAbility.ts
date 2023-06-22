@@ -6,10 +6,6 @@ export default class EntryAbility extends RNAbility {
     return "pages/Index"
   }
 
-  getWorkerPath() {
-    return "entry/ets/RNWorker.ts"
-  }
-
   getBundleURL() {
     return "http://localhost:8081/index.bundle?platform=harmony&dev=false&minify=false"
   }

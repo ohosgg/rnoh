@@ -6,11 +6,6 @@
       "arguments": "",
       "cppFlags": "",
     },
-    "sourceOption": {
-      "workers": [
-        "./src/main/ets/RNWorker.ts"
-      ]
-    }
   },
   "targets": [
     {

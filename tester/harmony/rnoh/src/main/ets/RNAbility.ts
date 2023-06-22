@@ -10,7 +10,6 @@ import hilog from '@ohos.hilog';
 import { TurboModule } from "./TurboModule"
 import { TurboModuleProvider } from "./TurboModuleProvider"
 import { RNOHCorePackage } from "./RNOHCorePackage";
-import worker from '@ohos.worker';
 import libRNOHApp from 'librnoh_app.so'
 
 export type SurfaceAboutToAppearContext = {
@@ -63,10 +62,8 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
   protected napiBridge: NapiBridge = null
   protected lifecycleState = LifecycleState.BEFORE_CREATE
   protected turboModuleProvider: TurboModuleProvider
-  protected worker: worker.ThreadWorker | undefined
 
   onCreate(want, param) {
-    this.worker = new worker.ThreadWorker(this.getWorkerPath());
     this.storage = new LocalStorage()
     this.napiBridge = new NapiBridge(libRNOHApp)
     this.turboModuleProvider = this.processPackages(this.napiBridge).turboModuleProvider
@@ -74,7 +71,6 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
     this.storage.setOrCreate('RNOHContext', new RNOHContext(this.napiBridge, this.napiBridge, this, this))
   }
 
-  abstract getWorkerPath(): string;
 
   private processPackages(napiBridge: NapiBridge) {
     const packages = this.createPackages({});
@@ -104,20 +100,13 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
   }
 
   onWindowStageCreate(windowStage: window.WindowStage) {
-    this.worker.onmessage = (e) => {
-      if (e.data === "RNOH_SYNC") {
-        RNOHLogger.info(`UI thread received: ${e.data}`)
-        RNOHLogger.info("UI dispatches event: RNOH_SYNC_ACK")
-        this.worker.postMessage("RNOH_SYNC_ACK")
-        windowStage.loadContent(this.getPagePath(), this.storage, (err, data) => {
-          if (err.code) {
-            hilog.error(0x0000, 'RNOH', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
-            return;
-          }
-          hilog.info(0x0000, 'RNOH', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
-        });
+    windowStage.loadContent(this.getPagePath(), this.storage, (err, data) => {
+      if (err.code) {
+        hilog.error(0x0000, 'RNOH', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
+        return;
       }
-    }
+      hilog.info(0x0000, 'RNOH', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
+    });
   }
 
   private emitLifecycleEvent<TEventName extends keyof LifecycleEventListenerByName>(type: TEventName, ...data: Parameters<LifecycleEventListenerByName[TEventName]>) {

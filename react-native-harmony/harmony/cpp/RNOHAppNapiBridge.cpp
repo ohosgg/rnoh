@@ -12,34 +12,20 @@
 
 using namespace rnoh;
 
-static napi_env workerEnv;
 static napi_ref listener_ref;
 static napi_ref arkTsTurboModuleProviderRef;
 static napi_ref measureTextFnRef;
 
 std::unique_ptr<RNInstance> rnInstance;
 
-static napi_value registerWorker(napi_env env, napi_callback_info info) {
-    LogSink::initializeLogging();
-    LOG(INFO) << "registerWorker"
-              << "\n";
-    ArkJS arkJs(env);
-    workerEnv = env;
-    return arkJs.getUndefined();
-}
-
 static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
     LogSink::initializeLogging();
     LOG(INFO) << "initializeReactNative"
               << "\n";
-    if (workerEnv == nullptr) {
-        LOG(ERROR) << "Worker env must be registered before RN initialization"
-                   << "\n";
-    }
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 1);
     measureTextFnRef = arkJs.createReference(args[0]);
-    rnInstance = createRNInstance(env, workerEnv, arkTsTurboModuleProviderRef, measureTextFnRef);
+    rnInstance = createRNInstance(env, arkTsTurboModuleProviderRef, measureTextFnRef);
     rnInstance->start();
     return arkJs.getUndefined();
 }
@@ -144,7 +130,6 @@ static napi_value Init(napi_env env, napi_value exports) {
     napi_property_descriptor desc[] = {
         {"subscribeToShadowTreeChanges", nullptr, subscribeToShadowTreeChanges, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"initializeReactNative", nullptr, initializeReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
-        {"registerWorker", nullptr, registerWorker, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"loadScriptFromString", nullptr, loadScriptFromString, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"startSurface", nullptr, startSurface, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"emitComponentEvent", nullptr, emitComponentEvent, nullptr, nullptr, nullptr, napi_default, nullptr},

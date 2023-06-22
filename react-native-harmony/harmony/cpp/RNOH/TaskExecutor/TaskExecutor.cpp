@@ -7,13 +7,12 @@
 
 namespace rnoh {
 
-TaskExecutor::TaskExecutor(napi_env mainEnv, napi_env workerEnv) 
+TaskExecutor::TaskExecutor(napi_env mainEnv)
     : m_taskRunners({
-        std::make_unique<NapiTaskRunner>(mainEnv),
-        std::make_unique<ThreadTaskRunner>("RNOH_JS"),
-        std::make_unique<ThreadTaskRunner>("RNOH_BACKGROUND"),
-        std::make_unique<NapiTaskRunner>(workerEnv)
-    }) {}
+          std::make_unique<NapiTaskRunner>(mainEnv),
+          std::make_unique<ThreadTaskRunner>("RNOH_JS"),
+          std::make_unique<ThreadTaskRunner>("RNOH_BACKGROUND"),
+      }) {}
 
 void TaskExecutor::runTask(TaskThread thread, Task &&task) {
     m_taskRunners[thread]->runAsyncTask(std::move(task));
