@@ -1,0 +1,26 @@
+{
+  "module": {
+    "name": "native_animations",
+    "type": "feature",
+    "description": "$string:module_desc",
+    "mainElement": "NativeAnimationsAbility",
+    "deviceTypes": [
+      "phone"
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "abilities": [
+      {
+        "name": "NativeAnimationsAbility",
+        "srcEntry": "./ets/nativeanimationsability/NativeAnimationsAbility.ts",
+        "description": "$string:NativeAnimationsAbility_desc",
+        "icon": "$media:icon",
+        "label": "$string:NativeAnimationsAbility_label",
+        "startWindowIcon": "$media:icon",
+        "startWindowBackground": "$color:start_window_background",
+        "exported": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "NativeAnimationsAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "NativeAnimationsAbility_label",
+      "value": "label"
+    }
+  ]
+}

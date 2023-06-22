@@ -43,6 +43,18 @@
           ]
         }
       ]
+    },
+    {
+      "name": "native_animations",
+      "srcPath": "./native_animations",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
     }
   ]
 }

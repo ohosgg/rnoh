@@ -81,3 +81,23 @@ Rendering **~10,000** views. ArkUI and react-native-android data is copied from 
 | Margin of error (T-Student) [ms] | 87                                                                                                      | 1045                                                                                                              | 81                                                                                                                |
 | Upper limit [ms]                 | 1675                                                                                                    | 10533                                                                                                             | 4389                                                                                                              |
 | Lower limit [ms]                 | 1501                                                                                                    | 8443                                                                                                              | 4226                                                                                                              |
+
+
+## Test session #5 - Animations
+
+- Commit https://gl.swmansion.com/rnoh/react-native-harmony/-/commit/4f2315dcac3b82931f6bf1f2d14f6e76a07bbe84
+- Environment: HarmonyOS System-image-phone 3.1.0.306 Release, AMD Ryzen 5900X, 32 GB RAM
+- ArkUI implementations updates 
+
+|           | ArkUI                                                                                            | react-native-harmony                                                                                      | react-native-android                                                                                      |
+| --------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Recording | [arkui.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/rn-harmony-native-4f2315.mp4) | [rn-harmony.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/rn-harmony-animations-4f2315.mp4) | [rn-android.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/rn-android-animations-4f2315.mp4) |
+
+
+### Observations
+
+- ArkUI example demonstrates better framerate when rendering 5000 elements than react-native-harmony when rendering 500 elements.
+- react-native-harmony and react-native-android when react-native-android (without the native driver) have similar framerate when rendering 500 elements.
+- The native driver significantly improves animation performance for react-native-android.
+- The impact of the native driver grows with the number of elements.
+- Number of elements impacts the performance of animating nonlayoutable properties like opacity similarly in both RN implementations.

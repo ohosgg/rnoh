@@ -1,0 +1,17 @@
+{
+  "apiType": 'stageMode',
+  "buildOption": {
+  },
+  "entryModules": [
+    "checkerboard"
+  ],
+  "targets": [
+    {
+      "name": "default",
+      "runtimeOS": "HarmonyOS"
+    },
+    {
+      "name": "ohosTest",
+    }
+  ]
+}
