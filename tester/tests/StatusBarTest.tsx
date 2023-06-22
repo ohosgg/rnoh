@@ -85,6 +85,12 @@ function StatusBarView() {
           </Text>
         </View>
       </TestCase>
+      <TestCase
+        itShould="return correct status bar height for device"
+        fn={({expect}) => {
+          expect(StatusBar.currentHeight).to.be.closeTo(38.8, 0.1);
+        }}
+      />
     </View>
   );
 }

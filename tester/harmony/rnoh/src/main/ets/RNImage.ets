@@ -1,5 +1,5 @@
 import { Descriptor } from './descriptor'
-import { convertColorSegmentsToString, convertColorValueToRGBA } from './cpp-bridge-utils'
+import { convertColorSegmentsToString } from './cpp-bridge-utils'
 import { ViewProps, handleTouchEvent } from './RNView'
 import { RNOHContext } from './RNOHContext'
 
@@ -14,7 +14,6 @@ export struct RNImage {
   ctx: RNOHContext
   tag: number
   @State descriptor: ImageDescriptor = {} as ImageDescriptor
-
   private unregisterDescriptorChangesListener?: () => void = undefined
 
   aboutToAppear() {

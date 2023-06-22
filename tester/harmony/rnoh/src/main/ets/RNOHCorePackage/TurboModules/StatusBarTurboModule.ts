@@ -1,14 +1,47 @@
-import { TurboModule } from "../../TurboModule";
+import { TurboModule, TurboModuleContext } from "../../TurboModule";
 import window from '@ohos.window';
+import display from '@ohos.display';
 import { convertColorValueToHex } from '../../cpp-bridge-utils';
 
+type StatusBarConstants = {
+  DEFAULT_BACKGROUND_COLOR: string,
+  HEIGHT: number,
+}
+function convertPhysicalToDeviceIndependentPixels(pixels?: number) {
+  let displayInstance = display.getDefaultDisplaySync();
+  return pixels/displayInstance.densityPixels;
+}
 
 export class StatusBarTurboModule extends TurboModule {
-  getConstants() {
-    this.ctx.logger.info('getConstants');
-    return {
-      DEFAULT_BACKGROUND_COLOR: "#00000066"
+  private constants?: StatusBarConstants = null;
+
+  constructor(protected ctx: TurboModuleContext) {
+    super(ctx);
+    this.setConstants();
+  }
+
+  private async setConstants() {
+    const windowInstance = await window.getLastWindow(this.ctx.uiAbilityContext);
+    try {
+      const windowRect = windowInstance.getWindowProperties().windowRect;
+      //we get this value in this way because other methods didn't work. I tried using window.getWindowAvoidArea but it
+      //always returned 0. I didn't use display.getCutoutInfo, as not every device has cutouts.
+      const scaledStatusBarHeight = convertPhysicalToDeviceIndependentPixels(windowRect.top);
+      this.constants = {
+        DEFAULT_BACKGROUND_COLOR: '#0x66000000',
+        HEIGHT: scaledStatusBarHeight,
+      }
+    } catch (exception) {
+      this.ctx.logger.error('Failed to obtain the avoid area  (currentHeight). Cause:' + JSON.stringify(exception));
     }
+
+  }
+
+  getConstants(): StatusBarConstants {
+    return this.constants ?? {
+      DEFAULT_BACKGROUND_COLOR: "#00000066",
+      HEIGHT: 0,
+    };
   }
 
   async setTranslucent(translucent: boolean) {
@@ -56,7 +89,6 @@ export class StatusBarTurboModule extends TurboModule {
   }
 
   async setHidden(hidden: boolean) {
-    this.ctx.logger.info('setHidden');
     let names: Array<'status' | 'navigation'> = ['navigation'];
     if (!hidden)
       names.push('status');

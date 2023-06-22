@@ -249,8 +249,9 @@ class StatusBar extends React.Component<Props> {
    *
    * @platform android
    */
-  // RNOH: patch - always set to null as it's not implemented in get constants
-  static currentHeight: ?number = null;
+  // RNOH: patch - use NativeStatusBarManagerHarmony
+  static currentHeight: ?number =
+    NativeStatusBarManagerHarmony.getConstants().HEIGHT;
 
   // Provide an imperative API as static functions of the component.
   // See the corresponding prop for more detail.

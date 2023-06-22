@@ -34,6 +34,7 @@ let constants = null;
 
 const NativeStatusBarManager = {
   getConstants(): {|
+    +HEIGHT: number,
     +DEFAULT_BACKGROUND_COLOR?: number,
   |} {
     if (constants == null) {

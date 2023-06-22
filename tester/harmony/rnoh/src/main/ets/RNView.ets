@@ -1,5 +1,5 @@
-import { Descriptor, LayoutProps, ColorValue, Tag, ColorSegments } from './descriptor'
-import { convertColorSegmentsToString, convertColorValueToRGBA } from './cpp-bridge-utils'
+import { Descriptor, LayoutProps, Tag, ColorSegments } from './descriptor'
+import { convertColorSegmentsToString } from './cpp-bridge-utils'
 import { RNOHContext } from './RNOHContext'
 import { RNOHEventEmitRequestHandlerName } from "./RNOHCorePackage"
 import { ScrollViewState } from './RNScrollView'

@@ -28,7 +28,6 @@ export struct RNScrollView {
   @State descriptor: ScrollViewDescriptor = {} as ScrollViewDescriptor
   private scroller = new Scroller()
   private cleanupCommandCallback?: () => void = undefined
-
   private unregisterDescriptorChangesListener?: () => void = undefined
 
   aboutToAppear() {

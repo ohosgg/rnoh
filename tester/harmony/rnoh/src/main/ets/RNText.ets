@@ -1,8 +1,6 @@
-import { ColorSegments, Descriptor, LayoutProps, Tag } from './descriptor'
-import { DescriptorRegistry } from './DescriptorRegistry'
+import { ColorSegments, Descriptor } from './descriptor'
 import { convertColorSegmentsToString } from './cpp-bridge-utils'
 import { ViewProps, handleTouchEvent } from './RNView'
-import { RNInstance } from './RNInstance'
 import { RNOHContext } from './RNOHContext'
 
 export type AttributedFragment = {
@@ -41,7 +39,6 @@ export struct RNText {
   ctx: RNOHContext
   tag: number
   @State descriptor: TextDescriptor = {} as TextDescriptor
-
   private unregisterDescriptorChangesListener?: () => void = undefined
 
   aboutToAppear() {

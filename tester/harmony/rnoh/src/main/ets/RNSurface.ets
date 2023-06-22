@@ -43,7 +43,7 @@ export struct RNApp {
         });
         this.rnohContext.rnInstance?.initializeReactNative(data.screenDensity);
         this.shouldShow = true
-      }})
+      } })
     }, this.dev ? 2000 : 0)
   }
 
