@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 
-import {Animated, View} from 'react-native';
+import {Animated, Text, View} from 'react-native';
 
 import {TestCase, TestSuite} from '@rnoh/testerino';
 
@@ -12,6 +12,9 @@ export function AnimatedTest() {
       </TestCase>
       <TestCase itShould="move red square horizontally relatively to the scroll offset">
         <AnimatedScrollViewTestCase />
+      </TestCase>
+      <TestCase itShould="fade in and out when clicked">
+        <FadeInOut />
       </TestCase>
     </TestSuite>
   );
@@ -104,3 +107,36 @@ const AnimatedScrollViewTestCase = () => {
     </View>
   );
 };
+
+function FadeInOut() {
+  const fadeAnim = React.useRef(new Animated.Value(1)).current;
+
+  const handleFadePress = () => {
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 1000,
+        useNativeDriver: false,
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: false,
+      }),
+    ]).start();
+  };
+
+  return (
+    <Animated.View
+      onTouchEnd={() => handleFadePress()}
+      style={{
+        marginTop: 24,
+        height: 100,
+        width: 100,
+        opacity: fadeAnim,
+        backgroundColor: 'red',
+      }}>
+      <Text style={{width: 100, height: 48}}>Press me to fade</Text>
+    </Animated.View>
+  );
+}
