@@ -39,6 +39,7 @@ export class DeviceInfoTurboModule extends TurboModule {
 
   constructor(protected ctx: TurboModuleContext) {
     super(ctx);
+    this.setInitialParameters()
     this.ctx.rnInstanceManager.subscribeToLifecycleEvents("CONFIGURATION_UPDATE", () => {
       this.updateDeviceMetrics();
     });
@@ -56,8 +57,22 @@ export class DeviceInfoTurboModule extends TurboModule {
     };
   }
 
-  setInitialParameters(displayMetrics: DisplayMetrics) {
-    this.displayMetrics = displayMetrics;
+  setInitialParameters() {
+    const displayProps = display.getDefaultDisplaySync();
+    this.displayMetrics = { screenPhysicalPixels: {
+      width: displayProps.width,
+      height: displayProps.height,
+      scale: displayProps.densityPixels,
+      fontScale: 1,
+      densityDpi: displayProps.densityDPI,
+    },
+      windowPhysicalPixels: {
+        width: displayProps.width,
+        height: displayProps.height,
+        scale: displayProps.densityPixels,
+        fontScale: 1,
+        densityDpi: displayProps.densityDPI,
+      } };
   }
 
   async updateDeviceMetrics() {

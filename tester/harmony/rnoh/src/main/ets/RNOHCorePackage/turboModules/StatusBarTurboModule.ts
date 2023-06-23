@@ -24,8 +24,8 @@ export class StatusBarTurboModule extends TurboModule {
     const windowInstance = await window.getLastWindow(this.ctx.uiAbilityContext);
     try {
       const windowRect = windowInstance.getWindowProperties().windowRect;
-      //we get this value in this way because other methods didn't work. I tried using window.getWindowAvoidArea but it
-      //always returned 0. I didn't use display.getCutoutInfo, as not every device has cutouts.
+      // we get this value in this way because other methods didn't work. I tried using window.getWindowAvoidArea but it
+      // always returned 0. I didn't use display.getCutoutInfo, as not every device has cutouts.
       const scaledStatusBarHeight = convertPhysicalToDeviceIndependentPixels(windowRect.top);
       this.constants = {
         DEFAULT_BACKGROUND_COLOR: '#0x66000000',

@@ -1,4 +1,5 @@
 import Device from '@system.device'
+import display from '@ohos.display'
 import { ComponentBuilderContext } from './RNComponentFactory'
 import { RNOHContext } from "./RNOH/RNOHContext"
 import type { DeviceInfoTurboModule } from "./RNOHCorePackage/turboModules/DeviceInfoTurboModule"
@@ -20,28 +21,17 @@ export struct RNApp {
   aboutToAppear() {
     // delay running the app so that debugger has a chance to connect before a potential error is thrown
     setTimeout(() => {
-      Device.getInfo({ success: (data) => {
-        this.screenDensity = data.screenDensity
-        const deviceInfoTurboModule = this.rnohContext.rnInstanceManager.getTurboModule<DeviceInfoTurboModule>("DeviceInfo");
-        deviceInfoTurboModule.setInitialParameters({
-          screenPhysicalPixels: {
-            width: data.windowWidth,
-            height: data.windowHeight,
-            scale: data.screenDensity,
-            fontScale: 1,
-            densityDpi: 1,
-          },
-          windowPhysicalPixels: {
-            width: data.windowWidth,
-            height: data.windowHeight,
-            scale: data.screenDensity,
-            fontScale: 1,
-            densityDpi: 1,
-          }
-        });
-        this.rnohContext.rnInstance?.initializeReactNative(data.screenDensity);
-        this.shouldShow = true
-      } })
+      display.getAllDisplays(async (err, displays) => {
+        if (err.code) {
+          this.rnohContext.logger.error('RNSurface: Failed to obtain displays. Code: ' + JSON.stringify(err));
+          return;
+        }
+        const data = displays[0];
+        this.screenDensity = data.densityPixels
+        this.rnohContext.rnInstance?.initializeReactNative(data.densityPixels);
+        this.shouldShow = true;
+      });
+
     }, this.dev ? 2000 : 0)
   }
 
