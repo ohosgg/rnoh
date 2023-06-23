@@ -1,8 +1,6 @@
-import { ColorSegments, Descriptor } from '../../RNOH/DescriptorBase'
-import { convertColorSegmentsToString } from '../../RNOH'
+import { ColorSegments, Descriptor, convertColorSegmentsToString, RNOHContext } from '../../RNOH'
 import { RNViewBase, ViewProps } from './RNView'
-import { RNOHContext } from '../../RNOH/RNOHContext'
-import { RNOHEventEmitRequestHandlerName } from "./.."
+import { RNOHEventEmitRequestHandlerName } from "./../RNOHEventEmitRequestHandler"
 
 export type TextInputProps = ViewProps & {
   fontColor?: ColorSegments

@@ -11,6 +11,7 @@ import { RNOHContext } from "./RNOH/RNOHContext"
 const nullDescriptor = {
   type: "null",
   tag: -1,
+  isDynamicBinder: false,
   props: {},
   state: {},
   childrenTags: [],

@@ -10,6 +10,7 @@ export type RootDescriptor = Descriptor<"RootView", any>
 const rootDescriptor: RootDescriptor = {
   type: 'RootView',
   tag: 1,
+  isDynamicBinder: false,
   childrenTags: [],
   props: { top: 0, left: 0, width: 0, height: 0 },
   state: {},

@@ -1,7 +1,5 @@
-import { ColorSegments, Descriptor } from '../../RNOH/DescriptorBase'
-import { convertColorSegmentsToString } from '../../RNOH'
-import { ViewProps, RNView, RNViewBase } from './RNView'
-import { RNOHContext } from '../../RNOH/RNOHContext'
+import { ColorSegments, Descriptor, convertColorSegmentsToString, RNOHContext } from '../../RNOH'
+import { ViewProps, RNViewBase } from './RNView'
 
 
 export type AttributedFragment = {

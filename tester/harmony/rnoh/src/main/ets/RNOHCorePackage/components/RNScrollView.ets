@@ -1,7 +1,6 @@
-import { Descriptor } from '../../RNOH/DescriptorBase'
+import { Descriptor, RNOHContext } from '../../RNOH'
 import { ViewProps, RNViewBase } from './RNView'
-import { RNOHContext } from "../../RNOH/RNOHContext"
-import { RNOHEventEmitRequestHandlerName } from "./.."
+import { RNOHEventEmitRequestHandlerName } from "./../RNOHEventEmitRequestHandler"
 
 export type ScrollViewProps = ViewProps & {
   scrollEnabled?: boolean

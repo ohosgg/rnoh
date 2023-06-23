@@ -29,3 +29,14 @@ export function convertColorValueToHex(colorValue: ColorValue | undefined, defau
   }
   return `#${toHex(argb.a, 2)}${toHex(argb.r, 2)}${toHex(argb.g, 2)}${toHex(argb.b, 2)}`;
 }
+
+export function convertColorValueToColorSegments(colorValue: ColorValue | undefined): ColorSegments | undefined {
+  if (colorValue === undefined) return undefined
+  const rgba = {
+    a: (colorValue >> 24) & 0xff / 255,
+    r: (colorValue >> 16) & 0xff / 255,
+    g: (colorValue >> 8) & 0xff / 255,
+    b: ((colorValue >> 0) & 0xff / 255),
+  }
+  return [rgba.r, rgba.g, rgba.b, rgba.a]
+}

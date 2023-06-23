@@ -33,11 +33,9 @@ export type LayoutMetrics = {
   };
 };
 
-export type Descriptor<
-  TType = string,
-  TProps extends Object = Object,
-  TState = {},
-> = {
+export type Descriptor<TType = string,
+TProps extends Object = Object,
+TState = {}> = {
   type: TType;
   tag: Tag;
   parentTag?: Tag;
@@ -45,19 +43,5 @@ export type Descriptor<
   state: TState;
   childrenTags: Tag[];
   layoutMetrics: LayoutMetrics;
+  isDynamicBinder: boolean;
 };
-
-export class DescriptorClass<
-  TType = string,
-  TProps extends Object = Object,
-  TState = {},
-> implements Descriptor<TType, TProps, TState>
-{
-  type: TType;
-  tag: Tag;
-  parentTag?: Tag;
-  props: TProps;
-  state: TState;
-  childrenTags: Tag[];
-  layoutMetrics: LayoutMetrics;
-}

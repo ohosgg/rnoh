@@ -1,8 +1,14 @@
-import { Descriptor, LayoutProps, Tag, ColorSegments } from '../../RNOH/DescriptorBase'
-import { convertColorSegmentsToString } from '../../RNOH'
-import { RNOHContext } from '../../RNOH/RNOHContext'
+import {
+  Descriptor,
+  LayoutProps,
+  Tag,
+  ColorSegments,
+  RNOHContext,
+  convertColorSegmentsToString,
+  convertColorValueToColorSegments
+} from '../../RNOH'
 import { RNOHEventEmitRequestHandlerName } from "./../RNOHEventEmitRequestHandler"
-import { ScrollViewState } from './RNScrollView'
+import type { ScrollViewState } from './RNScrollView'
 
 export type ViewProps = LayoutProps & {
   backgroundColor?: ColorSegments
@@ -10,6 +16,18 @@ export type ViewProps = LayoutProps & {
   borderColor?: ColorSegments
   borderRadius?: BorderRadii
   opacity?: number
+}
+
+export type ViewDynamicProps = {
+  backgroundColor?: number,
+  width?: number,
+  height?: number,
+  justifyContent?: string,
+  opacity?: number,
+  alignItems?: string,
+  borderWidth?: number,
+  borderRadius?: number,
+  borderColor?: number,
 }
 
 type BorderRadii = {
@@ -20,6 +38,8 @@ type BorderRadii = {
 }
 
 export type ViewDescriptor = Descriptor<"View" | (string & {}), ViewProps>
+
+export type ViewDynamicDescriptor = Descriptor<"View" | (string & {}), ViewDynamicProps>
 
 function getPageOffset(ctx: RNOHContext, tag: Tag) {
   let x = 0;
@@ -52,6 +72,25 @@ export function handleTouchEvent(ctx: RNOHContext, event: TouchEvent, tag: Tag) 
   ctx.rnInstance.emitComponentEvent(tag, RNOHEventEmitRequestHandlerName.Touch, event)
 }
 
+function convertViewDynamicDescriptor(dynamicDescriptor: ViewDynamicDescriptor): ViewDescriptor {
+  const p = dynamicDescriptor.props
+  return {
+    isDynamicBinder: false,
+    ...dynamicDescriptor,
+    props: {
+      top: 0,
+      left: 0,
+      height: 0,
+      width: 0,
+      backgroundColor: convertColorValueToColorSegments(p.backgroundColor),
+      borderWidth: p.borderWidth,
+      borderColor: convertColorValueToColorSegments(p.borderColor),
+      borderRadius: { topLeft: p.borderRadius, topRight: p.borderRadius, bottomLeft: p.borderRadius, bottomRight: p.borderRadius},
+      opacity: p.opacity
+    }
+  }
+}
+
 @Component
 export struct RNView {
   ctx: RNOHContext
@@ -61,12 +100,20 @@ export struct RNView {
   private unregisterDescriptorChangesListener?: () => void = undefined
 
   aboutToAppear() {
-    this.descriptor = this.ctx.descriptorRegistry.getDescriptor<ViewDescriptor>(this.tag)
+    let descriptor = this.ctx.descriptorRegistry.getDescriptor<ViewDescriptor | ViewDynamicDescriptor>(this.tag)
+    this.setDescriptor(descriptor)
     this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
-        this.descriptor = (newDescriptor as ViewDescriptor)
+        this.setDescriptor(newDescriptor)
       }
     )
+  }
+
+  private setDescriptor(descriptor: ViewDescriptor | ViewDynamicDescriptor) {
+    if (descriptor.isDynamicBinder) {
+      descriptor = convertViewDynamicDescriptor(descriptor as ViewDynamicDescriptor)
+    }
+    this.descriptor = descriptor as ViewDescriptor
   }
 
   aboutToDisappear() {
@@ -81,10 +128,10 @@ export struct RNView {
     Stack() {
       this.renderDescriptors()
     }
-    .width(this.descriptor.props.width)
-    .height(this.descriptor.props.height)
+    .width(this.descriptor.layoutMetrics.frame.size.width)
+    .height(this.descriptor.layoutMetrics.frame.size.height)
     .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
-    .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
+    .position({ y: this.descriptor.layoutMetrics.frame.origin.y, x: this.descriptor.layoutMetrics.frame.origin.x })
     .borderWidth(this.descriptor.props.borderWidth)
     .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
     .borderRadius(this.descriptor.props.borderRadius)

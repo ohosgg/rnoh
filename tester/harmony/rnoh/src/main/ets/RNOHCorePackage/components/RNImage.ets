@@ -1,6 +1,5 @@
-import { Descriptor } from '../../RNOH/DescriptorBase'
+import { Descriptor, RNOHContext } from '../../RNOH'
 import { RNViewBase, ViewProps } from './RNView'
-import { RNOHContext } from '../../RNOH/RNOHContext'
 
 export type ImageProps = ViewProps & {
   uri: string

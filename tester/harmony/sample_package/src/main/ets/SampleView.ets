@@ -1,18 +1,11 @@
-import {
-  DescriptorClass,
-  ComponentBuilderContext,
-  RNComponentFactory,
-  convertColorValueToRGBA,
-  RNOHContext,
-} from '@ohos/rnoh'
+import { Descriptor, ComponentBuilderContext, RNComponentFactory, RNOHContext, RNViewBase, ViewDynamicProps } from '@ohos/rnoh'
 
 export const SAMPLE_VIEW_TYPE = "SampleView" as const
 
-export class SampleViewDescriptor extends DescriptorClass<typeof SAMPLE_VIEW_TYPE, {
+export type SampleViewDescriptor = Descriptor<typeof SAMPLE_VIEW_TYPE, ViewDynamicProps & {
   size: number,
-  backgroundColor: number
-}> {
-}
+}>
+
 
 @Component
 export struct SampleView {
@@ -36,16 +29,11 @@ export struct SampleView {
   }
 
   build() {
-    Stack() {
-      Text(JSON.stringify(this.descriptor.childrenTags)).fontColor("blue")
+    RNViewBase({ ctx: this.ctx, tag: this.tag }) {
+      Text(JSON.stringify(this.descriptor.childrenTags)).fontColor("white").fontSize(12)
       ForEach(this.descriptor.childrenTags, (tag) => {
         RNComponentFactory({ ctx: this.ctx, tag: tag, buildCustomComponent: this.buildCustomComponent })
       }, tag => tag)
     }
-    .alignContent(Alignment.TopStart)
-    .width(this.descriptor.props.size)
-    .height(this.descriptor.props.size)
-    .position(this.descriptor.layoutMetrics.frame.origin)
-    .backgroundColor(this.descriptor.props.backgroundColor ? convertColorValueToRGBA(this.descriptor.props.backgroundColor) : undefined)
   }
 }

@@ -8,6 +8,7 @@ import { convertColorSegmentsToString } from './RNOH'
 export type RootDescriptor = Descriptor<"RootView", ViewProps>
 
 const rootDescriptor: RootDescriptor = {
+  isDynamicBinder: false,
   type: 'RootView',
   tag: 1,
   childrenTags: [],
