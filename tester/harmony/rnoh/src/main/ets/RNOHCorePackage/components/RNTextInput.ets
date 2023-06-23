@@ -1,6 +1,6 @@
 import { ColorSegments, Descriptor } from '../../RNOH/DescriptorBase'
 import { convertColorSegmentsToString } from '../../RNOH'
-import { ViewProps } from './RNView'
+import { RNViewBase, ViewProps } from './RNView'
 import { RNOHContext } from '../../RNOH/RNOHContext'
 import { RNOHEventEmitRequestHandlerName } from "./.."
 
@@ -37,16 +37,13 @@ export struct RNTextInput {
   }
 
   build() {
-    TextInput()
-      .width(this.descriptor.props.width)
-      .height(this.descriptor.props.height)
-      .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
-      .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
-      .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
-      .fontSize(this.descriptor.props.fontSize)
-      .borderWidth(this.descriptor.props.borderWidth)
-      .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
-      .borderRadius(this.descriptor.props.borderRadius)
-      .onChange((event) => this.handleChangeEvent(event))
+    RNViewBase({ctx: this.ctx, tag: this.tag}) {
+      TextInput()
+        .width("100%")
+        .height("100%")
+        .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
+        .fontSize(this.descriptor.props.fontSize)
+        .onChange((event) => this.handleChangeEvent(event))
+    }
   }
 }

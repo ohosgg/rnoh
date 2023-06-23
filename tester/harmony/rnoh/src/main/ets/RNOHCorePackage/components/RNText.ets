@@ -1,7 +1,8 @@
 import { ColorSegments, Descriptor } from '../../RNOH/DescriptorBase'
 import { convertColorSegmentsToString } from '../../RNOH'
-import { ViewProps, handleTouchEvent } from './RNView'
+import { ViewProps, RNView, RNViewBase } from './RNView'
 import { RNOHContext } from '../../RNOH/RNOHContext'
+
 
 export type AttributedFragment = {
   text?: string
@@ -54,24 +55,23 @@ export struct RNText {
     this.unregisterDescriptorChangesListener?.()
   }
 
-  onTouchEvent(e: TouchEvent) {
-    handleTouchEvent(this.ctx, e, this.descriptor.tag)
-  }
-
   build() {
-    Text() {
-      ForEach(this.descriptor.props.fragments, fragment => {
-        Span(fragment.text)
-          .fontColor(convertColorSegmentsToString(fragment.fontColor))
-          .fontWeight(fragment.fontWeight)
-          .fontSize(fragment.fontSize)
-          .fontStyle(stringToFontStyle(fragment.fontStyle))
-      })
+    RNViewBase({
+      ctx: this.ctx,
+      tag: this.tag,
+    }) {
+      Text() {
+        ForEach(this.descriptor.props.fragments, fragment => {
+          Span(fragment.text)
+            .fontColor(convertColorSegmentsToString(fragment.fontColor))
+            .fontWeight(fragment.fontWeight)
+            .fontSize(fragment.fontSize)
+            .fontStyle(stringToFontStyle(fragment.fontStyle))
+        })
+      }
+      .width("100%")
+      .height("100%")
+      .textAlign(stringToAlignment(this.descriptor.props.textAlign))
     }
-    .width(this.descriptor.props.width)
-    .height(this.descriptor.props.height)
-    .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
-    .textAlign(stringToAlignment(this.descriptor.props.textAlign))
-    .onTouch((event) => this.onTouchEvent(event))
   }
 }

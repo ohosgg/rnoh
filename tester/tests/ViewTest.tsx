@@ -38,6 +38,41 @@ export function ViewTest() {
           <DimensionsDisplayer />
         </View>
       </TestCase>
+      <TestCase itShould="hide the overflow">
+        <View
+          style={{
+            width: 64,
+            height: 64,
+            backgroundColor: 'red',
+            overflow: 'hidden',
+          }}>
+          <View
+            style={{
+              width: 64,
+              height: 64,
+              backgroundColor: 'green',
+              marginLeft: 32,
+            }}
+          />
+        </View>
+      </TestCase>
+      <TestCase itShould="not hide the overflow">
+        <View
+          style={{
+            width: 64,
+            height: 64,
+            backgroundColor: 'red',
+          }}>
+          <View
+            style={{
+              width: 64,
+              height: 64,
+              backgroundColor: 'green',
+              marginLeft: 32,
+            }}
+          />
+        </View>
+      </TestCase>
     </TestSuite>
   );
 }

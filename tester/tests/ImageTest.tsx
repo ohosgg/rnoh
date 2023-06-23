@@ -5,7 +5,10 @@ export const ImageTest = () => {
   return (
     <TestSuite name="Image">
       <TestCase itShould="support loading local images">
-        <Image source={require('../assets/pravatar-131.jpg')} />
+        <Image
+          style={{borderRadius: 8, borderWidth: 1}}
+          source={require('../assets/pravatar-131.jpg')}
+        />
       </TestCase>
     </TestSuite>
   );

@@ -19,7 +19,7 @@ type BorderRadii = {
   bottomRight?: number
 }
 
-export type ViewDescriptor = Descriptor<"View", ViewProps>
+export type ViewDescriptor = Descriptor<"View" | (string & {}), ViewProps>
 
 function getPageOffset(ctx: RNOHContext, tag: Tag) {
   let x = 0;
@@ -55,7 +55,7 @@ export function handleTouchEvent(ctx: RNOHContext, event: TouchEvent, tag: Tag) 
 @Component
 export struct RNView {
   ctx: RNOHContext
-  @State tag: number = -1
+  tag: number
   @BuilderParam renderDescriptors: () => void
   @State descriptor: ViewDescriptor = {} as ViewDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined
@@ -90,5 +90,22 @@ export struct RNView {
     .borderRadius(this.descriptor.props.borderRadius)
     .onTouch((event) => this.onTouchEvent(event))
     .opacity(this.descriptor.props.opacity)
+    .clip(true)
+  }
+}
+
+@Component
+export struct RNViewBase {
+  ctx: RNOHContext
+  tag: number
+  @BuilderParam renderChildren: () => void
+
+  build() {
+    RNView({
+      ctx: this.ctx,
+      tag: this.tag,
+    }) {
+      this.renderChildren()
+    }
   }
 }

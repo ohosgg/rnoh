@@ -1,6 +1,5 @@
 import { Descriptor } from '../../RNOH/DescriptorBase'
-import { convertColorSegmentsToString } from '../../RNOH'
-import { ViewProps, handleTouchEvent } from './RNView'
+import { RNViewBase, ViewProps } from './RNView'
 import { RNOHContext } from '../../RNOH/RNOHContext'
 
 export type ImageProps = ViewProps & {
@@ -29,10 +28,6 @@ export struct RNImage {
     this.unregisterDescriptorChangesListener?.()
   }
 
-  onTouchEvent(e: TouchEvent) {
-    handleTouchEvent(this.ctx, e, this.tag)
-  }
-
   getSource() {
     if (this.descriptor.props.uri.startsWith("asset://")) {
       return this.descriptor.props.uri.replace("asset://", "/assets/");
@@ -41,15 +36,14 @@ export struct RNImage {
   }
 
   build() {
-    Image(this.getSource())
-      .interpolation(ImageInterpolation.High)
-      .width(this.descriptor.props.width)
-      .height(this.descriptor.props.height)
-      .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
-      .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
-      .borderWidth(this.descriptor.props.borderWidth)
-      .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
-      .borderRadius(this.descriptor.props.borderRadius)
-      .onTouch((event) => this.onTouchEvent(event))
+    RNViewBase({
+      ctx: this.ctx,
+      tag: this.tag,
+    }) {
+      Image(this.getSource())
+        .interpolation(ImageInterpolation.High)
+        .width("100%")
+        .height("100%")
+    }
   }
 }

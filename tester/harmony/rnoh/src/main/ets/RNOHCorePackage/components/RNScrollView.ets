@@ -1,6 +1,5 @@
 import { Descriptor } from '../../RNOH/DescriptorBase'
-import { ViewProps } from './RNView'
-import { convertColorSegmentsToString } from '../../RNOH'
+import { ViewProps, RNViewBase } from './RNView'
 import { RNOHContext } from "../../RNOH/RNOHContext"
 import { RNOHEventEmitRequestHandlerName } from "./.."
 
@@ -116,29 +115,26 @@ export struct RNScrollView {
   }
 
   build() {
-    Scroll(this.scroller) {
-      Stack() {
-        this.renderDescriptors()
+    RNViewBase({ctx: this.ctx, tag: this.tag}) {
+      Scroll(this.scroller) {
+        Stack() {
+          this.renderDescriptors()
+        }
+        .width(this.descriptor.state.contentSizeWidth)
+        .height(this.descriptor.state.contentSizeHeight)
+        .backgroundColor(Color.Transparent)
       }
-      .width(this.descriptor.state.contentSizeWidth)
-      .height(this.descriptor.state.contentSizeHeight)
-      .backgroundColor(Color.Transparent)
+      .width("100%")
+      .height("100%")
+      .align(Alignment.TopStart)
+      .scrollable(this.scrollDirection())
+      //    .scrollBar(BarState.On)
+      //    .scrollBarColor(Color.Gray)
+      //    .scrollBarWidth(30)
+      //    .edgeEffect(this.descriptor.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
+      .onScroll(this.onScroll.bind(this))
+      //    .onScrollBegin(this.onScrollBegin.bind(this))
+      //    .onScrollEnd(this.onScrollEnd.bind(this))
     }
-    .align(Alignment.TopStart)
-    .width(this.descriptor.props.width)
-    .height(this.descriptor.props.height)
-    .position({ y: this.descriptor.props.top, x: this.descriptor.props.left })
-    .scrollable(this.scrollDirection())
-    //    .scrollBar(BarState.On)
-    //    .scrollBarColor(Color.Gray)
-    //    .scrollBarWidth(30)
-    //    .edgeEffect(this.descriptor.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
-    .onScroll(this.onScroll.bind(this))
-    //    .onScrollBegin(this.onScrollBegin.bind(this))
-    //    .onScrollEnd(this.onScrollEnd.bind(this))
-    .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
-    .borderWidth(this.descriptor.props.borderWidth)
-    .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
-    .borderRadius(this.descriptor.props.borderRadius)
   }
 }
