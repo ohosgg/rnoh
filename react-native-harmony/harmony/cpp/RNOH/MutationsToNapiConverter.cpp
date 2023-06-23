@@ -33,7 +33,8 @@ napi_value MutationsToNapiConverter::convert(napi_env env, react::ShadowViewMuta
         case react::ShadowViewMutation::Type::Insert: {
             objBuilder
                 .addProperty("childTag", mutation.newChildShadowView.tag)
-                .addProperty("parentTag", mutation.parentShadowView.tag);
+                .addProperty("parentTag", mutation.parentShadowView.tag)
+                .addProperty("index", mutation.index);
             break;
         }
         case react::ShadowViewMutation::Type::Delete: {

@@ -1,3 +1,4 @@
+import { RNOHLogger, StandardRNOHLogger } from './RNOHLogger';
 import { Tag, Descriptor } from './DescriptorBase';
 import { MutationType, Mutation } from './Mutation';
 
@@ -104,7 +105,9 @@ export class DescriptorRegistry {
       return [];
     } else if (mutation.type === MutationType.INSERT) {
       this.descriptorByTag.get(mutation.childTag).parentTag = mutation.parentTag;
-      this.descriptorByTag.get(mutation.parentTag).childrenTags.push(
+      this.descriptorByTag.get(mutation.parentTag).childrenTags.splice(
+        mutation.index,
+        0,
         mutation.childTag,
       );
       return [mutation.childTag, mutation.parentTag];

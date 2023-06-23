@@ -23,6 +23,7 @@ export type InsertMutation = {
   type: MutationType.INSERT
   parentTag: Tag
   childTag: Tag
+  index: number
 }
 
 export type RemoveMutation = {
