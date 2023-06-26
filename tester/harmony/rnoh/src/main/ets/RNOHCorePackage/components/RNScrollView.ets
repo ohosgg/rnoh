@@ -27,6 +27,7 @@ export struct RNScrollView {
   private scroller = new Scroller()
   private cleanupCommandCallback?: () => void = undefined
   private unregisterDescriptorChangesListener?: () => void = undefined
+  private scrollState: ScrollState = ScrollState.Idle
 
   aboutToAppear() {
     this.descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag)
@@ -56,6 +57,7 @@ export struct RNScrollView {
   }
 
   scrollDirection(): ScrollDirection {
+    // TODO: support horizontal and free Scroll - one solution is to always nest two Scroll components, one vertical, one horizontal
     if (!this.descriptor.props.scrollEnabled) {
       return ScrollDirection.None
     }
@@ -71,50 +73,101 @@ export struct RNScrollView {
       contentWidth: this.descriptor.state.contentSizeWidth,
       contentHeight: this.descriptor.state.contentSizeHeight,
       containerWidth: this.descriptor.props.width,
-      containerHeight: this.descriptor.props.width,
+      containerHeight: this.descriptor.props.height,
     }
   }
 
-  onScroll(xOffset: number, yOffset: number) {
-    const offset = this.scroller.currentOffset()
+  onScroll(offset: number, scrollState: ScrollState) {
+    const currentOffset = this.scroller.currentOffset()
+    const yOffset = currentOffset.yOffset + offset;
 
-    this.descriptor.state.contentOffsetX = offset.xOffset;
-    this.descriptor.state.contentOffsetY = offset.yOffset;
+    const currentScrollState = this.scrollState;
+
+    if (currentScrollState != scrollState) {
+      if (currentScrollState === ScrollState.Scroll) {
+        this.onDragEnd();
+      } else if (currentScrollState === ScrollState.Fling) {
+        this.onMomentumEnd();
+      }
+
+      if (scrollState === ScrollState.Scroll) {
+        this.onDragBegin();
+      } else if (scrollState === ScrollState.Fling) {
+        this.onMomentumBegin();
+      }
+    }
+    this.scrollState = scrollState
+
+    // TODO: check if scroll is horizontal/vertical and adjust the correct offset
+    // this.descriptor.state.contentOffsetX = offset.xOffset;
+    this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag).state.contentOffsetY = yOffset;
 
     this.ctx.rnInstance.emitComponentEvent(
       this.descriptor.tag,
       RNOHEventEmitRequestHandlerName.Scroll,
-      this.createScrollEvent("scroll", offset.xOffset, offset.yOffset)
+      this.createScrollEvent("scroll", 0, yOffset)
     )
   }
 
-  onScrollBegin(dx: number, dy: number) {
+  onDragBegin() {
     this.ctx.rnInstance.emitComponentEvent(
       this.descriptor.tag,
       RNOHEventEmitRequestHandlerName.Scroll,
       this.createScrollEvent(
-        "begin",
+        "beginDrag",
         this.descriptor.state.contentOffsetX,
         this.descriptor.state.contentOffsetY
       )
     )
-    return { dxRemain: dx, dyRemain: dy }
+  }
+
+  onDragEnd() {
+    this.ctx.rnInstance.emitComponentEvent(
+      this.descriptor.tag,
+      RNOHEventEmitRequestHandlerName.Scroll,
+      this.createScrollEvent(
+        "endDrag",
+        this.descriptor.state.contentOffsetX,
+        this.descriptor.state.contentOffsetY
+      )
+    )
+  }
+
+  onMomentumBegin() {
+    this.ctx.rnInstance.emitComponentEvent(
+      this.descriptor.tag,
+      RNOHEventEmitRequestHandlerName.Scroll,
+      this.createScrollEvent(
+        "beginMomentum",
+        this.descriptor.state.contentOffsetX,
+        this.descriptor.state.contentOffsetY
+      )
+    )
+  }
+
+  onMomentumEnd() {
+    this.ctx.rnInstance.emitComponentEvent(
+      this.descriptor.tag,
+      RNOHEventEmitRequestHandlerName.Scroll,
+      this.createScrollEvent(
+        "endMomentum",
+        this.descriptor.state.contentOffsetX,
+        this.descriptor.state.contentOffsetY
+      )
+    )
   }
 
   onScrollEnd() {
-    this.ctx.rnInstance.emitComponentEvent(
-      this.descriptor.tag,
-      "Scroll",
-      this.createScrollEvent(
-        "end",
-        this.descriptor.state.contentOffsetX,
-        this.descriptor.state.contentOffsetY
-      )
-    )
+    if (this.scrollState === ScrollState.Fling) {
+      this.onMomentumEnd();
+    } else if (this.scrollState === ScrollState.Scroll) {
+      this.onDragEnd();
+    }
+    this.scrollState = ScrollState.Idle;
   }
 
   build() {
-    RNViewBase({ctx: this.ctx, tag: this.tag}) {
+    RNViewBase({ ctx: this.ctx, tag: this.tag }) {
       Scroll(this.scroller) {
         Stack() {
           this.renderDescriptors()
@@ -131,9 +184,8 @@ export struct RNScrollView {
       //    .scrollBarColor(Color.Gray)
       //    .scrollBarWidth(30)
       //    .edgeEffect(this.descriptor.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
-      .onScroll(this.onScroll.bind(this))
-      //    .onScrollBegin(this.onScrollBegin.bind(this))
-      //    .onScrollEnd(this.onScrollEnd.bind(this))
+      .onScrollFrameBegin(this.onScroll.bind(this))
+      .onScrollStop(this.onScrollEnd.bind(this))
     }
   }
 }

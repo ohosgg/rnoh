@@ -21,6 +21,8 @@ class ScrollViewComponentJSIBinder : public ViewComponentJSIBinder {
         events.setProperty(rt, "topScroll", createDirectEvent(rt, "onScroll"));
         events.setProperty(rt, "topScrollBeginDrag", createDirectEvent(rt, "onScrollBeginDrag"));
         events.setProperty(rt, "topScrollEndDrag", createDirectEvent(rt, "onScrollEndDrag"));
+        events.setProperty(rt, "topMomentumScrollBegin", createDirectEvent(rt, "onMomentumScrollBegin"));
+        events.setProperty(rt, "topMomentumScrollEnd", createDirectEvent(rt, "onMomentumScrollEnd"));
 
         return events;
     }
