@@ -100,18 +100,33 @@ void RNInstance::loadScriptFromString(std::string const &&bundle, std::string co
 void RNInstance::runApplication(float width, float height, std::string const &moduleName, folly::dynamic &&initialProps) {
     this->taskExecutor->runTask(TaskThread::JS, [this, width, height, moduleName, initialProps = std::move(initialProps)]() {
         try {
-            facebook::react::SurfaceHandler surfaceHandler(moduleName, 1);
-            surfaceHandler.setProps(std::move(initialProps));
-            auto layoutConstraints = surfaceHandler.getLayoutConstraints();
+            auto surfaceHandler = std::make_shared<facebook::react::SurfaceHandler>(moduleName, 1);
+            surfaceHandler->setProps(std::move(initialProps));
+            auto layoutConstraints = surfaceHandler->getLayoutConstraints();
             layoutConstraints.layoutDirection = react::LayoutDirection::LeftToRight;
             layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
                 .width = width,
                 .height = height};
-            surfaceHandler.constraintLayout(layoutConstraints, surfaceHandler.getLayoutContext());
-            scheduler->registerSurface(surfaceHandler);
-            surfaceHandler.start();
+            surfaceHandler->constraintLayout(layoutConstraints, surfaceHandler->getLayoutContext());
+            scheduler->registerSurface(*surfaceHandler);
+            surfaceHandler->start();
+            surfaceHandlers[moduleName] = surfaceHandler;
         } catch (const std::exception &e) {
             LOG(ERROR) << "runApplication: " << e.what() << "\n";
+            throw e;
+        };
+    });
+}
+void RNInstance::updateSurfaceConstraints(std::string const &moduleName, float width, float height) {
+    this->taskExecutor->runTask(TaskThread::JS, [this, width, height, moduleName]() {
+        try {
+            auto layoutConstraints = surfaceHandlers[moduleName]->getLayoutConstraints();
+            layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
+                .width = width,
+                .height = height};
+            surfaceHandlers[moduleName]->constraintLayout(layoutConstraints, surfaceHandlers[moduleName]->getLayoutContext());
+        } catch (const std::exception &e) {
+            LOG(ERROR) << "updateSurfaceConstraints: " << e.what() << "\n";
             throw e;
         };
     });

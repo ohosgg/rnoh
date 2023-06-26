@@ -48,6 +48,7 @@ class RNInstance {
         MutationsListener,
         MountingManager::CommandDispatcher);
     void start();
+    void updateSurfaceConstraints(std::string const &moduleName, float width, float height);
     void loadScriptFromString(std::string const &&bundle, std::string const sourceURL);
     void runApplication(float width, float height, std::string const &moduleName, folly::dynamic &&initialProps);
     void callFunction(std::string &&module, std::string &&method, folly::dynamic &&params);
@@ -56,6 +57,7 @@ class RNInstance {
   private:
     std::shared_ptr<facebook::react::ContextContainer> m_contextContainer;
     std::shared_ptr<facebook::react::Instance> instance;
+    std::map<std::string, std::shared_ptr<facebook::react::SurfaceHandler>> surfaceHandlers;
     std::function<void(MutationsToNapiConverter, facebook::react::ShadowViewMutationList const &mutations)> mutationsListener;
     MountingManager::CommandDispatcher commandDispatcher;
     std::unique_ptr<facebook::react::Scheduler> scheduler;

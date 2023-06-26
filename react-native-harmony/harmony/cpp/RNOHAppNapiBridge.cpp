@@ -69,6 +69,15 @@ static napi_value loadScriptFromString(napi_env env, napi_callback_info info) {
     return arkJs.getUndefined();
 }
 
+static napi_value updateSurfaceConstraints(napi_env env, napi_callback_info info) {
+    ArkJS arkJs(env);
+    auto args = arkJs.getCallbackArgs(info, 3);
+    rnInstance->updateSurfaceConstraints(arkJs.getString(args[0]),
+                                         arkJs.getDouble(args[1]),
+                                         arkJs.getDouble(args[2]));
+    return arkJs.getUndefined();
+}
+
 static napi_value startSurface(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 4);
@@ -132,6 +141,7 @@ static napi_value Init(napi_env env, napi_value exports) {
         {"initializeReactNative", nullptr, initializeReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"loadScriptFromString", nullptr, loadScriptFromString, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"startSurface", nullptr, startSurface, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"updateSurfaceConstraints", nullptr, updateSurfaceConstraints, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"emitComponentEvent", nullptr, emitComponentEvent, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"registerTurboModuleProvider", nullptr, registerTurboModuleProvider, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"add", nullptr, add, nullptr, nullptr, nullptr, napi_default, nullptr},

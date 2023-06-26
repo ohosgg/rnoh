@@ -36,8 +36,14 @@ export struct RNApp {
   }
 
   onLayout(_children, constraint) {
-    this.initialSurfaceWidth = constraint.maxWidth
-    this.initialSurfaceHeight = constraint.maxHeight
+    if (this.initialSurfaceWidth == 0) {
+      this.initialSurfaceWidth = constraint.maxWidth
+      this.initialSurfaceHeight = constraint.maxHeight
+    }
+    else {
+      this.rnohContext.__napiBridge.updateSurfaceConstraints(this.appName, constraint.maxWidth / this.screenDensity, constraint.maxHeight / this.screenDensity);
+    }
+
   }
 
   build() {

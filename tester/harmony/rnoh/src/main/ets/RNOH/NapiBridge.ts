@@ -7,7 +7,8 @@ import TextMeasurer from "@ohos.measure"
  @deprecated - Use NapiBridge or RNInstanceManager
  * */
 export class RNInstance {
-  constructor(private libRNOHApp: any) {}
+  constructor(private libRNOHApp: any) {
+  }
 
   registerTurboModuleProvider(turboModuleProvider: TurboModuleProvider) {
     this.libRNOHApp?.registerTurboModuleProvider(turboModuleProvider);
@@ -38,6 +39,10 @@ export class RNInstance {
     this.libRNOHApp?.startSurface(initialSurfaceWidth, initialSurfaceHeight, appName, initialProps);
   }
 
+  updateSurfaceConstraints(appName: string, surfaceWidth: number, surfaceHeight: number) {
+    this.libRNOHApp?.updateSurfaceConstraints(appName, surfaceWidth, surfaceHeight);
+  }
+
   callRNFunction(moduleName: string, functionName: string, args: unknown[]): void {
     this.libRNOHApp?.callRNFunction(moduleName, functionName, args);
   }
@@ -47,4 +52,5 @@ export class RNInstance {
   }
 }
 
-export class NapiBridge extends RNInstance {}
+export class NapiBridge extends RNInstance {
+}
