@@ -1,7 +1,7 @@
 import { Descriptor, RNOHContext } from '../../RNOH'
-import { RNViewBase, ViewProps } from './RNView'
+import { RNViewBase, ViewBaseProps } from './RNViewBase'
 
-export type ImageProps = ViewProps & {
+export type ImageProps = ViewBaseProps & {
   uri: string
 }
 

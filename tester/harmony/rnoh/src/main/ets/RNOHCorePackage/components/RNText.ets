@@ -1,6 +1,5 @@
 import { ColorSegments, Descriptor, convertColorSegmentsToString, RNOHContext } from '../../RNOH'
-import { ViewProps, RNViewBase } from './RNView'
-
+import { ViewBaseProps, RNViewBase } from './RNViewBase'
 
 export type AttributedFragment = {
   text?: string
@@ -10,7 +9,7 @@ export type AttributedFragment = {
   fontStyle?: string
 }
 
-export type TextProps = ViewProps & {
+export type TextProps = ViewBaseProps & {
   textAlign?: string
   fragments: AttributedFragment[]
 }

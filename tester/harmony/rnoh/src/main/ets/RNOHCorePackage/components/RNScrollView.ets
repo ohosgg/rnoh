@@ -1,8 +1,8 @@
 import { Descriptor, RNOHContext } from '../../RNOH'
-import { ViewProps, RNViewBase } from './RNView'
+import { ViewBaseProps, RNViewBase } from './RNViewBase'
 import { RNOHEventEmitRequestHandlerName } from "./../RNOHEventEmitRequestHandler"
 
-export type ScrollViewProps = ViewProps & {
+export type ScrollViewProps = ViewBaseProps & {
   scrollEnabled?: boolean
   contentOffsetX: number
   contentOffsetY: number
@@ -164,6 +164,10 @@ export struct RNScrollView {
       this.onDragEnd();
     }
     this.scrollState = ScrollState.Idle;
+
+    const { xOffset, yOffset } = this.scroller.currentOffset();
+    this.descriptor.state.contentOffsetX = xOffset;
+    this.descriptor.state.contentOffsetY = yOffset;
   }
 
   build() {

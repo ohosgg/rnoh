@@ -1,33 +1,10 @@
-import { RNView, ViewDescriptor, handleTouchEvent } from "./RNOHCorePackage/Components/RNView"
-import { RNImage, ImageDescriptor } from "./RNOHCorePackage/Components/RNImage"
-import { RNTextInput, TextInputDescriptor } from "./RNOHCorePackage/Components/RNTextInput"
-import { RNText, TextDescriptor } from "./RNOHCorePackage/Components/RNText"
-import { RNScrollView, ScrollViewDescriptor } from "./RNOHCorePackage/Components/RNScrollView"
-import { Descriptor } from "./RNOH/DescriptorBase"
+import { RNView } from "./RNOHCorePackage/Components/RNView"
+import { RNImage } from "./RNOHCorePackage/Components/RNImage"
+import { RNTextInput } from "./RNOHCorePackage/Components/RNTextInput"
+import { RNText } from "./RNOHCorePackage/Components/RNText"
+import { RNScrollView } from "./RNOHCorePackage/Components/RNScrollView"
+import { Descriptor, Tag } from "./RNOH/DescriptorBase"
 import { RNOHContext } from "./RNOH/RNOHContext"
-
-// placeholder value used as the initializer for
-// the `descriptor` @State field in `RNComponentFactory`
-const nullDescriptor = {
-  type: "null",
-  tag: -1,
-  isDynamicBinder: false,
-  props: {},
-  state: {},
-  childrenTags: [],
-  layoutMetrics: {
-    frame: {
-      origin: {
-        x: 0,
-        y: 0,
-      },
-      size: {
-        width: 0,
-        height: 0,
-      }
-    }
-  }
-}
 
 export type ComponentBuilderContext = {
   rnohContext: RNOHContext
@@ -39,18 +16,17 @@ export struct RNComponentFactory {
   ctx: RNOHContext
   tag: number
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
-  @State descriptor: Descriptor = nullDescriptor
+  @State descriptorType: string = ''
+  @State childrenTags: Tag[] = []
   private cleanupCallback?: () => void = undefined
 
-  getDescriptorType() {
-    return this.descriptor.type
-  }
-
   aboutToAppear() {
-    this.descriptor = this.ctx.descriptorRegistry.getDescriptor(this.tag)
+    const descriptor = this.ctx.descriptorRegistry.getDescriptor(this.tag)
+    this.descriptorType = descriptor.type
+    this.setDescriptor(descriptor)
     this.cleanupCallback = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
       this.tag,
-      (newDescriptor) => this.onUpdateComponent(newDescriptor)
+      (newDescriptor) => this.setDescriptor(newDescriptor)
     )
   }
 
@@ -58,39 +34,37 @@ export struct RNComponentFactory {
     this.cleanupCallback?.()
   }
 
-  onUpdateComponent(newDescriptor: Descriptor) {
-    this.descriptor = newDescriptor
+  setDescriptor(newDescriptor: Descriptor) {
+    this.childrenTags = newDescriptor.childrenTags
   }
 
   @Builder renderDescriptors() {
-    ForEach(this.descriptor.childrenTags, (childrenTag) => {
+    ForEach(this.childrenTags, (childrenTag) => {
       RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
     }, childrenTag => childrenTag)
   }
 
   build() {
-    if (this.getDescriptorType() === "View") {
+    if (this.descriptorType === "View") {
       RNView({
         ctx: this.ctx,
         tag: this.tag,
-        renderDescriptors: this.renderDescriptors.bind(this),
-        descriptor: this.descriptor as ViewDescriptor
+        renderDescriptors: this.renderDescriptors.bind(this)
       })
-    } else if (this.getDescriptorType() === "Image") {
-      RNImage({ ctx: this.ctx, tag: this.tag, descriptor: this.descriptor as ImageDescriptor })
-    } else if (this.getDescriptorType() === "TextInput") {
-      RNTextInput({ ctx: this.ctx, tag: this.tag, descriptor: this.descriptor as TextInputDescriptor })
-    } else if (this.getDescriptorType() === "Paragraph") {
-      RNText({ ctx: this.ctx, tag: this.tag, descriptor: this.descriptor as TextDescriptor })
-    } else if (this.getDescriptorType() === "ScrollView") {
+    } else if (this.descriptorType === "Image") {
+      RNImage({ ctx: this.ctx, tag: this.tag })
+    } else if (this.descriptorType === "TextInput") {
+      RNTextInput({ ctx: this.ctx, tag: this.tag })
+    } else if (this.descriptorType === "Paragraph") {
+      RNText({ ctx: this.ctx, tag: this.tag })
+    } else if (this.descriptorType === "ScrollView") {
       RNScrollView({
         ctx: this.ctx,
         tag: this.tag,
-        renderDescriptors: this.renderDescriptors.bind(this),
-        descriptor: this.descriptor as ScrollViewDescriptor
+        renderDescriptors: this.renderDescriptors.bind(this)
       })
-    } else {
-      this.buildCustomComponent({ rnohContext: this.ctx, descriptor: this.descriptor })
+    } else if (this.descriptorType !== '') {
+      this.buildCustomComponent({ rnohContext: this.ctx, descriptor: this.ctx.descriptorRegistry.getDescriptor(this.tag) })
     }
   }
 }
