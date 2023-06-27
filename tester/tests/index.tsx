@@ -24,6 +24,7 @@ export * from './ScrollViewTest';
 export * from './SectionListTest';
 export * from './StatusBarTest';
 export * from './TextTest';
+export * from './TransformTest';
 export * from './TimerTest';
 export * from './TouchablesTest';
 export * from './TurboModuleTest';

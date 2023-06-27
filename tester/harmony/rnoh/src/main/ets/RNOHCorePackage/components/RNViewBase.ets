@@ -1,3 +1,5 @@
+import matrix4 from '@ohos.matrix4'
+import display from '@ohos.display'
 import {
   Descriptor,
   LayoutProps,
@@ -16,6 +18,7 @@ export type ViewBaseProps = LayoutProps & {
   borderColor?: ColorSegments
   borderRadius?: BorderRadii
   opacity?: number
+  transform?: TransformMatrix,
 }
 
 export type ViewDynamicProps = {
@@ -36,6 +39,25 @@ type BorderRadii = {
   bottomLeft?: number
   bottomRight?: number
 }
+
+type TransformMatrix = [
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number
+];
 
 export type ViewBaseDescriptor = Descriptor<string, ViewBaseProps>
 
@@ -85,10 +107,22 @@ function convertViewDynamicDescriptor(dynamicDescriptor: ViewDynamicDescriptor):
       backgroundColor: convertColorValueToColorSegments(p.backgroundColor),
       borderWidth: p.borderWidth,
       borderColor: convertColorValueToColorSegments(p.borderColor),
-      borderRadius: { topLeft: p.borderRadius, topRight: p.borderRadius, bottomLeft: p.borderRadius, bottomRight: p.borderRadius},
+      borderRadius: {
+        topLeft: p.borderRadius,
+        topRight: p.borderRadius,
+        bottomLeft: p.borderRadius,
+        bottomRight: p.borderRadius
+      },
       opacity: p.opacity
     }
   }
+}
+
+function convertTranslationPixelsToPhysicalPixels(transform: TransformMatrix) {
+  let displayInstance = display.getDefaultDisplaySync();
+  transform[12] = transform[12] * displayInstance.densityPixels;
+  transform[13] = transform[13] * displayInstance.densityPixels;
+  return transform;
 }
 
 @Component
@@ -137,6 +171,7 @@ export struct RNViewBase {
     .borderRadius(this.descriptor.props.borderRadius)
     .onTouch((event) => this.onTouchEvent(event))
     .opacity(this.descriptor.props.opacity)
+    .transform(this.descriptor.props.transform != undefined ? matrix4.init(convertTranslationPixelsToPhysicalPixels(this.descriptor.props.transform)) : undefined)
     .clip(true)
   }
 }

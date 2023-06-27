@@ -148,6 +148,8 @@ class RNOHNapiObjectBuilder {
 
     RNOHNapiObjectBuilder &addProperty(const char *name, int value);
 
+    RNOHNapiObjectBuilder &addProperty(const char *name, std::array<float, 16> matrix);
+
     RNOHNapiObjectBuilder &addProperty(const char *name, facebook::react::Float value);
 
     RNOHNapiObjectBuilder &addProperty(const char *name, char const *value);

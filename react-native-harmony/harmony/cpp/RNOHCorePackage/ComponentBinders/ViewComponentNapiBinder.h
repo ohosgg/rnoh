@@ -21,6 +21,7 @@ class ViewComponentNapiBinder : public BaseComponentNapiBinder {
                 .addProperty("borderWidth", borderMetrics.borderWidths.top)
                 .addProperty("borderColor", borderMetrics.borderColors.top)
                 .addProperty("borderRadius", borderMetrics.borderRadii)
+                .addProperty("transform", props->transform.matrix)
                 .build();
         }
         return napiBaseProps;

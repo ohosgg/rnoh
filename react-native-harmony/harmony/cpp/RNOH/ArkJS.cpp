@@ -384,6 +384,17 @@ RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, face
     napi_set_named_property(m_env, m_object, name, n_value);
     return *this;
 }
+RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, std::array<float, 16> matrix) {
+    napi_value n_value;
+    napi_create_array_with_length(m_env, matrix.size(), &n_value);
+
+    for (std::size_t i = 0; i < matrix.size(); ++i) {
+        napi_set_element(m_env, n_value, i, m_arkJs.createDouble(matrix[i]));
+    }
+
+    napi_set_named_property(m_env, m_object, name, n_value);
+    return *this;
+}
 
 RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, std::string value) {
     napi_set_named_property(m_env, m_object, name, m_arkJs.createString(value));
