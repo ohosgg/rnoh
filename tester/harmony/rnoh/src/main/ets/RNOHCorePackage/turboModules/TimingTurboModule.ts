@@ -12,12 +12,13 @@ export class TimingTurboModule extends TurboModule {
         const triggerTimer = () =>
             this.ctx.rnInstance.callRNFunction("JSTimers", "callTimers", [[id]]);
 
-        let nativeTimerId: number;
+        let nativeTimerId;
 
         if (repeats) {
             nativeTimerId = setInterval(triggerTimer, duration)
         } else {
-            nativeTimerId = setTimeout(triggerTimer, duration)
+            const delay = new Date().getTime() - jsSchedulingTime;
+            nativeTimerId = setTimeout(triggerTimer, Math.max(0, duration - delay))
         }
 
         this.nativeTimerMap.set(id, { nativeTimerId, repeats });
