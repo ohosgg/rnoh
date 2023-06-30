@@ -10,7 +10,7 @@ class ScrollViewComponentNapiBinder : public ViewComponentNapiBinder {
   public:
     napi_value createProps(napi_env env, facebook::react::ShadowView const shadowView) override {
         napi_value napiViewProps = ViewComponentNapiBinder::createProps(env, shadowView);
-        if (auto props = std::dynamic_pointer_cast<const react::ScrollViewProps>(shadowView.props)) {
+        if (auto props = std::dynamic_pointer_cast<const facebook::react::ScrollViewProps>(shadowView.props)) {
             ArkJS(env)
                 .getObjectBuilder(napiViewProps)
                 .addProperty("contentOffsetX", props->contentOffset.x)
@@ -26,7 +26,7 @@ class ScrollViewComponentNapiBinder : public ViewComponentNapiBinder {
 
     napi_value createState(napi_env env, facebook::react::ShadowView const shadowView) override {
         napi_value napiViewState = ViewComponentNapiBinder::createState(env, shadowView);
-        if (auto state = std::dynamic_pointer_cast<const facebook::react::ConcreteState<react::ScrollViewState>>(shadowView.state)) {
+        if (auto state = std::dynamic_pointer_cast<const facebook::react::ConcreteState<facebook::react::ScrollViewState>>(shadowView.state)) {
             auto data = state->getData();
             ArkJS(env)
                 .getObjectBuilder(napiViewState)

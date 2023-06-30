@@ -13,9 +13,9 @@
 #include <queue>
 
 #include <folly/Function.h>
-#include <folly/Optional.h>
 #include <hermes/hermes.h>
 #include <hermes/inspector/chrome/Connection.h>
+#include <optional>
 
 namespace facebook {
 namespace hermes {
@@ -49,8 +49,8 @@ class SyncConnection {
       std::chrono::milliseconds timeout = std::chrono::milliseconds(2500));
 
  private:
-  class RemoteConnnection;
-  friend class RemoteConnnection;
+  class RemoteConnection;
+  friend class RemoteConnection;
 
   void onReply(const std::string &message);
 

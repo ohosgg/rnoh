@@ -12,24 +12,24 @@ class SchedulerDelegate : public facebook::react::SchedulerDelegate {
 
     ~SchedulerDelegate() = default;
 
-    void schedulerDidFinishTransaction(react::MountingCoordinator::Shared const &mountingCoordinator) override {
+    void schedulerDidFinishTransaction(facebook::react::MountingCoordinator::Shared mountingCoordinator) override {
         mountingManager.scheduleTransaction(mountingCoordinator);
     }
 
-    void schedulerDidRequestPreliminaryViewAllocation(react::SurfaceId surfaceId, const react::ShadowNode &shadowView) override {}
+    void schedulerDidRequestPreliminaryViewAllocation(facebook::react::SurfaceId surfaceId, const facebook::react::ShadowNode &shadowView) override {}
 
     void schedulerDidDispatchCommand(
-        const react::ShadowView &shadowView,
+        const facebook::react::ShadowView &shadowView,
         std::string const &commandName,
         folly::dynamic const &args) override {
         mountingManager.dispatchCommand(shadowView.tag, commandName, args);
     }
 
-    void schedulerDidSendAccessibilityEvent(const react::ShadowView &shadowView, std::string const &eventType) override {
+    void schedulerDidSendAccessibilityEvent(const facebook::react::ShadowView &shadowView, std::string const &eventType) override {
     }
 
     void schedulerDidSetIsJSResponder(
-        react::ShadowView const &shadowView, bool isJSResponder, bool blockNativeResponder) override {}
+        facebook::react::ShadowView const &shadowView, bool isJSResponder, bool blockNativeResponder) override {}
 
   private:
     MountingManager mountingManager;

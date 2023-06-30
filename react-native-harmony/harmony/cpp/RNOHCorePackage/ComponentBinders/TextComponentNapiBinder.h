@@ -11,14 +11,14 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
   public:
     napi_value createProps(napi_env env, facebook::react::ShadowView const shadowView) override {
         napi_value napiViewProps = ViewComponentNapiBinder::createProps(env, shadowView);
-        if (auto state = std::dynamic_pointer_cast<const react::ConcreteState<react::ParagraphState>>(shadowView.state)) {
+        if (auto state = std::dynamic_pointer_cast<const facebook::react::ConcreteState<facebook::react::ParagraphState>>(shadowView.state)) {
             auto data = state->getData();
             ArkJS arkJs(env);
             auto propsObjBuilder = arkJs.getObjectBuilder(napiViewProps);
             auto fragmentsPayload = std::vector<napi_value>();
             auto fragments = data.attributedString.getFragments();
             
-            if (auto props = std::dynamic_pointer_cast<const react::BaseTextProps>(shadowView.props)) {
+            if (auto props = std::dynamic_pointer_cast<const facebook::react::BaseTextProps>(shadowView.props)) {
                 auto textAlign = props->textAttributes.alignment;   
                 if (textAlign.has_value()) {
                     propsObjBuilder.addProperty("textAlign", textAlignmentToString(textAlign.value()));

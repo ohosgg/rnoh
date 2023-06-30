@@ -44,6 +44,12 @@ class TextLayoutManager {
         AttributedStringBox attributedStringBox,
         ParagraphAttributes paragraphAttributes,
         LayoutConstraints layoutConstraints) const;
+    
+    TextMeasurement measure(
+        AttributedStringBox attributedStringBox,
+        ParagraphAttributes paragraphAttributes,
+        LayoutConstraints layoutConstraints, 
+        std::shared_ptr<void> hostTextStorage) const;
 
     /*
    * Measures lines of `attributedString` using native text rendering
@@ -59,6 +65,11 @@ class TextLayoutManager {
    * Is used on a native views layer to delegate text rendering to the manager.
    */
     void *getNativeTextLayoutManager() const;
+    
+    std::shared_ptr<void> getHostTextStorage(
+        AttributedString attributedString,
+        ParagraphAttributes paragraphAttributes,
+        LayoutConstraints layoutConstraints) const;
 
   private:
     std::shared_ptr<TextLayoutManagerDelegate> m_textLayoutManagerDelegate;

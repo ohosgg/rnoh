@@ -27,7 +27,7 @@ Props::Props(
                                                        "nativeID",
                                                        sourceProps.nativeId,
                                                        {}))
- // RNOH: patch
+      // RNOH patch: remove conditional compilation for ANDROID
       ,
       rawProps(
           shouldSetRawProps ? (folly::dynamic)rawProps

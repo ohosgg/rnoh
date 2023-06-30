@@ -16,9 +16,7 @@
 #include <react/renderer/core/Sealable.h>
 #include <react/renderer/debug/DebugStringConvertible.h>
 
-#ifdef ANDROID
 #include <react/renderer/mapbuffer/MapBufferBuilder.h>
-#endif
 
 namespace facebook {
 namespace react {
@@ -56,7 +54,7 @@ class Props : public virtual Sealable, public virtual DebugStringConvertible {
 
   std::string nativeId;
 
-// RNOH: patch
+  // RNOH patch: remove conditional compilation for ANDROID, comment out propsDiffMapBuffer
   folly::dynamic rawProps = folly::dynamic::object();
 
 //   virtual void propsDiffMapBuffer(

@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <folly/dynamic.h>
 #include <jsi/jsi.h>
 #include <react/renderer/runtimescheduler/Task.h>
 
@@ -22,7 +21,7 @@ struct TaskWrapper : public jsi::HostObject {
 
 inline static jsi::Value valueFromTask(
     jsi::Runtime &runtime,
-    std::shared_ptr<Task> const &task) {
+    std::shared_ptr<Task> task) {
   return jsi::Object::createFromHostObject(
       runtime, std::make_shared<TaskWrapper>(task));
 }

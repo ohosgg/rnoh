@@ -49,7 +49,7 @@ module.exports = {
     return require('react-native/Libraries/BatchedBridge/NativeModules');
   },
   get PixelRatio() {
-    return require('react-native/Libraries/Utilities/PixelRatio');
+    return require('react-native/Libraries/Utilities/PixelRatio').default;
   },
   get Platform() {
     return require('./Libraries/Utilities/Platform');
@@ -110,15 +110,15 @@ module.exports = {
     return require('react-native/Libraries/Interaction/InteractionManager');
   },
   get PanResponder() {
-    return require('react-native/Libraries/Interaction/PanResponder');
+    return require('react-native/Libraries/Interaction/PanResponder').default;
   },
   get processColor() {
-    return require('react-native/Libraries/StyleSheet/processColor');
+    return require('react-native/Libraries/StyleSheet/processColor').default;
   },
   get SectionList() {
     return require('react-native/Libraries/Lists/SectionList').default;
   },
   get VirtualizedList() {
-    return require('react-native/Libraries/Lists/VirtualizedList').default;
+    return require('react-native/Libraries/Lists/VirtualizedList');
   },
 };

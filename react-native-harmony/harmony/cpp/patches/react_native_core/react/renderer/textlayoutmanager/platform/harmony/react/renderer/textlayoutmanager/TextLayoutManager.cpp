@@ -29,12 +29,27 @@ TextMeasurement TextLayoutManager::measure(
     return TextMeasurement{m_textLayoutManagerDelegate->measure(attributedStringBox.getValue().getString()), attachments};
 }
 
+TextMeasurement TextLayoutManager::measure(
+    AttributedStringBox attributedStringBox,
+    ParagraphAttributes paragraphAttributes,
+    LayoutConstraints layoutConstraints,
+    std::shared_ptr<void> hostTextStorage) const {
+        return this->measure(attributedStringBox, paragraphAttributes, layoutConstraints);
+    }
+
 LinesMeasurements TextLayoutManager::measureLines(
     AttributedString attributedString,
     ParagraphAttributes paragraphAttributes,
     Size size) const {
     return {};
-};
+}
+
+std::shared_ptr<void> TextLayoutManager::getHostTextStorage(
+        AttributedString attributedString,
+        ParagraphAttributes paragraphAttributes,
+        LayoutConstraints layoutConstraints) const {
+        return nullptr;
+}
 
 } // namespace react
 } // namespace facebook

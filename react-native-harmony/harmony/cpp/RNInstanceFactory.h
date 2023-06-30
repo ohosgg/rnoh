@@ -24,7 +24,7 @@
 using namespace rnoh;
 
 std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboModuleProviderRef, napi_ref measureTextFnRef) {
-    auto contextContainer = std::make_shared<react::ContextContainer>();
+    auto contextContainer = std::make_shared<facebook::react::ContextContainer>();
     auto taskExecutor = std::make_shared<TaskExecutor>(env);
     auto textMeasurer = std::make_shared<TextMeasurer>(env, measureTextFnRef, taskExecutor);
     contextContainer->insert("textLayoutManagerDelegate", textMeasurer);
@@ -32,7 +32,7 @@ std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboMo
     auto packages = packageProvider.getPackages({});
     packages.insert(packages.begin(), std::make_shared<RNOHCorePackage>(Package::Context{}));
 
-    auto componentDescriptorProviderRegistry = std::make_shared<react::ComponentDescriptorProviderRegistry>();
+    auto componentDescriptorProviderRegistry = std::make_shared<facebook::react::ComponentDescriptorProviderRegistry>();
     std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> turboModuleFactoryDelegates;
     ComponentJSIBinderByString componentJSIBinderByName = {};
     ComponentNapiBinderByString componentNapiBinderByName = {};

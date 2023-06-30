@@ -28,9 +28,9 @@ void TurboModuleProvider::installJSBindings(react::RuntimeExecutor runtimeExecut
     runtimeExecutor(
         [turboModuleProvider = std::move(turboModuleProvider)](facebook::jsi::Runtime &runtime) {
             react::TurboModuleBinding::install(runtime,
-                                               std::move(turboModuleProvider),
                                                react::TurboModuleBindingMode::HostObject,
-                                               nullptr);
+                                               std::move(turboModuleProvider)
+                                               );
         });
 }
 

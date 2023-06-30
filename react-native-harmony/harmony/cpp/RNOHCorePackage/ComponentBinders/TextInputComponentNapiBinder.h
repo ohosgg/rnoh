@@ -11,7 +11,7 @@ class TextInputComponentNapiBinder : public ViewComponentNapiBinder {
   public:
     napi_value createProps(napi_env env, facebook::react::ShadowView const shadowView) override {
         napi_value napiViewProps = ViewComponentNapiBinder::createProps(env, shadowView);
-        if (auto props = std::dynamic_pointer_cast<const react::TextInputProps>(shadowView.props)) {
+        if (auto props = std::dynamic_pointer_cast<const facebook::react::TextInputProps>(shadowView.props)) {
             return ArkJS(env)
                 .getObjectBuilder(napiViewProps)
                 .addProperty("text", props->text)

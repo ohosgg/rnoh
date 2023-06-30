@@ -6,8 +6,9 @@
  */
 
 #include "EventDispatcher.h"
-
+#include <cxxreact/JSExecutor.h>
 #include <react/renderer/core/StateUpdate.h>
+#include "EventLogger.h"
 
 #include "BatchedEventQueue.h"
 #include "RawEvent.h"
@@ -18,7 +19,7 @@ namespace facebook::react {
 EventDispatcher::EventDispatcher(
     EventQueueProcessor const &eventProcessor,
     EventBeat::Factory const &synchonousEventBeatFactory,
-    EventBeat::Factory const &asynchonousEventBeatFactory,
+    EventBeat::Factory const &asynchronousEventBeatFactory,
     EventBeat::SharedOwnerBox const &ownerBox)
     : synchronousUnbatchedQueue_(std::make_unique<UnbatchedEventQueue>(
           eventProcessor,
@@ -28,16 +29,21 @@ EventDispatcher::EventDispatcher(
           synchonousEventBeatFactory(ownerBox))),
       asynchronousUnbatchedQueue_(std::make_unique<UnbatchedEventQueue>(
           eventProcessor,
-          asynchonousEventBeatFactory(ownerBox))),
+          asynchronousEventBeatFactory(ownerBox))),
       asynchronousBatchedQueue_(std::make_unique<BatchedEventQueue>(
           eventProcessor,
-          asynchonousEventBeatFactory(ownerBox))) {}
+          asynchronousEventBeatFactory(ownerBox))) {}
 
 void EventDispatcher::dispatchEvent(RawEvent &&rawEvent, EventPriority priority)
     const {
   // Allows the event listener to interrupt default event dispatch
   if (eventListeners_.willDispatchEvent(rawEvent)) {
     return;
+  }
+
+  auto eventLogger = getEventLogger();
+  if (eventLogger != nullptr) {
+    rawEvent.loggingTag = eventLogger->onEventStart(rawEvent.type.c_str());
   }
   getEventQueue(priority).enqueueEvent(std::move(rawEvent));
 }

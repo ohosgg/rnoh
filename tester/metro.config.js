@@ -1,4 +1,4 @@
-const {mergeConfig} = require('metro-config');
+const {mergeConfig, getDefaultConfig} = require('@react-native/metro-config');
 const harmonyMetroConfig = require('react-native-harmony/metro.config');
 
 /**
@@ -15,4 +15,4 @@ const config = {
   },
 };
 
-module.exports = mergeConfig(harmonyMetroConfig, config);
+module.exports = mergeConfig(getDefaultConfig(__dirname), harmonyMetroConfig, config);

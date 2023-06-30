@@ -29,13 +29,13 @@ import StyleSheet, {
 import Text from 'react-native/Libraries/Text/Text';
 import TextAncestor from 'react-native/Libraries/Text/TextAncestor';
 import Platform from '../../Utilities/Platform';
-import setAndForwardRef from 'react-native/Libraries/Utilities/setAndForwardRef';
+import useMergeRefs from 'react-native/Libraries/Utilities/useMergeRefs';
 import TextInputState from 'react-native/Libraries/Components/TextInput/TextInputState';
 import invariant from 'invariant';
 import nullthrows from 'nullthrows';
 import * as React from 'react';
 
-const {useLayoutEffect, useRef, useState} = React;
+const {useLayoutEffect, useRef, useState, useCallback} = React;
 
 type ReactRefSetter<T> = {current: null | T, ...} | ((ref: null | T) => mixed);
 
@@ -232,36 +232,6 @@ type PasswordRules = string;
 
 type IOSProps = $ReadOnly<{|
   /**
-   * Give the keyboard and the system information about the
-   * expected semantic meaning for the content that users enter.
-   * @platform ios
-   */
-  autoComplete?: ?(
-    | 'address-line1'
-    | 'address-line2'
-    | 'cc-number'
-    | 'current-password'
-    | 'country'
-    | 'email'
-    | 'name'
-    | 'additional-name'
-    | 'family-name'
-    | 'given-name'
-    | 'nickname'
-    | 'honorific-prefix'
-    | 'honorific-suffix'
-    | 'new-password'
-    | 'off'
-    | 'one-time-code'
-    | 'organization'
-    | 'organization-title'
-    | 'postal-code'
-    | 'street-address'
-    | 'tel'
-    | 'url'
-    | 'username'
-  ),
-  /**
    * When the clear button should appear on the right side of the text view.
    * This property is supported only for single-line TextInput component.
    * @platform ios
@@ -351,6 +321,9 @@ type IOSProps = $ReadOnly<{|
   /**
    * Give the keyboard and the system information about the
    * expected semantic meaning for the content that users enter.
+   * `autoComplete` property accomplishes same behavior and is recommended as its supported by both platforms.
+   * Avoid using both `autoComplete` and `textContentType`, you can use `Platform.select` for differing platform behaviors.
+   * For backwards compatibility, when both set, `textContentType` takes precedence on iOS.
    * @platform ios
    */
   textContentType?: ?TextContentType,
@@ -363,111 +336,6 @@ type IOSProps = $ReadOnly<{|
 |}>;
 
 type AndroidProps = $ReadOnly<{|
-  /**
-   * Specifies autocomplete hints for the system, so it can provide autofill. On Android, the system will always attempt to offer autofill by using heuristics to identify the type of content.
-   * To disable autocomplete, set `autoComplete` to `off`.
-   *
-   * *Android Only*
-   *
-   * Possible values for `autoComplete` are:
-   *
-   * - `birthdate-day`
-   * - `birthdate-full`
-   * - `birthdate-month`
-   * - `birthdate-year`
-   * - `cc-csc`
-   * - `cc-exp`
-   * - `cc-exp-day`
-   * - `cc-exp-month`
-   * - `cc-exp-year`
-   * - `cc-number`
-   * - `email`
-   * - `gender`
-   * - `name`
-   * - `name-family`
-   * - `name-given`
-   * - `name-middle`
-   * - `name-middle-initial`
-   * - `name-prefix`
-   * - `name-suffix`
-   * - `password`
-   * - `password-new`
-   * - `postal-address`
-   * - `postal-address-country`
-   * - `postal-address-extended`
-   * - `postal-address-extended-postal-code`
-   * - `postal-address-locality`
-   * - `postal-address-region`
-   * - `postal-code`
-   * - `street-address`
-   * - `sms-otp`
-   * - `tel`
-   * - `tel-country-code`
-   * - `tel-national`
-   * - `tel-device`
-   * - `username`
-   * - `username-new`
-   * - `off`
-   *
-   * @platform android
-   */
-  autoComplete?: ?(
-    | 'birthdate-day'
-    | 'birthdate-full'
-    | 'birthdate-month'
-    | 'birthdate-year'
-    | 'cc-csc'
-    | 'cc-exp'
-    | 'cc-exp-day'
-    | 'cc-exp-month'
-    | 'cc-exp-year'
-    | 'cc-number'
-    | 'email'
-    | 'gender'
-    | 'name'
-    | 'name-family'
-    | 'name-given'
-    | 'name-middle'
-    | 'name-middle-initial'
-    | 'name-prefix'
-    | 'name-suffix'
-    | 'password'
-    | 'password-new'
-    | 'postal-address'
-    | 'postal-address-country'
-    | 'postal-address-extended'
-    | 'postal-address-extended-postal-code'
-    | 'postal-address-locality'
-    | 'postal-address-region'
-    | 'postal-code'
-    | 'street-address'
-    | 'sms-otp'
-    | 'tel'
-    | 'tel-country-code'
-    | 'tel-national'
-    | 'tel-device'
-    | 'username'
-    | 'username-new'
-    | 'off'
-    // additional HTML autocomplete values
-    | 'address-line1'
-    | 'address-line2'
-    | 'bday'
-    | 'bday-day'
-    | 'bday-month'
-    | 'bday-year'
-    | 'country'
-    | 'current-password'
-    | 'honorific-prefix'
-    | 'honorific-suffix'
-    | 'additional-name'
-    | 'family-name'
-    | 'given-name'
-    | 'new-password'
-    | 'one-time-code'
-    | 'sex'
-  ),
-
   /**
    * When provided it will set the color of the cursor (or "caret") in the component.
    * Unlike the behavior of `selectionColor` the cursor color will be set independently
@@ -569,6 +437,127 @@ export type Props = $ReadOnly<{|
   autoCapitalize?: ?AutoCapitalize,
 
   /**
+   * Specifies autocomplete hints for the system, so it can provide autofill.
+   * On Android, the system will always attempt to offer autofill by using heuristics to identify the type of content.
+   * To disable autocomplete, set autoComplete to off.
+   *
+   * The following values work across platforms:
+   *
+   * - `additional-name`
+   * - `address-line1`
+   * - `address-line2`
+   * - `cc-number`
+   * - `country`
+   * - `current-password`
+   * - `email`
+   * - `family-name`
+   * - `given-name`
+   * - `honorific-prefix`
+   * - `honorific-suffix`
+   * - `name`
+   * - `new-password`
+   * - `off`
+   * - `one-time-code`
+   * - `postal-code`
+   * - `street-address`
+   * - `tel`
+   * - `username`
+   *
+   * The following values work on iOS only:
+   *
+   * - `nickname`
+   * - `organization`
+   * - `organization-title`
+   * - `url`
+   *
+   * The following values work on Android only:
+   *
+   * - `birthdate-day`
+   * - `birthdate-full`
+   * - `birthdate-month`
+   * - `birthdate-year`
+   * - `cc-csc`
+   * - `cc-exp`
+   * - `cc-exp-day`
+   * - `cc-exp-month`
+   * - `cc-exp-year`
+   * - `gender`
+   * - `name-family`
+   * - `name-given`
+   * - `name-middle`
+   * - `name-middle-initial`
+   * - `name-prefix`
+   * - `name-suffix`
+   * - `password`
+   * - `password-new`
+   * - `postal-address`
+   * - `postal-address-country`
+   * - `postal-address-extended`
+   * - `postal-address-extended-postal-code`
+   * - `postal-address-locality`
+   * - `postal-address-region`
+   * - `sms-otp`
+   * - `tel-country-code`
+   * - `tel-national`
+   * - `tel-device`
+   * - `username-new`
+   */
+  autoComplete?: ?(
+    | 'additional-name'
+    | 'address-line1'
+    | 'address-line2'
+    | 'birthdate-day'
+    | 'birthdate-full'
+    | 'birthdate-month'
+    | 'birthdate-year'
+    | 'cc-csc'
+    | 'cc-exp'
+    | 'cc-exp-day'
+    | 'cc-exp-month'
+    | 'cc-exp-year'
+    | 'cc-number'
+    | 'country'
+    | 'current-password'
+    | 'email'
+    | 'family-name'
+    | 'gender'
+    | 'given-name'
+    | 'honorific-prefix'
+    | 'honorific-suffix'
+    | 'name'
+    | 'name-family'
+    | 'name-given'
+    | 'name-middle'
+    | 'name-middle-initial'
+    | 'name-prefix'
+    | 'name-suffix'
+    | 'new-password'
+    | 'nickname'
+    | 'one-time-code'
+    | 'organization'
+    | 'organization-title'
+    | 'password'
+    | 'password-new'
+    | 'postal-address'
+    | 'postal-address-country'
+    | 'postal-address-extended'
+    | 'postal-address-extended-postal-code'
+    | 'postal-address-locality'
+    | 'postal-address-region'
+    | 'postal-code'
+    | 'street-address'
+    | 'sms-otp'
+    | 'tel'
+    | 'tel-country-code'
+    | 'tel-national'
+    | 'tel-device'
+    | 'url'
+    | 'username'
+    | 'username-new'
+    | 'off'
+  ),
+
+  /**
    * If `false`, disables auto-correct. The default value is `true`.
    */
   autoCorrect?: ?boolean,
@@ -591,7 +580,7 @@ export type Props = $ReadOnly<{|
    * On Android devices manufactured by Xiaomi with Android Q,
    * when keyboardType equals 'email-address'this will be set
    * in native to 'true' to prevent a system related crash. This
-   * will cause cursor to be diabled as a side-effect.
+   * will cause cursor to be disabled as a side-effect.
    *
    */
   caretHidden?: ?boolean,
@@ -613,9 +602,7 @@ export type Props = $ReadOnly<{|
    */
   editable?: ?boolean,
 
-  forwardedRef?: ?ReactRefSetter<
-    React.ElementRef<HostComponent<mixed>> & ImperativeMethods,
-  >,
+  forwardedRef?: ?ReactRefSetter<TextInputInstance>,
 
   /**
    * `enterKeyHint` defines what action label (or icon) to present for the enter key on virtual keyboards.
@@ -953,13 +940,6 @@ export type Props = $ReadOnly<{|
   value?: ?Stringish,
 |}>;
 
-type ImperativeMethods = $ReadOnly<{|
-  clear: () => void,
-  isFocused: () => boolean,
-  getNativeRef: () => ?React.ElementRef<HostComponent<mixed>>,
-  setSelection: (start: number, end: number) => void,
-|}>;
-
 const emptyFunctionThatReturnsTrue = () => true;
 
 /**
@@ -1074,24 +1054,28 @@ const emptyFunctionThatReturnsTrue = () => true;
  *
  */
 function InternalTextInput(props: Props): React.Node {
+  const {
+    'aria-busy': ariaBusy,
+    'aria-checked': ariaChecked,
+    'aria-disabled': ariaDisabled,
+    'aria-expanded': ariaExpanded,
+    'aria-selected': ariaSelected,
+    accessibilityState,
+    id,
+    tabIndex,
+    selection: propsSelection,
+    ...otherProps
+  } = props;
+
   const inputRef = useRef<null | React.ElementRef<HostComponent<mixed>>>(null);
 
-  // Android sends a "onTextChanged" event followed by a "onSelectionChanged" event, for
-  // the same "most recent event count".
-  // For controlled selection, that means that immediately after text is updated,
-  // a controlled component will pass in the *previous* selection, even if the controlled
-  // component didn't mean to modify the selection at all.
-  // Therefore, we ignore selections and pass them through until the selection event has
-  // been sent.
-  // Note that this mitigation is NOT needed for Fabric.
-  // discovered when upgrading react-hooks
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  let selection: ?Selection =
-    props.selection == null
+  const selection: ?Selection =
+    propsSelection == null
       ? null
       : {
-          start: props.selection.start,
-          end: props.selection.end ?? props.selection.start,
+          start: propsSelection.start,
+          end: propsSelection.end ?? propsSelection.start,
         };
 
   const [mostRecentEventCount, setMostRecentEventCount] = useState<number>(0);
@@ -1103,12 +1087,6 @@ function InternalTextInput(props: Props): React.Node {
   |}>({selection, mostRecentEventCount});
 
   const lastNativeSelection = lastNativeSelectionState.selection;
-  const lastNativeSelectionEventCount =
-    lastNativeSelectionState.mostRecentEventCount;
-
-  if (lastNativeSelectionEventCount < mostRecentEventCount) {
-    selection = null;
-  }
 
   let viewCommands;
   if (AndroidTextInputCommands) {
@@ -1189,74 +1167,74 @@ function InternalTextInput(props: Props): React.Node {
     }
   }, [inputRef]);
 
-  function clear(): void {
-    if (inputRef.current != null) {
-      viewCommands.setTextAndSelection(
-        inputRef.current,
-        mostRecentEventCount,
-        '',
-        0,
-        0,
-      );
-    }
-  }
-
-  function setSelection(start: number, end: number): void {
-    if (inputRef.current != null) {
-      viewCommands.setTextAndSelection(
-        inputRef.current,
-        mostRecentEventCount,
-        null,
-        start,
-        end,
-      );
-    }
-  }
-
-  // TODO: Fix this returning true on null === null, when no input is focused
-  function isFocused(): boolean {
-    return TextInputState.currentlyFocusedInput() === inputRef.current;
-  }
-
-  function getNativeRef(): ?React.ElementRef<HostComponent<mixed>> {
-    return inputRef.current;
-  }
-
-  const _setNativeRef = setAndForwardRef({
-    getForwardedRef: () => props.forwardedRef,
-    setLocalRef: ref => {
-      inputRef.current = ref;
+  const setLocalRef = useCallback(
+    (instance: TextInputInstance | null) => {
+      inputRef.current = instance;
 
       /*
-        Hi reader from the future. I'm sorry for this.
+      Hi reader from the future. I'm sorry for this.
 
-        This is a hack. Ideally we would forwardRef to the underlying
-        host component. However, since TextInput has it's own methods that can be
-        called as well, if we used the standard forwardRef then these
-        methods wouldn't be accessible and thus be a breaking change.
+      This is a hack. Ideally we would forwardRef to the underlying
+      host component. However, since TextInput has it's own methods that can be
+      called as well, if we used the standard forwardRef then these
+      methods wouldn't be accessible and thus be a breaking change.
 
-        We have a couple of options of how to handle this:
-        - Return a new ref with everything we methods from both. This is problematic
-          because we need React to also know it is a host component which requires
-          internals of the class implementation of the ref.
-        - Break the API and have some other way to call one set of the methods or
-          the other. This is our long term approach as we want to eventually
-          get the methods on host components off the ref. So instead of calling
-          ref.measure() you might call ReactNative.measure(ref). This would hopefully
-          let the ref for TextInput then have the methods like `.clear`. Or we do it
-          the other way and make it TextInput.clear(textInputRef) which would be fine
-          too. Either way though is a breaking change that is longer term.
-        - Mutate this ref. :( Gross, but accomplishes what we need in the meantime
-          before we can get to the long term breaking change.
-        */
-      if (ref) {
-        ref.clear = clear;
-        ref.isFocused = isFocused;
-        ref.getNativeRef = getNativeRef;
-        ref.setSelection = setSelection;
+      We have a couple of options of how to handle this:
+      - Return a new ref with everything we methods from both. This is problematic
+        because we need React to also know it is a host component which requires
+        internals of the class implementation of the ref.
+      - Break the API and have some other way to call one set of the methods or
+        the other. This is our long term approach as we want to eventually
+        get the methods on host components off the ref. So instead of calling
+        ref.measure() you might call ReactNative.measure(ref). This would hopefully
+        let the ref for TextInput then have the methods like `.clear`. Or we do it
+        the other way and make it TextInput.clear(textInputRef) which would be fine
+        too. Either way though is a breaking change that is longer term.
+      - Mutate this ref. :( Gross, but accomplishes what we need in the meantime
+        before we can get to the long term breaking change.
+      */
+      if (instance != null) {
+        // $FlowFixMe[incompatible-use] - See the explanation above.
+        Object.assign(instance, {
+          clear(): void {
+            if (inputRef.current != null) {
+              viewCommands.setTextAndSelection(
+                inputRef.current,
+                mostRecentEventCount,
+                '',
+                0,
+                0,
+              );
+            }
+          },
+          // TODO: Fix this returning true on null === null, when no input is focused
+          isFocused(): boolean {
+            return TextInputState.currentlyFocusedInput() === inputRef.current;
+          },
+          getNativeRef(): ?React.ElementRef<HostComponent<mixed>> {
+            return inputRef.current;
+          },
+          setSelection(start: number, end: number): void {
+            if (inputRef.current != null) {
+              viewCommands.setTextAndSelection(
+                inputRef.current,
+                mostRecentEventCount,
+                null,
+                start,
+                end,
+              );
+            }
+          },
+        });
       }
     },
-  });
+    [mostRecentEventCount, viewCommands],
+  );
+
+  const ref = useMergeRefs<TextInputInstance | null>(
+    setLocalRef,
+    props.forwardedRef,
+  );
 
   const _onChange = (event: ChangeEvent) => {
     const currentText = event.nativeEvent.text;
@@ -1373,7 +1351,7 @@ function InternalTextInput(props: Props): React.Node {
       onPressIn: props.onPressIn,
       onPressOut: props.onPressOut,
       cancelable:
-        OS === 'ios' ? !props.rejectResponderTermination : null,
+        Platform.OS === 'ios' ? !props.rejectResponderTermination : null,
     }),
     [
       props.editable,
@@ -1394,24 +1372,34 @@ function InternalTextInput(props: Props): React.Node {
   // so omitting onBlur and onFocus pressability handlers here.
   const {onBlur, onFocus, ...eventHandlers} = usePressability(config) || {};
 
-  const _accessibilityState = {
-    busy: props['aria-busy'] ?? props.accessibilityState?.busy,
-    checked: props['aria-checked'] ?? props.accessibilityState?.checked,
-    disabled: props['aria-disabled'] ?? props.accessibilityState?.disabled,
-    expanded: props['aria-expanded'] ?? props.accessibilityState?.expanded,
-    selected: props['aria-selected'] ?? props.accessibilityState?.selected,
-  };
+  let _accessibilityState;
+  if (
+    accessibilityState != null ||
+    ariaBusy != null ||
+    ariaChecked != null ||
+    ariaDisabled != null ||
+    ariaExpanded != null ||
+    ariaSelected != null
+  ) {
+    _accessibilityState = {
+      busy: ariaBusy ?? accessibilityState?.busy,
+      checked: ariaChecked ?? accessibilityState?.checked,
+      disabled: ariaDisabled ?? accessibilityState?.disabled,
+      expanded: ariaExpanded ?? accessibilityState?.expanded,
+      selected: ariaSelected ?? accessibilityState?.selected,
+    };
+  }
 
-  if (OS === 'ios') {
+  // $FlowFixMe[underconstrained-implicit-instantiation]
+  let style = flattenStyle(props.style);
+
+  if (Platform.OS === 'ios') {
     const RCTTextInputView =
       props.multiline === true
         ? RCTMultilineTextInputView
         : RCTSinglelineTextInputView;
 
-    const style =
-      props.multiline === true
-        ? StyleSheet.flatten([styles.multilineInput, props.style])
-        : props.style;
+    style = props.multiline === true ? [styles.multilineInput, style] : style;
 
     const useOnChangeSync =
       (props.unstable_onChangeSync || props.unstable_onChangeTextSync) &&
@@ -1419,16 +1407,18 @@ function InternalTextInput(props: Props): React.Node {
 
     textInput = (
       <RCTTextInputView
-        ref={_setNativeRef}
-        {...props}
+        // $FlowFixMe[incompatible-type] - Figure out imperative + forward refs.
+        ref={ref}
+        {...otherProps}
         {...eventHandlers}
-        accessible={accessible}
         accessibilityState={_accessibilityState}
+        accessible={accessible}
         submitBehavior={submitBehavior}
         caretHidden={caretHidden}
         dataDetectorTypes={props.dataDetectorTypes}
-        focusable={focusable}
+        focusable={tabIndex !== undefined ? !tabIndex : focusable}
         mostRecentEventCount={mostRecentEventCount}
+        nativeID={id ?? props.nativeID}
         onBlur={_onBlur}
         onKeyPressSync={props.unstable_onKeyPressSync}
         onChange={_onChange}
@@ -1443,8 +1433,7 @@ function InternalTextInput(props: Props): React.Node {
         text={text}
       />
     );
-  } else if (OS === 'android') {
-    const style = [props.style];
+  } else if (Platform.OS === 'android') {
     const autoCapitalize = props.autoCapitalize || 'sentences';
     const _accessibilityLabelledBy =
       props?.['aria-labelledby'] ?? props?.accessibilityLabelledBy;
@@ -1469,19 +1458,21 @@ function InternalTextInput(props: Props): React.Node {
        * match up exactly with the props for TextInput. This will need to get
        * fixed */
       <AndroidTextInput
-        ref={_setNativeRef}
-        {...props}
+        // $FlowFixMe[incompatible-type] - Figure out imperative + forward refs.
+        ref={ref}
+        {...otherProps}
         {...eventHandlers}
-        accessible={accessible}
         accessibilityState={_accessibilityState}
         accessibilityLabelledBy={_accessibilityLabelledBy}
+        accessible={accessible}
         autoCapitalize={autoCapitalize}
         submitBehavior={submitBehavior}
         caretHidden={caretHidden}
         children={children}
         disableFullscreenUI={props.disableFullscreenUI}
-        focusable={focusable}
+        focusable={tabIndex !== undefined ? !tabIndex : focusable}
         mostRecentEventCount={mostRecentEventCount}
+        nativeID={id ?? props.nativeID}
         numberOfLines={props.rows ?? props.numberOfLines}
         onBlur={_onBlur}
         onChange={_onChange}
@@ -1495,7 +1486,6 @@ function InternalTextInput(props: Props): React.Node {
         onScroll={_onScroll}
         onSelectionChange={_onSelectionChange}
         placeholder={placeholder}
-        selection={selection}
         style={style}
         text={text}
         textBreakStrategy={props.textBreakStrategy}
@@ -1523,7 +1513,7 @@ const inputModeToKeyboardTypeMap = {
   decimal: 'decimal-pad',
   numeric: 'number-pad',
   tel: 'phone-pad',
-  search: OS === 'ios' ? 'web-search' : 'default',
+  search: Platform.OS === 'ios' ? 'web-search' : 'default',
   email: 'email-address',
   url: 'url',
 };
@@ -1591,7 +1581,7 @@ const autoCompleteWebToTextContentTypeMap = {
 
 const ExportedForwardRef: React.AbstractComponent<
   React.ElementConfig<typeof InternalTextInput>,
-  React.ElementRef<HostComponent<mixed>> & ImperativeMethods,
+  TextInputInstance,
 > = React.forwardRef(function TextInput(
   {
     allowFontScaling = true,
@@ -1604,18 +1594,19 @@ const ExportedForwardRef: React.AbstractComponent<
     enterKeyHint,
     returnKeyType,
     inputMode,
+    showSoftInputOnFocus,
     keyboardType,
     ...restProps
   },
-  forwardedRef: ReactRefSetter<
-    React.ElementRef<HostComponent<mixed>> & ImperativeMethods,
-  >,
+  forwardedRef: ReactRefSetter<TextInputInstance>,
 ) {
-  const style = flattenStyle(restProps.style);
+  // $FlowFixMe[underconstrained-implicit-instantiation]
+  let style = flattenStyle(restProps.style);
 
   if (style?.verticalAlign != null) {
     style.textAlignVertical =
       verticalAlignToTextAlignVerticalMap[style.verticalAlign];
+    delete style.verticalAlign;
   }
 
   return (
@@ -1630,18 +1621,25 @@ const ExportedForwardRef: React.AbstractComponent<
       keyboardType={
         inputMode ? inputModeToKeyboardTypeMap[inputMode] : keyboardType
       }
+      showSoftInputOnFocus={
+        inputMode == null ? showSoftInputOnFocus : inputMode !== 'none'
+      }
       autoComplete={
-        OS === 'android'
-          ? // $FlowFixMe
+        Platform.OS === 'android'
+          ? // $FlowFixMe[invalid-computed-prop]
+            // $FlowFixMe[prop-missing]
             autoCompleteWebToAutoCompleteAndroidMap[autoComplete] ??
             autoComplete
           : undefined
       }
       textContentType={
-        OS === 'ios' &&
-        autoComplete &&
-        autoComplete in autoCompleteWebToTextContentTypeMap
-          ? // $FlowFixMe
+        textContentType != null
+          ? textContentType
+          : Platform.OS === 'ios' &&
+            autoComplete &&
+            autoComplete in autoCompleteWebToTextContentTypeMap
+          ? // $FlowFixMe[invalid-computed-prop]
+            // $FlowFixMe[prop-missing]
             autoCompleteWebToTextContentTypeMap[autoComplete]
           : textContentType
       }
@@ -1651,6 +1649,8 @@ const ExportedForwardRef: React.AbstractComponent<
     />
   );
 });
+
+ExportedForwardRef.displayName = 'TextInput';
 
 /**
  * Switch to `deprecated-react-native-prop-types` for compatibility with future

@@ -26,7 +26,7 @@ class MountingManager {
           triggerUICallback(std::move(triggerUICallback)),
           commandDispatcher(std::move(commandDispatcher)) {}
 
-    void performMountInstructions(facebook::react::ShadowViewMutationList const &mutations, react::SurfaceId surfaceId);
+    void performMountInstructions(facebook::react::ShadowViewMutationList const &mutations, facebook::react::SurfaceId surfaceId);
 
     void scheduleTransaction(facebook::react::MountingCoordinator::Shared const &mountingCoordinator);
 

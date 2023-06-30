@@ -12,6 +12,7 @@
 #include <react/common/mapbuffer/JReadableMapBuffer.h>
 #include <react/jni/ReadableNativeMap.h>
 #include <react/renderer/attributedstring/conversions.h>
+#include <react/renderer/core/CoreFeatures.h>
 #include <react/renderer/core/conversions.h>
 #include <react/renderer/mapbuffer/MapBuffer.h>
 #include <react/renderer/mapbuffer/MapBufferBuilder.h>
@@ -146,7 +147,10 @@ Size measureAndroidComponentMapBuffer(
 TextLayoutManager::TextLayoutManager(
     const ContextContainer::Shared &contextContainer)
     : contextContainer_(contextContainer),
-      measureCache_(kSimpleThreadSafeCacheSizeCap) {}
+      measureCache_(
+          CoreFeatures::cacheLastTextMeasurement
+              ? 8096
+              : kSimpleThreadSafeCacheSizeCap) {}
 
 void *TextLayoutManager::getNativeTextLayoutManager() const {
   return self_;
@@ -154,8 +158,9 @@ void *TextLayoutManager::getNativeTextLayoutManager() const {
 
 TextMeasurement TextLayoutManager::measure(
     AttributedStringBox const &attributedStringBox,
-    ParagraphAttributes paragraphAttributes,
-    LayoutConstraints layoutConstraints) const {
+    ParagraphAttributes const &paragraphAttributes,
+    LayoutConstraints layoutConstraints,
+    std::shared_ptr<void> /* hostTextStorage */) const {
   auto &attributedString = attributedStringBox.getValue();
 
   auto measurement = measureCache_.get(
@@ -178,6 +183,12 @@ TextMeasurement TextLayoutManager::measure(
 
   measurement.size = layoutConstraints.clamp(measurement.size);
   return measurement;
+}
+std::shared_ptr<void> TextLayoutManager::getHostTextStorage(
+    AttributedString const & /* attributedStringBox */,
+    ParagraphAttributes const & /* paragraphAttributes */,
+    LayoutConstraints /* layoutConstraints */) const {
+  return nullptr;
 }
 
 TextMeasurement TextLayoutManager::measureCachedSpannableById(

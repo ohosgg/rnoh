@@ -28,10 +28,10 @@ class RNInstance {
   public:
     using MutationsListener = std::function<void(MutationsToNapiConverter, facebook::react::ShadowViewMutationList const &mutations)>;
 
-    RNInstance(std::shared_ptr<react::ContextContainer> contextContainer,
+    RNInstance(std::shared_ptr<facebook::react::ContextContainer> contextContainer,
                TurboModuleFactory &&turboModuleFactory,
                std::shared_ptr<TaskExecutor> taskExecutor,
-               std::shared_ptr<react::ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry,
+               std::shared_ptr<facebook::react::ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry,
                MutationsToNapiConverter mutationsToNapiConverter,
                EventEmitRequestHandlerByString eventEmitRequestHandlerByName)
         : instance(std::make_shared<facebook::react::Instance>()),
@@ -52,7 +52,7 @@ class RNInstance {
     void loadScriptFromString(std::string const &&bundle, std::string const sourceURL);
     void runApplication(float width, float height, std::string const &moduleName, folly::dynamic &&initialProps);
     void callFunction(std::string &&module, std::string &&method, folly::dynamic &&params);
-    void emitComponentEvent(napi_env env, react::Tag tag, std::string eventEmitRequestHandlerName, napi_value payload);
+    void emitComponentEvent(napi_env env, facebook::react::Tag tag, std::string eventEmitRequestHandlerName, napi_value payload);
 
   private:
     std::shared_ptr<facebook::react::ContextContainer> m_contextContainer;
@@ -63,7 +63,7 @@ class RNInstance {
     std::unique_ptr<facebook::react::Scheduler> scheduler;
     std::unique_ptr<SchedulerDelegate> schedulerDelegate;
     std::shared_ptr<TaskExecutor> taskExecutor;
-    std::shared_ptr<react::ComponentDescriptorProviderRegistry> m_componentDescriptorProviderRegistry;
+    std::shared_ptr<facebook::react::ComponentDescriptorProviderRegistry> m_componentDescriptorProviderRegistry;
     EventEmitterRegistry::Shared eventEmitterRegistry;
     TurboModuleFactory m_turboModuleFactory;
     MutationsToNapiConverter m_mutationsToNapiConverter;
