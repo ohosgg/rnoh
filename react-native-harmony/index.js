@@ -14,10 +14,10 @@ module.exports = {
   get BackHandler() {
     return require('react-native/Libraries/Utilities/BackHandler');
   },
-  get Button(){
+  get Button() {
     return require('react-native/Libraries/Components/Button');
   },
-  get Dimensions(){
+  get Dimensions() {
     return require('react-native/Libraries/Utilities/Dimensions');
   },
   get Easing() {
@@ -100,8 +100,9 @@ module.exports = {
   get useAnimatedValue() {
     return require('react-native/Libraries/Animated/useAnimatedValue').default;
   },
-  get useWindowDimensions(){
-    return require('react-native/Libraries/Utilities/useWindowDimensions').default;
+  get useWindowDimensions() {
+    return require('react-native/Libraries/Utilities/useWindowDimensions')
+      .default;
   },
   get View() {
     return require('react-native/Libraries/Components/View/View');
@@ -120,5 +121,10 @@ module.exports = {
   },
   get VirtualizedList() {
     return require('react-native/Libraries/Lists/VirtualizedList');
+  },
+  // react-native-harmony specific ---
+  get registerViewConfig() {
+    return require('react-native/Libraries/Renderer/shims/ReactNativeViewConfigRegistry')
+      .register;
   },
 };

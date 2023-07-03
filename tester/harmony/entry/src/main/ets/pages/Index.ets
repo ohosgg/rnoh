@@ -1,5 +1,5 @@
 import { RNApp, ComponentBuilderContext, RNOHContext } from '@ohos/rnoh'
-import { SampleView, SAMPLE_VIEW_TYPE } from "@ohos/rnoh-sample-package"
+import { SampleView, SAMPLE_VIEW_TYPE, PropsDisplayer } from "@ohos/rnoh-sample-package"
 
 let storage = LocalStorage.GetShared()
 
@@ -15,13 +15,18 @@ struct Index {
         tag: ctx.descriptor.tag,
         buildCustomComponent: this.buildCustomComponent.bind(this)
       })
+    } else if (ctx.descriptor.type === PropsDisplayer.NAME) {
+      PropsDisplayer({
+        ctx: ctx.rnohContext,
+        tag: ctx.descriptor.tag
+      })
     }
   }
 
   build() {
     Column() {
       RNApp({
-        rnohContext: this.rnohContext!,
+        rnohContext: this.rnohContext !,
         appName: "app_name",
         buildCustomComponent: this.buildCustomComponent.bind(this)
       })

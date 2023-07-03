@@ -1,5 +1,6 @@
 #include "SamplePackage.h"
 #include "SampleViewComponentDescriptor.h"
+#include "PropsDisplayerComponentDescriptor.h"
 #include "SampleTurboModuleSpec.h"
 
 using namespace rnoh;
@@ -21,5 +22,7 @@ std::unique_ptr<TurboModuleFactoryDelegate> SamplePackage::createTurboModuleFact
 
 std::vector<react::ComponentDescriptorProvider> SamplePackage::createComponentDescriptorProviders() {
     return {
-        react::concreteComponentDescriptorProvider<react::SampleViewComponentDescriptor>()};
+        react::concreteComponentDescriptorProvider<react::SampleViewComponentDescriptor>(),
+        react::concreteComponentDescriptorProvider<react::PropsDisplayerComponentDescriptor>(),
+    };
 }

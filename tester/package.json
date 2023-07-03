@@ -10,7 +10,7 @@
     "android": "react-native run-android",
     "format": "prettier App.tsx ./tests -w",
     "start": "react-native start",
-    "benchmark-fps":"node ./scripts/get-frame-times | node ./scripts/create-performance-report -dt 0.5"
+    "benchmark-fps": "node ./scripts/get-frame-times | node ./scripts/create-performance-report -dt 0.5"
   },
   "dependencies": {
     "chai": "4.3.7",

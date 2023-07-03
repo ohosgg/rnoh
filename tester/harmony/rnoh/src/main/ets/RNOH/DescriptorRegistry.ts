@@ -117,6 +117,7 @@ export class DescriptorRegistry {
       this.descriptorByTag.set(mutation.descriptor.tag, {
         ...currentDescriptor,
         ...mutation.descriptor,
+        props: {...currentDescriptor.props, ...mutation.descriptor.props}
       });
       this.descriptorByTag.get(mutation.descriptor.tag).childrenTags = children;
       return [mutation.descriptor.tag];

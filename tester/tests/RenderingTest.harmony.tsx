@@ -1,8 +1,21 @@
 import {TestSuite, TestCase} from '@rnoh/testerino';
 import React from 'react';
 import {useState} from 'react';
-import {View} from 'react-native';
+import {View, registerViewConfig} from 'react-native';
 import {Button} from '../components';
+//@ts-ignore
+import ReactNativeViewAttributes from 'react-native/Libraries/Components/View/ReactNativeViewAttributes';
+
+const PropsDisplayer = registerViewConfig('PropsDisplayer', () => {
+  return {
+    uiViewClassName: 'PropsDisplayer',
+    bubblingEventTypes: {},
+    directEventTypes: {},
+    validAttributes: {
+      ...ReactNativeViewAttributes.UIView,
+    },
+  };
+});
 
 export function RenderingTest() {
   return (
@@ -27,6 +40,24 @@ export function RenderingTest() {
               ) : null}
             </View>
           )}
+        />
+      </TestCase>
+      <TestCase itShould="display all props after pressing the button, not only the recently updated one">
+        <Timeout
+          ms={0}
+          renderItem={refreshColor => {
+            return (
+              <PropsDisplayer
+                style={{
+                  backgroundColor: refreshColor % 2 ? 'red' : 'blue',
+                  borderWidth: 4,
+                  borderColor: 'orange',
+                  width: '100%',
+                  height: 64,
+                }}
+              />
+            );
+          }}
         />
       </TestCase>
     </TestSuite>
