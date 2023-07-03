@@ -9,7 +9,8 @@
     "dev": "react-native bundle-harmony",
     "android": "react-native run-android",
     "format": "prettier App.tsx ./tests -w",
-    "start": "react-native start"
+    "start": "react-native start",
+    "benchmark-fps":"node ./scripts/get-frame-times | node ./scripts/create-performance-report -dt 0.5"
   },
   "dependencies": {
     "chai": "4.3.7",
@@ -42,7 +43,8 @@
     "metro-react-native-babel-preset": "0.73.9",
     "prettier": "2.4.1",
     "react-test-renderer": "18.2.0",
-    "typescript": "4.8.4"
+    "typescript": "4.8.4",
+    "yargs": "^17.7.2"
   },
   "jest": {
     "preset": "react-native"
