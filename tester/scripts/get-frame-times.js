@@ -7,6 +7,12 @@ const argv = yargs
     type: 'string',
     description: 'Set the time(length) of the benchmark.',
   })
+  .option('d', {
+    alias: 'delay',
+    default: '3',
+    type: 'number',
+    description: 'Delay frame times aggregation.',
+  })
   .option('stdin', {
     alias: 'i',
     default: false,
@@ -77,10 +83,18 @@ const run = () => {
     });
   } else {
     const child = spawn(command, args);
-
-    child.stdout.on('data', chunk => {
-      hitraceOutput += chunk;
-    });
+    let intervalExecutionCounter = 0;
+    const interval = setInterval(() => {
+      console.warn(argv.d - intervalExecutionCounter - 1 + '...');
+      intervalExecutionCounter++;
+    }, 1000);
+    setTimeout(() => {
+      clearInterval(interval);
+      console.warn('Recording started...');
+      child.stdout.on('data', chunk => {
+        hitraceOutput += chunk;
+      });
+    }, argv.d * 1000);
 
     child.stderr.on('data', data => {
       console.error(`stderr: ${data}`);
