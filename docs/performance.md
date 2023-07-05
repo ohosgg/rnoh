@@ -77,7 +77,26 @@ Startup time gives the first impression to the user. Users may assume that if th
 
 ## Interaction
 
-T.B.D.
+In this test, a simple component with a text inside was dragged on the screen.
+
+## Conclusions
+
+react-native-harmony loses 4.5 FPS to ArkUI and react-native-android. react-native-android feels smoother than ArkUI.
+
+### Details
+
+- Environment: emulator - HarmonyOS System-image-phone 3.1.0.306 Release, AMD Ryzen 5900X, 32 GB RAM
+- Measurement method: ArkUI and rn-harmony: custom script that analyzes hdc output; Android: perf monitor
+- Application complexity: minimal
+- ArkUI emits touch event 60 times per second
+- Component was dragged with `adb shell input swipe`
+
+
+|                     | ArkUI | react-native-harmony | react-native-android |
+| ------------------- | ----- | -------------------- | -------------------- |
+| Mean [FPS]          | 59,58 | 55,04                | 60                   |
+| Sample size         | 5     | 5                    | 1                    |
+| Standard Dev. [FPS] | 0.7   | 3                    | 0                    |
 
 ## Text rendering
 

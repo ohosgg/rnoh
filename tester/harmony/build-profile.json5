@@ -1,70 +1,72 @@
 {
-  "app": {
-    "compileSdkVersion": 9,
-    "compatibleSdkVersion": 9,
-    "products": [
+  app: {
+    compileSdkVersion: 9,
+    compatibleSdkVersion: 9,
+    products: [
       {
-        "name": "default",
-        "signingConfig": "default",
-      }
-    ]
+        name: 'default',
+        signingConfig: 'default',
+      },
+    ],
   },
-  "modules": [
+  modules: [
     {
-      "name": "entry",
-      "srcPath": "./entry",
-      "targets": [
+      name: 'entry',
+      srcPath: './entry',
+      targets: [
         {
-          "name": "default",
-          "applyToProducts": [
-            "default"
-          ]
-        }
-      ]
+          name: 'default',
+          applyToProducts: ['default'],
+        },
+      ],
     },
     {
-      "name": "rnoh",
-      "srcPath": "./rnoh"
+      name: 'rnoh',
+      srcPath: './rnoh',
     },
     {
-      "name": "sample_package",
-      "srcPath": "./sample_package"
+      name: 'sample_package',
+      srcPath: './sample_package',
     },
     {
-      "name": "checkerboard",
-      "srcPath": "./checkerboard",
-      "targets": [
+      name: 'checkerboard',
+      srcPath: './checkerboard',
+      targets: [
         {
-          "name": "default",
-          "applyToProducts": [
-            "default"
-          ]
-        }
-      ]
+          name: 'default',
+          applyToProducts: ['default'],
+        },
+      ],
     },
     {
-      "name": "native_animations",
-      "srcPath": "./native_animations",
-      "targets": [
+      name: 'native_animations',
+      srcPath: './native_animations',
+      targets: [
         {
-          "name": "default",
-          "applyToProducts": [
-            "default"
-          ]
-        }
-      ]
+          name: 'default',
+          applyToProducts: ['default'],
+        },
+      ],
     },
     {
-      "name": "text_scroll",
-      "srcPath": "./text_scroll",
-      "targets": [
+      name: 'cursor',
+      srcPath: './cursor',
+      targets: [
         {
-          "name": "default",
-          "applyToProducts": [
-            "default"
-          ]
-        }
-      ]
-    }
-  ]
+          name: 'default',
+          applyToProducts: ['default'],
+        },
+      ],
+    },
+    {
+      name: 'text_scroll',
+      srcPath: './text_scroll',
+      targets: [
+        {
+          name: 'default',
+          applyToProducts: ['default'],
+        },
+      ],
+    },
+  ],
 }

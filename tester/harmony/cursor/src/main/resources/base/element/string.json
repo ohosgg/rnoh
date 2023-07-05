@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "CursorAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "CursorAbility_label",
+      "value": "label"
+    }
+  ]
+}

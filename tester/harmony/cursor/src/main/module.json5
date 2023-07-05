@@ -1,0 +1,26 @@
+{
+  "module": {
+    "name": "cursor",
+    "type": "feature",
+    "description": "$string:module_desc",
+    "mainElement": "CursorAbility",
+    "deviceTypes": [
+      "phone"
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "abilities": [
+      {
+        "name": "CursorAbility",
+        "srcEntry": "./ets/cursorability/CursorAbility.ts",
+        "description": "$string:CursorAbility_desc",
+        "icon": "$media:icon",
+        "label": "$string:CursorAbility_label",
+        "startWindowIcon": "$media:icon",
+        "startWindowBackground": "$color:start_window_background",
+        "exported": true
+      }
+    ]
+  }
+}
