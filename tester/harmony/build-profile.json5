@@ -53,6 +53,18 @@
           ]
         }
       ]
+    },
+    {
+      "name": "text_scroll",
+      "srcPath": "./text_scroll",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
     }
   ]
 }

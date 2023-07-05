@@ -24,14 +24,14 @@ const calculateFps = (frameTimes, dt) => {
 
   for (
     let currentSampleTime = dt;
-    currentSampleTime < timeSum && frameIndex < frameTimes.length;
+    currentSampleTime < timeSum;
     currentSampleTime += dt
   ) {
     let currentFrameTimes = [];
 
     while (
-      currentFrameTimeSum + frameTimes[frameIndex + 1] <
-      currentSampleTime
+      currentFrameTimeSum + frameTimes[frameIndex + 1] < currentSampleTime &&
+      frameIndex < frameTimes.length
     ) {
       currentFrameTimeSum = currentFrameTimeSum + frameTimes[frameIndex + 1];
       currentFrameTimes.push(frameTimes[frameIndex + 1]);

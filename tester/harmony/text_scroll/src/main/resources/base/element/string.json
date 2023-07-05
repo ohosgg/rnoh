@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "textscrollAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "textscrollAbility_label",
+      "value": "label"
+    }
+  ]
+}

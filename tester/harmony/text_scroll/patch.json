@@ -1,0 +1,11 @@
+{
+  "app": {
+    "bundleName": "com.rnoh.tester",
+    "patchVersionCode": 2000008,
+    "versionCode": 1000000
+  },
+  "module": {
+    "name": "text_scroll",
+    "type": "hotreload"
+  }
+}

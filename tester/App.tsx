@@ -6,6 +6,7 @@ import {
   AnimationsExample,
   CheckerboardExample,
   ChessboardExample,
+  TextScrollExample,
   CursorExample,
 } from './examples';
 import {Button, NavigationContainer, Page} from './components';
@@ -80,17 +81,20 @@ function App() {
           )}
         />
       </Page>
-      <Page name="EXAMPLE: CHESSBOARD">
-        <ChessboardExample />
-      </Page>
       <Page name="EXAMPLE: ANIMATIONS">
         <AnimationsExample />
       </Page>
       <Page name="EXAMPLE: CHECKERBOARD">
         <CheckerboardExample />
       </Page>
+      <Page name="EXAMPLE: CHESSBOARD">
+        <ChessboardExample />
+      </Page>
       <Page name="EXAMPLE: CURSOR">
         <CursorExample />
+      </Page>
+      <Page name="EXAMPLE: TEXTSCROLL">
+        <TextScrollExample />
       </Page>
     </NavigationContainer>
   );

@@ -1,0 +1,26 @@
+{
+  "module": {
+    "name": "text_scroll",
+    "type": "feature",
+    "description": "$string:module_desc",
+    "mainElement": "textscrollAbility",
+    "deviceTypes": [
+      "phone"
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "abilities": [
+      {
+        "name": "textscrollAbility",
+        "srcEntry": "./ets/textscrollability/TextScrollAbility.ts",
+        "description": "$string:textscrollAbility_desc",
+        "icon": "$media:icon",
+        "label": "$string:textscrollAbility_label",
+        "startWindowIcon": "$media:icon",
+        "startWindowBackground": "$color:start_window_background",
+        "exported": true
+      }
+    ]
+  }
+}

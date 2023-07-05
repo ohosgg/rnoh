@@ -46,7 +46,7 @@ const getFrameTimes = hitraceOutput => {
           }
         : null;
     })
-    .filter(trace => trace !== null);
+    .filter(trace => trace && trace.timestamp && trace.functionDetails);
   //console.log(JSON.stringify(parsedTraces, null, 2));
 
   const repaintTimestamps = parsedTraces
