@@ -75,13 +75,13 @@ Startup time gives the first impression to the user. Users may assume that if th
 | Sample size        | 5     | 5                    | 5                    |
 | Standard Dev. [ms] | 77    | 80                   | 22                   |
 
-## Interaction
+## UI Interaction
 
 In this test, a simple component with a text inside was dragged on the screen.
 
-## Conclusions
+### Conclusions
 
-react-native-harmony loses 4.5 FPS to ArkUI and react-native-android. react-native-android feels smoother than ArkUI.
+**react-native-harmony is slower than ArkUI and react-native-android by 4-5 FPS. This frame drop requires further investigation to be explained. react-native-android feels smoother than ArkUI.**
 
 ### Details
 
@@ -104,7 +104,7 @@ This benchmark's intention was to test rendering of large amounts of Text views 
 
 ### Conclusions
 
-**The rendering of text is slightly slower on ArkUI than on react-native-android. react-native-harmony is noticeably slower than ArkUI. We suspect sending scroll events from ArkUI to React may have the impact on performance but this must be yet confirmed. **
+**The rendering of text is slightly slower on ArkUI than on react-native-android. react-native-harmony is noticeably slower than ArkUI. We suspect sending scroll events from ArkUI to React may have the impact on performance but this must be yet confirmed.**
 
 ### Details
 
@@ -129,7 +129,11 @@ T.B.D.
 
 ## ScrollView vs FlatList
 
-T.B.D.
+ScrollView renders all elements at once. FlatList renders only elements dynamically once a user scrolls the list.
+
+### Conclusions
+
+**FlatList is temporarily freezes when elements are added or removed from the list. FlatList is also buggy - it jumps to the top and bottom when new elements are added. FlatList needs to be more stable to perform a proper comparison.**
 
 ## Memory usage
 

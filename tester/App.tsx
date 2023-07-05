@@ -8,6 +8,7 @@ import {
   ChessboardExample,
   TextScrollExample,
   CursorExample,
+  FlatListVsScrollViewExample,
 } from './examples';
 import {Button, NavigationContainer, Page} from './components';
 import {Benchmarker, DeepTree, SierpinskiTriangle} from './benchmarks';
@@ -95,6 +96,9 @@ function App() {
       </Page>
       <Page name="EXAMPLE: TEXTSCROLL">
         <TextScrollExample />
+      </Page>
+      <Page name="EXAMPLE: FLATLIST VS SCROLLVIEW">
+        <FlatListVsScrollViewExample />
       </Page>
     </NavigationContainer>
   );
