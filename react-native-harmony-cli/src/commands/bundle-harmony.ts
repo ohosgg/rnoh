@@ -9,14 +9,21 @@ export const commandBundleHarmony: Command = {
   name: 'bundle-harmony',
   description:
     'Creates JS bundle, creates a special cpp header containing the JS code, copies assets directory to the project.',
-  func: async (argv, config, args) => {
+  options: [
+    {
+      name: '--prod',
+      description: 'Warnings are disabled and the bundle is minified',
+    },
+  ],
+  func: async (argv, config, args: any) => {
     const metroConfig = await Metro.loadConfig();
     await fse.ensureDir(ARK_RESOURCE_PATH);
     await Metro.runBuild(metroConfig, {
       entry: 'index.js',
       platform: 'harmony',
       minify: false,
-      out: ARK_RESOURCE_PATH+'/bundle.harmony.js',
+      out: ARK_RESOURCE_PATH + '/bundle.harmony.js',
+      dev: args.prod ?? true,
     });
     copyAssets('./assets/', './harmony/entry/src/main/ets/assets/assets');
   },
