@@ -12,7 +12,7 @@ module.exports = {
     return require('react-native/Libraries/AppState/AppState');
   },
   get BackHandler() {
-    return require('react-native/Libraries/Utilities/BackHandler');
+    return require('./Libraries/Utilities/BackHandler');
   },
   get Button() {
     return require('react-native/Libraries/Components/Button');

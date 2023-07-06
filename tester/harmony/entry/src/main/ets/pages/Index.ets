@@ -23,6 +23,11 @@ struct Index {
     }
   }
 
+  onBackPress() {
+    this.rnohContext.rnInstanceManager.onBackPress();
+    return true;
+  }
+
   build() {
     Column() {
       RNApp({

@@ -54,6 +54,8 @@ export interface RNInstanceManager {
   loadScriptFromString(script: string, sourceURL?: string);
 
   getTurboModule<T extends TurboModule>(name: string): T
+
+  onBackPress: () => void
 }
 
 
@@ -189,5 +191,9 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
 
   getTurboModule<T extends TurboModule>(name: string): T {
     return this.turboModuleProvider.getModule(name);
+  }
+
+  public onBackPress() {
+    this.emitDeviceEvent('hardwareBackPress', {})
   }
 }
