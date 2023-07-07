@@ -49,6 +49,18 @@
       ],
     },
     {
+      "name": "image_gallery",
+      "srcPath": "./image_gallery",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
       name: 'cursor',
       srcPath: './cursor',
       targets: [
@@ -67,6 +79,18 @@
           applyToProducts: ['default'],
         },
       ],
-    },
-  ],
+    },     
+    {
+      "name": "large_image_scroll",
+      "srcPath": "./large_image_scroll",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
 }

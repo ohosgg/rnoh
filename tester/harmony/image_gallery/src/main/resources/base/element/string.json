@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "ImageGalleryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "ImageGalleryAbility_label",
+      "value": "label"
+    }
+  ]
+}

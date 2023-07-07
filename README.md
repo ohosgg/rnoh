@@ -231,9 +231,8 @@ Before you start the project, you have to setup the device on which you will be 
 ### Benchmarking FPS
 
 Frame times can be measured using `node ./scripts/get-frame-times`. It runs hdc hitrace and returns an array (frame times) which contains the time gap between repaints. You can also use it to get the frame times from manually captured traces.
-NOTE: Doesn't work on emulator.
 
-You can use `node ./scripts/create-performance-report` to create a JSON object containing a performanceReport based on the frame times.
+You can use `node ./scripts/create-fps-stats` to get a performance report based on the measured frame times. `node ./scripts/create-fps-stats-flipper file1.csv file2.csv` generates the performance report based on one or more .csv files exported from flippers [rnperfmonitor](https://github.com/bamlab/react-native-flipper-performance-monitor) plugin, allowing to compare performance to react-native-android.
 
 ## Creating NPM Package
 

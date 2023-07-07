@@ -1,0 +1,26 @@
+{
+  "module": {
+    "name": "image_gallery",
+    "type": "feature",
+    "description": "$string:module_desc",
+    "mainElement": "ImageGalleryAbility",
+    "deviceTypes": [
+      "phone"
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "abilities": [
+      {
+        "name": "ImageGalleryAbility",
+        "srcEntry": "./ets/imagegalleryability/ImageGalleryAbility.ts",
+        "description": "$string:ImageGalleryAbility_desc",
+        "icon": "$media:icon",
+        "label": "$string:ImageGalleryAbility_label",
+        "startWindowIcon": "$media:icon",
+        "startWindowBackground": "$color:start_window_background",
+        "exported": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "module": {
+    "name": "large_image_scroll",
+    "type": "feature",
+    "description": "$string:module_desc",
+    "mainElement": "LargeImageScrollAbility",
+    "deviceTypes": [
+      "phone"
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "abilities": [
+      {
+        "name": "LargeImageScrollAbility",
+        "srcEntry": "./ets/largeimagescrollability/LargeImageScrollAbility.ts",
+        "description": "$string:LargeImageScrollAbility_desc",
+        "icon": "$media:icon",
+        "label": "$string:LargeImageScrollAbility_label",
+        "startWindowIcon": "$media:icon",
+        "startWindowBackground": "$color:start_window_background",
+        "exported": true
+      }
+    ]
+  }
+}

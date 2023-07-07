@@ -1,6 +1,6 @@
 import React from 'react';
 import {Tester} from '@rnoh/testerino';
-import {ScrollView, StyleSheet} from 'react-native';
+import {Image, ScrollView, StyleSheet} from 'react-native';
 import * as tests from './tests';
 import {
   AnimationsExample,
@@ -8,7 +8,9 @@ import {
   ChessboardExample,
   TextScrollExample,
   CursorExample,
+  ImageGalleryExample,
   FlatListVsScrollViewExample,
+  LargeImageScrollExample,
 } from './examples';
 import {Button, NavigationContainer, Page} from './components';
 import {Benchmarker, DeepTree, SierpinskiTriangle} from './benchmarks';
@@ -93,6 +95,12 @@ function App() {
       </Page>
       <Page name="EXAMPLE: CURSOR">
         <CursorExample />
+      </Page>
+      <Page name="EXAMPLE: IMAGE GALLERY">
+        <ImageGalleryExample />
+      </Page>
+      <Page name="EXAMPLE: LARGE IMAGE SCROLL">
+        <LargeImageScrollExample />
       </Page>
       <Page name="EXAMPLE: TEXTSCROLL">
         <TextScrollExample />

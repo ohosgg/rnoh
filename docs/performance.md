@@ -91,7 +91,6 @@ In this test, a simple component with a text inside was dragged on the screen.
 - ArkUI emits touch event 60 times per second
 - Component was dragged with `adb shell input swipe`
 
-
 |                     | ArkUI | react-native-harmony | react-native-android |
 | ------------------- | ----- | -------------------- | -------------------- |
 | Mean [FPS]          | 59,58 | 55,04                | 60                   |
@@ -125,7 +124,44 @@ This benchmark's intention was to test rendering of large amounts of Text views 
 
 ## Image rendering
 
-T.B.D.
+Images are an important part of mobile apps. They can be a potential source of low performance.
+
+### Conclusions
+
+**Image rendering performance is strongly affected by the level of interpolation used. Decreasing the level of interpolation used by react-native-harmony should improve performance (high is currently used). ArkUI's performance seems to be more affected by high amounts of components than react-native-android. This might cause a small decrease in performance in complicated views.**
+
+### Details
+
+- Commit: https://gl.swmansion.com/rnoh/react-native-harmony/-/commit/aa5642c82af1897ce55481dd62041bb9f20a67ce
+- Environment: emulator - HarmonyOS System-image-phone 3.1.0.306 Release, AMD Ryzen 6850U, 16 GB RAM
+- Measurement method: analysis fom output of Flipper - RN Perf Monitor on Android, and hitrace on Harmony. Average of 5 samples.
+- Application complexity: low (scrollview with n images)
+
+#### Scenario 1 - several small images in a grid like layout.
+
+|                                  | ArkUI | ArkUI H.I.\* | react-native-harmony | react-native-android |
+| -------------------------------- | ----- | ------------ | -------------------- | -------------------- |
+| Mean - 300 comp. [FPS]           | 59.9  | 50.1         | 49.1                 | 59.8                 |
+| Standard Dev. - 300 comp. [FPS]  | 4.3   | 12.2         | 10.9                 | 0.4                  |
+| Mean - 2400 comp. [FPS]          | 45.7  | 38.9         | 33.8                 | 59.7                 |
+| Standard Dev. - 2400 comp. [FPS] | 13.3  | 14.9         | 13.78                | 0.8                  |
+| Mean - 9600 comp. [FPS]          | 28.2  | 19.9         | 9.5                  | 39.4                 |
+| Standard Dev. - 9600 comp. [FPS] | 8.3   | 5.8          | 1.62                 | 3.3                  |
+
+\* Image interpolation set to high (default: none)
+
+#### Scenario 2 - fewer big images in a column.
+
+|                                  | ArkUI | ArkUI H.I.\* | react-native-harmony | react-native-android |
+| -------------------------------- | ----- | ------------ | -------------------- | -------------------- |
+| Mean - 300 comp. [FPS]           | 56.7  | 52.7         | 52.4                 | 59.4                 |
+| Standard Dev. - 300 comp. [FPS]  | 7.1   | 8.5          | 9.4                  | 1.5                  |
+| Mean - 2400 comp. [FPS]          | 52.4  | 49.1         | 30.3                 | 59.9                 |
+| Standard Dev. - 2400 comp. [FPS] | 11.2  | 12.5         | 11.6                 | 0.3                  |
+| Mean - 9600 comp. [FPS]          | 27.12 | 24.9         | 10.7                 | 49.4                 |
+| Standard Dev. - 9600 comp. [FPS] | 8.92  | 10.4         | 1.7                  | 4.3                  |
+
+\* Image interpolation set to high (default: none)
 
 ## ScrollView vs FlatList
 

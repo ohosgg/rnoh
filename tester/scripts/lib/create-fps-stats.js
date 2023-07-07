@@ -33,13 +33,39 @@ function calculateAverageFps(frameTimesInSec) {
 }
 
 /**
- * @param{number[]} values
+ * @param {number[]} values
  */
 function calculateStandardDeviation(values) {
   const n = values.length;
   const mean = values.reduce((a, b) => a + b) / n;
   return Math.sqrt(
     values.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n,
+  );
+}
+
+/**
+ * @param {Object} fpsStats
+ * @param {number} fpsStats.mean
+ * @param {number} fpsStats.standardDeviationInFps
+ * @param {number} fpsStats.frameTime95thPercentileInFps
+ * @param {number} fpsStats.frameTime99thPercentileInFps
+ */
+function generateFPSStatsConsoleOutput(fpsStats) {
+  return (
+    '\n' +
+    '========= FPS stats =========\n' +
+    'mean                      : ' +
+    fpsStats.mean.toFixed(1) +
+    ' FPS\n' +
+    'standard deviation        : ' +
+    fpsStats.standardDeviationInFps.toFixed(1) +
+    ' FPS\n' +
+    '95th frame time percentile: ' +
+    fpsStats.frameTime95thPercentileInFps.toFixed(1) +
+    ' FPS\n' +
+    '99th frame time percentile: ' +
+    fpsStats.frameTime99thPercentileInFps.toFixed(1) +
+    ' FPS\n'
   );
 }
 
@@ -77,4 +103,4 @@ function calculateFrameTimesPercentile(frameTimesInSec, percentile) {
   return sortedFrameTimesInSec[currentIdx];
 }
 
-module.exports = {createFpsStats};
+module.exports = {createFpsStats, generateFPSStatsConsoleOutput};

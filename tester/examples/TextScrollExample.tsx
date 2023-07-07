@@ -2,7 +2,7 @@ import React, {useState, useRef} from 'react';
 import {ScrollView, Text, TextInput, View} from 'react-native';
 
 export function TextScrollExample() {
-  const [numberOfComponents, setNumberOfComponents] = useState(1000);
+  const [numberOfComponents, setNumberOfComponents] = useState(100);
   const generateRandomText = (length: number) => {
     let result = '';
     const characters =
