@@ -133,7 +133,7 @@ ScrollView renders all elements at once. FlatList renders only elements dynamica
 
 ### Conclusions
 
-**FlatList is temporarily freezes when elements are added or removed from the list. FlatList is also buggy - it jumps to the top and bottom when new elements are added. FlatList needs to be more stable to perform a proper comparison.**
+**FlatList temporarily freezes when elements are added or removed from the list. FlatList is also buggy - it jumps to the top and sometimes to bottom when new elements are added. FlatList needs to be more stable to perform a proper comparison.**
 
 ## Memory usage
 
