@@ -5,10 +5,6 @@ struct Index {
   scroller: Scroller = new Scroller()
   timerId: number
 
-  aboutToDisappear() {
-    clearInterval(this.timerId)
-  }
-
   generateRandomText(length) {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

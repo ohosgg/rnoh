@@ -1,11 +1,11 @@
 {
   "name": "@rnoh/react-native-harmony-cli",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "",
   "scripts": {
     "build": "tsc --outDir dist -p tsconfig.build.json",
     "prepack": "npm run build",
-    "verify": "tsc --noEmit && jest",
+    "verify": "tsc --noEmit && npm run test",
     "test": "npm run build && jest",
     "rn": "npm run build && react-native",
     "prepublishOnly": "npm run verify"

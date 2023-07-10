@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "ManyComponentsAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "ManyComponentsAbility_label",
+      "value": "label"
+    }
+  ]
+}

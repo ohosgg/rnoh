@@ -14,12 +14,18 @@ export const commandBundleHarmony: Command = {
       name: '--prod',
       description: 'Warnings are disabled and the bundle is minified',
     },
+    {
+      name: '--entry-file <path>',
+      description:
+        'Path to the root JS file, either absolute or relative to JS root',
+      default: 'index.js',
+    },
   ],
   func: async (argv, config, args: any) => {
     const metroConfig = await Metro.loadConfig();
     await fse.ensureDir(ARK_RESOURCE_PATH);
     await Metro.runBuild(metroConfig, {
-      entry: 'index.js',
+      entry: args.entryFile,
       platform: 'harmony',
       minify: false,
       out: ARK_RESOURCE_PATH + '/bundle.harmony.js',

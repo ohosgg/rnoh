@@ -67,12 +67,12 @@ Startup time gives the first impression to the user. Users may assume that if th
 - Commit https://gl.swmansion.com/rnoh/react-native-harmony/-/commit/beb980274c5110e9144f16e09050646c5e691c2b
 - Environment: emulator - HarmonyOS System-image-phone 3.1.0.306 Release, AMD Ryzen 5900X, 32 GB RAM
 - Measurement method: recording analysis
+- Average of 5 measurements.
 - Application complexity: low ("hello world" example)
 
 |                    | ArkUI | react-native-harmony | react-native-android |
 | ------------------ | ----- | -------------------- | -------------------- |
 | Mean [ms]          | 734   | 2984                 | 556                  |
-| Sample size        | 5     | 5                    | 5                    |
 | Standard Dev. [ms] | 77    | 80                   | 22                   |
 
 ## UI Interaction
@@ -111,10 +111,10 @@ This benchmark's intention was to test rendering of large amounts of Text views 
 - Environment: emulator - HarmonyOS System-image-phone 3.1.0.306 Release, AMD Ryzen 6850U, 16 GB RAM
 - Measurement method: analysis fom output of Flipper - RN Perf Monitor on Android, and hitrace on Harmony
 - Application complexity: low (scrollview with n text components)
+- Average of 5 measurements.
 
 |                                     | ArkUI | react-native-harmony | react-native-android |
 | ----------------------------------- | ----- | -------------------- | -------------------- |
-| Sample size                         | 5     | 5                    | 5                    |
 | Mean - 1000 comp. [FPS]             | 58.2  | 51.7                 | 59.5                 |
 | 95th percentile - 1000 comp. [FPS]  | 56.0  | 52.1                 | 60.0                 |
 | Standard Dev. - 1000 comp. [FPS]    | 1.9   | 2.4                  | 0.3                  |
@@ -185,8 +185,37 @@ FlatList on react-native-harmony has noticeable FPS drops when adding or removin
 | 95th frame time percentile | 30.1 FPS             | 60 FPS                     |
 | 99th frame time percentile | 20.2 FPS             | 60 FPS                     |
 
-
-
 ## Memory usage
 
-T.B.D.
+Problems with memory usage can impact application performance. Less memory usage also improves the user experience on lower end devices.
+
+### Conclusions
+
+**The memory usage of react-native-harmony and react-native-android seems similiar. Both react-native implementations use much more memory than ArkUI. react-native-harmony has known memory leaks, but they shouldn't have a big impact on performance, unless the application is kept alive for a long time. The difference between rn-android and rn-harmony is probably caused by measuring in different environments.**
+
+### Details
+
+- Commit: https://gl.swmansion.com/rnoh/react-native-harmony/-/commit/919764e0d1b169ac17e5de65bc1d19bf99f9e33a
+- Environment: ArkUI and RNOH - Huawei Mate 40 Pro OpenHarmony-4.0.5.5, Android - Samsung Galaxy S22 SM-S901B/DS
+- Measurement method: analysis of DevEco Studio Profiler, and Android Studio Profiler
+- Application complexity: low (empty view for scenario 1, view with 100 components for scenario 2 )
+- Average of 5 measurements.
+
+#### Scenario 1 - empty application
+
+|                         | ArkUI | react-native-harmony | react-native-android |
+| ----------------------- | ----- | -------------------- | -------------------- |
+| Mean Average [MB]       | 7     | 108                  | 164                  |
+| Standard Deviation [MB] | 0     | 9                    | 5                    |
+
+#### Scenario 2 - view with 100 components
+
+|                                     | ArkUI | react-native-harmony | react-native-android |
+| ----------------------------------- | ----- | -------------------- | -------------------- |
+| Mean Average<sup>1</sup> [MB]       | 8     | 118                  | 153                  |
+| Standard Deviation<sup>1</sup> [MB] | 0     | 3                    | 3                    |
+| Mean Average<sup>2</sup> [MB]       | 9     | 135                  | 184                  |
+| Standard Deviation<sup>2</sup> [MB] | 0     | 6                    | 5                    |
+
+[1] - measurement after initial render  
+[2] - measurement after hiding and showing components 10 times

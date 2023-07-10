@@ -1,0 +1,26 @@
+{
+  "module": {
+    "name": "many_components",
+    "type": "feature",
+    "description": "$string:module_desc",
+    "mainElement": "ManyComponentsAbility",
+    "deviceTypes": [
+      "phone"
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "abilities": [
+      {
+        "name": "ManyComponentsAbility",
+        "srcEntry": "./ets/manycomponentsability/ManyComponentsAbility.ts",
+        "description": "$string:ManyComponentsAbility_desc",
+        "icon": "$media:icon",
+        "label": "$string:ManyComponentsAbility_label",
+        "startWindowIcon": "$media:icon",
+        "startWindowBackground": "$color:start_window_background",
+        "exported": true
+      }
+    ]
+  }
+}
