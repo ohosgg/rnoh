@@ -2,7 +2,7 @@
 
 ## Rendering a large number of components
 
-This benchmark represents an unusual situation, however it was easy to perform.
+This benchmark represents an unusual situation, but represents generic rendering performance.
 
 ### Conclusions
 
@@ -169,7 +169,23 @@ ScrollView renders all elements at once. FlatList renders only elements dynamica
 
 ### Conclusions
 
-**FlatList temporarily freezes when elements are added or removed from the list. FlatList is also buggy - it jumps to the top and sometimes to bottom when new elements are added. FlatList needs to be more stable to perform a proper comparison.**
+FlatList on react-native-harmony has noticeable FPS drops when adding or removing elements to the list whereas react-native-android keeps solid 60 FPS. The main logic behind FlatList is the same for both platform. The native side receives only basic operations to perform like create, update or remove a component.
+
+## Details
+
+- Commit: https://gl.swmansion.com/rnoh/react-native-harmony/-/commit/b43bcdd41ce04aad746308cd04ec8ed144795867
+- Environment: emulator - HarmonyOS System-image-phone 3.1.0.306 Release, AMD Ryzen 5900X, 32 GB RAM
+- Measurement method: react-native-harmony - script that counts FPS based on hitrace output, performance
+- Application: 100 rectangles with a text inside
+
+|                            | react-native-harmony | react-native-android       |
+| -------------------------- | -------------------- | -------------------------- |
+| Mean                       | 57.9 FPS             | 60 FPS (no frames dropped) |
+| Standard Deviation         | 6.3 FPS              | 0 FPS                      |
+| 95th frame time percentile | 30.1 FPS             | 60 FPS                     |
+| 99th frame time percentile | 20.2 FPS             | 60 FPS                     |
+
+
 
 ## Memory usage
 
