@@ -1,6 +1,6 @@
 import React from 'react';
 import {Tester} from '@rnoh/testerino';
-import {Image, ScrollView, StyleSheet} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 import * as tests from './tests';
 import {
   AnimationsExample,
@@ -11,6 +11,7 @@ import {
   ImageGalleryExample,
   FlatListVsScrollViewExample,
   LargeImageScrollExample,
+  TogglingComponentExample,
 } from './examples';
 import {Button, NavigationContainer, Page} from './components';
 import {Benchmarker, DeepTree, SierpinskiTriangle} from './benchmarks';
@@ -107,6 +108,9 @@ function App() {
       </Page>
       <Page name="EXAMPLE: FLATLIST VS SCROLLVIEW">
         <FlatListVsScrollViewExample />
+      </Page>
+      <Page name="EXAMPLE: TOGGLING COMPONENT">
+        <TogglingComponentExample />
       </Page>
     </NavigationContainer>
   );

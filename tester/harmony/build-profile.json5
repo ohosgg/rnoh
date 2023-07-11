@@ -5,9 +5,11 @@
     products: [
       {
         name: 'default',
-        signingConfig: 'default',
-      },
+        signingConfig: 'default'
+      }
     ],
+    "signingConfigs": [
+    ]
   },
   modules: [
     {
@@ -16,7 +18,9 @@
       targets: [
         {
           name: 'default',
-          applyToProducts: ['default'],
+          applyToProducts: [
+            'default'
+          ],
         },
       ],
     },
@@ -34,7 +38,9 @@
       targets: [
         {
           name: 'default',
-          applyToProducts: ['default'],
+          applyToProducts: [
+            'default'
+          ],
         },
       ],
     },
@@ -44,7 +50,9 @@
       targets: [
         {
           name: 'default',
-          applyToProducts: ['default'],
+          applyToProducts: [
+            'default'
+          ],
         },
       ],
     },
@@ -66,7 +74,9 @@
       targets: [
         {
           name: 'default',
-          applyToProducts: ['default'],
+          applyToProducts: [
+            'default'
+          ],
         },
       ],
     },
@@ -76,13 +86,27 @@
       targets: [
         {
           name: 'default',
-          applyToProducts: ['default'],
+          applyToProducts: [
+            'default'
+          ],
         },
       ],
-    },     
+    },
     {
       "name": "large_image_scroll",
       "srcPath": "./large_image_scroll",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "components_toggler_example",
+      "srcPath": "./components_toggler_example",
       "targets": [
         {
           "name": "default",

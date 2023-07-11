@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "模块描述"
+    },
+    {
+      "name": "ComponentsTogglerExampleAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "ComponentsTogglerExampleAbility_label",
+      "value": "label"
+    }
+  ]
+}

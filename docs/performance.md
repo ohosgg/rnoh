@@ -219,3 +219,19 @@ Problems with memory usage can impact application performance. Less memory usage
 
 [1] - measurement after initial render  
 [2] - measurement after hiding and showing components 10 times
+
+
+## Rendering and stuttering
+
+FlatList, a common React Native component, sends create, update and delete operations to the native side during scrolling. A stutter can be observed, when such operations are dispatched. The purpose of this benchmark is identifying where the problem lies. For that purpose, a mini-app was created that consist of a ScrollView on the first half on the screen and a space below where various number of components are created and removed every second. 
+
+### Conclusions
+
+ArkUI > react-native-android > react-native-harmony
+
+Stutter is noticeably bigger on react-native-harmony than on ArkUI. The stutter is similar, when ArkUI renders 5000 components and react-native-harmony 500. react-native-android doesn't seem to suffer from stuttering when rendering 500 components. When rendering 5000 components, RN Android suffered from bigger stutters than ArkUI and RN Android updated the UI couple of seconds instead of every second as specified in the code. No metrics were gathered, because measuring stuttering is difficult/unreliable. Further testing with a setup on ArkUI similar to the one used by react-native-harmony is needed.
+
+### Details
+- Commit: https://gl.swmansion.com/rnoh/react-native-harmony/-/commit/71befcb02caa1b73c9b802d740ac11c59ab3c73b
+- Assessment method: Manual comparison
+- Environment: Emulators and real devices

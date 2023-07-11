@@ -11,7 +11,7 @@ export default class EntryAbility extends RNAbility {
   }
 
   getInitialProps() {
-    return {"foo": "bar"}
+    return {...super.getInitialProps(), "foo": "bar"}
   }
 
   createPackages(ctx) {

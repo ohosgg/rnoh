@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "ComponentsTogglerExampleAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "ComponentsTogglerExampleAbility_label",
+      "value": "label"
+    }
+  ]
+}

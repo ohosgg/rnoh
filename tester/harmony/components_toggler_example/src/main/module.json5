@@ -1,0 +1,26 @@
+{
+  "module": {
+    "name": "components_toggler_example",
+    "type": "feature",
+    "description": "$string:module_desc",
+    "mainElement": "ComponentsTogglerExampleAbility",
+    "deviceTypes": [
+      "phone"
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "abilities": [
+      {
+        "name": "ComponentsTogglerExampleAbility",
+        "srcEntry": "./ets/componentstogglerexampleability/ComponentsTogglerExampleAbility.ts",
+        "description": "$string:ComponentsTogglerExampleAbility_desc",
+        "icon": "$media:icon",
+        "label": "$string:ComponentsTogglerExampleAbility_label",
+        "startWindowIcon": "$media:icon",
+        "startWindowBackground": "$color:start_window_background",
+        "exported": true
+      }
+    ]
+  }
+}

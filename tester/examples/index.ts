@@ -6,3 +6,4 @@ export * from './CursorExample';
 export * from './ImageGalleryExample';
 export * from './FlatListVsScrollViewExample';
 export * from './LargeImageScrollExample';
+export * from './TogglingComponentExample';

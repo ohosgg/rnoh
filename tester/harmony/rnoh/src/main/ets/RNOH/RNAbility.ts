@@ -103,8 +103,8 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
     }
   }
 
-  getInitialProps() {
-    return {}
+  getInitialProps(): Record<string, any> {
+    return { concurrentRoot: true }
   }
 
   onWindowStageCreate(windowStage: window.WindowStage) {
