@@ -51,9 +51,9 @@ export function CustomNativeComponentTest() {
       <TestCase itShould="render red rectangle">
         <NativeComponent backgroundColor="red" size={64} />
       </TestCase>
-      <TestCase itShould="render blue rectangle inside red rectangle">
+      <TestCase itShould="render green rectangle inside red rectangle">
         <NativeComponent backgroundColor="red" size={64}>
-          <NativeComponent backgroundColor="blue" size={32} />
+          <NativeComponent backgroundColor="green" size={32} />
         </NativeComponent>
       </TestCase>
       <TestCase itShould="show/hide blue rectangle">

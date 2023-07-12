@@ -11,7 +11,7 @@ export function convertColorSegmentsToString(colorSegments?: ColorSegments) {
 export function convertColorValueToRGBA(colorValue: ColorValue | undefined, defaultColor: string = "rgba(0,0,0,0.0)") {
   if (colorValue === undefined) return defaultColor;
   const rgba = {
-    a: (colorValue >> 24) & 0xff / 255,
+    a: ((colorValue >> 24) & 0xff) / 255,
     r: (colorValue >> 16) & 0xff,
     g: (colorValue >> 8) & 0xff,
     b: ((colorValue >> 0) & 0xff),
@@ -33,10 +33,10 @@ export function convertColorValueToHex(colorValue: ColorValue | undefined, defau
 export function convertColorValueToColorSegments(colorValue: ColorValue | undefined): ColorSegments | undefined {
   if (colorValue === undefined) return undefined
   const rgba = {
-    a: (colorValue >> 24) & 0xff / 255,
-    r: (colorValue >> 16) & 0xff / 255,
-    g: (colorValue >> 8) & 0xff / 255,
-    b: ((colorValue >> 0) & 0xff / 255),
+    a: ((colorValue >> 24) & 0xff) / 255,
+    r: ((colorValue >> 16) & 0xff) / 255,
+    g: ((colorValue >> 8) & 0xff) / 255,
+    b: ((colorValue >> 0) & 0xff) / 255,
   }
   return [rgba.r, rgba.g, rgba.b, rgba.a]
 }
