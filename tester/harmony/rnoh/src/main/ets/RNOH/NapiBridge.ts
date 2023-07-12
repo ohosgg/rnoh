@@ -3,10 +3,8 @@ import { Mutation } from "./Mutation";
 import { Tag } from "./DescriptorBase";
 import TextMeasurer from "@ohos.measure"
 
-/*
- @deprecated - Use NapiBridge or RNInstanceManager
- * */
-export class RNInstance {
+
+export class NapiBridge {
   constructor(private libRNOHApp: any) {
   }
 
@@ -50,7 +48,4 @@ export class RNInstance {
   add(a: number, b: number): number {
     return this.libRNOHApp?.add(a, b)
   }
-}
-
-export class NapiBridge extends RNInstance {
 }

@@ -102,7 +102,7 @@ export struct RNScrollView {
     // this.descriptor.state.contentOffsetX = offset.xOffset;
     this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag).state.contentOffsetY = yOffset;
 
-    this.ctx.rnInstance.emitComponentEvent(
+    this.ctx.rnInstanceManager.emitComponentEvent(
       this.descriptor.tag,
       RNOHEventEmitRequestHandlerName.Scroll,
       this.createScrollEvent("scroll", 0, yOffset)
@@ -110,7 +110,7 @@ export struct RNScrollView {
   }
 
   onDragBegin() {
-    this.ctx.rnInstance.emitComponentEvent(
+    this.ctx.rnInstanceManager.emitComponentEvent(
       this.descriptor.tag,
       RNOHEventEmitRequestHandlerName.Scroll,
       this.createScrollEvent(
@@ -122,7 +122,7 @@ export struct RNScrollView {
   }
 
   onDragEnd() {
-    this.ctx.rnInstance.emitComponentEvent(
+    this.ctx.rnInstanceManager.emitComponentEvent(
       this.descriptor.tag,
       RNOHEventEmitRequestHandlerName.Scroll,
       this.createScrollEvent(
@@ -134,7 +134,7 @@ export struct RNScrollView {
   }
 
   onMomentumBegin() {
-    this.ctx.rnInstance.emitComponentEvent(
+    this.ctx.rnInstanceManager.emitComponentEvent(
       this.descriptor.tag,
       RNOHEventEmitRequestHandlerName.Scroll,
       this.createScrollEvent(
@@ -146,7 +146,7 @@ export struct RNScrollView {
   }
 
   onMomentumEnd() {
-    this.ctx.rnInstance.emitComponentEvent(
+    this.ctx.rnInstanceManager.emitComponentEvent(
       this.descriptor.tag,
       RNOHEventEmitRequestHandlerName.Scroll,
       this.createScrollEvent(

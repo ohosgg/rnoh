@@ -1,8 +1,6 @@
-import Device from '@system.device'
 import display from '@ohos.display'
 import { ComponentBuilderContext } from './RNComponentFactory'
 import { RNOHContext } from "./RNOH/RNOHContext"
-import type { DeviceInfoTurboModule } from "./RNOHCorePackage/turboModules/DeviceInfoTurboModule"
 import { RNSurface } from "./RNSurface"
 
 
@@ -28,7 +26,7 @@ export struct RNApp {
         }
         const data = displays[0];
         this.screenDensity = data.densityPixels
-        this.rnohContext.rnInstance?.initializeReactNative(data.densityPixels);
+        this.rnohContext.__napiBridge?.initializeReactNative(data.densityPixels);
         this.shouldShow = true;
       });
 

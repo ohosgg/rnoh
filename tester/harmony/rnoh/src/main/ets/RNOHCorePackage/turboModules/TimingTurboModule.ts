@@ -10,7 +10,7 @@ export class TimingTurboModule extends TurboModule {
         repeats: boolean
     ): void {
         const triggerTimer = () =>
-            this.ctx.rnInstance.callRNFunction("JSTimers", "callTimers", [[id]]);
+            this.ctx.__napiBridge.callRNFunction("JSTimers", "callTimers", [[id]]);
 
         let nativeTimerId;
 

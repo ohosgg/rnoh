@@ -91,7 +91,7 @@ export function handleTouchEvent(ctx: RNOHContext, event: TouchEvent, tag: Tag) 
     touch['pageX'] = touch.screenX + x;
     touch['pageY'] = touch.screenY + y;
   }
-  ctx.rnInstance.emitComponentEvent(tag, RNOHEventEmitRequestHandlerName.Touch, event)
+  ctx.rnInstanceManager.emitComponentEvent(tag, RNOHEventEmitRequestHandlerName.Touch, event)
 }
 
 function convertViewDynamicDescriptor(dynamicDescriptor: ViewDynamicDescriptor): ViewBaseDescriptor {

@@ -40,7 +40,7 @@ export struct RNSurface {
   private cleanup?: () => void = undefined
 
   aboutToAppear() {
-    this.ctx.rnInstance.subscribeToShadowTreeChanges((mutations) => {
+    this.ctx.__napiBridge.subscribeToShadowTreeChanges((mutations) => {
       this.updateDescriptorRegistry(mutations)
     }, (tag, commandName, args) => {
       this.dispatchCommand(tag, commandName, args)

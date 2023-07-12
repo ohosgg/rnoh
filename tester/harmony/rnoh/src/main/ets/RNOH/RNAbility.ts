@@ -7,7 +7,7 @@ import { StandardRNOHLogger, RNOHLogger } from "./RNOHLogger"
 import JavaScriptLoader from "./JavaScriptLoader"
 import window from '@ohos.window';
 import hilog from '@ohos.hilog';
-import { TurboModule } from "./TurboModule"
+import { TurboModule, TurboModuleContext } from "./TurboModule"
 import { TurboModuleProvider } from "./TurboModuleProvider"
 import { RNOHCorePackage } from "../RNOHCorePackage";
 import libRNOHApp from 'librnoh_app.so'
@@ -70,28 +70,24 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
     this.logger = this.createLogger()
     this.storage = new LocalStorage()
     this.napiBridge = new NapiBridge(libRNOHApp)
-    this.turboModuleProvider = this.processPackages(this.napiBridge).turboModuleProvider
+    const rnohContext = new RNOHContext("0.0.0", this.napiBridge, this.context, this, this, this.logger)
+    this.storage.setOrCreate('RNOHContext', rnohContext)
+    this.turboModuleProvider = this.processPackages(rnohContext).turboModuleProvider
     this.napiBridge.registerTurboModuleProvider(this.turboModuleProvider)
-    this.storage.setOrCreate('RNOHContext', new RNOHContext(this.napiBridge, this.napiBridge, this, this, this.logger))
+
+
   }
 
   public createLogger(): RNOHLogger {
     return new StandardRNOHLogger();
   }
 
-  private processPackages(napiBridge: NapiBridge) {
+  private processPackages(turboModuleContext: TurboModuleContext) {
     const packages = this.createPackages({});
     packages.unshift(new RNOHCorePackage({}));
     return {
       turboModuleProvider: new TurboModuleProvider(packages.map((pkg) => {
-        return pkg.createTurboModulesFactory({
-          reactNativeVersion: "0.0.0",
-          rnInstance: napiBridge,
-          __napiBridge: napiBridge,
-          uiAbilityContext: this.context,
-          rnInstanceManager: this,
-          logger: this.logger
-        });
+        return pkg.createTurboModulesFactory(turboModuleContext);
       }))
     }
   }

@@ -84,6 +84,6 @@ export class NetworkingTurboModule extends TurboModule {
     }
 
     private sendEvent(eventName: string, body: Object) {
-        this.ctx.rnInstance.callRNFunction("RCTDeviceEventEmitter", "emit", [eventName, body])
+        this.ctx.__napiBridge.callRNFunction("RCTDeviceEventEmitter", "emit", [eventName, body])
     }
 }

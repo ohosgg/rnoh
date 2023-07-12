@@ -18,7 +18,7 @@ export struct RNTextInput {
   private unregisterDescriptorChangesListener?: () => void = undefined
 
   handleChangeEvent(value: string) {
-    this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, RNOHEventEmitRequestHandlerName.TextInputChange, value)
+    this.ctx.rnInstanceManager.emitComponentEvent(this.descriptor.tag, RNOHEventEmitRequestHandlerName.TextInputChange, value)
   }
 
   aboutToAppear() {

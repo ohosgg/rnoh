@@ -7,9 +7,10 @@ type StatusBarConstants = {
   DEFAULT_BACKGROUND_COLOR: string,
   HEIGHT: number,
 }
+
 function convertPhysicalToDeviceIndependentPixels(pixels?: number) {
   let displayInstance = display.getDefaultDisplaySync();
-  return pixels/displayInstance.densityPixels;
+  return pixels / displayInstance.densityPixels;
 }
 
 export class StatusBarTurboModule extends TurboModule {

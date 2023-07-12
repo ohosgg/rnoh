@@ -1,5 +1,5 @@
-import {RNPackage, TurboModulesFactory} from '@ohos/rnoh/ts';
-import type {TurboModule, TurboModuleContext} from '@ohos/rnoh/ts';
+import { RNPackage, TurboModuleContext, TurboModulesFactory} from '@ohos/rnoh/ts';
+import type {TurboModule} from '@ohos/rnoh/ts';
 import {SampleTurboModule} from './SampleTurboModule';
 
 class SampleTurboModulesFactory extends TurboModulesFactory {

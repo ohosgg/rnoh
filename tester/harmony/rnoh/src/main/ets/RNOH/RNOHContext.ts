@@ -1,9 +1,10 @@
 import { DescriptorRegistry } from './DescriptorRegistry';
 import { CommandDispatcher } from './CommandDispatcher';
 import { Descriptor } from './DescriptorBase';
-import { RNInstance, NapiBridge } from './NapiBridge';
+import { NapiBridge } from './NapiBridge';
 import { RNOHLogger } from "./RNOHLogger";
 import type { SurfaceLifecycle, RNInstanceManager } from "./RNAbility"
+import common from '@ohos.app.ability.common';
 
 export type RootDescriptor = Descriptor<"RootView", any>
 
@@ -33,8 +34,9 @@ export class RNOHContext {
   public descriptorRegistry: DescriptorRegistry;
   public commandDispatcher: CommandDispatcher;
 
-  constructor(public rnInstance: RNInstance,
+  constructor(public reactNativeVersion: string,
               public __napiBridge: NapiBridge,
+              public uiAbilityContext: common.UIAbilityContext,
               public surfaceLifecycle: SurfaceLifecycle,
               public rnInstanceManager: RNInstanceManager,
               public logger: RNOHLogger) {
