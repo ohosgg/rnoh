@@ -1,4 +1,40 @@
-# Performance
+# Performance <!-- omit in toc -->
+
+There is no single metric that can fully capture react-native-harmony performance. Therefore, in this report, we have devised a series of benchmarks to assess the performance of react-native-harmony against ArkUI and react-native-android. Our analysis reveals that, in general, react-native-harmony is slower compared than ArkUI and react-native-android. Improvements are possible in areas where react-native-harmony demonstrates a noticeable lower performance when compared to both ArkUI and react-native-android.
+
+- [Rendering a large number of components](#rendering-a-large-number-of-components)
+  - [Conclusions](#conclusions)
+  - [Details](#details)
+- [Animations](#animations)
+  - [Conclusions](#conclusions-1)
+  - [Observations](#observations)
+  - [Details](#details-1)
+- [Startup time](#startup-time)
+  - [Conclusions](#conclusions-2)
+  - [Details](#details-2)
+- [UI Interaction](#ui-interaction)
+  - [Conclusions](#conclusions-3)
+  - [Details](#details-3)
+- [Text rendering](#text-rendering)
+  - [Conclusions](#conclusions-4)
+  - [Details](#details-4)
+- [Image rendering](#image-rendering)
+  - [Conclusions](#conclusions-5)
+  - [Details](#details-5)
+    - [Scenario 1 - several small images in a grid like layout.](#scenario-1---several-small-images-in-a-grid-like-layout)
+    - [Scenario 2 - fewer big images in a column.](#scenario-2---fewer-big-images-in-a-column)
+- [ScrollView vs FlatList](#scrollview-vs-flatlist)
+  - [Conclusions](#conclusions-6)
+- [Details](#details-6)
+- [Memory usage](#memory-usage)
+  - [Conclusions](#conclusions-7)
+  - [Details](#details-7)
+    - [Scenario 1 - empty application](#scenario-1---empty-application)
+    - [Scenario 2 - view with 100 components](#scenario-2---view-with-100-components)
+- [Relation Between Component Creation and Stutters](#relation-between-component-creation-and-stutters)
+  - [Conclusions](#conclusions-8)
+  - [Details](#details-8)
+
 
 ## Rendering a large number of components
 
@@ -15,19 +51,17 @@ Rendering ~10,000 tiny views.
 - Commit https://gl.swmansion.com/rnoh/react-native-harmony/-/commit/fb3c847070e866075d0c662d2adad587d681a506
 - Environment: emulator - HarmonyOS System-image-phone 3.1.0.306 Release, AMD Ryzen 5900X, 32 GB RAM
 - Measurement method: recording analysis
+- Measured times 5 times for each platform
 
 ![](./checkerboard-example-preview.png)
 
-|                                  | ArkUI                                                                                                   | react-native-harmony                                                                                              | react-native-android                                                                                              |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Recording                        | [arkui-checkerboard.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/arkui-checkerboard.mp4) | [rn-harmony-checkerboard.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/rn-harmony-10000-fb3c84.mp4) | [rn-android-checkerboard.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/rn-android-checkerboard.mp4) |
-| Mean [ms]                        | 1588                                                                                                    | 9488                                                                                                              | 4307.5                                                                                                            |
-| Sample size                      | 5                                                                                                       | 5                                                                                                                 | 4                                                                                                                 |
-| Standard Dev. [ms]               | 70                                                                                                      | 842                                                                                                               | 51                                                                                                                |
-| Confidence level                 | 95%                                                                                                     | 95%                                                                                                               | 95%                                                                                                               |
-| Margin of error (T-Student) [ms] | 87                                                                                                      | 1045                                                                                                              | 81                                                                                                                |
-| Upper limit [ms]                 | 1675                                                                                                    | 10533                                                                                                             | 4389                                                                                                              |
-| Lower limit [ms]                 | 1501                                                                                                    | 8443                                                                                                              | 4226                                                                                                              |
+|                          | ArkUI                                                                                                   | react-native-harmony                                                                                              | react-native-android                                                                                              |
+| ------------------------ | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Link to video            | [arkui-checkerboard.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/arkui-checkerboard.mp4) | [rn-harmony-checkerboard.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/rn-harmony-10000-fb3c84.mp4) | [rn-android-checkerboard.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/rn-android-checkerboard.mp4) |
+| Mean time [ms]           | 1588                                                                                                    | 9488                                                                                                              | 4307.5                                                                                                            |
+| Standard Deviation* [ms] | 70                                                                                                      | 842                                                                                                               | 51                                                                                                                |
+
+
 
 ## Animations
 
@@ -50,9 +84,9 @@ Animations, although they are not essential from the functional perspective, the
 - Commit https://gl.swmansion.com/rnoh/react-native-harmony/-/commit/4f2315dcac3b82931f6bf1f2d14f6e76a07bbe84
 - Environment: emulator HarmonyOS System-image-phone 3.1.0.306 Release, AMD Ryzen 5900X, 32 GB RAM
 
-|           | ArkUI                                                                                            | react-native-harmony                                                                                      | react-native-android                                                                                      |
-| --------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Recording | [arkui.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/rn-harmony-native-4f2315.mp4) | [rn-harmony.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/rn-harmony-animations-4f2315.mp4) | [rn-android.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/rn-android-animations-4f2315.mp4) |
+|               | ArkUI                                                                                            | react-native-harmony                                                                                      | react-native-android                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Link to video | [arkui.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/rn-harmony-native-4f2315.mp4) | [rn-harmony.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/rn-harmony-animations-4f2315.mp4) | [rn-android.mp4](https://gl.swmansion.com/rnoh/file-storage/-/blob/main/rn-android-animations-4f2315.mp4) |
 
 ## Startup time
 
@@ -70,10 +104,10 @@ Startup time gives the first impression to the user. Users may assume that if th
 - Average of 5 measurements.
 - Application complexity: low ("hello world" example)
 
-|                    | ArkUI | react-native-harmony | react-native-android |
-| ------------------ | ----- | -------------------- | -------------------- |
-| Mean [ms]          | 734   | 2984                 | 556                  |
-| Standard Dev. [ms] | 77    | 80                   | 22                   |
+|                         | ArkUI | react-native-harmony | react-native-android |
+| ----------------------- | ----- | -------------------- | -------------------- |
+| Mean [ms]               | 734   | 2984                 | 556                  |
+| Standard Deviation [ms] | 77    | 80                   | 22                   |
 
 ## UI Interaction
 
@@ -91,11 +125,12 @@ In this test, a simple component with a text inside was dragged on the screen.
 - ArkUI emits touch event 60 times per second
 - Component was dragged with `adb shell input swipe`
 
-|                     | ArkUI | react-native-harmony | react-native-android |
-| ------------------- | ----- | -------------------- | -------------------- |
-| Mean [FPS]          | 59,58 | 55,04                | 60                   |
-| Sample size         | 5     | 5                    | 1                    |
-| Standard Dev. [FPS] | 0.7   | 3                    | 0                    |
+|                          | ArkUI | react-native-harmony | react-native-android |
+| ------------------------ | ----- | -------------------- | -------------------- |
+| Mean [FPS]               | 59,58 | 55,04                | 60                   |
+| Standard Deviation [FPS] | 0.7   | 3                    | 0                    |
+| Sample size              | 5     | 5                    | 1                    |
+
 
 ## Text rendering
 
@@ -191,7 +226,7 @@ Problems with memory usage can impact application performance. Less memory usage
 
 ### Conclusions
 
-**The memory usage of react-native-harmony and react-native-android seems similiar. Both react-native implementations use much more memory than ArkUI. react-native-harmony has known memory leaks, but they shouldn't have a big impact on performance, unless the application is kept alive for a long time. The difference between rn-android and rn-harmony is probably caused by measuring in different environments.**
+**The memory usage of react-native-harmony and react-native-android seems similar. Both react-native implementations use much more memory than ArkUI. react-native-harmony has known memory leaks, but they shouldn't have a big impact on performance, unless the application is kept alive for a long time. The difference between rn-android and rn-harmony is probably caused by measuring in different environments.**
 
 ### Details
 
@@ -221,7 +256,7 @@ Problems with memory usage can impact application performance. Less memory usage
 [2] - measurement after hiding and showing components 10 times
 
 
-## Rendering and stuttering
+## Relation Between Component Creation and Stutters
 
 FlatList, a common React Native component, sends create, update and delete operations to the native side during scrolling. A stutter can be observed, when such operations are dispatched. The purpose of this benchmark is identifying where the problem lies. For that purpose, a mini-app was created that consist of a ScrollView on the first half on the screen and a space below where various number of components are created and removed every second. 
 
