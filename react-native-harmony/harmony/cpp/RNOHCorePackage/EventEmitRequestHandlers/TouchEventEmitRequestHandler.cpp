@@ -17,6 +17,15 @@ void TouchEventEmitRequestHandler::handleEvent(TouchEventEmitRequestHandler::Con
     auto changedTouches = convertTouches(arkJs, ctx.tag, timestamp, arkJs.getObjectProperty(touchEvent, "changedTouches"));
 
     auto eventType = (TouchType)(arkJs.getDouble(arkJs.getObjectProperty(ctx.payload, "type")));
+    bool isTouchEnd = eventType == TouchType::UP || eventType == TouchType::CANCEL;
+
+    if (isTouchEnd) {
+        // `touches` should only contain touches that are still active,
+        // so we exclude the touches that just ended
+        for (auto &touch : changedTouches) {
+            touches.erase(touch);
+        }
+    }
 
     std::unordered_set<react::Tag> changedTargets;
     for (auto &touch : changedTouches) {
@@ -60,8 +69,6 @@ void TouchEventEmitRequestHandler::handleEvent(TouchEventEmitRequestHandler::Con
             LOG(FATAL) << "Invalid touch event type received from Ark";
         }
     }
-
-    bool isTouchEnd = eventType == TouchType::UP || eventType == TouchType::CANCEL;
 
     if (isTouchEnd) {
         for (auto &touch : changedTouches) {
