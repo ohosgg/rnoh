@@ -62,9 +62,9 @@ class TextMeasurement final {
 // nature of text measuring.
 class TextMeasureCacheKey final {
  public:
-  AttributedString attributedString{};
-  ParagraphAttributes paragraphAttributes{};
-  LayoutConstraints layoutConstraints{};
+   AttributedString attributedString{};
+   ParagraphAttributes paragraphAttributes{};
+   LayoutConstraints layoutConstraints{};
 };
 
 /*

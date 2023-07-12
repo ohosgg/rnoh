@@ -19,6 +19,8 @@ TextMeasurement TextLayoutManager::measure(
     ParagraphAttributes paragraphAttributes,
     LayoutConstraints layoutConstraints) const {
     attributedStringBox.getValue().getString();
+    auto &attributedString = attributedStringBox.getValue();
+
     TextMeasurement::Attachments attachments;
     for (auto const &fragment : attributedStringBox.getValue().getFragments()) {
         if (fragment.isAttachment()) {
@@ -26,7 +28,12 @@ TextMeasurement TextLayoutManager::measure(
                 TextMeasurement::Attachment{{{0, 0}, {0, 0}}, false});
         }
     }
-    return TextMeasurement{m_textLayoutManagerDelegate->measure(attributedStringBox.getValue().getString()), attachments};
+    auto measurement = m_measureCache.get(
+        {attributedString, paragraphAttributes, layoutConstraints},
+        [&](TextMeasureCacheKey const & /*key*/) {
+            return TextMeasurement{m_textLayoutManagerDelegate->measure(attributedStringBox.getValue().getString()), attachments};
+        });
+    return measurement;
 }
 
 TextMeasurement TextLayoutManager::measure(
@@ -34,8 +41,8 @@ TextMeasurement TextLayoutManager::measure(
     ParagraphAttributes paragraphAttributes,
     LayoutConstraints layoutConstraints,
     std::shared_ptr<void> hostTextStorage) const {
-        return this->measure(attributedStringBox, paragraphAttributes, layoutConstraints);
-    }
+    return this->measure(attributedStringBox, paragraphAttributes, layoutConstraints);
+}
 
 LinesMeasurements TextLayoutManager::measureLines(
     AttributedString attributedString,
@@ -45,10 +52,10 @@ LinesMeasurements TextLayoutManager::measureLines(
 }
 
 std::shared_ptr<void> TextLayoutManager::getHostTextStorage(
-        AttributedString attributedString,
-        ParagraphAttributes paragraphAttributes,
-        LayoutConstraints layoutConstraints) const {
-        return nullptr;
+    AttributedString attributedString,
+    ParagraphAttributes paragraphAttributes,
+    LayoutConstraints layoutConstraints) const {
+    return nullptr;
 }
 
 } // namespace react

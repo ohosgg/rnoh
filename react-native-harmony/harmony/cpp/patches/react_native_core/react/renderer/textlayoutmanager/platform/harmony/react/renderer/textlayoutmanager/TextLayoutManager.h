@@ -15,6 +15,7 @@
 #include <react/renderer/core/LayoutConstraints.h>
 #include <react/renderer/textlayoutmanager/TextMeasureCache.h>
 #include <react/utils/ContextContainer.h>
+#include <react/renderer/core/CoreFeatures.h>
 
 namespace facebook {
 namespace react {
@@ -33,7 +34,9 @@ class TextLayoutManagerDelegate {
  */
 class TextLayoutManager {
   public:
-    TextLayoutManager(const ContextContainer::Shared &contextContainer) {
+    TextLayoutManager(const ContextContainer::Shared &contextContainer) : m_measureCache(CoreFeatures::cacheLastTextMeasurement
+                                                                                             ? 8096
+                                                                                             : kSimpleThreadSafeCacheSizeCap) {
         m_textLayoutManagerDelegate = contextContainer->at<std::shared_ptr<TextLayoutManagerDelegate>>("textLayoutManagerDelegate");
     }
 
@@ -44,11 +47,11 @@ class TextLayoutManager {
         AttributedStringBox attributedStringBox,
         ParagraphAttributes paragraphAttributes,
         LayoutConstraints layoutConstraints) const;
-    
+
     TextMeasurement measure(
         AttributedStringBox attributedStringBox,
         ParagraphAttributes paragraphAttributes,
-        LayoutConstraints layoutConstraints, 
+        LayoutConstraints layoutConstraints,
         std::shared_ptr<void> hostTextStorage) const;
 
     /*
@@ -65,7 +68,7 @@ class TextLayoutManager {
    * Is used on a native views layer to delegate text rendering to the manager.
    */
     void *getNativeTextLayoutManager() const;
-    
+
     std::shared_ptr<void> getHostTextStorage(
         AttributedString attributedString,
         ParagraphAttributes paragraphAttributes,
@@ -73,6 +76,7 @@ class TextLayoutManager {
 
   private:
     std::shared_ptr<TextLayoutManagerDelegate> m_textLayoutManagerDelegate;
+    TextMeasureCache m_measureCache;
 };
 
 } // namespace react
