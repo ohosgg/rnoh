@@ -1,5 +1,5 @@
 import React, {useRef, useEffect} from 'react';
-import {View, PanResponder, Animated, Text} from 'react-native';
+import {View, PanResponder, Animated, Text, ScrollView} from 'react-native';
 
 export function CursorExample() {
   const pan = useRef(new Animated.ValueXY()).current;
@@ -26,11 +26,15 @@ export function CursorExample() {
 
   return (
     <View style={{flex: 1}}>
+      <ScrollView style={{height: 600}}>
+        <View style={{height: 500, width: '100%', backgroundColor: 'silver'}} />
+        <View style={{height: 500, width: '100%', backgroundColor: 'gray'}} />
+      </ScrollView>
       <Animated.View
         {...panResponder.panHandlers}
         style={[
           pan.getLayout(),
-          {width: 50, height: 50, backgroundColor: 'red'},
+          {width: 50, height: 50, backgroundColor: 'red', position: 'absolute'},
         ]}>
         <Text style={{width: '100%', height: '100%'}}>Drag me around</Text>
       </Animated.View>
