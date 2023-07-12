@@ -24,15 +24,10 @@ import ReactNativeFeatureFlags from 'react-native/Libraries/ReactNative/ReactNat
 import Platform from '../Utilities/Platform';
 import NativeAnimatedNonTurboModule from 'react-native/Libraries/Animated/NativeAnimatedModule';
 import NativeAnimatedTurboModule from 'react-native/Libraries/Animated/NativeAnimatedTurboModule';
+import invariant from 'invariant';
 
-// RNOH: patch - noop invariant impl
-const invariant = (condition, message) => {};
-
-// TODO T69437152 @petetheheat - Delete this fork when Fabric ships to 100%.
-const NativeAnimatedModule =
-  Platform.OS === 'ios' && global.RN$Bridgeless === true
-    ? NativeAnimatedTurboModule
-    : NativeAnimatedNonTurboModule;
+// RNOH Patch: always use TurboModule version of NativeAnimatedModule
+const NativeAnimatedModule = NativeAnimatedTurboModule;
 
 let __nativeAnimatedNodeTagCount = 1; /* used for animated nodes */
 let __nativeAnimationIdCount = 1; /* used for started animations */
@@ -144,7 +139,11 @@ const API = {
     }
   },
   flushQueue: function (): void {
-    invariant(NativeAnimatedModule, 'Native animated module is not available');
+    // TODO: (T136971132)
+    invariant(
+      NativeAnimatedModule || process.env.NODE_ENV === 'test',
+      'Native animated module is not available',
+    );
     flushQueueTimeout = null;
 
     // Early returns before calling any APIs
@@ -167,16 +166,18 @@ const API = {
       // use RCTDeviceEventEmitter. This reduces overhead of sending lots of
       // JSI functions across to native code; but also, TM infrastructure currently
       // does not support packing a function into native arrays.
-      NativeAnimatedModule.queueAndExecuteBatchedOperations?.(singleOpQueue);
+      NativeAnimatedModule?.queueAndExecuteBatchedOperations?.(singleOpQueue);
       singleOpQueue.length = 0;
     } else {
-      Platform.OS === 'android' && NativeAnimatedModule.startOperationBatch?.();
+      Platform.OS === 'android' &&
+        NativeAnimatedModule?.startOperationBatch?.();
+
       for (let q = 0, l = queue.length; q < l; q++) {
         queue[q]();
       }
       queue.length = 0;
       Platform.OS === 'android' &&
-        NativeAnimatedModule.finishOperationBatch?.();
+        NativeAnimatedModule?.finishOperationBatch?.();
     }
   },
   queueOperation: <Args: $ReadOnlyArray<mixed>, Fn: (...Args) => void>(
@@ -244,6 +245,7 @@ const API = {
       }
       // $FlowFixMe
       API.queueOperation(
+        // $FlowFixMe[incompatible-call]
         nativeOps.startAnimatingNode,
         animationId,
         nodeTag,
@@ -386,11 +388,15 @@ const SUPPORTED_STYLES = {
   borderBottomLeftRadius: true,
   borderBottomRightRadius: true,
   borderBottomStartRadius: true,
+  borderEndEndRadius: true,
+  borderEndStartRadius: true,
   borderRadius: true,
   borderTopEndRadius: true,
   borderTopLeftRadius: true,
   borderTopRightRadius: true,
   borderTopStartRadius: true,
+  borderStartEndRadius: true,
+  borderStartStartRadius: true,
   elevation: true,
   opacity: true,
   transform: true,
@@ -513,7 +519,7 @@ function generateNewAnimationId(): number {
 }
 
 function assertNativeAnimatedModule(): void {
-    invariant(NativeAnimatedModule, 'Native animated module is not available');
+  invariant(NativeAnimatedModule, 'Native animated module is not available');
 }
 
 let _warnedMissingNativeAnimated = false;
@@ -579,10 +585,11 @@ export default {
   assertNativeAnimatedModule,
   shouldUseNativeDriver,
   transformDataType,
-  // $FlowExpectedError[unsafe-getters-setters] - unsafe getter lint suppresion
-  // $FlowExpectedError[missing-type-arg] - unsafe getter lint suppresion
+  // $FlowExpectedError[unsafe-getters-setters] - unsafe getter lint suppression
+  // $FlowExpectedError[missing-type-arg] - unsafe getter lint suppression
   get nativeEventEmitter(): NativeEventEmitter {
     if (!nativeEventEmitter) {
+      // $FlowFixMe[underconstrained-implicit-instantiation]
       nativeEventEmitter = new NativeEventEmitter(
         // T88715063: NativeEventEmitter only used this parameter on iOS. Now it uses it on all platforms, so this code was modified automatically to preserve its behavior
         // If you want to use the native module on other platforms, please remove this condition and test its behavior

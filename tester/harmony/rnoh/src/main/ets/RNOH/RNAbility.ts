@@ -68,14 +68,14 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
 
   onCreate(want, param) {
     this.logger = this.createLogger()
-    this.storage = new LocalStorage()
     this.napiBridge = new NapiBridge(libRNOHApp)
+    this.storage = new LocalStorage()
+
     const rnohContext = new RNOHContext("0.0.0", this.napiBridge, this.context, this, this, this.logger)
-    this.storage.setOrCreate('RNOHContext', rnohContext)
+
     this.turboModuleProvider = this.processPackages(rnohContext).turboModuleProvider
     this.napiBridge.registerTurboModuleProvider(this.turboModuleProvider)
-
-
+    this.storage.setOrCreate('RNOHContext', rnohContext)
   }
 
   public createLogger(): RNOHLogger {

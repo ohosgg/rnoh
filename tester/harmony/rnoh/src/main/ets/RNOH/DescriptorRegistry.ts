@@ -19,6 +19,22 @@ export class DescriptorRegistry {
     return this.descriptorByTag.get(tag) as TDescriptor;
   }
 
+  public setProps<TProps>(tag: Tag, props: TProps): void {
+    let descriptor = this.getDescriptor<Descriptor<string, TProps>>(tag);
+
+    if (!descriptor) {
+      (new StandardRNOHLogger().info(`No view for tag ${tag}`))
+      return;
+    }
+
+    descriptor.props = {...descriptor.props, ...props};
+    const updatedDescriptor = {...descriptor};
+    this.descriptorByTag.set(tag, updatedDescriptor);
+
+    this.descriptorListenersSetByTag.get(tag)?.forEach(cb => cb(updatedDescriptor));
+    this.callSubtreeListeners([tag]);
+  }
+
   public applyMutations(mutations: Mutation[]) {
     const updatedComponents = mutations.flatMap(mutation =>
       this.applyMutation(mutation),

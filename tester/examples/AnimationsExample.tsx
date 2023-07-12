@@ -44,7 +44,7 @@ export function AnimationsExample() {
   }, [isTogglingComponent]);
 
   useEffect(() => {
-    Animated.loop(
+    const x = Animated.loop(
       Animated.sequence([
         Animated.timing(xAnim, {
           toValue: 0,
@@ -62,9 +62,10 @@ export function AnimationsExample() {
           useNativeDriver: false,
         }),
       ]),
-    ).start();
+    );
+    x.start();
 
-    Animated.loop(
+    const xNative = Animated.loop(
       Animated.sequence([
         Animated.timing(xAnimNative, {
           toValue: 0,
@@ -82,22 +83,30 @@ export function AnimationsExample() {
           useNativeDriver: true,
         }),
       ]),
-    ).start();
+    );
+    xNative.start();
 
-    Animated.loop(
+    const fade = Animated.loop(
       Animated.sequence([
         Animated.timing(fadeAnim, {
           toValue: 0,
           duration: 1000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(fadeAnim, {
           toValue: 1,
           duration: 1000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
       ]),
-    ).start();
+    );
+    fade.start();
+
+    return () => {
+      x.stop();
+      xNative.stop();
+      fade.stop();
+    }
   }, []);
 
   return (
@@ -168,7 +177,6 @@ export function AnimationsExample() {
           }}>
           <Text style={{height: 24}}>Position</Text>
         </Animated.View>
-        {Platform.OS === 'android' && (
           <>
             <Animated.View
               style={{
@@ -191,7 +199,6 @@ export function AnimationsExample() {
               <Text style={{height: 24}}>Native driver</Text>
             </Animated.View>
           </>
-        )}
         {isComponentVisible && (
           <View
             style={{

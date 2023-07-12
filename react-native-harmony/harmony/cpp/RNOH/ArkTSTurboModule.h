@@ -46,7 +46,7 @@ class ArkTSTurboModule : public TurboModule {
                                    const facebook::jsi::Value *args,
                                    size_t argsCount);
 
-  private:
+  protected:
     Context m_ctx;
 };
 } // namespace rnoh

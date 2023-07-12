@@ -27,6 +27,7 @@
 #include "RNOHCorePackage/EventEmitRequestHandlers/TouchEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/TextInputChangeEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/ScrollEventEmitRequestHandler.h"
+#include "RNOHCorePackage/TurboModules/Animated/NativeAnimatedTurboModule.h"
 
 namespace rnoh {
 
@@ -39,6 +40,8 @@ class RNOHCoreTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
             return std::make_shared<DeviceInfoTurboModule>(ctx, name);
         } else if (name == "ExceptionsManager") {
             return std::make_shared<ExceptionsManagerTurboModule>(ctx, name);
+        } else if (name == "NativeAnimatedTurboModule") {
+            return std::make_shared<NativeAnimatedTurboModule>(ctx, name);
         } else if (name == "Networking") {
             return std::make_shared<NetworkingTurboModule>(ctx, name);
         } else if (name == "PlatformConstants") {

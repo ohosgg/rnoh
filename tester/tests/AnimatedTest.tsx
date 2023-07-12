@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Animated, Text, View} from 'react-native';
+import {Animated, Pressable, Text, View} from 'react-native';
 
 import {TestCase, TestSuite} from '@rnoh/testerino';
 
@@ -15,6 +15,7 @@ export function AnimatedTest() {
       </TestCase>
       <TestCase itShould="fade in and out when clicked">
         <FadeInOut />
+        <FadeInOut nativeDriver/>
       </TestCase>
     </TestSuite>
   );
@@ -108,7 +109,7 @@ const AnimatedScrollViewTestCase = () => {
   );
 };
 
-function FadeInOut() {
+function FadeInOut({nativeDriver = false}) {
   const fadeAnim = React.useRef(new Animated.Value(1)).current;
 
   const handleFadePress = () => {
@@ -116,27 +117,28 @@ function FadeInOut() {
       Animated.timing(fadeAnim, {
         toValue: 0,
         duration: 1000,
-        useNativeDriver: false,
+        useNativeDriver: nativeDriver,
       }),
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 1000,
-        useNativeDriver: false,
+        useNativeDriver: nativeDriver,
       }),
     ]).start();
   };
 
   return (
-    <Animated.View
-      onTouchEnd={() => handleFadePress()}
-      style={{
-        marginTop: 24,
-        height: 100,
-        width: 100,
-        opacity: fadeAnim,
-        backgroundColor: 'red',
-      }}>
-      <Text style={{width: 100, height: 48}}>Press me to fade</Text>
-    </Animated.View>
+    <Pressable onPress={handleFadePress}>
+      <Animated.View
+        style={{
+          marginTop: 24,
+          height: 100,
+          width: 100,
+          opacity: fadeAnim,
+          backgroundColor: 'red',
+        }}>
+        <Text style={{width: 100, height: 48}}>Press me to fade{nativeDriver && " using native driver"}</Text>
+      </Animated.View>
+    </Pressable>
   );
 }
