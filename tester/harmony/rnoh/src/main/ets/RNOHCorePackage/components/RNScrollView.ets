@@ -78,6 +78,13 @@ export struct RNScrollView {
   }
 
   onScroll(offset: number, scrollState: ScrollState) {
+    const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag);
+
+    if (!descriptor) {
+      // the view was unmounted while scrolling - don't report the event in that case
+      return;
+    }
+
     const currentOffset = this.scroller.currentOffset()
     const yOffset = currentOffset.yOffset + offset;
 
@@ -99,8 +106,8 @@ export struct RNScrollView {
     this.scrollState = scrollState
 
     // TODO: check if scroll is horizontal/vertical and adjust the correct offset
-    // this.descriptor.state.contentOffsetX = offset.xOffset;
-    this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag).state.contentOffsetY = yOffset;
+    // descriptor.state.contentOffsetX = offset.xOffset;
+    descriptor.state.contentOffsetY = yOffset;
 
     this.ctx.rnInstanceManager.emitComponentEvent(
       this.descriptor.tag,
