@@ -8,13 +8,17 @@ namespace rnoh {
 
 NapiTaskRunner::NapiTaskRunner(napi_env env) : env(env) {
     auto loop = getLoop();
-    asyncHandle.data = (void *)this;
+    asyncHandle.data = static_cast<void*>(this);
     uv_async_init(loop, &asyncHandle, [](auto handle) {
         auto runner = static_cast<NapiTaskRunner *>(handle->data);
-        std::unique_lock<std::mutex> lock(runner->tasksMutex);
-        while (!runner->tasksQueue.empty()) {
-            auto task = std::move(runner->tasksQueue.front());
-            runner->tasksQueue.pop();
+        std::queue<Task> tasksQueue;
+        {
+            std::unique_lock<std::mutex> lock(runner->tasksMutex);
+            std::swap(tasksQueue, runner->tasksQueue);
+        }
+        while (!tasksQueue.empty()) {
+            auto task = std::move(tasksQueue.front());
+            tasksQueue.pop();
             task();
         }
     });
