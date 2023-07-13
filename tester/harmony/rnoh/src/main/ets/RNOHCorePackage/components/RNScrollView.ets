@@ -52,9 +52,12 @@ export struct RNScrollView {
 
   scrollTo(xOffset, yOffset, animated) {
     const animation = animated ? { duration: 1000, curve: Curve.Smooth } : undefined;
-
-    setTimeout(() => this.scroller.scrollTo({ xOffset, yOffset, animation }), 0);
-  }
+    this.scroller.scrollTo({ xOffset, yOffset, animation })
+    this.ctx.rnInstanceManager.emitComponentEvent(
+      this.descriptor.tag,
+      RNOHEventEmitRequestHandlerName.Scroll,
+      this.createScrollEvent("scroll", 0, yOffset)
+    )  }
 
   scrollDirection(): ScrollDirection {
     // TODO: support horizontal and free Scroll - one solution is to always nest two Scroll components, one vertical, one horizontal
@@ -86,7 +89,7 @@ export struct RNScrollView {
     }
 
     const currentOffset = this.scroller.currentOffset()
-    const yOffset = currentOffset.yOffset + offset;
+    const yOffset = currentOffset.yOffset;
 
     const currentScrollState = this.scrollState;
 
