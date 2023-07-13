@@ -25,6 +25,7 @@ it('should create harmony.tar.gz', async () => {
       },
     },
     'react-native-harmony-package-name': {
+      'package.json': `{"version": "0.0.1"}`,
       harmony: {},
     },
   });
@@ -32,6 +33,7 @@ it('should create harmony.tar.gz', async () => {
   new ReactNativeFixture(tmpDir).packHarmony({
     ohModulePath: 'tester/harmony/package-name',
     harmonyDirPath: 'react-native-harmony-package-name/harmony',
+    packageJSONPath: 'react-native-harmony-package-name/package.json',
   });
 
   expect(

@@ -30,7 +30,10 @@ export function buildDirTree(dirPath: string, indent = '') {
       tree += `${indent}└── ${file} (folder)\n`;
       tree += buildDirTree(filePath, `${indent}    `);
     } else {
-      tree += `${indent}└── ${file}\n`;
+      const fileContent = fs
+        .readFileSync(filePath, { encoding: 'utf-8' })
+        .substring(0, 48);
+      tree += `${indent}└── ${file}: ${fileContent}\n`;
     }
 
     if (index === files.length - 1) {

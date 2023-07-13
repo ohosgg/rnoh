@@ -28,6 +28,7 @@ it('should pack and unpack package', () => {
           'ignored.txt': 'ignored',
         },
       },
+      'package.json': `{"version": "0.0.1"}`,
     },
     tester: {
       harmony: {
@@ -37,6 +38,7 @@ it('should pack and unpack package', () => {
           ignored: {
             'ignored.txt': 'ignored',
           },
+          'oh-package.json5': `{"version": "0.0.1"}`,
         },
       },
     },
@@ -49,16 +51,11 @@ it('should pack and unpack package', () => {
   rnFixture.packHarmony({
     harmonyDirPath: 'react-native-harmony/harmony',
     ohModulePath: 'tester/harmony/rnoh',
+    packageJSONPath: 'react-native-harmony/package.json',
   });
   fse.copySync(
-    pathUtils.join(tmpDir, 'react-native-harmony', 'harmony.tar.gz'),
-    pathUtils.join(
-      tmpDir,
-      'rn-project',
-      'node_modules',
-      'react-native-harmony',
-      'harmony.tar.gz'
-    )
+    pathUtils.join(tmpDir, 'react-native-harmony'),
+    pathUtils.join(tmpDir, 'rn-project', 'node_modules', 'react-native-harmony')
   );
 
   const unpackingResult = rnFixture.unpackHarmony({
@@ -86,14 +83,67 @@ it('should pack and unpack package', () => {
       )
     )
   ).toBeTruthy();
+  expect(unpackingResult).toContain('[UNPACKING]');
+  expect(unpackingAgainResult).not.toContain('[UNPACKING]');
+});
+
+it('should replace module when updating npm package', () => {
+  createFileStructure(tmpDir, {
+    'react-native-harmony': {
+      harmony: {},
+      'package.json': `{"version": "0.0.2"}`,
+    },
+    tester: {
+      harmony: {
+        rnoh: {
+          'oh-package.json5': `{"version": "0.0.0"}`,
+          'file.txt': 'NEW_CONTENT',
+        },
+      },
+    },
+    'rn-project': {
+      harmony: {
+        react_native_modules: {
+          rnoh: {
+            'oh-package.json5': `{"version": "0.0.1"}`,
+            'file.txt': 'OLD_CONTENT',
+          },
+        },
+      },
+    },
+  });
+  const rnFixture = new ReactNativeFixture(tmpDir);
+  rnFixture.packHarmony({
+    harmonyDirPath: 'react-native-harmony/harmony',
+    ohModulePath: 'tester/harmony/rnoh',
+    packageJSONPath: 'react-native-harmony/package.json',
+  });
+  fse.copySync(
+    pathUtils.join(tmpDir, 'react-native-harmony'),
+    pathUtils.join(tmpDir, 'rn-project', 'node_modules', 'react-native-harmony')
+  );
+
+  rnFixture.unpackHarmony({
+    nodeModulesPath: 'rn-project/node_modules',
+    outputDir: 'rn-project/harmony/react_native_modules',
+  });
+
   expect(
-    fse.existsSync(
+    fse.readFileSync(
       pathUtils.join(
         tmpDir,
-        'rn-project/node_modules/react-native-harmony/harmony/ignored/ignored.txt'
-      )
+        'rn-project/harmony/react_native_modules/rnoh/oh-package.json5'
+      ),
+      { encoding: 'utf-8' }
     )
-  ).toBeFalsy();
-  expect(unpackingResult).toContain('[UNPACKED]');
-  expect(unpackingAgainResult).not.toContain('[UNPACKED]');
+  ).toContain('0.0.2');
+  expect(
+    fse.readFileSync(
+      pathUtils.join(
+        tmpDir,
+        'rn-project/harmony/react_native_modules/rnoh/file.txt'
+      ),
+      { encoding: 'utf-8' }
+    )
+  ).toBe('NEW_CONTENT');
 });
