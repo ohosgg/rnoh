@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.72.1
+- fixed react-native unpack-harmony not replacing the native module when updating npm package
+- fixed crash when removing a scrolling ScrollView
+- fixed color transformation for custom components when a NapiBinder was not provided
+- fixed an error thrown by React Native renderer caused by dispatching wrong touch events 
+- fixed `collapsable` property
+- fixed `onLayout` property
+- fixed `FlatList` displaying wrong items
+- added development mode (which can be disabled by using `prod` flag: `react-native bundle-harmony --prod`)
+- added caching text measurements
+- added a basic support for a native driver
+- added back button handler - requires adapting `entry/pages/Index.ets` code, since listener for back button callbacks can only be added to the entry component
+- removed rnInstance property from RNOHContext in favor of rnInstanceManager
+- 
 ## v0.72.0
 - upgraded React Native from 0.71.3 to 0.72.0
 - added support for transform properties
