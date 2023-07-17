@@ -1,11 +1,13 @@
 {
-  license: 'ISC',
-  types: '',
-  devDependencies: {},
-  name: '@ohos/rnoh',
-  description: 'React Native for Open Harmony',
-  ohos: {org: ''},
-  type: 'module',
-  version: '0.72.1',
-  dependencies: {},
+  "license": "ISC",
+  "types": "",
+  "devDependencies": {},
+  "name": "@ohos/rnoh",
+  "description": "React Native for Open Harmony",
+  "ohos": {
+    "org": ""
+  },
+  "type": "module",
+  "version": "0.72.1",
+  "dependencies": {}
 }
