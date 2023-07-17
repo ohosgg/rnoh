@@ -1,7 +1,8 @@
-import {RNPackage, TurboModulesFactory} from '../RNOH/RNPackage';
-import type {TurboModule, TurboModuleContext} from '../RNOH/TurboModule';
+import { RNPackage, TurboModulesFactory } from '../RNOH/RNPackage';
+import type { TurboModule, TurboModuleContext } from '../RNOH/TurboModule';
 import {
   AppStateTurboModule,
+  DeviceEventManagerTurboModule,
   DeviceInfoTurboModule,
   ExceptionsManagerTurboModule,
   NativeAnimatedTurboModule,
@@ -20,16 +21,17 @@ export class RNOHCorePackage extends RNPackage {
 }
 
 const TURBO_MODULE_CLASS_BY_NAME: Record<string, typeof TurboModule> = {
-  AppState: AppStateTurboModule,
-  DeviceInfo: DeviceInfoTurboModule,
-  ExceptionsManager: ExceptionsManagerTurboModule,
-  NativeAnimatedTurboModule: NativeAnimatedTurboModule,
-  Networking: NetworkingTurboModule,
-  PlatformConstants: PlatformConstantsTurboModule,
-  SourceCode: SourceCodeTurboModule,
-  StatusBarManager: StatusBarTurboModule,
-  Timing: TimingTurboModule,
-  WebSocketModule: WebSocketTurboModule,
+  [AppStateTurboModule.NAME]: AppStateTurboModule,
+  [DeviceEventManagerTurboModule.NAME]: DeviceEventManagerTurboModule,
+  [DeviceInfoTurboModule.NAME]: DeviceInfoTurboModule,
+  [ExceptionsManagerTurboModule.NAME]: ExceptionsManagerTurboModule,
+  [NativeAnimatedTurboModule.NAME]: NativeAnimatedTurboModule,
+  [NetworkingTurboModule.NAME]: NetworkingTurboModule,
+  [PlatformConstantsTurboModule.NAME]: PlatformConstantsTurboModule,
+  [SourceCodeTurboModule.NAME]: SourceCodeTurboModule,
+  [StatusBarTurboModule.NAME]: StatusBarTurboModule,
+  [TimingTurboModule.NAME]: TimingTurboModule,
+  [WebSocketTurboModule.NAME]: WebSocketTurboModule,
 };
 
 class CoreTurboModulesFactory extends TurboModulesFactory {

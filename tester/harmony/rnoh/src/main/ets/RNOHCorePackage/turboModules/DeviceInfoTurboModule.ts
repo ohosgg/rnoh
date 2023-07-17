@@ -35,6 +35,8 @@ const defaultDisplayMetrics: DisplayMetrics = {
 } as const;
 
 export class DeviceInfoTurboModule extends TurboModule {
+  public static readonly NAME = 'DeviceInfo';
+
   private displayMetrics?: DisplayMetrics = null;
 
   constructor(protected ctx: TurboModuleContext) {

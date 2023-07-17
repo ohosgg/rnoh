@@ -14,6 +14,8 @@ function convertPhysicalToDeviceIndependentPixels(pixels?: number) {
 }
 
 export class StatusBarTurboModule extends TurboModule {
+  public static readonly NAME = 'StatusBarManager';
+
   private constants?: StatusBarConstants = null;
 
   constructor(protected ctx: TurboModuleContext) {

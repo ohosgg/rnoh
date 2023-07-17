@@ -391,6 +391,7 @@ add_library(rnoh SHARED
     "${RNOH_CPP_DIR}/RNOH/TaskExecutor/NapiTaskRunner.cpp"
     "${RNOH_CPP_DIR}/RNOH/TaskExecutor/ThreadTaskRunner.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/AppStateTurboModule.cpp"
+    "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/DeviceEventManagerTurboModule.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/DeviceInfoTurboModule.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/ExceptionsManagerTurboModule.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/NetworkingTurboModule.cpp"

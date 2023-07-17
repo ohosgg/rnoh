@@ -20,6 +20,8 @@ export type ExceptionData = {
 };
 
 export class ExceptionsManagerTurboModule extends TurboModule {
+  public static readonly NAME = 'ExceptionsManager';
+
   reportFatalException(message: string, stack: StackFrame[], exceptionId: number): void {
     this.ctx.logger.error(`ExceptionsManager::reportFatalException ${message}`);
     stack.forEach((frame) => {

@@ -2,6 +2,8 @@ import { Tag } from '../../RNOH';
 import { TurboModule } from "../../RNOH/TurboModule";
 
 export class NativeAnimatedTurboModule extends TurboModule {
+  public static readonly NAME = 'NativeAnimatedTurboModule';
+
   public scheduleNextFrame(callback: () => void) {
     setTimeout(callback, 12);
   }

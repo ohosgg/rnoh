@@ -1,46 +1,51 @@
 import { TurboModule } from "../../RNOH/TurboModule";
 
 export class TimingTurboModule extends TurboModule {
-    private nativeTimerMap: Map<number, { nativeTimerId: number, repeats: boolean }> = new Map();
+  public static readonly NAME = 'Timing';
 
-    createTimer(
-        id: number,
-        duration: number,
-        jsSchedulingTime: number,
-        repeats: boolean
-    ): void {
-        const triggerTimer = () =>
-            this.ctx.__napiBridge.callRNFunction("JSTimers", "callTimers", [[id]]);
+  private nativeTimerMap: Map<number, {
+    nativeTimerId: number,
+    repeats: boolean
+  }> = new Map();
 
-        let nativeTimerId;
+  createTimer(
+    id: number,
+    duration: number,
+    jsSchedulingTime: number,
+    repeats: boolean
+  ): void {
+    const triggerTimer = () =>
+    this.ctx.__napiBridge.callRNFunction("JSTimers", "callTimers", [[id]]);
 
-        if (repeats) {
-            nativeTimerId = setInterval(triggerTimer, duration)
-        } else {
-            const delay = new Date().getTime() - jsSchedulingTime;
-            nativeTimerId = setTimeout(triggerTimer, Math.max(0, duration - delay))
-        }
+    let nativeTimerId;
 
-        this.nativeTimerMap.set(id, { nativeTimerId, repeats });
+    if (repeats) {
+      nativeTimerId = setInterval(triggerTimer, duration)
+    } else {
+      const delay = new Date().getTime() - jsSchedulingTime;
+      nativeTimerId = setTimeout(triggerTimer, Math.max(0, duration - delay))
     }
 
-    deleteTimer(id: number): void {
+    this.nativeTimerMap.set(id, { nativeTimerId, repeats });
+  }
 
-        const timer = this.nativeTimerMap.get(id);
-        if (!timer) {
-            return;
-        }
+  deleteTimer(id: number): void {
 
-        const { nativeTimerId, repeats } = timer;
-
-        if (repeats) {
-            clearInterval(nativeTimerId);
-        } else {
-            clearTimeout(nativeTimerId);
-        }
+    const timer = this.nativeTimerMap.get(id);
+    if (!timer) {
+      return;
     }
 
-    setSendIdleEvents(enabled: boolean): void {
-        this.ctx.logger.warn(`TimingTurboModule::setSendIdleEvents(${enabled}): not implemented`);
+    const { nativeTimerId, repeats } = timer;
+
+    if (repeats) {
+      clearInterval(nativeTimerId);
+    } else {
+      clearTimeout(nativeTimerId);
     }
+  }
+
+  setSendIdleEvents(enabled: boolean): void {
+    this.ctx.logger.warn(`TimingTurboModule::setSendIdleEvents(${enabled}): not implemented`);
+  }
 }
