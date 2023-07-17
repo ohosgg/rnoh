@@ -19,6 +19,7 @@ export type ViewBaseProps = LayoutProps & {
   borderRadius?: BorderRadii
   opacity?: number
   transform?: TransformMatrix,
+  pointerEvents?: "auto" | "none" | "box-none" | "box-only"
 }
 
 export type ViewDynamicProps = {
@@ -113,7 +114,7 @@ function convertViewDynamicDescriptor(dynamicDescriptor: ViewDynamicDescriptor):
         bottomLeft: p.borderRadius,
         bottomRight: p.borderRadius
       },
-      opacity: p.opacity
+      opacity: p.opacity,
     }
   }
 }
@@ -158,6 +159,19 @@ export struct RNViewBase {
     handleTouchEvent(this.ctx, event, this.descriptor.tag)
   }
 
+  getHitTestMode() {
+    switch (this.descriptor.props.pointerEvents) {
+      case "none":
+        return HitTestMode.None
+      case "box-none":
+        return HitTestMode.None
+      case "box-only":
+        return HitTestMode.Block
+      default:
+        return HitTestMode.Default
+    }
+  }
+
   build() {
     Stack() {
       this.renderChildren()
@@ -173,5 +187,6 @@ export struct RNViewBase {
     .opacity(this.descriptor.props.opacity)
     .transform(this.descriptor.props.transform != undefined ? matrix4.init(convertTranslationPixelsToPhysicalPixels(this.descriptor.props.transform)) : undefined)
     .clip(true)
+    .hitTestBehavior(this.getHitTestMode())
   }
 }

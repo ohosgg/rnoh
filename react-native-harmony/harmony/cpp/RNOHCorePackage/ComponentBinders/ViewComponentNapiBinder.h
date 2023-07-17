@@ -22,10 +22,25 @@ class ViewComponentNapiBinder : public BaseComponentNapiBinder {
                 .addProperty("borderColor", borderMetrics.borderColors.top)
                 .addProperty("borderRadius", borderMetrics.borderRadii)
                 .addProperty("transform", props->transform.matrix)
+                .addProperty("pointerEvents", this->stringifyPointerEvents(props->pointerEvents))
                 .build();
         }
         return napiBaseProps;
     };
+
+  private:
+    std::string stringifyPointerEvents(facebook::react::PointerEventsMode pointerEventsMode) {
+        switch (pointerEventsMode) {
+        case facebook::react::PointerEventsMode::Auto:
+            return "auto";
+        case facebook::react::PointerEventsMode::BoxNone:
+            return "box-none";
+        case facebook::react::PointerEventsMode::BoxOnly:
+            return "box-only";
+        case facebook::react::PointerEventsMode::None:
+            return "none";
+        }
+    }
 };
 
 } // namespace rnoh
