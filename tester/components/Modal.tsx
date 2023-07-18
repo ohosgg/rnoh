@@ -18,7 +18,7 @@ export function Modal(props: {children: any}) {
   return (
     <Portal hostName="ModalHost">
       <View
-        onTouchEnd={() => {
+        onTouchEnd={e => {
           setIsOpen(false);
         }}
         style={[
@@ -29,7 +29,11 @@ export function Modal(props: {children: any}) {
             alignItems: 'center',
           },
         ]}>
-        {props.children}
+        <View
+          style={{backgroundColor: 'white', padding: 16}}
+          onTouchEnd={e => e.stopPropagation()}>
+          {props.children}
+        </View>
       </View>
     </Portal>
   );

@@ -156,7 +156,8 @@ export struct RNViewBase {
   }
 
   onTouchEvent(event: TouchEvent) {
-    handleTouchEvent(this.ctx, event, this.descriptor.tag)
+    if (this.descriptor.props.pointerEvents != "box-none")
+      handleTouchEvent(this.ctx, event, this.descriptor.tag)
   }
 
   getHitTestMode() {
