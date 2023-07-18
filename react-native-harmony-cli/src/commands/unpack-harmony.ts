@@ -47,11 +47,8 @@ async function unpack(nodeModulesPath: string, outputDirPath: string) {
     const harmonyArchivePath = pathUtils.join(nodeModulePath, 'harmony.tar.gz');
     const pkgHarmonyDirPath = pathUtils.join(nodeModulePath, 'harmony');
     const ohModulesInfo = getOhModulesInfo(pkgHarmonyDirPath, outputDirPath);
-    if (!nodePackageVersion)
-      throw new Error(
-        "Couldn't read package version for node module: " + nodeModuleName
-      );
     if (
+      nodePackageVersion &&
       shouldUnpackHarmonyArchive(
         harmonyArchivePath,
         pkgHarmonyDirPath,
