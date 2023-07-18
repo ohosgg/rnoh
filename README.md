@@ -194,7 +194,7 @@ More details about GitLab access tokens can be found [in the docs](https://docs.
 1. Go to the `react-native-harmony` directory
 1. Create the package by running the `npm pack` command
 1. Go to the `../tester` directory
-1. Run the `npm i` command to install dependencies
+1. Run the `npm i` command to install dependencies and setup build-profile
 1. Open the `/tester/harmony/entry/oh_package.json5` in the DevEco Studio
 1. Click "Sync" on the pop-up at the top
 
