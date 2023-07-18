@@ -76,7 +76,7 @@ const AnimatedScrollViewTestCase = () => {
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
           {
-            useNativeDriver: false,
+            useNativeDriver: true,
           },
         )}>
         {new Array(3).fill(0).map((_, idx) => {
@@ -98,7 +98,7 @@ const AnimatedScrollViewTestCase = () => {
           {
             position: 'absolute',
             bottom: 0,
-            left: translation,
+            transform: [{translateX: translation}],
             width: 32,
             height: 32,
             backgroundColor: 'red',

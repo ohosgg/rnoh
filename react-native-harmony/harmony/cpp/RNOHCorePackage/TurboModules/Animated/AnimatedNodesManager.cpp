@@ -7,7 +7,9 @@
 #include "Nodes/ValueAnimatedNode.h"
 #include "Nodes/PropsAnimatedNode.h"
 #include "Nodes/TransformAnimatedNode.h"
+#include "Nodes/InterpolationAnimatedNode.h"
 
+#include "Drivers/EventAnimationDriver.h"
 #include "Drivers/FrameBasedAnimationDriver.h"
 
 using namespace facebook;
@@ -19,6 +21,7 @@ AnimatedNodesManager::AnimatedNodesManager(std::function<void()> &&scheduleUpdat
       m_setNativePropsFn(std::move(setNativePropsFn)) {}
 
 void AnimatedNodesManager::createNode(facebook::react::Tag tag, folly::dynamic const &config) {
+    LOG(INFO) << "AnimatedNodesManager::createNode(" << tag <<", " << config << ")";
     auto type = config["type"].asString();
     std::unique_ptr<AnimatedNode> node;
 
@@ -30,17 +33,19 @@ void AnimatedNodesManager::createNode(facebook::react::Tag tag, folly::dynamic c
         node = std::make_unique<ValueAnimatedNode>(config);
     } else if (type == "transform") {
         node = std::make_unique<TransformAnimatedNode>(config, *this);
+    } else if (type == "interpolation") {
+        node = std::make_unique<InterpolationAnimatedNode>(config, *this);
     } else {
         throw new std::runtime_error("Unsupported node type: " + type);
     }
 
     node->tag_ = tag;
     m_nodeByTag.insert({tag, std::move(node)});
-    m_updatedNodeTags.insert(tag);
+    m_nodeTagsToUpdate.insert(tag);
 }
 
 void AnimatedNodesManager::dropNode(facebook::react::Tag tag) {
-    m_updatedNodeTags.erase(tag);
+    m_nodeTagsToUpdate.erase(tag);
     m_nodeByTag.erase(tag);
 }
 
@@ -49,7 +54,7 @@ void AnimatedNodesManager::connectNodes(facebook::react::Tag parentTag, facebook
     auto &child = getNodeByTag(childTag);
 
     parent.addChild(child);
-    m_updatedNodeTags.insert(childTag);
+    m_nodeTagsToUpdate.insert(childTag);
 }
 
 void AnimatedNodesManager::disconnectNodes(facebook::react::Tag parentTag, facebook::react::Tag childTag) {
@@ -57,13 +62,13 @@ void AnimatedNodesManager::disconnectNodes(facebook::react::Tag parentTag, faceb
     auto &child = getNodeByTag(childTag);
 
     parent.removeChild(child);
-    m_updatedNodeTags.insert(childTag);
+    m_nodeTagsToUpdate.insert(childTag);
 }
 
 void AnimatedNodesManager::connectNodeToView(facebook::react::Tag nodeTag, facebook::react::Tag viewTag) {
     auto &node = dynamic_cast<PropsAnimatedNode &>(getNodeByTag(nodeTag));
     node.connectToView(viewTag);
-    m_updatedNodeTags.insert(nodeTag);
+    m_nodeTagsToUpdate.insert(nodeTag);
 }
 
 void AnimatedNodesManager::disconnectNodeFromView(facebook::react::Tag nodeTag, facebook::react::Tag viewTag) {
@@ -71,16 +76,49 @@ void AnimatedNodesManager::disconnectNodeFromView(facebook::react::Tag nodeTag, 
     node.disconnectFromView(viewTag);
 }
 
+void AnimatedNodesManager::addAnimatedEventToView(react::Tag viewTag, const std::string &eventName, const folly::dynamic &eventMapping) {
+    LOG(INFO) << "addAnimatedEventToView " << viewTag << " " << eventName << " " << eventMapping;
+    auto nodeTag = eventMapping["animatedValueTag"].asInt();
+    auto dynamicNativeEventPath = eventMapping["nativeEventPath"];
+    std::vector<std::string> nativeEventPath;
+    for (auto &key : dynamicNativeEventPath) {
+        nativeEventPath.push_back(key.asString());
+    }
+    m_eventDrivers.push_back(std::make_unique<EventAnimationDriver>(eventName, viewTag, std::move(nativeEventPath), nodeTag, *this));
+}
+
+void AnimatedNodesManager::removeAnimatedEventFromView(facebook::react::Tag viewTag, std::string const &eventName, facebook::react::Tag animatedValueTag) {
+    LOG(INFO) << "removeAnimatedEventFromView " << viewTag << " " << eventName << " " << animatedValueTag;
+    m_eventDrivers.erase(std::remove_if(m_eventDrivers.begin(), m_eventDrivers.end(), [&](auto &driver) {
+        return driver->getViewTag() == viewTag && driver->getEventName() == eventName && driver->getNodeTag() == animatedValueTag;
+    }));
+}
+
+void AnimatedNodesManager::handleEvent(facebook::react::Tag targetTag, std::string const &eventName, folly::dynamic const &eventValue) {
+    bool someDriverNeedsUpdate = false;
+    for (auto &driver : m_eventDrivers) {
+        if (driver->getViewTag() == targetTag && driver->getEventName() == eventName) {
+            someDriverNeedsUpdate = true;
+            driver->updateWithEvent(eventValue);
+        }
+    }
+
+    if (someDriverNeedsUpdate && !m_isRunningAnimations) {
+        m_isRunningAnimations = true;
+        m_scheduleUpdateFn();
+    }
+}
+
 void AnimatedNodesManager::setValue(facebook::react::Tag tag, double value) {
     auto &node = getValueNodeByTag(tag);
     stopAnimationsForNode(tag);
-    m_updatedNodeTags.insert(tag);
+    m_nodeTagsToUpdate.insert(tag);
     node.setValue(value);
 }
 
 void AnimatedNodesManager::setOffset(facebook::react::Tag tag, double offset) {
     auto &node = getValueNodeByTag(tag);
-    m_updatedNodeTags.insert(tag);
+    m_nodeTagsToUpdate.insert(tag);
     node.setOffset(offset);
 }
 
@@ -136,14 +174,14 @@ void AnimatedNodesManager::runUpdates(uint64_t frameTimeNanos) {
 
     for (auto &[animationId, driver] : m_animationById) {
         driver->runAnimationStep(frameTimeNanos);
-        m_updatedNodeTags.insert(driver->getAnimatedValueTag());
+        m_nodeTagsToUpdate.insert(driver->getAnimatedValueTag());
         if (driver->hasFinished()) {
             finishedAnimations.push_back(animationId);
         }
     }
 
-    std::vector<facebook::react::Tag> updatedNodesList(m_updatedNodeTags.begin(), m_updatedNodeTags.end());
-    m_updatedNodeTags.clear();
+    std::vector<facebook::react::Tag> updatedNodesList(m_nodeTagsToUpdate.begin(), m_nodeTagsToUpdate.end());
+    m_nodeTagsToUpdate.clear();
 
     updateNodes(std::move(updatedNodesList));
 
@@ -158,6 +196,10 @@ void AnimatedNodesManager::runUpdates(uint64_t frameTimeNanos) {
         m_isRunningAnimations = true;
         m_scheduleUpdateFn();
     }
+}
+
+void AnimatedNodesManager::setNeedsUpdate(facebook::react::Tag nodeTag) {
+    m_nodeTagsToUpdate.insert(nodeTag);
 }
 
 void AnimatedNodesManager::updateNodes(std::vector<facebook::react::Tag> nodeTags) {

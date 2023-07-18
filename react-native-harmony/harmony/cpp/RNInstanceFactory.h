@@ -36,7 +36,7 @@ std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboMo
     std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> turboModuleFactoryDelegates;
     ComponentJSIBinderByString componentJSIBinderByName = {};
     ComponentNapiBinderByString componentNapiBinderByName = {};
-    EventEmitRequestHandlerByString eventEmitRequestHandlerByName = {};
+    EventEmitRequestHandlers eventEmitRequestHandlers = {};
 
     for (auto &package : packages) {
         auto turboModuleFactoryDelegate = package->createTurboModuleFactoryDelegate();
@@ -52,9 +52,12 @@ std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboMo
         for (auto [name, componentNapiBinder] : package->createComponentNapiBinderByName()) {
             componentNapiBinderByName.insert({name, componentNapiBinder});
         };
-        for (auto [name, eventEmitRequestHandler] : package->createEventEmitRequestHandlerByName()) {
-            eventEmitRequestHandlerByName.insert({name, eventEmitRequestHandler});
-        };
+        auto packageEventEmitRequestHandlers = package->createEventEmitRequestHandlers();
+        eventEmitRequestHandlers.insert(
+            eventEmitRequestHandlers.end(), 
+            std::make_move_iterator(packageEventEmitRequestHandlers.begin()), 
+            std::make_move_iterator(packageEventEmitRequestHandlers.end())
+        );
     }
 
     auto turboModuleFactory = TurboModuleFactory(env, arkTsTurboModuleProviderRef,
@@ -66,5 +69,5 @@ std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboMo
                                         taskExecutor,
                                         componentDescriptorProviderRegistry,
                                         MutationsToNapiConverter(std::move(componentNapiBinderByName)),
-                                        eventEmitRequestHandlerByName);
+                                        eventEmitRequestHandlers);
 }

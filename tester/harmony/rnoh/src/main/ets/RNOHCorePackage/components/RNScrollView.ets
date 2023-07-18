@@ -1,6 +1,5 @@
 import { Descriptor, RNOHContext } from '../../RNOH'
 import { ViewBaseProps, RNViewBase } from './RNViewBase'
-import { RNOHEventEmitRequestHandlerName } from "./../RNOHEventEmitRequestHandler"
 
 export type ScrollViewProps = ViewBaseProps & {
   scrollEnabled?: boolean
@@ -55,9 +54,10 @@ export struct RNScrollView {
     this.scroller.scrollTo({ xOffset, yOffset, animation })
     this.ctx.rnInstanceManager.emitComponentEvent(
       this.descriptor.tag,
-      RNOHEventEmitRequestHandlerName.Scroll,
-      this.createScrollEvent("scroll", 0, yOffset)
-    )  }
+      "onScroll",
+      this.createScrollEvent()
+    )
+  }
 
   scrollDirection(): ScrollDirection {
     // TODO: support horizontal and free Scroll - one solution is to always nest two Scroll components, one vertical, one horizontal
@@ -68,15 +68,23 @@ export struct RNScrollView {
     return ScrollDirection.Vertical
   }
 
-  createScrollEvent(type: string, xOffset: number, yOffset: number) {
+  createScrollEvent() {
+    const { xOffset, yOffset } = this.scroller.currentOffset();
+
     return {
-      type,
-      contentOffsetX: xOffset,
-      contentOffsetY: yOffset,
-      contentWidth: this.descriptor.state.contentSizeWidth,
-      contentHeight: this.descriptor.state.contentSizeHeight,
-      containerWidth: this.descriptor.props.width,
-      containerHeight: this.descriptor.props.height,
+      contentSize: {
+        width: this.descriptor.state.contentSizeWidth,
+        height: this.descriptor.state.contentSizeHeight,
+      },
+      contentOffset: {
+        x: xOffset,
+        y: yOffset,
+      },
+      containerSize: {
+        width: this.descriptor.props.width,
+        height: this.descriptor.props.height,
+      },
+      zoomScale: 1,
     }
   }
 
@@ -114,56 +122,40 @@ export struct RNScrollView {
 
     this.ctx.rnInstanceManager.emitComponentEvent(
       this.descriptor.tag,
-      RNOHEventEmitRequestHandlerName.Scroll,
-      this.createScrollEvent("scroll", 0, yOffset)
+      "onScroll",
+      this.createScrollEvent()
     )
   }
 
   onDragBegin() {
     this.ctx.rnInstanceManager.emitComponentEvent(
       this.descriptor.tag,
-      RNOHEventEmitRequestHandlerName.Scroll,
-      this.createScrollEvent(
-        "beginDrag",
-        this.descriptor.state.contentOffsetX,
-        this.descriptor.state.contentOffsetY
-      )
+      "onScrollBeginDrag",
+      this.createScrollEvent()
     )
   }
 
   onDragEnd() {
     this.ctx.rnInstanceManager.emitComponentEvent(
       this.descriptor.tag,
-      RNOHEventEmitRequestHandlerName.Scroll,
-      this.createScrollEvent(
-        "endDrag",
-        this.descriptor.state.contentOffsetX,
-        this.descriptor.state.contentOffsetY
-      )
+      "onScrollEndDrag",
+      this.createScrollEvent()
     )
   }
 
   onMomentumBegin() {
     this.ctx.rnInstanceManager.emitComponentEvent(
       this.descriptor.tag,
-      RNOHEventEmitRequestHandlerName.Scroll,
-      this.createScrollEvent(
-        "beginMomentum",
-        this.descriptor.state.contentOffsetX,
-        this.descriptor.state.contentOffsetY
-      )
+      "onMomentumScrollBegin",
+      this.createScrollEvent()
     )
   }
 
   onMomentumEnd() {
     this.ctx.rnInstanceManager.emitComponentEvent(
       this.descriptor.tag,
-      RNOHEventEmitRequestHandlerName.Scroll,
-      this.createScrollEvent(
-        "endMomentum",
-        this.descriptor.state.contentOffsetX,
-        this.descriptor.state.contentOffsetY
-      )
+      "onMomentumScrollEnd",
+      this.createScrollEvent()
     )
   }
 
@@ -194,7 +186,7 @@ export struct RNScrollView {
       .height("100%")
       .align(Alignment.TopStart)
       .scrollable(this.scrollDirection())
-      //    .scrollBar(BarState.On)
+      .scrollBar(BarState.Off)
       //    .scrollBarColor(Color.Gray)
       //    .scrollBarWidth(30)
       //    .edgeEffect(this.descriptor.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)

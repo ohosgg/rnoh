@@ -10,45 +10,68 @@ enum ScrollEventType {
     END_DRAG = 1,
     BEGIN_MOMENTUM = 2,
     END_MOMENTUM = 3,
-    SCROLLING = 4
+    SCROLLING = 4,
+    UNSUPPORTED = 5
 };
 
 facebook::react::ScrollViewMetrics convertScrollEvent(ArkJS &arkJs, napi_value eventObject) {
+    auto arkContentSize = arkJs.getObjectProperty(eventObject, "contentSize");
+    facebook::react::Size contentSize = {
+        (float)arkJs.getDouble(arkJs.getObjectProperty(arkContentSize, "width")),
+        (float)arkJs.getDouble(arkJs.getObjectProperty(arkContentSize, "height"))};
+
+    auto arkContentOffset = arkJs.getObjectProperty(eventObject, "contentOffset");
+    facebook::react::Point contentOffset = {
+        (float)arkJs.getDouble(arkJs.getObjectProperty(arkContentOffset, "x")),
+        (float)arkJs.getDouble(arkJs.getObjectProperty(arkContentOffset, "y"))};
+
+    auto arkContainerSize = arkJs.getObjectProperty(eventObject, "containerSize");
+    facebook::react::Size containerSize = {
+        (float)arkJs.getDouble(arkJs.getObjectProperty(arkContainerSize, "width")),
+        (float)arkJs.getDouble(arkJs.getObjectProperty(arkContainerSize, "height"))};
+
+    float zoomScale = (float)arkJs.getDouble(arkJs.getObjectProperty(eventObject, "zoomScale"));
+
     return {
-        .contentSize = {
-            (float)arkJs.getDouble(arkJs.getObjectProperty(eventObject, "contentWidth")),
-            (float)arkJs.getDouble(arkJs.getObjectProperty(eventObject, "contentHeight"))},
-        .contentOffset = {(float)arkJs.getDouble(arkJs.getObjectProperty(eventObject, "contentOffsetX")), (float)arkJs.getDouble(arkJs.getObjectProperty(eventObject, "contentOffsetY"))},
-        .containerSize = {(float)arkJs.getDouble(arkJs.getObjectProperty(eventObject, "containerWidth")), (float)arkJs.getDouble(arkJs.getObjectProperty(eventObject, "containerHeight"))},
-        .zoomScale = 1};
+        contentSize,
+        contentOffset,
+        {},
+        containerSize,
+        zoomScale};
 }
 
-ScrollEventType getScrollEventType(ArkJS &arkJs, napi_value eventObject) {
-    auto eventType = arkJs.getString(arkJs.getObjectProperty(eventObject, "type"));
-    if (eventType == "beginDrag") {
+ScrollEventType getScrollEventType(std::string const &eventType) {
+    if (eventType == "onScrollBeginDrag") {
         return ScrollEventType::BEGIN_DRAG;
-    } else if (eventType == "endDrag") {
+    } else if (eventType == "onScrollEndDrag") {
         return ScrollEventType::END_DRAG;
-    } else if (eventType == "beginMomentum") {
+    } else if (eventType == "onMomentumScrollBegin") {
         return ScrollEventType::BEGIN_MOMENTUM;
-    } else if (eventType == "endMomentum") {
+    } else if (eventType == "onMomentumScrollEnd") {
         return ScrollEventType::END_MOMENTUM;
-    } else if (eventType == "scroll") {
+    } else if (eventType == "onScroll") {
         return ScrollEventType::SCROLLING;
     } else {
-        throw std::runtime_error("Unknown scroll event type");
+        return ScrollEventType::UNSUPPORTED;
     }
 }
 
 class ScrollEventEmitRequestHandler : public EventEmitRequestHandler {
-    void handleEvent(EventEmitRequestHandler::Context ctx) override {
-        ArkJS arkJs(ctx.env);
+    void handleEvent(EventEmitRequestHandler::Context const &ctx) override {
+        auto eventType = getScrollEventType(ctx.eventName);
+        if (eventType == ScrollEventType::UNSUPPORTED) {
+            return;
+        }
+
         auto eventEmitter = ctx.eventEmitterRegistry->getEventEmitter<facebook::react::ScrollViewEventEmitter>(ctx.tag);
         if (eventEmitter == nullptr) {
             return;
         }
+
+        ArkJS arkJs(ctx.env);
         auto event = convertScrollEvent(arkJs, ctx.payload);
-        switch (getScrollEventType(arkJs, ctx.payload)) {
+
+        switch (eventType) {
         case ScrollEventType::BEGIN_DRAG:
             eventEmitter->onScrollBeginDrag(event);
             break;

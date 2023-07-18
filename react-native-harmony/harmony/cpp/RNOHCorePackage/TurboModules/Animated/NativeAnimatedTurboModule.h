@@ -2,16 +2,20 @@
 
 #include <mutex>
 #include <react/renderer/core/ReactPrimitives.h>
+#include <react/renderer/core/EventListener.h>
 #include <RNOH/ArkTSTurboModule.h>
 #include <folly/dynamic.h>
 
 #include "AnimatedNodesManager.h"
+#include "RNOH/EventEmitRequestHandler.h"
 
 namespace rnoh {
 
-class NativeAnimatedTurboModule : public rnoh::ArkTSTurboModule {
+class NativeAnimatedTurboModule : public rnoh::ArkTSTurboModule, public rnoh::EventEmitRequestHandler {
 
 public:
+    using Context = rnoh::ArkTSTurboModule::Context;
+
     NativeAnimatedTurboModule(const ArkTSTurboModule::Context ctx, const std::string name);
 
     void startOperationBatch();
@@ -56,7 +60,7 @@ public:
 
     void dropAnimatedNode(facebook::react::Tag tag);
 
-    void addAnimatedEventToView(facebook::react::Tag viewTag, std::string const &eventName, facebook::jsi::Value const &eventMapping);
+    void addAnimatedEventToView(facebook::react::Tag viewTag, std::string const &eventName, folly::dynamic const &eventMapping);
 
     void removeAnimatedEventFromView(facebook::react::Tag viewTag, std::string const &eventName, facebook::react::Tag animatedValueTag);
 
@@ -69,6 +73,9 @@ public:
     void setNativeProps(facebook::react::Tag tag, folly::dynamic const &props);
 
     void emitAnimationEndedEvent(facebook::jsi::Runtime &rt, facebook::react::Tag animationId, bool completed);
+
+    // EventEmitRequestHandler
+    void handleEvent(EventEmitRequestHandler::Context const &ctx) override;
 
 private:
     std::unique_lock<std::mutex> acquireLock() {

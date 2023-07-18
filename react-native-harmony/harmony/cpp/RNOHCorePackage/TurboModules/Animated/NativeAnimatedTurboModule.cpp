@@ -219,7 +219,8 @@ jsi::Value addAnimatedEventToView(
     const facebook::jsi::Value *args,
     size_t count) {
     auto self = static_cast<NativeAnimatedTurboModule *>(&turboModule);
-    self->addAnimatedEventToView(args[0].getNumber(), args[1].getString(rt).utf8(rt), args[2]);
+    auto dynamicEventMapping = jsi::dynamicFromValue(rt, args[2]);
+    self->addAnimatedEventToView(args[0].getNumber(), args[1].getString(rt).utf8(rt), dynamicEventMapping);
     return facebook::jsi::Value::undefined();
 }
 
@@ -353,10 +354,14 @@ void NativeAnimatedTurboModule::dropAnimatedNode(react::Tag tag) {
     m_animatedNodesManager.dropNode(tag);
 }
 
-void NativeAnimatedTurboModule::addAnimatedEventToView(react::Tag viewTag, const std::string &eventName, const jsi::Value &eventMapping) {
+void NativeAnimatedTurboModule::addAnimatedEventToView(react::Tag viewTag, std::string const &eventName, folly::dynamic const &eventMapping) {
+    auto lock = acquireLock();
+    m_animatedNodesManager.addAnimatedEventToView(viewTag, eventName, eventMapping);
 }
 
 void NativeAnimatedTurboModule::removeAnimatedEventFromView(facebook::react::Tag viewTag, std::string const &eventName, facebook::react::Tag animatedValueTag) {
+    auto lock = acquireLock();
+    m_animatedNodesManager.removeAnimatedEventFromView(viewTag, eventName, animatedValueTag);
 }
 
 void NativeAnimatedTurboModule::addListener(const std::string &eventName) {
@@ -399,6 +404,16 @@ void NativeAnimatedTurboModule::emitAnimationEndedEvent(facebook::jsi::Runtime &
                         param.setProperty(rt, "finished", finished);
                         args.emplace_back(std::move(param));
                     });
+}
+
+void NativeAnimatedTurboModule::handleEvent(EventEmitRequestHandler::Context const &ctx) {
+    ArkJS arkJs(ctx.env);
+    folly::dynamic payload = arkJs.getDynamic(ctx.payload);
+    react::Tag tag = ctx.tag;
+    auto eventName = ctx.eventName;
+
+    auto lock = acquireLock();
+    m_animatedNodesManager.handleEvent(tag, eventName, payload);
 }
 
 } // namespace rnoh

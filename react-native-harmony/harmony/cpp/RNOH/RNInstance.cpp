@@ -43,8 +43,14 @@ void RNInstance::initialize() {
         std::move(jsQueue),
         std::move(moduleRegistry));
 
-    std::make_shared<TurboModuleProvider>(this->instance->getJSCallInvoker(), std::move(m_turboModuleFactory))
-        ->installJSBindings(this->instance->getRuntimeExecutor());
+    std::make_shared<TurboModuleProvider>(
+        this->instance->getJSCallInvoker(), 
+        std::move(m_turboModuleFactory), [this] (auto turboModule) {
+            if (auto eventHandler = std::dynamic_pointer_cast<EventEmitRequestHandler>(turboModule); eventHandler != nullptr) {
+                this->m_eventEmitRequestHandlers.push_back(eventHandler);
+            }
+        }
+        )->installJSBindings(this->instance->getRuntimeExecutor());
 }
 
 void RNInstance::initializeScheduler() {
@@ -132,14 +138,17 @@ void RNInstance::updateSurfaceConstraints(std::string const &moduleName, float w
     });
 }
 
-void rnoh::RNInstance::emitComponentEvent(napi_env env, react::Tag tag, std::string eventEmitRequestHandlerName, napi_value payload) {
-    if (m_eventEmitRequestHandlerByName.count(eventEmitRequestHandlerName) > 0) {
-        m_eventEmitRequestHandlerByName.at(eventEmitRequestHandlerName)->handleEvent({
-            .env = env,
-            .tag = tag,
-            .payload = payload,
-            .eventEmitterRegistry = this->eventEmitterRegistry,
-        });
+void rnoh::RNInstance::emitComponentEvent(napi_env env, react::Tag tag, std::string eventName, napi_value payload) {
+    EventEmitRequestHandler::Context ctx{
+        .env = env,
+        .tag = tag,
+        .eventName = std::move(eventName),
+        .payload = payload,
+        .eventEmitterRegistry = this->eventEmitterRegistry,
+    };
+    
+    for (auto &eventEmitRequestHandler : m_eventEmitRequestHandlers) {
+        eventEmitRequestHandler->handleEvent(ctx);
     }
 }
 

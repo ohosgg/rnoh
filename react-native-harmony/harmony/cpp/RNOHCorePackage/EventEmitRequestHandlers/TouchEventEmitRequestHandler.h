@@ -16,7 +16,7 @@ enum TouchType {
 
 class TouchEventEmitRequestHandler : public EventEmitRequestHandler {
   public:
-    void handleEvent(TouchEventEmitRequestHandler::Context ctx) override;
+    void handleEvent(TouchEventEmitRequestHandler::Context const &ctx) override;
 
   private:
     facebook::react::Touch convertTouchObject(ArkJS &arkJs, napi_value touchObject);

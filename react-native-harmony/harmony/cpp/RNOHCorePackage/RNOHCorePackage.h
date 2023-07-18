@@ -102,10 +102,10 @@ class RNOHCorePackage : public Package {
             {"TextInput", std::make_shared<TextInputComponentNapiBinder>()}};
     };
 
-    EventEmitRequestHandlerByString createEventEmitRequestHandlerByName() override {
-        return {{"Touch", std::make_shared<TouchEventEmitRequestHandler>()},
-                {"TextInputChange", std::make_shared<TextInputChangeEventEmitRequestHandler>()},
-                {"Scroll", std::make_shared<ScrollEventEmitRequestHandler>()}};
+    EventEmitRequestHandlers createEventEmitRequestHandlers() override {
+        return {std::make_shared<TouchEventEmitRequestHandler>(),
+                std::make_shared<TextInputChangeEventEmitRequestHandler>(),
+                std::make_shared<ScrollEventEmitRequestHandler>()};
     }
 };
 

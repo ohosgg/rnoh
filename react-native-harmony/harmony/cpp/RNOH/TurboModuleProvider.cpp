@@ -8,13 +8,15 @@ using namespace rnoh;
 using namespace facebook;
 
 TurboModuleProvider::TurboModuleProvider(std::shared_ptr<react::CallInvoker> jsInvoker,
-                                         TurboModuleFactory &&turboModuleFactory)
+                                         TurboModuleFactory &&turboModuleFactory,
+                                         std::function<void(std::shared_ptr<react::TurboModule>)> &&onTurboModuleCreated)
     : m_jsInvoker(jsInvoker),
       m_createTurboModule([factory = std::move(turboModuleFactory)](
                               std::string const &moduleName,
                               std::shared_ptr<react::CallInvoker> jsInvoker) -> std::shared_ptr<react::TurboModule> {
           return factory.create(jsInvoker, moduleName);
-      }) {}
+      }),
+      m_onTurboModuleCreated(std::move(onTurboModuleCreated)) {}
 
 void TurboModuleProvider::installJSBindings(react::RuntimeExecutor runtimeExecutor) {
     if (!runtimeExecutor) {
@@ -23,6 +25,7 @@ void TurboModuleProvider::installJSBindings(react::RuntimeExecutor runtimeExecut
     }
     auto turboModuleProvider = [self = this->shared_from_this()](std::string const &moduleName) {
         auto turboModule = self->getTurboModule(moduleName);
+        self->m_onTurboModuleCreated(turboModule);
         return turboModule;
     };
     runtimeExecutor(

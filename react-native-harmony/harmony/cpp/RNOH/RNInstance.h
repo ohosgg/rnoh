@@ -33,7 +33,7 @@ class RNInstance {
                std::shared_ptr<TaskExecutor> taskExecutor,
                std::shared_ptr<facebook::react::ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry,
                MutationsToNapiConverter mutationsToNapiConverter,
-               EventEmitRequestHandlerByString eventEmitRequestHandlerByName)
+               EventEmitRequestHandlers eventEmitRequestHandlers)
         : instance(std::make_shared<facebook::react::Instance>()),
           m_contextContainer(contextContainer),
           scheduler(nullptr),
@@ -42,7 +42,7 @@ class RNInstance {
           m_turboModuleFactory(std::move(turboModuleFactory)),
           m_componentDescriptorProviderRegistry(componentDescriptorProviderRegistry),
           m_mutationsToNapiConverter(mutationsToNapiConverter),
-          m_eventEmitRequestHandlerByName(eventEmitRequestHandlerByName) {}
+          m_eventEmitRequestHandlers(eventEmitRequestHandlers) {}
 
     void registerSurface(
         MutationsListener,
@@ -52,7 +52,7 @@ class RNInstance {
     void loadScriptFromString(std::string const &&bundle, std::string const sourceURL);
     void runApplication(float width, float height, std::string const &moduleName, folly::dynamic &&initialProps);
     void callFunction(std::string &&module, std::string &&method, folly::dynamic &&params);
-    void emitComponentEvent(napi_env env, facebook::react::Tag tag, std::string eventEmitRequestHandlerName, napi_value payload);
+    void emitComponentEvent(napi_env env, facebook::react::Tag tag, std::string eventName, napi_value payload);
 
   private:
     std::shared_ptr<facebook::react::ContextContainer> m_contextContainer;
@@ -67,7 +67,7 @@ class RNInstance {
     EventEmitterRegistry::Shared eventEmitterRegistry;
     TurboModuleFactory m_turboModuleFactory;
     MutationsToNapiConverter m_mutationsToNapiConverter;
-    EventEmitRequestHandlerByString m_eventEmitRequestHandlerByName;
+    EventEmitRequestHandlers m_eventEmitRequestHandlers;
 
     void initialize();
     void initializeScheduler();

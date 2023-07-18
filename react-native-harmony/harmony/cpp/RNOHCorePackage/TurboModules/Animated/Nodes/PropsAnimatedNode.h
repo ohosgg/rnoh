@@ -40,7 +40,7 @@ public:
         for (auto &[key, nodeTag] : m_tagByPropName) {
             auto node = &m_nodesManager.getNodeByTag(nodeTag);
             if (auto styleNode = dynamic_cast<StyleAnimatedNode*>(node); styleNode != nullptr) {
-                props[key] = styleNode->getStyle();
+                props.update(styleNode->getStyle());
             } else if (auto valueNode = dynamic_cast<ValueAnimatedNode*>(node); valueNode != nullptr) {
                 props[key] = valueNode->getValue();
             } else {

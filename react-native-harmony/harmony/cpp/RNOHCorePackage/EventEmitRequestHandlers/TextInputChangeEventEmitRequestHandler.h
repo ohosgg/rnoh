@@ -5,7 +5,11 @@
 namespace rnoh {
 
 class TextInputChangeEventEmitRequestHandler : public EventEmitRequestHandler {
-    void handleEvent(EventEmitRequestHandler::Context ctx) override {
+    void handleEvent(EventEmitRequestHandler::Context const &ctx) override {
+        if (ctx.eventName != "TextInputChange") {
+            return;
+        }
+
         ArkJS arkJs(ctx.env);
         auto eventEmitter = ctx.eventEmitterRegistry->getEventEmitter<facebook::react::TextInputEventEmitter>(ctx.tag);
         if (eventEmitter == nullptr) {

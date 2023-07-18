@@ -23,6 +23,6 @@ ComponentNapiBinderByString rnoh::Package::createComponentNapiBinderByName() {
     return {};
 }
 
-EventEmitRequestHandlerByString rnoh::Package::createEventEmitRequestHandlerByName() {
+EventEmitRequestHandlers rnoh::Package::createEventEmitRequestHandlers() {
     return {};
 }

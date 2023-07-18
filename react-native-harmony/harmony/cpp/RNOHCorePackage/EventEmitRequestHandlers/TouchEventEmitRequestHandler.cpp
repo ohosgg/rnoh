@@ -6,7 +6,11 @@ using namespace facebook;
 
 namespace rnoh {
 
-void TouchEventEmitRequestHandler::handleEvent(TouchEventEmitRequestHandler::Context ctx) {
+void TouchEventEmitRequestHandler::handleEvent(TouchEventEmitRequestHandler::Context const &ctx) {
+    if (ctx.eventName != "Touch") {
+        return;
+    }
+
     ArkJS arkJs(ctx.env);
     auto touchEvent = ctx.payload;
 

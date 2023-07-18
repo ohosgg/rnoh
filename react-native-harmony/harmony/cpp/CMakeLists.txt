@@ -404,8 +404,10 @@ add_library(rnoh SHARED
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/Animated/AnimatedNodesManager.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/Animated/Nodes/AnimatedNode.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/Animated/Nodes/TransformAnimatedNode.cpp"
+    "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/Animated/Nodes/InterpolationAnimatedNode.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/Animated/Drivers/AnimationDriver.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/Animated/Drivers/FrameBasedAnimationDriver.cpp"
+    "${RNOH_CPP_DIR}/RNOHCorePackage/TurboModules/Animated/Drivers/EventAnimationDriver.cpp"
     "${RNOH_CPP_DIR}/RNOHCorePackage/EventEmitRequestHandlers/TouchEventEmitRequestHandler.cpp"
 )
 target_include_directories(rnoh PUBLIC

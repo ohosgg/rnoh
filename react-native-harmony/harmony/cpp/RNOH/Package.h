@@ -23,7 +23,7 @@ class Package {
 
     virtual ComponentNapiBinderByString createComponentNapiBinderByName();
 
-    virtual EventEmitRequestHandlerByString createEventEmitRequestHandlerByName();
+    virtual EventEmitRequestHandlers createEventEmitRequestHandlers();
 
   protected:
     Context m_ctx;

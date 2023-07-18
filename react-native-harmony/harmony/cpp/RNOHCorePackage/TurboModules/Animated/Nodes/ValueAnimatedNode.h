@@ -37,8 +37,8 @@ public:
         m_value = 0;
     }
 
-    double m_value;
-    double m_offset;
+    double m_value = 0.0;
+    double m_offset = 0.0;
 };
 
 }

@@ -8,12 +8,14 @@
 
 #include "Nodes/AnimatedNode.h"
 #include "Drivers/AnimationDriver.h"
+#include "Drivers/EventAnimationDriver.h"
 
 namespace rnoh {
 
 class AnimatedNode;
 class ValueAnimatedNode;
 class AnimationDriver;
+class EventAnimationDriver;
 
 class AnimatedNodesManager {
 public:
@@ -31,6 +33,9 @@ public:
     void connectNodeToView(facebook::react::Tag nodeTag, facebook::react::Tag viewTag);
     void disconnectNodeFromView(facebook::react::Tag nodeTag, facebook::react::Tag viewTag);
 
+    void addAnimatedEventToView(facebook::react::Tag viewTag, std::string const &eventName, folly::dynamic const &eventMapping);
+    void removeAnimatedEventFromView(facebook::react::Tag viewTag, std::string const &eventName, facebook::react::Tag nodeTag);
+
     void setValue(facebook::react::Tag tag, double value);
     void setOffset(facebook::react::Tag tag, double offset);
     void flattenOffset(facebook::react::Tag tag);
@@ -47,6 +52,10 @@ public:
 
     void runUpdates(uint64_t frameTimeNanos);
 
+    void setNeedsUpdate(facebook::react::Tag nodeTag);
+
+    void handleEvent(facebook::react::Tag targetTag, std::string const &eventName, folly::dynamic const &eventValue);
+
     AnimatedNode &getNodeByTag(facebook::react::Tag tag);
     ValueAnimatedNode &getValueNodeByTag(facebook::react::Tag tag);
 
@@ -58,7 +67,8 @@ private:
     std::function<void()> m_scheduleUpdateFn;
     std::unordered_map<facebook::react::Tag, std::unique_ptr<AnimatedNode>> m_nodeByTag;
     std::unordered_map<facebook::react::Tag, std::unique_ptr<AnimationDriver>> m_animationById;
-    std::unordered_set<facebook::react::Tag> m_updatedNodeTags;
+    std::vector<std::unique_ptr<EventAnimationDriver>> m_eventDrivers;
+    std::unordered_set<facebook::react::Tag> m_nodeTagsToUpdate;
     bool m_isRunningAnimations = false;
 };
 
