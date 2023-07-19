@@ -1,6 +1,6 @@
-import { RNApp, ComponentBuilderContext, RNOHContext } from '@ohos/rnoh'
-import { SampleView, SAMPLE_VIEW_TYPE, PropsDisplayer } from "@ohos/rnoh-sample-package"
-import { DeviceEventManagerTurboModule } from "@ohos/rnoh/src/main/ets/RNOHCorePackage/turboModules/DeviceEventManagerTurboModule"
+import { RNApp, ComponentBuilderContext, RNOHContext } from 'rnoh'
+import { SampleView, SAMPLE_VIEW_TYPE, PropsDisplayer } from "rnoh-sample-package"
+import { DeviceEventManagerTurboModule } from "rnoh/src/main/ets/RNOHCorePackage/turboModules/DeviceEventManagerTurboModule"
 
 let storage = LocalStorage.GetShared()
 

@@ -1,4 +1,4 @@
-import { Descriptor, RNOHContext, RNViewBase, ViewDynamicProps } from '@ohos/rnoh'
+import { Descriptor, RNOHContext, RNViewBase, ViewDynamicProps } from 'rnoh'
 
 export type PropsDisplayerDescriptor = Descriptor<"PropsDisplayer", ViewDynamicProps>
 

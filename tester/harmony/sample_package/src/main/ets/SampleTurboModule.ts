@@ -1,4 +1,4 @@
-import {TurboModule} from '@ohos/rnoh';
+import {TurboModule} from 'rnoh';
 
 export class SampleTurboModule extends TurboModule {
   voidFunc() {

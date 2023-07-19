@@ -2,9 +2,9 @@
   "license": "ISC",
   "types": "",
   "devDependencies": {
-    "@ohos/rnoh": "file:../rnoh"
+    "rnoh": "file:../rnoh"
   },
-  "name": "@ohos/rnoh-sample-package",
+  "name": "rnoh-sample-package",
   "description": "",
   "main": "index.ets",
   "type": "module",

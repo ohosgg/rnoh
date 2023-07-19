@@ -6,7 +6,7 @@
   "repository": {},
   "version": "1.0.0",
   "dependencies": {
-    "@ohos/rnoh": "file:../rnoh",
-    "@ohos/rnoh-sample-package": "file:../sample_package"
+    "rnoh": "file:../rnoh",
+    "rnoh-sample-package": "file:../sample_package"
   }
 }
