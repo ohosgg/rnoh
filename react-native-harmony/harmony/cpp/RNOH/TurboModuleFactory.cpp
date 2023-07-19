@@ -17,13 +17,17 @@ TurboModuleFactory::TurboModuleFactory(napi_env env,
       m_taskExecutor(taskExecutor),
       m_delegates(delegates) {}
 
-TurboModuleFactory::SharedTurboModule TurboModuleFactory::create(std::shared_ptr<facebook::react::CallInvoker> jsInvoker, const std::string &name) const {
+TurboModuleFactory::SharedTurboModule TurboModuleFactory::create(
+    std::shared_ptr<facebook::react::CallInvoker> jsInvoker,
+    const std::string &name,
+    std::shared_ptr<EventDispatcher> eventDispatcher) const {
     LOG(INFO) << "Providing Turbo Module: " << name;
     Context ctx{
         {.jsInvoker = jsInvoker},
         .env = m_env,
         .arkTsTurboModuleInstanceRef = this->maybeGetArkTsTurboModuleInstanceRef(name),
-        .taskExecutor = m_taskExecutor};
+        .taskExecutor = m_taskExecutor,
+        .eventDispatcher = eventDispatcher};
     if (name == "UIManager") {
         return std::make_shared<UIManagerModule>(ctx, name, std::move(m_componentBinderByString));
     } else {

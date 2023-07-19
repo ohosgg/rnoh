@@ -11,12 +11,13 @@
 
 namespace rnoh {
 
-class NativeAnimatedTurboModule : public rnoh::ArkTSTurboModule, public rnoh::EventEmitRequestHandler {
+class NativeAnimatedTurboModule : public rnoh::ArkTSTurboModule, public rnoh::EventEmitRequestHandler, public std::enable_shared_from_this<NativeAnimatedTurboModule> {
 
 public:
     using Context = rnoh::ArkTSTurboModule::Context;
 
     NativeAnimatedTurboModule(const ArkTSTurboModule::Context ctx, const std::string name);
+    ~NativeAnimatedTurboModule() override;
 
     void startOperationBatch();
 
@@ -82,8 +83,14 @@ private:
         return std::unique_lock(m_nodesManagerLock);
     }
     
+    // `shared_from_this` cannot be used in constructor,
+    // so we defer the initialization of the event listener
+    // until the first animated event is registered.
+    void initializeEventListener();
+    
     AnimatedNodesManager m_animatedNodesManager;
     std::mutex m_nodesManagerLock;
+    bool m_initializedEventListener = false;
 };
     
 } // namespace rnoh

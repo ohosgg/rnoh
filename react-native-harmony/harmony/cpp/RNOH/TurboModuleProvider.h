@@ -6,6 +6,7 @@
 #include <ReactCommon/CallInvoker.h>
 #include <ReactCommon/LongLivedObject.h>
 #include "RNOH/TurboModuleFactory.h"
+#include "EventDispatcher.h"
 
 namespace rnoh {
 
@@ -13,7 +14,7 @@ class TurboModuleProvider : public std::enable_shared_from_this<TurboModuleProvi
   public:
     TurboModuleProvider(std::shared_ptr<facebook::react::CallInvoker> jsInvoker,
                         TurboModuleFactory &&turboModuleFactory,
-                        std::function<void(std::shared_ptr<facebook::react::TurboModule>)> &&onTurboModuleCreated);
+                        std::shared_ptr<EventDispatcher> eventDispatcher);
 
     std::shared_ptr<facebook::react::TurboModule> getTurboModule(std::string const &moduleName);
     void installJSBindings(facebook::react::RuntimeExecutor runtimeExecutor);
@@ -22,7 +23,6 @@ class TurboModuleProvider : public std::enable_shared_from_this<TurboModuleProvi
     std::shared_ptr<facebook::react::CallInvoker> m_jsInvoker;
     std::function<std::shared_ptr<facebook::react::TurboModule>(std::string const &, std::shared_ptr<facebook::react::CallInvoker>)> m_createTurboModule;
     facebook::butter::map<std::string, std::shared_ptr<facebook::react::TurboModule>> m_cache;
-    std::function<void(std::shared_ptr<facebook::react::TurboModule>)> m_onTurboModuleCreated;
 };
 
 } // namespace rnoh

@@ -8,6 +8,7 @@ namespace rnoh {
 
 class EventEmitRequestHandler {
   public:
+    using Weak = std::weak_ptr<EventEmitRequestHandler>;
     using Shared = std::shared_ptr<EventEmitRequestHandler>;
 
     struct Context {

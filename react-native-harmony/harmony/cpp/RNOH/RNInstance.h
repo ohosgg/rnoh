@@ -20,6 +20,7 @@
 #include "RNOH/SchedulerDelegate.h"
 #include "RNOH/EventEmitterRegistry.h"
 #include "RNOH/TurboModuleFactory.h"
+#include "RNOH/EventDispatcher.h"
 #include "RNOH/EventEmitRequestHandler.h"
 #include "RNOH/TaskExecutor/TaskExecutor.h"
 
@@ -66,6 +67,7 @@ class RNInstance {
     std::shared_ptr<facebook::react::ComponentDescriptorProviderRegistry> m_componentDescriptorProviderRegistry;
     EventEmitterRegistry::Shared eventEmitterRegistry;
     TurboModuleFactory m_turboModuleFactory;
+    std::shared_ptr<EventDispatcher> m_eventDispatcher;
     MutationsToNapiConverter m_mutationsToNapiConverter;
     EventEmitRequestHandlers m_eventEmitRequestHandlers;
 

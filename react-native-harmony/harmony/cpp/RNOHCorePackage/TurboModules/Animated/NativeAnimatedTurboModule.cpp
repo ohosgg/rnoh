@@ -263,6 +263,12 @@ NativeAnimatedTurboModule::NativeAnimatedTurboModule(const ArkTSTurboModule::Con
         {"removeAnimatedEventFromView", {3, rnoh::removeAnimatedEventFromView}}};
 }
 
+NativeAnimatedTurboModule::~NativeAnimatedTurboModule() {
+    if (m_initializedEventListener) {
+        m_ctx.eventDispatcher->unregisterEventListener(shared_from_this());
+    }
+}
+
 void NativeAnimatedTurboModule::startOperationBatch() {
 }
 
@@ -356,6 +362,7 @@ void NativeAnimatedTurboModule::dropAnimatedNode(react::Tag tag) {
 
 void NativeAnimatedTurboModule::addAnimatedEventToView(react::Tag viewTag, std::string const &eventName, folly::dynamic const &eventMapping) {
     auto lock = acquireLock();
+    initializeEventListener();
     m_animatedNodesManager.addAnimatedEventToView(viewTag, eventName, eventMapping);
 }
 
@@ -414,6 +421,15 @@ void NativeAnimatedTurboModule::handleEvent(EventEmitRequestHandler::Context con
 
     auto lock = acquireLock();
     m_animatedNodesManager.handleEvent(tag, eventName, payload);
+}
+
+void NativeAnimatedTurboModule::initializeEventListener() {
+    if (m_initializedEventListener) {
+        return;
+    }
+
+    m_ctx.eventDispatcher->registerEventListener(shared_from_this());
+    m_initializedEventListener = true;
 }
 
 } // namespace rnoh

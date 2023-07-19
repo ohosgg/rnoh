@@ -9,14 +9,13 @@ using namespace facebook;
 
 TurboModuleProvider::TurboModuleProvider(std::shared_ptr<react::CallInvoker> jsInvoker,
                                          TurboModuleFactory &&turboModuleFactory,
-                                         std::function<void(std::shared_ptr<react::TurboModule>)> &&onTurboModuleCreated)
+                                         std::shared_ptr<EventDispatcher> eventDispatcher)
     : m_jsInvoker(jsInvoker),
-      m_createTurboModule([factory = std::move(turboModuleFactory)](
+      m_createTurboModule([eventDispatcher, factory = std::move(turboModuleFactory)](
                               std::string const &moduleName,
                               std::shared_ptr<react::CallInvoker> jsInvoker) -> std::shared_ptr<react::TurboModule> {
-          return factory.create(jsInvoker, moduleName);
-      }),
-      m_onTurboModuleCreated(std::move(onTurboModuleCreated)) {}
+          return factory.create(jsInvoker, moduleName, eventDispatcher);
+      }) {}
 
 void TurboModuleProvider::installJSBindings(react::RuntimeExecutor runtimeExecutor) {
     if (!runtimeExecutor) {
@@ -25,15 +24,13 @@ void TurboModuleProvider::installJSBindings(react::RuntimeExecutor runtimeExecut
     }
     auto turboModuleProvider = [self = this->shared_from_this()](std::string const &moduleName) {
         auto turboModule = self->getTurboModule(moduleName);
-        self->m_onTurboModuleCreated(turboModule);
         return turboModule;
     };
     runtimeExecutor(
         [turboModuleProvider = std::move(turboModuleProvider)](facebook::jsi::Runtime &runtime) {
             react::TurboModuleBinding::install(runtime,
                                                react::TurboModuleBindingMode::HostObject,
-                                               std::move(turboModuleProvider)
-                                               );
+                                               std::move(turboModuleProvider));
         });
 }
 

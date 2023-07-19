@@ -6,6 +6,8 @@
 #include "RNOH/UIManagerModule.h"
 namespace rnoh {
 
+class TurboModuleProvider;
+
 class TurboModuleFactoryDelegate {
   public:
     using Context = ArkTSTurboModule::Context;
@@ -27,7 +29,8 @@ class TurboModuleFactory {
                        std::vector<std::shared_ptr<TurboModuleFactoryDelegate>>);
 
     virtual SharedTurboModule create(std::shared_ptr<facebook::react::CallInvoker> jsInvoker,
-                                     const std::string &name) const;
+                                     const std::string &name,
+                                     std::shared_ptr<EventDispatcher> eventDispatcher) const;
 
   protected:
     SharedTurboModule delegateCreatingTurboModule(Context ctx, const std::string &name) const;

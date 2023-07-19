@@ -7,6 +7,7 @@
 #include <ReactCommon/TurboModuleUtils.h>
 
 #include "ArkJS.h"
+#include "RNOH/EventDispatcher.h"
 #include "RNOH/TurboModule.h"
 #include "RNOH/TaskExecutor/TaskExecutor.h"
 
@@ -32,6 +33,7 @@ class ArkTSTurboModule : public TurboModule {
         napi_env env;
         napi_ref arkTsTurboModuleInstanceRef;
         std::shared_ptr<TaskExecutor> taskExecutor;
+        std::shared_ptr<EventDispatcher> eventDispatcher;
     };
 
     ArkTSTurboModule(Context ctx, std::string name);

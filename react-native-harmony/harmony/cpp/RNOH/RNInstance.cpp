@@ -26,6 +26,8 @@ void RNInstance::start() {
 }
 
 void RNInstance::initialize() {
+    // create a new event dispatcher every time RN is initialized
+    m_eventDispatcher = std::make_shared<EventDispatcher>();
     std::vector<std::unique_ptr<react::NativeModule>> modules;
     auto instanceCallback = std::make_unique<react::InstanceCallback>();
     auto jsExecutorFactory = std::make_shared<react::HermesExecutorFactory>(
@@ -44,13 +46,10 @@ void RNInstance::initialize() {
         std::move(moduleRegistry));
 
     std::make_shared<TurboModuleProvider>(
-        this->instance->getJSCallInvoker(), 
-        std::move(m_turboModuleFactory), [this] (auto turboModule) {
-            if (auto eventHandler = std::dynamic_pointer_cast<EventEmitRequestHandler>(turboModule); eventHandler != nullptr) {
-                this->m_eventEmitRequestHandlers.push_back(eventHandler);
-            }
-        }
-        )->installJSBindings(this->instance->getRuntimeExecutor());
+        this->instance->getJSCallInvoker(),
+        std::move(m_turboModuleFactory),
+        m_eventDispatcher)
+        ->installJSBindings(this->instance->getRuntimeExecutor());
 }
 
 void RNInstance::initializeScheduler() {
@@ -146,7 +145,11 @@ void rnoh::RNInstance::emitComponentEvent(napi_env env, react::Tag tag, std::str
         .payload = payload,
         .eventEmitterRegistry = this->eventEmitterRegistry,
     };
-    
+
+    if (m_eventDispatcher != nullptr) {
+        m_eventDispatcher->sendEvent(ctx);
+    }
+
     for (auto &eventEmitRequestHandler : m_eventEmitRequestHandlers) {
         eventEmitRequestHandler->handleEvent(ctx);
     }
