@@ -122,9 +122,13 @@ module.exports = {
   get VirtualizedList() {
     return require('react-native/Libraries/Lists/VirtualizedList');
   },
-  // react-native-harmony specific ---
+  // BEGIN: react-native-harmony specific exports
   get registerViewConfig() {
     return require('react-native/Libraries/Renderer/shims/ReactNativeViewConfigRegistry')
       .register;
   },
+  get ReactNativeViewAttributes() {
+    return require('react-native/Libraries/Components/View/ReactNativeViewAttributes');
+  },
+  // END: react-native-harmony specific exports
 };

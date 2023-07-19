@@ -89,3 +89,5 @@ export declare function registerViewConfig(
   componentName: string,
   viewConfigFactory: () => Record
 ): any;
+
+export declare const ReactNativeViewAttributes: Record;
