@@ -155,6 +155,14 @@ void rnoh::RNInstance::emitComponentEvent(napi_env env, react::Tag tag, std::str
     }
 }
 
+void rnoh::RNInstance::onMemoryLevel(size_t memoryLevel) {
+    // Android memory levels are 5, 10, 15, while Ark's are 0, 1, 2
+    static const int memoryLevels[] = {5, 10, 15};
+    if (this->instance) {
+        this->instance->handleMemoryPressure(memoryLevels[memoryLevel]);
+    }
+}
+
 void RNInstance::callFunction(std::string &&module, std::string &&method, folly::dynamic &&params) {
     this->taskExecutor->runTask(TaskThread::JS, [this, module = std::move(module), method = std::move(method), params = std::move(params)]() mutable {
         this->instance->callJSFunction(std::move(module), std::move(method), std::move(params));

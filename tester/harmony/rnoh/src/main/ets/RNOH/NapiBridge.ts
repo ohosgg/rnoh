@@ -48,4 +48,8 @@ export class NapiBridge {
   add(a: number, b: number): number {
     return this.libRNOHApp?.add(a, b)
   }
+
+  onMemoryLevel(level: number): void {
+    this.libRNOHApp?.onMemoryLevel(level)
+  }
 }

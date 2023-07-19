@@ -54,6 +54,7 @@ class RNInstance {
     void runApplication(float width, float height, std::string const &moduleName, folly::dynamic &&initialProps);
     void callFunction(std::string &&module, std::string &&method, folly::dynamic &&params);
     void emitComponentEvent(napi_env env, facebook::react::Tag tag, std::string eventName, napi_value payload);
+    void onMemoryLevel(size_t memoryLevel);
 
   private:
     std::shared_ptr<facebook::react::ContextContainer> m_contextContainer;

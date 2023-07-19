@@ -134,6 +134,14 @@ static napi_value add(napi_env env, napi_callback_info info) {
     return sum;
 }
 
+static napi_value onMemoryLevel(napi_env env, napi_callback_info info) {
+    ArkJS arkJs(env);
+    auto args = arkJs.getCallbackArgs(info, 1);
+    auto memoryLevel = arkJs.getDouble(args[0]);
+    rnInstance->onMemoryLevel(static_cast<size_t>(memoryLevel));
+    return arkJs.getUndefined();
+}
+
 EXTERN_C_START
 static napi_value Init(napi_env env, napi_value exports) {
     napi_property_descriptor desc[] = {
@@ -145,7 +153,8 @@ static napi_value Init(napi_env env, napi_value exports) {
         {"emitComponentEvent", nullptr, emitComponentEvent, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"registerTurboModuleProvider", nullptr, registerTurboModuleProvider, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"add", nullptr, add, nullptr, nullptr, nullptr, napi_default, nullptr},
-        {"callRNFunction", nullptr, callRNFunction, nullptr, nullptr, nullptr, napi_default, nullptr}};
+        {"callRNFunction", nullptr, callRNFunction, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"onMemoryLevel", nullptr, onMemoryLevel, nullptr, nullptr, nullptr, napi_default, nullptr}};
 
     napi_define_properties(env, exports, sizeof(desc) / sizeof(napi_property_descriptor), desc);
     return exports;

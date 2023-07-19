@@ -111,6 +111,12 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
     });
   }
 
+  onMemoryLevel(level) {
+    const MEMORY_LEVEL_NAMES = [ "MEMORY_LEVEL_MODERATE", "MEMORY_LEVEL_LOW", "MEMORY_LEVEL_CRITICAL" ]
+    this.logger.debug("Received memory level event: "+MEMORY_LEVEL_NAMES[level])
+    this.napiBridge.onMemoryLevel(level)
+  }
+
   private emitLifecycleEvent<TEventName extends keyof LifecycleEventListenerByName>(type: TEventName, ...data: Parameters<LifecycleEventListenerByName[TEventName]>) {
     this.context.eventHub.emit(type, ...data)
   }
