@@ -1,5 +1,6 @@
 #include <atomic>
 #include <uv.h>
+#include <napi/native_api.h>
 #include <glog/logging.h>
 
 #include "NapiTaskRunner.h"
@@ -11,6 +12,18 @@ NapiTaskRunner::NapiTaskRunner(napi_env env) : env(env) {
     asyncHandle.data = static_cast<void*>(this);
     uv_async_init(loop, &asyncHandle, [](auto handle) {
         auto runner = static_cast<NapiTaskRunner *>(handle->data);
+
+        // https://nodejs.org/api/n-api.html#napi_handle_scope
+        // "For any invocations of code outside the execution of a native method (...)
+        // the module is required to create a scope before invoking any functions
+        // that can result in the creation of JavaScript values"
+        napi_handle_scope scope;
+        auto result = napi_open_handle_scope(runner->env, &scope);
+        if (result != napi_ok) {
+            LOG(ERROR) << "Failed to open handle scope";
+            return;
+        }
+
         std::queue<Task> tasksQueue;
         {
             std::unique_lock<std::mutex> lock(runner->tasksMutex);
@@ -20,6 +33,12 @@ NapiTaskRunner::NapiTaskRunner(napi_env env) : env(env) {
             auto task = std::move(tasksQueue.front());
             tasksQueue.pop();
             task();
+        }
+
+        result = napi_close_handle_scope(runner->env, scope);
+        if (result != napi_ok) {
+            LOG(ERROR) << "Failed to close handle scope";
+            return;
         }
     });
 }

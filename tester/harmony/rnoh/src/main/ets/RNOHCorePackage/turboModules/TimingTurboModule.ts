@@ -14,8 +14,12 @@ export class TimingTurboModule extends TurboModule {
     jsSchedulingTime: number,
     repeats: boolean
   ): void {
-    const triggerTimer = () =>
-    this.ctx.__napiBridge.callRNFunction("JSTimers", "callTimers", [[id]]);
+    const triggerTimer = () => {
+      this.ctx.__napiBridge.callRNFunction("JSTimers", "callTimers", [[id]]);
+      if (!repeats) {
+        this.deleteTimer(id);
+      }
+    };
 
     let nativeTimerId;
 
@@ -30,7 +34,6 @@ export class TimingTurboModule extends TurboModule {
   }
 
   deleteTimer(id: number): void {
-
     const timer = this.nativeTimerMap.get(id);
     if (!timer) {
       return;
