@@ -5,6 +5,7 @@ export type ScrollViewProps = ViewBaseProps & {
   scrollEnabled?: boolean
   contentOffsetX: number
   contentOffsetY: number
+  flexDirection: number
   bounces: boolean
 }
 
@@ -60,12 +61,13 @@ export struct RNScrollView {
   }
 
   scrollDirection(): ScrollDirection {
-    // TODO: support horizontal and free Scroll - one solution is to always nest two Scroll components, one vertical, one horizontal
     if (!this.descriptor.props.scrollEnabled) {
       return ScrollDirection.None
+    } else if (this.descriptor.props.flexDirection === 2) {
+      return ScrollDirection.Horizontal
+    } else {
+      return ScrollDirection.Vertical
     }
-
-    return ScrollDirection.Vertical
   }
 
   createScrollEvent() {
@@ -98,6 +100,7 @@ export struct RNScrollView {
 
     const currentOffset = this.scroller.currentOffset()
     const yOffset = currentOffset.yOffset;
+    const xOffset = currentOffset.xOffset;
 
     const currentScrollState = this.scrollState;
 
@@ -116,8 +119,7 @@ export struct RNScrollView {
     }
     this.scrollState = scrollState
 
-    // TODO: check if scroll is horizontal/vertical and adjust the correct offset
-    // descriptor.state.contentOffsetX = offset.xOffset;
+    descriptor.state.contentOffsetX = xOffset;
     descriptor.state.contentOffsetY = yOffset;
 
     this.ctx.rnInstanceManager.emitComponentEvent(

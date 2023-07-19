@@ -7,49 +7,83 @@ export function ScrollViewTest() {
   return (
     <TestSuite name="ScrollView">
       <TestCase itShould="render scroll view with different rounded corners">
-        <View
-          style={{
-            width: '100%',
-            height: 100,
-            position: 'relative',
-            overflow: 'hidden',
-          }}>
-          <ScrollView
+        <Modal>
+          <View
             style={{
-              width: '80%',
+              width: 200,
               height: '80%',
-              borderWidth: 3,
-              borderColor: 'firebrick',
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 20,
-              borderBottomRightRadius: 30,
-              borderBottomLeftRadius: 40,
-              backgroundColor: 'beige',
-            }}
-            contentContainerStyle={{
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            scrollEventThrottle={16}>
-            {new Array(3).fill(0).map((_, idx) => {
-              return (
-                <View
-                  key={idx}
-                  style={{
-                    width: '100%',
-                    height: 50,
-                    backgroundColor: 'pink',
-                    marginBottom: 50,
-                  }}
-                />
-              );
-            })}
-          </ScrollView>
-        </View>
+            }}>
+            <ScrollView
+              style={{
+                borderWidth: 3,
+                borderColor: 'firebrick',
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 20,
+                borderBottomRightRadius: 30,
+                borderBottomLeftRadius: 40,
+                backgroundColor: 'beige',
+              }}
+              contentContainerStyle={{
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              scrollEventThrottle={16}>
+              {new Array(10).fill(0).map((_, idx) => {
+                return (
+                  <View
+                    key={idx}
+                    style={{
+                      width: '100%',
+                      height: 50,
+                      backgroundColor: 'pink',
+                      marginBottom: 50,
+                    }}
+                  />
+                );
+              })}
+            </ScrollView>
+          </View>
+        </Modal>
       </TestCase>
       <TestCase itShould="change rectangles colors to green when releasing scroll">
         <Modal>
           <MomentumTestCase />
+        </Modal>
+      </TestCase>
+      <TestCase itShould="render horizontal scroll view">
+        <Modal>
+          <View
+            style={{
+              width: '100%',
+              height: 150,
+            }}>
+            <ScrollView
+              style={{
+                borderWidth: 3,
+                borderColor: 'firebrick',
+                backgroundColor: 'beige',
+              }}
+              contentContainerStyle={{
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              horizontal={true}
+              scrollEventThrottle={16}>
+              {new Array(5).fill(0).map((_, idx) => {
+                return (
+                  <View
+                    key={idx}
+                    style={{
+                      width: 160,
+                      height: '100%',
+                      backgroundColor: 'pink',
+                      marginRight: 80,
+                    }}
+                  />
+                );
+              })}
+            </ScrollView>
+          </View>
         </Modal>
       </TestCase>
     </TestSuite>
