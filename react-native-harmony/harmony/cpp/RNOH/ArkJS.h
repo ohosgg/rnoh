@@ -43,6 +43,8 @@ class ArkJS {
     napi_value createString(std::string const &str);
 
     napi_ref createReference(napi_value value);
+    
+    void deleteReference(napi_ref reference);
 
     napi_value createSingleUseCallback(std::function<void(std::vector<folly::dynamic>)> &&callback);
 

@@ -37,28 +37,35 @@ jsi::Value ArkTSTurboModule::call(jsi::Runtime &runtime, const std::string &meth
 
 jsi::Value ArkTSTurboModule::callAsync(jsi::Runtime &runtime, const std::string &methodName, const jsi::Value *jsiArgs, size_t argsCount) {
     auto args = convertJSIValuesToIntermediaryValues(runtime, m_ctx.jsInvoker, jsiArgs, argsCount);
-    napi_value napiResult;
-    m_ctx.taskExecutor->runSyncTask(TaskThread::MAIN, [ctx = m_ctx, &methodName, &args, &runtime, &napiResult]() {
+    napi_ref napiResultRef;
+    m_ctx.taskExecutor->runSyncTask(TaskThread::MAIN, [ctx = m_ctx, &methodName, &args, &runtime, &napiResultRef]() {
         ArkJS arkJs(ctx.env);
         auto napiArgs = arkJs.convertIntermediaryValuesToNapiValues(args);
         auto napiTurboModuleObject = arkJs.getObject(ctx.arkTsTurboModuleInstanceRef);
-        napiResult = napiTurboModuleObject.call(methodName, napiArgs);
+        auto napiResult = napiTurboModuleObject.call(methodName, napiArgs);
+        napiResultRef = arkJs.createReference(napiResult);
     });
     return react::createPromiseAsJSIValue(
-        runtime, [ctx = m_ctx, napiResult](jsi::Runtime &rt2, std::shared_ptr<react::Promise> jsiPromise) {
-            ctx.taskExecutor->runTask(TaskThread::MAIN, [ctx, napiResult, &rt2, jsiPromise]() {
+        runtime, [ctx = m_ctx, napiResultRef](jsi::Runtime &rt2, std::shared_ptr<react::Promise> jsiPromise) {
+            ctx.taskExecutor->runTask(TaskThread::MAIN, [ctx, napiResultRef, &rt2, jsiPromise]() {
+                ArkJS arkJs(ctx.env);
+                auto napiResult = arkJs.getReferenceValue(napiResultRef);
                 Promise(ctx.env, napiResult)
-                    .then([&rt2, jsiPromise, ctx](auto args) {
+                    .then([&rt2, jsiPromise, ctx, napiResultRef](auto args) {
                         ctx.jsInvoker->invokeAsync([&rt2, jsiPromise, args = std::move(args)]() {
                             jsiPromise->resolve(preparePromiseResolverResult(rt2, args));
                             jsiPromise->allowRelease();
                         });
+                        ArkJS arkJs(ctx.env);
+                        arkJs.deleteReference(napiResultRef);
                     })
-                    .catch_([&rt2, jsiPromise, ctx](auto args) {
+                    .catch_([&rt2, jsiPromise, ctx, napiResultRef](auto args) {
                         ctx.jsInvoker->invokeAsync([&rt2, jsiPromise, args]() {
                             jsiPromise->reject(preparePromiseRejectionResult(args));
                             jsiPromise->allowRelease();
                         });
+                        ArkJS arkJs(ctx.env);
+                        arkJs.deleteReference(napiResultRef);
                     });
             });
         });

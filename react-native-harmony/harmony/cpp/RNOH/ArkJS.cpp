@@ -113,6 +113,11 @@ napi_ref ArkJS::createReference(napi_value value) {
     return result;
 }
 
+void ArkJS::deleteReference(napi_ref reference) {
+    auto status = napi_delete_reference(m_env, reference);
+    this->maybeThrowFromStatus(status, "Couldn't delete a reference");
+}
+
 std::function<napi_value(napi_env, std::vector<napi_value>)> *createNapiCallback(std::function<void(std::vector<folly::dynamic>)> &&callback) {
     return new std::function([callback = std::move(callback)](napi_env env, std::vector<napi_value> callbackNapiArgs) -> napi_value {
         ArkJS arkJs(env);
