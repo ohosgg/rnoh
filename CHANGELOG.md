@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.72.2
+- BREAKING CHANGE: renamed harmony module from `@ohos/rnoh` to `rnoh`
+- BREAKING CHANGE: changed the interface of `EventEmitRequestHandler` and `Package::createEventEmitRequestHandlers`
+- added support for `pointerEvents`
+- added support for scroll driven animations to  native driver
+- added support for horizontal scrolling
+- added support for `BackHandler.exitApp()`
+- various memory management tweaks that probably fix some memory leaks
+- bumped react-native-harmony-cli to fix crash caused by `node_modules/.bin` when unpacking harmony modules
+
 ## v0.72.1
 - fixed react-native unpack-harmony not replacing the native module when updating npm package
 - fixed crash when removing a scrolling ScrollView
