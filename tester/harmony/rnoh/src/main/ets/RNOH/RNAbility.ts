@@ -9,7 +9,7 @@ import window from '@ohos.window';
 import hilog from '@ohos.hilog';
 import { TurboModule, TurboModuleContext } from "./TurboModule"
 import { TurboModuleProvider } from "./TurboModuleProvider"
-import { RNOHCorePackage } from "../RNOHCorePackage";
+import { RNOHCorePackage } from "../RNOHCorePackage/ts";
 import libRNOHApp from 'librnoh_app.so'
 
 export type SurfaceAboutToAppearContext = {
@@ -54,6 +54,8 @@ export interface RNInstanceManager {
   loadScriptFromString(script: string, sourceURL?: string);
 
   getTurboModule<T extends TurboModule>(name: string): T
+
+  onBackPress(): void
 }
 
 
@@ -191,5 +193,9 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
 
   getTurboModule<T extends TurboModule>(name: string): T {
     return this.turboModuleProvider.getModule(name);
+  }
+
+  onBackPress() {
+    this.emitDeviceEvent('hardwareBackPress', {})
   }
 }

@@ -1,6 +1,5 @@
 import { RNApp, ComponentBuilderContext, RNOHContext } from 'rnoh'
 import { SampleView, SAMPLE_VIEW_TYPE, PropsDisplayer } from "rnoh-sample-package"
-import { DeviceEventManagerTurboModule } from "rnoh/src/main/ets/RNOHCorePackage/turboModules/DeviceEventManagerTurboModule"
 
 let storage = LocalStorage.GetShared()
 
@@ -25,7 +24,7 @@ struct Index {
   }
 
   onBackPress() {
-    this.rnohContext.rnInstanceManager.getTurboModule<DeviceEventManagerTurboModule>(DeviceEventManagerTurboModule.NAME).emitHardwareBackPressed();
+    this.rnohContext.rnInstanceManager.onBackPress()
     return true;
   }
 

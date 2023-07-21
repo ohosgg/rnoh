@@ -6,8 +6,4 @@ export class DeviceEventManagerTurboModule extends TurboModule {
   invokeDefaultBackPressHandler() {
     this.ctx.uiAbilityContext.terminateSelf();
   }
-
-  emitHardwareBackPressed() {
-    this.ctx.rnInstanceManager.emitDeviceEvent('hardwareBackPress', {})
-  }
 }
