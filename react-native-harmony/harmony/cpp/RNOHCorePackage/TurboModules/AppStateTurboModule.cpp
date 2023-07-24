@@ -7,9 +7,6 @@ AppStateTurboModule::AppStateTurboModule(const ArkTSTurboModule::Context ctx, co
     methodMap_ = {
         ARK_METHOD_METADATA(getCurrentAppState, 0),
         ARK_METHOD_METADATA(getConstants, 0),
-        //event emitters
-        ARK_METHOD_METADATA(addListener, 1),
-        ARK_METHOD_METADATA(removeListeners, 1),
     };
 }
 

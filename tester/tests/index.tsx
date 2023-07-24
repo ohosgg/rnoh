@@ -23,6 +23,7 @@ export * from './RenderingTest';
 export * from './ScrollViewTest';
 export * from './SectionListTest';
 export * from './StatusBarTest';
+export * from './TextInputTest';
 export * from './TextTest';
 export * from './TransformTest';
 export * from './TimerTest';

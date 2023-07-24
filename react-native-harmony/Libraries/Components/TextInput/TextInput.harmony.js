@@ -1351,7 +1351,7 @@ function InternalTextInput(props: Props): React.Node {
       onPressIn: props.onPressIn,
       onPressOut: props.onPressOut,
       cancelable:
-        Platform.OS === 'ios' ? !props.rejectResponderTermination : null,
+        OS === 'ios' ? !props.rejectResponderTermination : null,
     }),
     [
       props.editable,
@@ -1393,7 +1393,7 @@ function InternalTextInput(props: Props): React.Node {
   // $FlowFixMe[underconstrained-implicit-instantiation]
   let style = flattenStyle(props.style);
 
-  if (Platform.OS === 'ios') {
+  if (OS === 'ios') {
     const RCTTextInputView =
       props.multiline === true
         ? RCTMultilineTextInputView
@@ -1433,7 +1433,7 @@ function InternalTextInput(props: Props): React.Node {
         text={text}
       />
     );
-  } else if (Platform.OS === 'android') {
+  } else if (OS === 'android') {
     const autoCapitalize = props.autoCapitalize || 'sentences';
     const _accessibilityLabelledBy =
       props?.['aria-labelledby'] ?? props?.accessibilityLabelledBy;
@@ -1513,7 +1513,7 @@ const inputModeToKeyboardTypeMap = {
   decimal: 'decimal-pad',
   numeric: 'number-pad',
   tel: 'phone-pad',
-  search: Platform.OS === 'ios' ? 'web-search' : 'default',
+  search: OS === 'ios' ? 'web-search' : 'default',
   email: 'email-address',
   url: 'url',
 };
@@ -1625,7 +1625,7 @@ const ExportedForwardRef: React.AbstractComponent<
         inputMode == null ? showSoftInputOnFocus : inputMode !== 'none'
       }
       autoComplete={
-        Platform.OS === 'android'
+        OS === 'android'
           ? // $FlowFixMe[invalid-computed-prop]
             // $FlowFixMe[prop-missing]
             autoCompleteWebToAutoCompleteAndroidMap[autoComplete] ??
@@ -1635,7 +1635,7 @@ const ExportedForwardRef: React.AbstractComponent<
       textContentType={
         textContentType != null
           ? textContentType
-          : Platform.OS === 'ios' &&
+          : OS === 'ios' &&
             autoComplete &&
             autoComplete in autoCompleteWebToTextContentTypeMap
           ? // $FlowFixMe[invalid-computed-prop]
