@@ -27,6 +27,9 @@ export struct RNApp {
         const data = displays[0];
         this.screenDensity = data.densityPixels
         this.rnohContext.__napiBridge?.initializeReactNative(data.densityPixels);
+        if (this.initialSurfaceWidth != 0) {
+          this.rnohContext.__napiBridge.updateSurfaceConstraints(this.appName, this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity);
+        }
         this.shouldShow = true;
       });
 

@@ -125,6 +125,9 @@ void RNInstance::runApplication(float width, float height, std::string const &mo
 void RNInstance::updateSurfaceConstraints(std::string const &moduleName, float width, float height) {
     this->taskExecutor->runTask(TaskThread::JS, [this, width, height, moduleName]() {
         try {
+            if (surfaceHandlers[moduleName] == nullptr) {
+                return;
+            }
             auto layoutConstraints = surfaceHandlers[moduleName]->getLayoutConstraints();
             layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
                 .width = width,
