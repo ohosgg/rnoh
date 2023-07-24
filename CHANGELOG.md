@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.72.3
+- fixed TextInput not working correctly since v0.72.0
+- fixed crashing on Open Harmony 4.0.8.5
+
 ## v0.72.2
 - BREAKING CHANGE: renamed harmony module from `@ohos/rnoh` to `rnoh`
 - BREAKING CHANGE: changed the interface of `EventEmitRequestHandler` and `Package::createEventEmitRequestHandlers`
