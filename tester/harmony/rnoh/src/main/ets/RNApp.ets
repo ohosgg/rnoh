@@ -10,7 +10,6 @@ export struct RNApp {
   rnohContext: RNOHContext
   appName: string
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
-  @State screenDensity: number = 0
   @State shouldShow: boolean = false
   @State dev: boolean = false
   private initialSurfaceWidth: number = 0
@@ -25,10 +24,9 @@ export struct RNApp {
           return;
         }
         const data = displays[0];
-        this.screenDensity = data.densityPixels
-        this.rnohContext.__napiBridge?.initializeReactNative(data.densityPixels);
+        this.rnohContext.__napiBridge?.initializeReactNative();
         if (this.initialSurfaceWidth != 0) {
-          this.rnohContext.__napiBridge.updateSurfaceConstraints(this.appName, this.initialSurfaceWidth / this.screenDensity, this.initialSurfaceHeight / this.screenDensity);
+          this.rnohContext.__napiBridge.updateSurfaceConstraints(this.appName, px2vp(this.initialSurfaceWidth), px2vp(this.initialSurfaceHeight));
         }
         this.shouldShow = true;
       });
@@ -42,19 +40,18 @@ export struct RNApp {
       this.initialSurfaceHeight = constraint.maxHeight
     }
     else {
-      this.rnohContext.__napiBridge.updateSurfaceConstraints(this.appName, constraint.maxWidth / this.screenDensity, constraint.maxHeight / this.screenDensity);
+      this.rnohContext.__napiBridge.updateSurfaceConstraints(this.appName, px2vp(constraint.maxWidth), px2vp(constraint.maxHeight));
     }
 
   }
 
   build() {
     Stack() {
-      if (this.screenDensity > 0 && this.shouldShow) {
+      if (this.shouldShow) {
         RNSurface({
           ctx: this.rnohContext,
           appName: this.appName,
           buildCustomComponent: this.buildCustomComponent,
-          screenDensity: this.screenDensity,
           initialSurfaceWidth: this.initialSurfaceWidth,
           initialSurfaceHeight: this.initialSurfaceHeight,
         })

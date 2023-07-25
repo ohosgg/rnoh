@@ -12,9 +12,9 @@ export class NapiBridge {
     this.libRNOHApp?.registerTurboModuleProvider(turboModuleProvider);
   }
 
-  initializeReactNative(screenDensity: number) {
+  initializeReactNative() {
     this.libRNOHApp?.initializeReactNative((config: { textContent: string }) => {
-      return { width: TextMeasurer.measureText({ textContent: config.textContent }) / (screenDensity || 1), height: 0 }
+      return { width: px2vp(TextMeasurer.measureText({ textContent: config.textContent })), height: 0 }
     });
   }
 

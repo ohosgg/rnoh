@@ -8,10 +8,6 @@ type StatusBarConstants = {
   HEIGHT: number,
 }
 
-function convertPhysicalToDeviceIndependentPixels(pixels?: number) {
-  let displayInstance = display.getDefaultDisplaySync();
-  return pixels / displayInstance.densityPixels;
-}
 
 export class StatusBarTurboModule extends TurboModule {
   public static readonly NAME = 'StatusBarManager';
@@ -29,7 +25,9 @@ export class StatusBarTurboModule extends TurboModule {
       const windowRect = windowInstance.getWindowProperties().windowRect;
       // we get this value in this way because other methods didn't work. I tried using window.getWindowAvoidArea but it
       // always returned 0. I didn't use display.getCutoutInfo, as not every device has cutouts.
-      const scaledStatusBarHeight = convertPhysicalToDeviceIndependentPixels(windowRect.top);
+
+      // @ts-ignore because px2vp isn't recognized
+      const scaledStatusBarHeight = px2vp(windowRect.top);
       this.constants = {
         DEFAULT_BACKGROUND_COLOR: '#0x66000000',
         HEIGHT: scaledStatusBarHeight,

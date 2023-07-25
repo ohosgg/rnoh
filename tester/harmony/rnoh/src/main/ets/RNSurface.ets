@@ -35,7 +35,6 @@ export struct RNSurface {
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   @State initialSurfaceWidth: number = 0
   @State initialSurfaceHeight: number = 0
-  @Prop screenDensity: number
   @State descriptor: RootDescriptor = rootDescriptor
   private cleanup?: () => void = undefined
 
@@ -49,7 +48,6 @@ export struct RNSurface {
       appName: this.appName,
       width: this.initialSurfaceWidth,
       height: this.initialSurfaceHeight,
-      screenDensity: this.screenDensity
     })
     this.cleanup = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
       1,

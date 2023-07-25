@@ -16,7 +16,6 @@ export type SurfaceAboutToAppearContext = {
   appName: string
   width: number
   height: number
-  screenDensity: number
 }
 
 export interface SurfaceLifecycle {
@@ -114,8 +113,8 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
   }
 
   onMemoryLevel(level) {
-    const MEMORY_LEVEL_NAMES = [ "MEMORY_LEVEL_MODERATE", "MEMORY_LEVEL_LOW", "MEMORY_LEVEL_CRITICAL" ]
-    this.logger.debug("Received memory level event: "+MEMORY_LEVEL_NAMES[level])
+    const MEMORY_LEVEL_NAMES = ["MEMORY_LEVEL_MODERATE", "MEMORY_LEVEL_LOW", "MEMORY_LEVEL_CRITICAL"]
+    this.logger.debug("Received memory level event: " + MEMORY_LEVEL_NAMES[level])
     this.napiBridge.onMemoryLevel(level)
   }
 
@@ -175,16 +174,16 @@ export abstract class RNAbility extends UIAbility implements SurfaceLifecycle, R
         return javaScriptLoader.loadBundle("bundle.harmony.js")
       }).then((bundle) => {
       this.loadScriptFromString(bundle)
-      this.napiBridge.run(ctx.width / ctx.screenDensity,
-        ctx.height / ctx.screenDensity,
+      this.napiBridge.run(px2vp(ctx.width),
+        px2vp(ctx.height),
         ctx.appName,
         this.getInitialProps())
     }).catch((error) => {
       this.logger.error(error)
       // TODO: don't use empty string as a magic "failure" value
       this.loadScriptFromString("")
-      this.napiBridge.run(ctx.width / ctx.screenDensity,
-        ctx.height / ctx.screenDensity,
+      this.napiBridge.run(px2vp(ctx.width),
+        px2vp(ctx.height),
         ctx.appName,
         this.getInitialProps())
     });

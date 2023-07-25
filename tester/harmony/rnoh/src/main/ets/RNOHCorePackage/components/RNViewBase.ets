@@ -119,11 +119,13 @@ function convertViewDynamicDescriptor(dynamicDescriptor: ViewDynamicDescriptor):
   }
 }
 
-function convertTranslationPixelsToPhysicalPixels(transform: TransformMatrix) {
-  let displayInstance = display.getDefaultDisplaySync();
-  transform[12] = transform[12] * displayInstance.densityPixels;
-  transform[13] = transform[13] * displayInstance.densityPixels;
-  return transform;
+function convertMatrixArrayToMatrix4(transform: TransformMatrix) {
+  if (transform.length < 16)
+    return matrix4.identity();
+  transform[12] = vp2px(transform[12]);
+  transform[13] = vp2px(transform[13]);
+  transform[14] = vp2px(transform[14]);
+  return matrix4.init(transform);
 }
 
 @Component
@@ -186,7 +188,7 @@ export struct RNViewBase {
     .borderRadius(this.descriptor.props.borderRadius)
     .onTouch((event) => this.onTouchEvent(event))
     .opacity(this.descriptor.props.opacity)
-    .transform(this.descriptor.props.transform != undefined ? matrix4.init(convertTranslationPixelsToPhysicalPixels(this.descriptor.props.transform)) : undefined)
+    .transform(this.descriptor.props.transform != undefined ? convertMatrixArrayToMatrix4(this.descriptor.props.transform) : undefined)
     .clip(true)
     .hitTestBehavior(this.getHitTestMode())
   }
