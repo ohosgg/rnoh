@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.72.4
+- BREAKING CHANGE: replaced `EventEmitterRegistry.cpp` with `ShadowViewRegistry.cpp`
+- added `Modal` component support
+- added an option to set CPP state from eTS
+- added Addition, Subtraction, Multiplication, and Division Animation Nodes
+- fixed transforms
+- reexported `dispatchCommand` method for custom fabric components that don't use code generation utility
+
 ## v0.72.3
 - fixed TextInput not working correctly since v0.72.0
 - fixed crashing on Open Harmony 4.0.8.5

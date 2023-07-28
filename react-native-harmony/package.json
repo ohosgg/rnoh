@@ -1,6 +1,6 @@
 {
   "name": "@rnoh/react-native-harmony",
-  "version": "0.72.3",
+  "version": "0.72.4",
   "description": "",
   "scripts": {
     "pack:harmony": "react-native pack-harmony --oh-module-path ../tester/harmony/rnoh --harmony-dir-path ./harmony --package-json-path ./package.json",
