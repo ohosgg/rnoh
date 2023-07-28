@@ -2,12 +2,14 @@
 
 #include <glog/logging.h>
 #include <queue>
+#include <functional>
 
 #include "Nodes/StyleAnimatedNode.h"
 #include "Nodes/ValueAnimatedNode.h"
 #include "Nodes/PropsAnimatedNode.h"
 #include "Nodes/TransformAnimatedNode.h"
 #include "Nodes/InterpolationAnimatedNode.h"
+#include "Nodes/AssociativeOperationNode.h"
 
 #include "Drivers/EventAnimationDriver.h"
 #include "Drivers/FrameBasedAnimationDriver.h"
@@ -35,6 +37,14 @@ void AnimatedNodesManager::createNode(facebook::react::Tag tag, folly::dynamic c
         node = std::make_unique<TransformAnimatedNode>(config, *this);
     } else if (type == "interpolation") {
         node = std::make_unique<InterpolationAnimatedNode>(config, *this);
+    } else if (type == "addition") {
+        node = std::make_unique<AdditionAnimatedNode>(config, *this);
+    } else if (type == "subtraction") {
+        node = std::make_unique<SubtractionAnimatedNode>(config, *this);
+    } else if (type == "multiplication") {
+        node = std::make_unique<MultiplicationAnimatedNode>(config, *this);
+    } else if (type == "division") {
+        node = std::make_unique<DivisionAnimatedNode>(config, *this);
     } else {
         throw new std::runtime_error("Unsupported node type: " + type);
     }

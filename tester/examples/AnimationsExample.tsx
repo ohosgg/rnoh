@@ -16,6 +16,7 @@ export function AnimationsExample() {
   const [isComponentVisible, setIsComponentVisible] = useState(false);
   const xAnim = React.useRef(new Animated.Value(0)).current;
   const xAnimNative = React.useRef(new Animated.Value(0)).current;
+  const yAnimNative = React.useRef(new Animated.Value(0)).current;
   const fadeAnim = React.useRef(new Animated.Value(1)).current;
   const [numberOfComponents, setNumberOfComponents] = useState(100);
 
@@ -85,6 +86,27 @@ export function AnimationsExample() {
       ]),
     );
     xNative.start();
+
+    const yNative = Animated.loop(
+      Animated.sequence([
+        Animated.timing(yAnimNative, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(yAnimNative, {
+          toValue: 2,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(yAnimNative, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+    yNative.start();
 
     const fade = Animated.loop(
       Animated.sequence([
@@ -197,6 +219,46 @@ export function AnimationsExample() {
                 position: 'absolute',
               }}>
               <Text style={{height: 24}}>Native driver</Text>
+            </Animated.View>
+            <Animated.View
+              style={{
+                height: 100,
+                width: 100,
+                transform: [{translateX: Animated.add(xAnimNative, 50)}, {translateY: 400}],
+                backgroundColor: 'red',
+                position: 'absolute',
+              }}>
+              <Text style={{height: 48}}>Native driver Addition</Text>
+            </Animated.View>
+            <Animated.View
+              style={{
+                height: 100,
+                width: 100,
+                transform: [{translateX: Animated.multiply(xAnimNative, yAnimNative)}, {translateY: 500}],
+                backgroundColor: 'red',
+                position: 'absolute',
+              }}>
+              <Text style={{height: 48}}>Native driver Multiplication</Text>
+            </Animated.View>
+            <Animated.View
+              style={{
+                height: 100,
+                width: 100,
+                transform: [{translateX: Animated.divide(xAnimNative, Animated.add(yAnimNative, 1))}, {translateY: 600}],
+                backgroundColor: 'red',
+                position: 'absolute',
+              }}>
+              <Text style={{height: 48}}>Native driver Division</Text>
+            </Animated.View>
+            <Animated.View
+              style={{
+                height: 100,
+                width: 100,
+                transform: [{translateX: Animated.subtract(xAnimNative, 50)}, {translateY: 700}],
+                backgroundColor: 'red',
+                position: 'absolute',
+              }}>
+              <Text style={{height: 48}}>Native driver Subtraction</Text>
             </Animated.View>
           </>
         {isComponentVisible && (
