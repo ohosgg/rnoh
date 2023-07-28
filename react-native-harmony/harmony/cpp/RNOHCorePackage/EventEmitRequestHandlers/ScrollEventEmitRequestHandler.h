@@ -63,7 +63,7 @@ class ScrollEventEmitRequestHandler : public EventEmitRequestHandler {
             return;
         }
 
-        auto eventEmitter = ctx.eventEmitterRegistry->getEventEmitter<facebook::react::ScrollViewEventEmitter>(ctx.tag);
+        auto eventEmitter = ctx.shadowViewRegistry->getEventEmitter<facebook::react::ScrollViewEventEmitter>(ctx.tag);
         if (eventEmitter == nullptr) {
             return;
         }

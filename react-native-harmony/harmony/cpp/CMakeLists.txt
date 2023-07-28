@@ -291,6 +291,8 @@ set(REACT_COMMON_PATCH_DIR "${patches_dir}/react_native_core")
 add_library(folly_runtime ALIAS folly_target)
 add_library(glog ALIAS glog_target)
 
+include_directories(${REACT_COMMON_PATCH_DIR})
+
 # dummy targets added to avoid modyfing CMakeLists located in ReactCommon
 add_library(boost INTERFACE)
 add_library(log INTERFACE)
@@ -350,7 +352,8 @@ add_react_common_subdir(react/renderer/components/image)
 # add_react_common_subdir(react/renderer/componentregistry/native)
 add_react_common_subdir(react/renderer/components/text)
 # add_react_common_subdir(react/renderer/components/unimplementedview)
-# add_react_common_subdir(react/renderer/components/modal)
+add_subdirectory(${REACT_COMMON_PATCH_DIR}/react/renderer/components/rncore)
+add_react_common_subdir(react/renderer/components/modal)
 add_react_common_subdir(react/renderer/components/scrollview)
 add_react_common_subdir(react/renderer/leakchecker)
 add_subdirectory(${REACT_COMMON_PATCH_DIR}/react/renderer/textlayoutmanager)
@@ -379,7 +382,7 @@ add_library(rnoh SHARED
     "${RNOH_CPP_DIR}/RNOH/LogSink.cpp"
     "${RNOH_CPP_DIR}/RNOH/ArkJS.cpp"
     "${RNOH_CPP_DIR}/RNOH/MountingManager.cpp"
-    "${RNOH_CPP_DIR}/RNOH/EventEmitterRegistry.cpp"
+    "${RNOH_CPP_DIR}/RNOH/ShadowViewRegistry.cpp"
     "${RNOH_CPP_DIR}/RNOH/TurboModuleProvider.cpp"
     "${RNOH_CPP_DIR}/RNOH/TurboModuleFactory.cpp"
     "${RNOH_CPP_DIR}/RNOH/ArkTSTurboModule.cpp"
@@ -430,6 +433,8 @@ target_link_libraries(rnoh PUBLIC
     rrc_text
     rrc_textinput
     rrc_scrollview
+    rrc_modal
+    react_codegen_rncore
     react_nativemodule_core
     react_bridging
 )

@@ -18,7 +18,7 @@
 
 #include "RNOH/MessageQueueThread.h"
 #include "RNOH/SchedulerDelegate.h"
-#include "RNOH/EventEmitterRegistry.h"
+#include "RNOH/ShadowViewRegistry.h"
 #include "RNOH/TurboModuleFactory.h"
 #include "RNOH/EventDispatcher.h"
 #include "RNOH/EventEmitRequestHandler.h"
@@ -39,15 +39,15 @@ class RNInstance {
           m_contextContainer(contextContainer),
           scheduler(nullptr),
           taskExecutor(taskExecutor),
-          eventEmitterRegistry(std::make_shared<EventEmitterRegistry>()),
+          shadowViewRegistry(std::make_shared<ShadowViewRegistry>()),
           m_turboModuleFactory(std::move(turboModuleFactory)),
           m_componentDescriptorProviderRegistry(componentDescriptorProviderRegistry),
           m_mutationsToNapiConverter(mutationsToNapiConverter),
           m_eventEmitRequestHandlers(eventEmitRequestHandlers) {}
 
     void registerSurface(
-        MutationsListener,
-        MountingManager::CommandDispatcher);
+        MutationsListener&&,
+        MountingManager::CommandDispatcher&&);
     void start();
     void updateSurfaceConstraints(std::string const &moduleName, float width, float height);
     void loadScriptFromString(std::string const &&bundle, std::string const sourceURL);
@@ -55,6 +55,7 @@ class RNInstance {
     void callFunction(std::string &&module, std::string &&method, folly::dynamic &&params);
     void emitComponentEvent(napi_env env, facebook::react::Tag tag, std::string eventName, napi_value payload);
     void onMemoryLevel(size_t memoryLevel);
+    void updateState(napi_env env, std::string const &componentName, facebook::react::Tag tag, napi_value newState);
 
   private:
     std::shared_ptr<facebook::react::ContextContainer> m_contextContainer;
@@ -66,7 +67,7 @@ class RNInstance {
     std::unique_ptr<SchedulerDelegate> schedulerDelegate;
     std::shared_ptr<TaskExecutor> taskExecutor;
     std::shared_ptr<facebook::react::ComponentDescriptorProviderRegistry> m_componentDescriptorProviderRegistry;
-    EventEmitterRegistry::Shared eventEmitterRegistry;
+    ShadowViewRegistry::Shared shadowViewRegistry;
     TurboModuleFactory m_turboModuleFactory;
     std::shared_ptr<EventDispatcher> m_eventDispatcher;
     MutationsToNapiConverter m_mutationsToNapiConverter;

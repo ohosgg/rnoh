@@ -5,6 +5,7 @@ import { RNText } from "./RNOHCorePackage/Components/RNText"
 import { RNScrollView } from "./RNOHCorePackage/Components/RNScrollView"
 import { Descriptor, Tag } from "./RNOH/DescriptorBase"
 import { RNOHContext } from "./RNOH/RNOHContext"
+import { RNModalHostView } from './RNOHCorePackage/components/RNModalHostView'
 
 export type ComponentBuilderContext = {
   rnohContext: RNOHContext
@@ -59,6 +60,12 @@ export struct RNComponentFactory {
       RNText({ ctx: this.ctx, tag: this.tag })
     } else if (this.descriptorType === "ScrollView") {
       RNScrollView({
+        ctx: this.ctx,
+        tag: this.tag,
+        renderDescriptors: this.renderDescriptors.bind(this)
+      })
+    } else if (this.descriptorType === "ModalHostView") {
+      RNModalHostView({
         ctx: this.ctx,
         tag: this.tag,
         renderDescriptors: this.renderDescriptors.bind(this)

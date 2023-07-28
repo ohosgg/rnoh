@@ -52,4 +52,8 @@ export class NapiBridge {
   onMemoryLevel(level: number): void {
     this.libRNOHApp?.onMemoryLevel(level)
   }
+
+  updateState(componentName: string, tag: Tag, state: unknown): void {
+    this.libRNOHApp?.updateState(componentName, tag, state)
+  }
 }

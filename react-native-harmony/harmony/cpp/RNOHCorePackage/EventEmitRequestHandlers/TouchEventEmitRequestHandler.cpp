@@ -42,7 +42,7 @@ void TouchEventEmitRequestHandler::handleEvent(TouchEventEmitRequestHandler::Con
     };
 
     for (auto target : changedTargets) {
-        auto eventEmitter = ctx.eventEmitterRegistry->getEventEmitter<react::TouchEventEmitter>(target);
+        auto eventEmitter = ctx.shadowViewRegistry->getEventEmitter<react::TouchEventEmitter>(target);
         if (!eventEmitter) {
             continue;
         }

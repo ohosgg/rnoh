@@ -1,14 +1,14 @@
-import { RNOHLogger, StandardRNOHLogger } from './RNOHLogger';
 import { Tag, Descriptor } from './DescriptorBase';
 import { MutationType, Mutation } from './Mutation';
 
 type SubtreeListener = () => void;
+type SetNativeStateFn = (componentName: string, tag: Tag, state: unknown) => void
 export class DescriptorRegistry {
   private descriptorByTag: Map<Tag, Descriptor>;
   private descriptorListenersSetByTag: Map<Tag, Set<(descriptor: Descriptor) => void>> = new Map();
   private subtreeListenersSetByTag: Map<Tag, Set<SubtreeListener>> = new Map();
 
-  constructor(descriptorByTag: Record<Tag, Descriptor>) {
+  constructor(descriptorByTag: Record<Tag, Descriptor>, private setNativeStateFn: SetNativeStateFn) {
     this.descriptorByTag = new Map();
     for (const tag in descriptorByTag) {
       this.descriptorByTag.set(parseInt(tag), descriptorByTag[tag])
@@ -23,7 +23,6 @@ export class DescriptorRegistry {
     let descriptor = this.getDescriptor<Descriptor<string, TProps>>(tag);
 
     if (!descriptor) {
-      (new StandardRNOHLogger().info(`No view for tag ${tag}`))
       return;
     }
 
@@ -33,6 +32,17 @@ export class DescriptorRegistry {
 
     this.descriptorListenersSetByTag.get(tag)?.forEach(cb => cb(updatedDescriptor));
     this.callSubtreeListeners([tag]);
+  }
+
+  public setState<TState>(tag: Tag, state: TState): void {
+    let descriptor = this.getDescriptor<Descriptor<string, TState>>(tag);
+    if (!descriptor) {
+      return;
+    }
+
+    // we don't update the local state, since Fabric will
+    // supply it in a mutation
+    this.setNativeStateFn(descriptor.type, tag, state);
   }
 
   public applyMutations(mutations: Mutation[]) {

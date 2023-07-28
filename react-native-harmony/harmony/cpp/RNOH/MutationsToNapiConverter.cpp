@@ -47,6 +47,13 @@ napi_value MutationsToNapiConverter::convert(napi_env env, react::ShadowViewMuta
     return arkJs.createArray(napiMutations);
 }
 
+void rnoh::MutationsToNapiConverter::updateState(napi_env env, std::string const &componentName, facebook::react::State::Shared const &state, napi_value newState) {
+    if (auto it = m_componentNapiBinderByName.find(componentName); it != m_componentNapiBinderByName.end()) {
+        it->second->updateState({env, state, newState});
+    }
+    return;
+}
+
 napi_value MutationsToNapiConverter::convertShadowView(napi_env env, react::ShadowView const shadowView) {
     ArkJS arkJs(env);
     auto napiShadowViewBuilder = arkJs.createObjectBuilder();

@@ -11,7 +11,7 @@ class TextInputChangeEventEmitRequestHandler : public EventEmitRequestHandler {
         }
 
         ArkJS arkJs(ctx.env);
-        auto eventEmitter = ctx.eventEmitterRegistry->getEventEmitter<facebook::react::TextInputEventEmitter>(ctx.tag);
+        auto eventEmitter = ctx.shadowViewRegistry->getEventEmitter<facebook::react::TextInputEventEmitter>(ctx.tag);
         if (eventEmitter == nullptr) {
             return;
         }

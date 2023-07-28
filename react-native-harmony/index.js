@@ -38,6 +38,9 @@ module.exports = {
   get Linking() {
     return require('./Libraries/Linking/Linking');
   },
+  get Modal() {
+    return require('react-native/Libraries/Modal/Modal');
+  },
   get Keyboard() {
     return require('react-native/Libraries/Components/Keyboard/Keyboard');
   },

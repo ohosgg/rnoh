@@ -31,7 +31,7 @@ class SchedulerDelegate : public facebook::react::SchedulerDelegate {
     void schedulerDidSetIsJSResponder(
         facebook::react::ShadowView const &shadowView, bool isJSResponder, bool blockNativeResponder) override {}
 
-  private:
+
     MountingManager mountingManager;
 };
 

@@ -12,13 +12,13 @@ void MountingManager::performMountInstructions(react::ShadowViewMutationList con
         case react::ShadowViewMutation::Create: {
             auto newChild = mutation.newChildShadowView;
 
-            eventEmitterRegistry->setEventEmitter(newChild.tag, newChild.eventEmitter);
+            shadowViewRegistry->setShadowView(newChild.tag, newChild);
             break;
         }
         case react::ShadowViewMutation::Delete: {
             auto oldChild = mutation.oldChildShadowView;
 
-            eventEmitterRegistry->clearEventEmitter(oldChild.tag);
+            shadowViewRegistry->clearShadowView(oldChild.tag);
             break;
         }
         case react::ShadowViewMutation::Insert: {
@@ -31,10 +31,10 @@ void MountingManager::performMountInstructions(react::ShadowViewMutationList con
             auto parent = mutation.parentShadowView;
             break;
         }
-        case react::ShadowViewMutation::Update: {
+        case react::ShadowViewMutation::Update: { 
             auto newChild = mutation.newChildShadowView;
 
-            eventEmitterRegistry->setEventEmitter(newChild.tag, newChild.eventEmitter);
+            shadowViewRegistry->setShadowView(newChild.tag, newChild);
             break;
         }
         }
@@ -67,4 +67,5 @@ void MountingManager::performTransaction(facebook::react::MountingCoordinator::S
 void MountingManager::dispatchCommand(facebook::react::Tag tag, std::string const &commandName, folly::dynamic const args) {
     this->commandDispatcher(tag, commandName, args);
 }
+
 } // namespace rnoh

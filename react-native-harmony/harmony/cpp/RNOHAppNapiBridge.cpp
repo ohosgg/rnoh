@@ -142,6 +142,16 @@ static napi_value onMemoryLevel(napi_env env, napi_callback_info info) {
     return arkJs.getUndefined();
 }
 
+static napi_value updateState(napi_env env, napi_callback_info info) {
+    ArkJS arkJs(env);
+    auto args = arkJs.getCallbackArgs(info, 3);
+    auto componentName = arkJs.getString(args[0]);
+    auto tag = arkJs.getDouble(args[1]);
+    auto state = args[2];
+    rnInstance->updateState(env, componentName, static_cast<facebook::react::Tag>(tag), state);
+    return arkJs.getUndefined();
+}
+
 EXTERN_C_START
 static napi_value Init(napi_env env, napi_value exports) {
     napi_property_descriptor desc[] = {
@@ -154,7 +164,8 @@ static napi_value Init(napi_env env, napi_value exports) {
         {"registerTurboModuleProvider", nullptr, registerTurboModuleProvider, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"add", nullptr, add, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"callRNFunction", nullptr, callRNFunction, nullptr, nullptr, nullptr, napi_default, nullptr},
-        {"onMemoryLevel", nullptr, onMemoryLevel, nullptr, nullptr, nullptr, napi_default, nullptr}};
+        {"onMemoryLevel", nullptr, onMemoryLevel, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"updateState", nullptr, updateState, nullptr, nullptr, nullptr, napi_default, nullptr}};
 
     napi_define_properties(env, exports, sizeof(desc) / sizeof(napi_property_descriptor), desc);
     return exports;

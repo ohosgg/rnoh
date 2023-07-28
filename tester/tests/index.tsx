@@ -12,6 +12,7 @@ export * from './KeyboardTest';
 export * from './LayoutAnimationsTest';
 export * from './LinkingTest';
 export * from './MiscTest';
+export * from './ModalTest';
 export * from './NativeEventEmitterTest';
 export * from './NetworkingTest';
 export * from './PanResponderTest';

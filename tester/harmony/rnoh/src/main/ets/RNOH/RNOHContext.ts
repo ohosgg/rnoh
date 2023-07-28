@@ -40,9 +40,11 @@ export class RNOHContext {
               public surfaceLifecycle: SurfaceLifecycle,
               public rnInstanceManager: RNInstanceManager,
               public logger: RNOHLogger) {
-    this.descriptorRegistry = new DescriptorRegistry({
-      '1': { ...rootDescriptor },
-    });
+    this.descriptorRegistry = new DescriptorRegistry(
+      {
+        '1': { ...rootDescriptor },
+      },
+      __napiBridge.updateState.bind(__napiBridge));
     this.commandDispatcher = new CommandDispatcher();
   }
 }

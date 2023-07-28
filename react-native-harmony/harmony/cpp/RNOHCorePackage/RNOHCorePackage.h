@@ -6,6 +6,7 @@
 #include <react/renderer/components/text/ParagraphComponentDescriptor.h>
 #include <react/renderer/components/textinput/TextInputComponentDescriptor.h>
 #include <react/renderer/components/scrollview/ScrollViewComponentDescriptor.h>
+#include <react/renderer/components/modal/ModalHostViewComponentDescriptor.h>
 #include "RNOH/Package.h"
 #include "RNOHCorePackage/TurboModules/AppStateTurboModule.h"
 #include "RNOHCorePackage/TurboModules/DeviceEventManagerTurboModule.h"
@@ -25,9 +26,12 @@
 #include "RNOHCorePackage/ComponentBinders/ScrollViewComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/TextComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/TextInputComponentNapiBinder.h"
+#include "RNOHCorePackage/ComponentBinders/ModalHostViewJSIBinder.h"
+#include "RNOHCorePackage/ComponentBinders/ModalHostViewNapiBinder.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/TouchEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/TextInputChangeEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/ScrollEventEmitRequestHandler.h"
+#include "RNOHCorePackage/EventEmitRequestHandlers/ModalEventEmitRequestHandler.h"
 #include "RNOHCorePackage/TurboModules/Animated/NativeAnimatedTurboModule.h"
 
 namespace rnoh {
@@ -79,7 +83,7 @@ class RNOHCorePackage : public Package {
             facebook::react::concreteComponentDescriptorProvider<facebook::react::ParagraphComponentDescriptor>(),
             facebook::react::concreteComponentDescriptorProvider<facebook::react::TextInputComponentDescriptor>(),
             facebook::react::concreteComponentDescriptorProvider<facebook::react::ScrollViewComponentDescriptor>(),
-        };
+            facebook::react::concreteComponentDescriptorProvider<facebook::react::ModalHostViewComponentDescriptor>()};
     }
 
     ComponentJSIBinderByString createComponentJSIBinderByName() override {
@@ -89,7 +93,8 @@ class RNOHCorePackage : public Package {
             {"RCTVirtualText", std::make_shared<ViewComponentJSIBinder>()},
             {"RCTSinglelineTextInputView", std::make_shared<ViewComponentJSIBinder>()},
             {"RCTScrollView", std::make_shared<ScrollViewComponentJSIBinder>()},
-            {"RCTScrollContentView", std::make_shared<ViewComponentJSIBinder>()}};
+            {"RCTScrollContentView", std::make_shared<ViewComponentJSIBinder>()},
+            {"RCTModalHostView", std::make_shared<ModalHostViewJSIBinder>()}};
     };
 
     ComponentNapiBinderByString createComponentNapiBinderByName() override {
@@ -99,13 +104,15 @@ class RNOHCorePackage : public Package {
             {"Image", std::make_shared<ImageComponentNapiBinder>()},
             {"Paragraph", std::make_shared<TextComponentNapiBinder>()},
             {"ScrollView", std::make_shared<ScrollViewComponentNapiBinder>()},
-            {"TextInput", std::make_shared<TextInputComponentNapiBinder>()}};
+            {"TextInput", std::make_shared<TextInputComponentNapiBinder>()},
+            {"ModalHostView", std::make_shared<ModalHostViewNapiBinder>()}};
     };
 
     EventEmitRequestHandlers createEventEmitRequestHandlers() override {
         return {std::make_shared<TouchEventEmitRequestHandler>(),
                 std::make_shared<TextInputChangeEventEmitRequestHandler>(),
-                std::make_shared<ScrollEventEmitRequestHandler>()};
+                std::make_shared<ScrollEventEmitRequestHandler>(),
+                std::make_shared<ModalEventEmitRequestHandler>()};
     }
 };
 

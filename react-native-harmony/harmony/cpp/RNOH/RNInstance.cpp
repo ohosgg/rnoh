@@ -5,7 +5,7 @@
 #include "RNOH/EventBeat.h"
 #include "hermes/executor/HermesExecutorFactory.h"
 #include <react/renderer/componentregistry/ComponentDescriptorProvider.h>
-#include "RNOH/EventEmitterRegistry.h"
+#include "RNOH/ShadowViewRegistry.h"
 #include "RNOH/TurboModuleProvider.h"
 #include "RNOH/TurboModuleFactory.h"
 #include "RNInstance.h"
@@ -14,10 +14,10 @@ using namespace facebook;
 using namespace rnoh;
 
 void RNInstance::registerSurface(
-    RNInstance::MutationsListener mutationsListener,
-    MountingManager::CommandDispatcher commandDispatcher) {
-    this->mutationsListener = mutationsListener;
-    this->commandDispatcher = commandDispatcher;
+    RNInstance::MutationsListener &&mutationsListener,
+    MountingManager::CommandDispatcher &&commandDispatcher) {
+    this->mutationsListener = std::move(mutationsListener);
+    this->commandDispatcher = std::move(commandDispatcher);
 }
 
 void RNInstance::start() {
@@ -82,7 +82,7 @@ void RNInstance::initializeScheduler() {
 
     this->schedulerDelegate = std::make_unique<SchedulerDelegate>(MountingManager(
         taskExecutor,
-        eventEmitterRegistry,
+        shadowViewRegistry,
         [this](react::ShadowViewMutationList mutations) {
             this->mutationsListener(this->m_mutationsToNapiConverter, mutations);
         },
@@ -146,7 +146,7 @@ void rnoh::RNInstance::emitComponentEvent(napi_env env, react::Tag tag, std::str
         .tag = tag,
         .eventName = std::move(eventName),
         .payload = payload,
-        .eventEmitterRegistry = this->eventEmitterRegistry,
+        .shadowViewRegistry = this->shadowViewRegistry,
     };
 
     if (m_eventDispatcher != nullptr) {
@@ -163,6 +163,12 @@ void rnoh::RNInstance::onMemoryLevel(size_t memoryLevel) {
     static const int memoryLevels[] = {5, 10, 15};
     if (this->instance) {
         this->instance->handleMemoryPressure(memoryLevels[memoryLevel]);
+    }
+}
+
+void rnoh::RNInstance::updateState(napi_env env, std::string const &componentName, facebook::react::Tag tag, napi_value newState) {
+    if (auto state = shadowViewRegistry->getFabricState<facebook::react::State>(tag)) {
+        m_mutationsToNapiConverter.updateState(env, componentName, state, newState);
     }
 }
 

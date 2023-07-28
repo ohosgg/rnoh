@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 #include <napi/native_api.h>
-#include "RNOH/EventEmitterRegistry.h"
+#include "RNOH/ShadowViewRegistry.h"
 namespace rnoh {
 
 class EventEmitRequestHandler {
@@ -16,7 +16,7 @@ class EventEmitRequestHandler {
         facebook::react::Tag tag;
         std::string eventName;
         napi_value payload;
-        std::shared_ptr<EventEmitterRegistry> eventEmitterRegistry;
+        std::shared_ptr<ShadowViewRegistry> shadowViewRegistry;
     };
 
     virtual void handleEvent(Context const &ctx) = 0;

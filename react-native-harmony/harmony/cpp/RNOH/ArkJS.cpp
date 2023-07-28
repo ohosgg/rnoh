@@ -348,6 +348,11 @@ RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, napi
     return *this;
 }
 
+RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, bool value) {
+    napi_set_named_property(m_env, m_object, name, m_arkJs.createBoolean(value));
+    return *this;
+}
+
 RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, int value) {
     napi_set_named_property(m_env, m_object, name, m_arkJs.createInt(value));
     return *this;

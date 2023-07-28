@@ -148,6 +148,8 @@ class RNOHNapiObjectBuilder {
 
     RNOHNapiObjectBuilder &addProperty(const char *name, napi_value value);
 
+    RNOHNapiObjectBuilder &addProperty(const char *name, bool value);
+
     RNOHNapiObjectBuilder &addProperty(const char *name, int value);
 
     RNOHNapiObjectBuilder &addProperty(const char *name, std::array<float, 16> matrix);
