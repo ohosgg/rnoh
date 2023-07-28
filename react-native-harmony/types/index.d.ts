@@ -91,3 +91,9 @@ export declare function registerViewConfig(
 ): any;
 
 export declare const ReactNativeViewAttributes: Record;
+
+export declare function dispatchCommand(
+  currentRef: any,
+  commandName: string,
+  args: any
+);

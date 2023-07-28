@@ -133,5 +133,9 @@ module.exports = {
   get ReactNativeViewAttributes() {
     return require('react-native/Libraries/Components/View/ReactNativeViewAttributes');
   },
+  get dispatchCommand() {
+    return require('react-native/Libraries/Renderer/shims/ReactNative')
+      .dispatchCommand;
+  },
   // END: react-native-harmony specific exports
 };
