@@ -46,7 +46,7 @@ void AnimatedNodesManager::createNode(facebook::react::Tag tag, folly::dynamic c
     } else if (type == "division") {
         node = std::make_unique<DivisionAnimatedNode>(config, *this);
     } else {
-        throw new std::runtime_error("Unsupported node type: " + type);
+        throw std::runtime_error("Unsupported animated node type: " + type);
     }
 
     node->tag_ = tag;
@@ -160,7 +160,7 @@ void AnimatedNodesManager::startAnimatingNode(facebook::react::Tag animationId, 
     if (type == "frames") {
         driver = std::make_unique<FrameBasedAnimationDriver>(animationId, nodeTag, *this, config, std::move(endCallback));
     } else {
-        throw new std::runtime_error("Unsupported animation type: " + type);
+        throw std::runtime_error("Unsupported animation type: " + type);
     }
 
     m_animationById.insert({animationId, std::move(driver)});
@@ -275,7 +275,7 @@ void AnimatedNodesManager::updateNodes(std::vector<facebook::react::Tag> nodeTag
 
     if (activeNodesCount != updatedNodesCount) {
         // if not all active nodes were updated, it means there's a cycle in the graph
-        throw new std::runtime_error(
+        throw std::runtime_error(
             "There were " + std::to_string(activeNodesCount) + " active nodes, but only " + std::to_string(updatedNodesCount) + " were updated");
     }
 }

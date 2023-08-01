@@ -37,7 +37,7 @@ class AssociativeOperationNode : public ValueAnimatedNode {
 struct SafeDivides {
     double operator()(double a, double b) {
         if (b == 0) {
-            throw new std::runtime_error("Division by zero in Animated.divide node");
+            throw std::runtime_error("Division by zero in Animated.divide node");
         }
         return a / b;
     }

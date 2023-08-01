@@ -13,7 +13,7 @@ static Transform applyTransformOperation(Transform const &transform, std::string
     } else if (property == "translateY") {
         operation = Transform::Translate(0, value, 0);
     } else {
-        throw new std::runtime_error("Unsupported transform property " + property);
+        throw std::runtime_error("Unsupported animated transform property " + property);
     }
 
     return transform * operation;

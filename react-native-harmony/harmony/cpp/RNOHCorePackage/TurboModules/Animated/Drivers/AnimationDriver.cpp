@@ -11,7 +11,7 @@ AnimationDriver::AnimationDriver(react::Tag animationId, react::Tag animatedNode
       endCallback_(std::move(endCallback)) {}
 
 void AnimationDriver::resetConfig(folly::dynamic const &config) {
-    throw new std::runtime_error("AnimationDriver::resetConfig() is not implemented");
+    throw std::runtime_error("AnimationDriver::resetConfig() is not implemented");
 }
 
 facebook::react::Tag AnimationDriver::getId() const {

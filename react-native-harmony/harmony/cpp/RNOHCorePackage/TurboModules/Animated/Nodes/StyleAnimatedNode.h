@@ -27,7 +27,7 @@ public:
             } else if (auto transformNode = dynamic_cast<TransformAnimatedNode*>(node); transformNode != nullptr) {
                 style[key] = transformNode->getTransform();
             } else {
-                throw new std::runtime_error("Unsupported node type");
+                throw std::runtime_error("Unsupported style animated node type");
             }
         }
         return style;

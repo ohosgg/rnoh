@@ -26,7 +26,7 @@ public:
 
     void disconnectFromView(facebook::react::Tag viewTag) {
         if (m_viewTag != viewTag) {
-            throw new std::runtime_error("Attempting to disconnect view that has not been connected with the given animated node");
+            throw std::runtime_error("Attempting to disconnect view that has not been connected with the given animated node");
         }
         m_viewTag = std::nullopt;
     }
@@ -44,7 +44,7 @@ public:
             } else if (auto valueNode = dynamic_cast<ValueAnimatedNode*>(node); valueNode != nullptr) {
                 props[key] = valueNode->getValue();
             } else {
-                throw new std::runtime_error("Unsupported node type");
+                throw std::runtime_error("Unsupported property animated node type");
             }
         }
 

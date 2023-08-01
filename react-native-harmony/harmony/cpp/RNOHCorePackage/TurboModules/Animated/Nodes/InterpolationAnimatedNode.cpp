@@ -50,7 +50,7 @@ void InterpolationAnimatedNode::onAttachedToNode(facebook::react::Tag tag) {
 
 void InterpolationAnimatedNode::onDetachedFromNode(facebook::react::Tag tag) {
     if (tag != m_parent) {
-        throw new std::runtime_error("Invalid parent tag provided: " + std::to_string(tag));
+        throw std::runtime_error("Trying to detach animated node from node " + std::to_string(tag) + " which is not its parent");
     }
     m_parent = std::nullopt;
 }
@@ -73,7 +73,8 @@ double InterpolationAnimatedNode::interpolate(
         } else if (extrapolateLeft == ExtrapolateType::EXTRAPOLATE_TYPE_EXTEND) {
             // noop
         } else {
-            throw new std::runtime_error("Invalid extrapolation type for left extrapolation");
+            // this should never happen, since we've already checked the extrapolation type
+            throw std::runtime_error("Invalid extrapolation type for left extrapolation");
         }
     }
 
@@ -85,7 +86,8 @@ double InterpolationAnimatedNode::interpolate(
         } else if (extrapolateRight == ExtrapolateType::EXTRAPOLATE_TYPE_EXTEND) {
             // noop
         } else {
-            throw new std::runtime_error("Invalid extrapolation type for right extrapolation");
+            // this should never happen
+            throw std::runtime_error("Invalid extrapolation type for right extrapolation");
         }
     }
 
@@ -109,7 +111,7 @@ double InterpolationAnimatedNode::interpolate(
 
 ValueAnimatedNode &InterpolationAnimatedNode::getParentNode() const {
     if (m_parent == std::nullopt) {
-        throw new std::runtime_error("Parent node has not been set");
+        throw std::runtime_error("Parent animated node has not been set");
     }
     return m_nodesManager.getValueNodeByTag(m_parent.value());
 }
@@ -122,7 +124,7 @@ InterpolationAnimatedNode::ExtrapolateType InterpolationAnimatedNode::extrapolat
     } else if (extrapolateType == "extend") {
         return ExtrapolateType::EXTRAPOLATE_TYPE_EXTEND;
     } else {
-        throw new std::runtime_error("Invalid extrapolation type " + extrapolateType + " provided.");
+        throw std::runtime_error("Invalid extrapolation type " + extrapolateType + " provided.");
     }
 }
 

@@ -39,7 +39,7 @@ export class ExceptionsManagerTurboModule extends TurboModule {
   }
 
   reportException(data: ExceptionData): void {
-    this.ctx.logger.error(`ExceptionsManager::reportException ${data.message}`);
+    this.ctx.logger.error(`ExceptionsManager::reportException ${data.originalMessage}`);
     data.stack.forEach((frame) => {
       this.ctx.logger.error(JSON.stringify(frame));
     });
