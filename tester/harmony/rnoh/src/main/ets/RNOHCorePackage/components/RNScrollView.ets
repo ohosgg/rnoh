@@ -183,6 +183,7 @@ export struct RNScrollView {
         .width(this.descriptor.state.contentSizeWidth)
         .height(this.descriptor.state.contentSizeHeight)
         .backgroundColor(Color.Transparent)
+        .margin({top: -this.descriptor.props.borderWidth, left: -this.descriptor.props.borderWidth})
       }
       .width("100%")
       .height("100%")
