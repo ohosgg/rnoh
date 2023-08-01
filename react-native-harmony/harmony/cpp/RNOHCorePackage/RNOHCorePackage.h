@@ -6,6 +6,7 @@
 #include <react/renderer/components/text/ParagraphComponentDescriptor.h>
 #include <react/renderer/components/textinput/TextInputComponentDescriptor.h>
 #include <react/renderer/components/scrollview/ScrollViewComponentDescriptor.h>
+#include <react/renderer/components/rncore/ComponentDescriptors.h>
 #include <react/renderer/components/modal/ModalHostViewComponentDescriptor.h>
 #include "RNOH/Package.h"
 #include "RNOHCorePackage/TurboModules/AppStateTurboModule.h"
@@ -24,6 +25,8 @@
 #include "RNOHCorePackage/ComponentBinders/ImageComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ScrollViewComponentJSIBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ScrollViewComponentNapiBinder.h"
+#include "RNOHCorePackage/ComponentBinders/SwitchComponentJSIBinder.h"
+#include "RNOHCorePackage/ComponentBinders/SwitchComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/TextComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/TextInputComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ModalHostViewJSIBinder.h"
@@ -32,6 +35,7 @@
 #include "RNOHCorePackage/EventEmitRequestHandlers/TextInputChangeEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/ScrollEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/ModalEventEmitRequestHandler.h"
+#include "RNOHCorePackage/EventEmitRequestHandlers/SwitchEventEmitRequestHandler.h"
 #include "RNOHCorePackage/TurboModules/Animated/NativeAnimatedTurboModule.h"
 
 namespace rnoh {
@@ -83,10 +87,12 @@ class RNOHCorePackage : public Package {
             facebook::react::concreteComponentDescriptorProvider<facebook::react::ParagraphComponentDescriptor>(),
             facebook::react::concreteComponentDescriptorProvider<facebook::react::TextInputComponentDescriptor>(),
             facebook::react::concreteComponentDescriptorProvider<facebook::react::ScrollViewComponentDescriptor>(),
-            facebook::react::concreteComponentDescriptorProvider<facebook::react::ModalHostViewComponentDescriptor>()};
+            facebook::react::concreteComponentDescriptorProvider<facebook::react::ModalHostViewComponentDescriptor>(),
+            facebook::react::concreteComponentDescriptorProvider<facebook::react::SwitchComponentDescriptor>()};
     }
 
-    ComponentJSIBinderByString createComponentJSIBinderByName() override {
+    ComponentJSIBinderByString
+    createComponentJSIBinderByName() override {
         return {
             {"RCTView", std::make_shared<ViewComponentJSIBinder>()},
             {"RCTImageView", std::make_shared<ImageComponentJSIBinder>()},
@@ -94,7 +100,8 @@ class RNOHCorePackage : public Package {
             {"RCTSinglelineTextInputView", std::make_shared<ViewComponentJSIBinder>()},
             {"RCTScrollView", std::make_shared<ScrollViewComponentJSIBinder>()},
             {"RCTScrollContentView", std::make_shared<ViewComponentJSIBinder>()},
-            {"RCTModalHostView", std::make_shared<ModalHostViewJSIBinder>()}};
+            {"RCTModalHostView", std::make_shared<ModalHostViewJSIBinder>()},
+            {"RCTSwitch", std::make_shared<SwitchComponentJSIBinder>()}};
     };
 
     ComponentNapiBinderByString createComponentNapiBinderByName() override {
@@ -105,14 +112,16 @@ class RNOHCorePackage : public Package {
             {"Paragraph", std::make_shared<TextComponentNapiBinder>()},
             {"ScrollView", std::make_shared<ScrollViewComponentNapiBinder>()},
             {"TextInput", std::make_shared<TextInputComponentNapiBinder>()},
-            {"ModalHostView", std::make_shared<ModalHostViewNapiBinder>()}};
+            {"ModalHostView", std::make_shared<ModalHostViewNapiBinder>()},
+            {"Switch", std::make_shared<SwitchComponentNapiBinder>()}};
     };
 
     EventEmitRequestHandlers createEventEmitRequestHandlers() override {
         return {std::make_shared<TouchEventEmitRequestHandler>(),
                 std::make_shared<TextInputChangeEventEmitRequestHandler>(),
                 std::make_shared<ScrollEventEmitRequestHandler>(),
-                std::make_shared<ModalEventEmitRequestHandler>()};
+                std::make_shared<ModalEventEmitRequestHandler>(),
+                std::make_shared<SwitchEventEmitRequestHandler>()};
     }
 };
 

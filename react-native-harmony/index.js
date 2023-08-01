@@ -1,7 +1,5 @@
 module.exports = {
-  // get Switch() {
-  //   return require('react-native/Libraries/Components/Switch/Switch').default;
-  // },
+ 
   get Animated() {
     return require('react-native/Libraries/Animated/Animated').default;
   },
@@ -72,6 +70,9 @@ module.exports = {
   },
   get StyleSheet() {
     return require('react-native/Libraries/StyleSheet/StyleSheet');
+  },
+  get Switch() {
+    return require('react-native/Libraries/Components/Switch/Switch').default;
   },
   get Text() {
     return require('react-native/Libraries/Text/Text');

@@ -202,6 +202,13 @@ bool ArkJS::getBoolean(napi_value value) {
     return result;
 }
 
+int ArkJS::getInteger(napi_value value) {
+    int result;
+    auto status = napi_get_value_int32(m_env, value, &result);
+    this->maybeThrowFromStatus(status, "Failed to retrieve integer value");
+    return result;
+}
+
 double ArkJS::getDouble(napi_value value) {
     double result;
     auto status = napi_get_value_double(m_env, value, &result);
