@@ -264,7 +264,7 @@ FlatList, a common React Native component, sends create, update and delete opera
 
 ArkUI > react-native-android > react-native-harmony
 
-Stutter is noticeably bigger on react-native-harmony than on ArkUI. The stutter is similar, when ArkUI renders 5000 components and react-native-harmony 500. react-native-android doesn't seem to suffer from stuttering when rendering 500 components. When rendering 5000 components, RN Android suffered from bigger stutters than ArkUI and RN Android updated the UI couple of seconds instead of every second as specified in the code. No metrics were gathered, because measuring stuttering is difficult/unreliable. Further testing with a setup on ArkUI similar to the one used by react-native-harmony is needed.
+Stutters are noticeably larger on react-native-harmony than on ArkUI. Stutters are similar, when ArkUI renders 5000 components and react-native-harmony 500. react-native-android doesn't seem to suffer from stuttering when rendering 500 components. When rendering 5000 components, RN Android suffered from bigger stutters than pure ArkUI and it took a couple of seconds for RN Android to update the UI despite specyfing that it should happend every second. No metrics were gathered, because measuring stuttering is difficult/unreliable with current tools. Further testing with a setup on ArkUI similar to the one used by react-native-harmony is needed.
 
 ### Details
 - Commit: https://gl.swmansion.com/rnoh/react-native-harmony/-/commit/71befcb02caa1b73c9b802d740ac11c59ab3c73b
