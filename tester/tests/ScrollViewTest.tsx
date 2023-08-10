@@ -86,6 +86,40 @@ export function ScrollViewTest() {
           </View>
         </Modal>
       </TestCase>
+      <TestCase itShould="[FAILS] support sticky headers">
+        {/* this test fails on Android (and possible on Harmony) */}
+        <Modal>
+          <View
+            style={{
+              width: 200,
+              height: '100%',
+            }}>
+            <ScrollView
+              style={{width: '100%', height: '100%'}}
+              stickyHeaderIndices={[0, 1]}>
+              <View
+                style={{
+                  width: '100%',
+                  height: 50,
+                  backgroundColor: 'red',
+                }}
+              />
+              {new Array(20).fill(0).map((_, idx) => {
+                return (
+                  <View
+                    key={idx}
+                    style={{
+                      width: '100%',
+                      height: 50,
+                      backgroundColor: idx % 2 ? 'pink' : 'blue',
+                    }}
+                  />
+                );
+              })}
+            </ScrollView>
+          </View>
+        </Modal>
+      </TestCase>
     </TestSuite>
   );
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, FlatList, StyleSheet, Text} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
+import {Modal} from '../components';
 
 const DATA = [
   {
@@ -36,6 +37,40 @@ export const FlatListTest = () => {
             keyExtractor={item => item.id}
           />
         </View>
+      </TestCase>
+      <TestCase itShould="support sticky headers">
+        <Modal>
+          <View style={{height: 100, backgroundColor: '#fff'}}>
+            <FlatList
+              data={DATA}
+              renderItem={({item}) => (
+                <View
+                  style={{
+                    padding: 20,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#ccc',
+                  }}>
+                  <Text style={{fontSize: 16}}>{item.title}</Text>
+                </View>
+              )}
+              keyExtractor={item => item.id}
+              ListHeaderComponent={() => (
+                <View
+                  style={{
+                    backgroundColor: '#f0f0f0',
+                    padding: 20,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                    Sticky Header
+                  </Text>
+                </View>
+              )}
+              stickyHeaderIndices={[0]} // Make the header sticky
+            />
+          </View>
+        </Modal>
       </TestCase>
     </TestSuite>
   );
