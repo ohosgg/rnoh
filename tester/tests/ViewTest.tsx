@@ -73,6 +73,28 @@ export function ViewTest() {
           />
         </View>
       </TestCase>
+      <TestCase itShould="render blue rectangle (zIndex test)">
+        <View>
+          <View
+            style={{
+              width: 64,
+              height: 64,
+              backgroundColor: 'blue',
+              zIndex: 2,
+              position: 'relative', // https://github.com/facebook/react-native/issues/38513
+            }}
+          />
+          <View
+            style={{
+              width: 64,
+              height: 64,
+              backgroundColor: 'red',
+              zIndex: 1,
+              position: 'absolute',
+            }}
+          />
+        </View>
+      </TestCase>
     </TestSuite>
   );
 }
