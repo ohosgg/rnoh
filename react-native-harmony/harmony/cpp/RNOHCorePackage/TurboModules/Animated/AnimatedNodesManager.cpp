@@ -124,12 +124,20 @@ void AnimatedNodesManager::setValue(facebook::react::Tag tag, double value) {
     stopAnimationsForNode(tag);
     m_nodeTagsToUpdate.insert(tag);
     node.setValue(value);
+    if (!m_isRunningAnimations) {
+        m_isRunningAnimations = true;
+        m_scheduleUpdateFn();
+    }
 }
 
 void AnimatedNodesManager::setOffset(facebook::react::Tag tag, double offset) {
     auto &node = getValueNodeByTag(tag);
     m_nodeTagsToUpdate.insert(tag);
     node.setOffset(offset);
+    if (!m_isRunningAnimations) {
+        m_isRunningAnimations = true;
+        m_scheduleUpdateFn();
+    }
 }
 
 void AnimatedNodesManager::flattenOffset(facebook::react::Tag tag) {

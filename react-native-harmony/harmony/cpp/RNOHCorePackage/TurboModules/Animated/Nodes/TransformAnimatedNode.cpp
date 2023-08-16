@@ -12,6 +12,20 @@ static Transform applyTransformOperation(Transform const &transform, std::string
         operation = Transform::Translate(value, 0, 0);
     } else if (property == "translateY") {
         operation = Transform::Translate(0, value, 0);
+    } else if (property == "scale") {
+        operation = Transform::Scale(value, value, 1);
+    } else if (property == "scaleX") {
+        operation = Transform::Scale(value, 1, 1);
+    } else if (property == "scaleY") {
+        operation = Transform::Scale(1, value, 1);
+    } else if (property == "rotate") {
+        operation = Transform::Rotate(0, 0, value);
+    } else if (property == "rotateX") {
+        operation = Transform::Rotate(value, 0, 0);
+    } else if (property == "rotateY") {
+        operation = Transform::Rotate(0, value, 0);
+    } else if (property == "rotateZ") {
+        operation = Transform::Rotate(0, 0, value);
     } else {
         throw std::runtime_error("Unsupported animated transform property " + property);
     }

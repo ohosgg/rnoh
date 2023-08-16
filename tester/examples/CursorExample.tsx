@@ -7,13 +7,11 @@ export function CursorExample() {
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: Animated.event([null, {dx: pan.x, dy: pan.y}], {
-        useNativeDriver: false,
-      }),
+      onPanResponderMove: Animated.event([null, {dx: pan.x, dy: pan.y}]),
       onPanResponderRelease: () => {
-        Animated.spring(pan, {
+        Animated.timing(pan, {
           toValue: {x: 0, y: 0},
-          useNativeDriver: false,
+          useNativeDriver: true,
         }).start();
       },
     }),
@@ -33,7 +31,7 @@ export function CursorExample() {
       <Animated.View
         {...panResponder.panHandlers}
         style={[
-          pan.getLayout(),
+          {transform: pan.getTranslateTransform()},
           {width: 50, height: 50, backgroundColor: 'red', position: 'absolute'},
         ]}>
         <Text style={{width: '100%', height: '100%'}}>Drag me around</Text>
