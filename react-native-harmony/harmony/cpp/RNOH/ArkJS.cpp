@@ -257,9 +257,11 @@ std::string ArkJS::getString(napi_value value) {
 
 void ArkJS::maybeThrowFromStatus(napi_status status, const char *message) {
     if (status != napi_ok) {
+        napi_extended_error_info const *error_info;
+        napi_get_last_error_info(m_env, &error_info);
         std::string msg_str = message;
         std::string error_code_msg_str = ". Error code: ";
-        std::string status_str = std::to_string(status);
+        std::string status_str = error_info->error_message;
         std::string full_msg = msg_str + error_code_msg_str + status_str;
         auto c_str = full_msg.c_str();
         this->throwError(c_str);
