@@ -12,6 +12,7 @@ import {
   FlatListVsScrollViewExample,
   LargeImageScrollExample,
   TogglingComponentExample,
+  StickyHeadersExample,
 } from './examples';
 import {Button, NavigationContainer, Page} from './components';
 import {Benchmarker, DeepTree, SierpinskiTriangle} from './benchmarks';
@@ -113,6 +114,9 @@ function App() {
         </Page>
         <Page name="EXAMPLE: TOGGLING COMPONENT">
           <TogglingComponentExample />
+        </Page>
+        <Page name="EXAMPLE: STICKY HEADERS (example doesn't work on Android)">
+          <StickyHeadersExample />
         </Page>
         <View
           style={[

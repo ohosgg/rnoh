@@ -7,3 +7,4 @@ export * from './ImageGalleryExample';
 export * from './FlatListVsScrollViewExample';
 export * from './LargeImageScrollExample';
 export * from './TogglingComponentExample';
+export * from './StickyHeadersExample';
