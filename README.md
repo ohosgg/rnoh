@@ -71,9 +71,8 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 - [ ] DevSettings
 - [ ] Dimensions
 - [x] Easing
-- [ ] findNodeHandle
+- [x] findNodeHandle
 - [x] I18nManager
-- [ ] findNodeHandle
 - [x] InteractionManager
 - [x] Keyboard
 - [x] LayoutAnimation (stub)
@@ -99,7 +98,7 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 
 ### Plugins
 
-- [ ] DeviceEventEmitter
+- [x] DeviceEventEmitter
 - [ ] NativeAppEventEmitter
 - [x] NativeModules
 - [x] Platform

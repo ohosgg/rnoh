@@ -1,5 +1,4 @@
 module.exports = {
- 
   get Animated() {
     return require('react-native/Libraries/Animated/Animated').default;
   },
@@ -18,8 +17,16 @@ module.exports = {
   get Dimensions() {
     return require('react-native/Libraries/Utilities/Dimensions');
   },
+  get DeviceEventEmitter() {
+    return require('react-native/Libraries/EventEmitter/RCTDeviceEventEmitter')
+      .default;
+  },
   get Easing() {
     return require('react-native/Libraries/Animated/Easing').default;
+  },
+  get findNodeHandle() {
+    return require('react-native/Libraries/ReactNative/RendererProxy')
+      .findNodeHandle;
   },
   get FlatList() {
     return require('react-native/Libraries/Lists/FlatList');

@@ -4,6 +4,8 @@ import {
   ReactNativeViewAttributes,
   dispatchCommand,
   Platform,
+  DeviceEventEmitter,
+  findNodeHandle,
 } from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 
@@ -27,6 +29,19 @@ export const MiscTest = () => {
           }}
         />
       )}
+
+      <TestCase
+        itShould="export DeviceEventEmitter"
+        fn={({expect}) => {
+          expect(DeviceEventEmitter).to.be.not.undefined;
+        }}
+      />
+      <TestCase
+        itShould="export findNodeHandle"
+        fn={({expect}) => {
+          expect(findNodeHandle).to.be.not.undefined;
+        }}
+      />
     </TestSuite>
   );
 };
