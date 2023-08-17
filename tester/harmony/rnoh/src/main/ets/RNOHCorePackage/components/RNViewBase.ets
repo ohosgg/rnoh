@@ -82,7 +82,10 @@ function getPageOffset(ctx: RNOHContext, tag: Tag) {
 }
 
 export function handleTouchEvent(ctx: RNOHContext, event: TouchEvent, tag: Tag) {
-  event?.stopPropagation();
+  if ('reactHandled' in event && event['reactHandled']) {
+    return;
+  }
+  event['reactHandled'] = true;
   const {x, y} = getPageOffset(ctx, tag);
   for (const touch of event.touches) {
     touch['pageX'] = touch.screenX + x;
