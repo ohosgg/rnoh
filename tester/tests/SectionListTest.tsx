@@ -156,7 +156,7 @@ export const SectionListTest = () => {
           <ScrollToLocationOffset />
         </Modal>
       </TestCase>
-      <TestCase itShould="[FAILS] show vertical scroll indicator">
+      <TestCase itShould="show vertical scroll indicator">
         <Modal>
           <SectionList {...commonProps} showsVerticalScrollIndicator={true} />
         </Modal>
@@ -164,6 +164,17 @@ export const SectionListTest = () => {
       <TestCase itShould="hide vertical scroll indicator">
         <Modal>
           <SectionList {...commonProps} showsVerticalScrollIndicator={false} />
+        </Modal>
+      </TestCase>
+      <TestCase itShould="show horizontal scroll indicator">
+        <Modal>
+          <View style={{width: 200, height: '100%'}}>
+            <SectionList
+              {...commonProps}
+              showsHorizontalScrollIndicator={true}
+              horizontal
+            />
+          </View>
         </Modal>
       </TestCase>
       <TestCase itShould="hide horizontal scroll indicator">

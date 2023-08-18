@@ -8,6 +8,8 @@ class ScrollViewComponentJSIBinder : public ViewComponentJSIBinder {
     facebook::jsi::Object createNativeProps(facebook::jsi::Runtime &rt) override {
         auto object = ViewComponentJSIBinder::createNativeProps(rt);
         object.setProperty(rt, "scrollEnabled", "boolean");
+        object.setProperty(rt, "showsHorizontalScrollIndicator", "boolean");
+        object.setProperty(rt, "showsVerticalScrollIndicator", "boolean");
         return object;
     }
 

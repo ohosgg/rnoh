@@ -28,19 +28,7 @@ export function ScrollViewTest() {
                 justifyContent: 'center',
               }}
               scrollEventThrottle={16}>
-              {new Array(10).fill(0).map((_, idx) => {
-                return (
-                  <View
-                    key={idx}
-                    style={{
-                      width: '100%',
-                      height: 50,
-                      backgroundColor: 'pink',
-                      marginBottom: 50,
-                    }}
-                  />
-                );
-              })}
+              <ScrollViewContent />
             </ScrollView>
           </View>
         </Modal>
@@ -120,6 +108,42 @@ export function ScrollViewTest() {
           </View>
         </Modal>
       </TestCase>
+      <TestCase itShould="show vertical scroll indicator">
+        <Modal>
+          <View style={{width: 200, height: '80%'}}>
+            <ScrollView showsVerticalScrollIndicator={true}>
+              <ScrollViewContent />
+            </ScrollView>
+          </View>
+        </Modal>
+      </TestCase>
+      <TestCase itShould="hide vertical scroll indicator">
+        <Modal>
+          <View style={{width: 200, height: '80%'}}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <ScrollViewContent />
+            </ScrollView>
+          </View>
+        </Modal>
+      </TestCase>
+      <TestCase itShould="show horizontal scroll indicator">
+        <Modal>
+          <View style={{width: 200, height: '80%'}}>
+            <ScrollView showsHorizontalScrollIndicator={true} horizontal>
+              <ScrollViewContentHorizontal />
+            </ScrollView>
+          </View>
+        </Modal>
+      </TestCase>
+      <TestCase itShould="hide horizontal scroll indicator">
+        <Modal>
+          <View style={{width: 200, height: '80%'}}>
+            <ScrollView showsHorizontalScrollIndicator={false} horizontal>
+              <ScrollViewContentHorizontal />
+            </ScrollView>
+          </View>
+        </Modal>
+      </TestCase>
     </TestSuite>
   );
 }
@@ -172,4 +196,36 @@ function MomentumTestCase() {
       </View>
     </>
   );
+}
+
+function ScrollViewContent() {
+  return new Array(10).fill(0).map((_, idx) => {
+    return (
+      <View
+        key={idx}
+        style={{
+          width: '100%',
+          height: 50,
+          backgroundColor: 'pink',
+          marginBottom: 50,
+        }}
+      />
+    );
+  })
+}
+
+function ScrollViewContentHorizontal() {
+  return new Array(10).fill(0).map((_, idx) => {
+    return (
+      <View
+        key={idx}
+        style={{
+          width: 50,
+          height: '100%',
+          backgroundColor: 'pink',
+          marginRight: 50,
+        }}
+      />
+    );
+  })
 }

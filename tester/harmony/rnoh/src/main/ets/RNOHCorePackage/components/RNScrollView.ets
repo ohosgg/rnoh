@@ -7,6 +7,8 @@ export type ScrollViewProps = ViewBaseProps & {
   contentOffsetY: number
   flexDirection: number
   bounces: boolean
+  showsHorizontalScrollIndicator: boolean
+  showsVerticalScrollIndicator: boolean
 }
 
 export type ScrollViewState = {
@@ -84,6 +86,14 @@ export struct RNScrollView {
     } else {
       return ScrollDirection.Vertical
     }
+  }
+
+  scrollBarState(): BarState {
+    if (((this.props.flexDirection === 2) && !this.props.showsHorizontalScrollIndicator)
+      || ((this.props.flexDirection !== 2) && !this.props.showsVerticalScrollIndicator)) {
+      return BarState.Off
+    }
+    return BarState.Auto
   }
 
   createScrollEvent() {
@@ -206,10 +216,10 @@ export struct RNScrollView {
       .height("100%")
       .align(Alignment.TopStart)
       .scrollable(this.scrollDirection())
-      .scrollBar(BarState.Off)
-      //    .scrollBarColor(Color.Gray)
-      //    .scrollBarWidth(30)
-      //    .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
+      .scrollBar(this.scrollBarState())
+         // .scrollBarColor(Color.Gray)
+         // .scrollBarWidth(30)
+         // .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
       .onScrollFrameBegin(this.onScroll.bind(this))
       .onScrollStop(this.onScrollEnd.bind(this))
     }
