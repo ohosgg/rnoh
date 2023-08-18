@@ -64,40 +64,6 @@ export type ViewBaseDescriptor = Descriptor<string, ViewBaseProps>
 
 export type ViewDynamicDescriptor = Descriptor<string, ViewDynamicProps>
 
-function getPageOffset(ctx: RNOHContext, tag: Tag) {
-  let x = 0;
-  let y = 0;
-
-  while (tag) {
-    const descriptor = ctx.descriptorRegistry.getDescriptor(tag);
-    if (descriptor?.type === "ScrollView") {
-      const state = descriptor.state as ScrollViewState;
-      x += state.contentOffsetX;
-      y += state.contentOffsetY;
-    }
-    tag = descriptor?.parentTag;
-  }
-
-  return { x, y }
-}
-
-export function handleTouchEvent(ctx: RNOHContext, event: TouchEvent, tag: Tag) {
-  if ('reactHandled' in event && event['reactHandled']) {
-    return;
-  }
-  event['reactHandled'] = true;
-  const {x, y} = getPageOffset(ctx, tag);
-  for (const touch of event.touches) {
-    touch['pageX'] = touch.screenX + x;
-    touch['pageY'] = touch.screenY + y;
-  }
-  for (const touch of event.changedTouches) {
-    touch['pageX'] = touch.screenX + x;
-    touch['pageY'] = touch.screenY + y;
-  }
-  ctx.rnInstanceManager.emitComponentEvent(tag, RNOHEventEmitRequestHandlerName.Touch, event)
-}
-
 function convertViewDynamicDescriptor(dynamicDescriptor: ViewDynamicDescriptor): ViewBaseDescriptor {
   const p = dynamicDescriptor.props
   return {
@@ -133,6 +99,7 @@ function convertMatrixArrayToMatrix4(transform: TransformMatrix) {
 
 @Component
 export struct RNViewBase {
+  private static lastTouchEventTimestamp = 0
   ctx: RNOHContext
   tag: number
   @BuilderParam renderChildren: () => void
@@ -161,8 +128,30 @@ export struct RNViewBase {
   }
 
   onTouchEvent(event: TouchEvent) {
-    if (this.descriptor.props.pointerEvents != "box-none")
-      handleTouchEvent(this.ctx, event, this.descriptor.tag)
+    if (this.descriptor.props.pointerEvents === "box-none") {
+      return;
+    }
+
+    // report a single event only to the innermost React component,
+    // since React handles event propagation on its own.
+    // We cannot use `event.stopPropagation` since it breaks other native components
+    // (e.g `Scroll` not stopping when touched)
+    // We identify TouchEvents by their timestamp, they should be unique enough.
+    if (RNViewBase.lastTouchEventTimestamp === event.timestamp) {
+      return;
+    }
+    RNViewBase.lastTouchEventTimestamp = event.timestamp
+
+    for (const touch of event.touches) {
+      touch['pageX'] = touch.screenX;
+      touch['pageY'] = touch.screenY;
+    }
+    for (const touch of event.changedTouches) {
+      touch['pageX'] = touch.screenX;
+      touch['pageY'] = touch.screenY;
+    }
+
+    this.ctx.rnInstanceManager.emitComponentEvent(this.tag, RNOHEventEmitRequestHandlerName.Touch, event)
   }
 
   getHitTestMode() {

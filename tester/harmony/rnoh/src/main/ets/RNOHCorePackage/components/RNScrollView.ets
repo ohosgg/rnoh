@@ -16,6 +16,11 @@ export type ScrollViewState = {
   contentSizeHeight: number
 }
 
+type Size = {
+  width: number
+  height: number
+}
+
 export type ScrollViewDescriptor = Descriptor<"ScrollView", ScrollViewProps, ScrollViewState>
 
 @Component
@@ -23,18 +28,20 @@ export struct RNScrollView {
   ctx: RNOHContext
   tag: number
   @BuilderParam renderDescriptors: () => void
-  @State descriptor: ScrollViewDescriptor = {} as ScrollViewDescriptor
+  @State props: ScrollViewProps = {} as ScrollViewProps
+  @State contentSize: Size = {} as Size
+  state: ScrollViewState = {} as ScrollViewState
   private scroller = new Scroller()
   private cleanupCommandCallback?: () => void = undefined
   private unregisterDescriptorChangesListener?: () => void = undefined
   private scrollState: ScrollState = ScrollState.Idle
 
   aboutToAppear() {
-    this.descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag)
+    const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag)
+    this.onDescriptorUpdate(descriptor)
+    this.state = descriptor.state
     this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
-      (newDescriptor) => {
-        this.descriptor = (newDescriptor as ScrollViewDescriptor)
-      }
+      this.onDescriptorUpdate.bind(this)
     )
     this.cleanupCommandCallback = this.ctx.commandDispatcher.registerCommandCallback(
       this.tag,
@@ -43,6 +50,15 @@ export struct RNScrollView {
           this.scrollTo(args[0], args[1], args[2]);
         }
       });
+  }
+
+  onDescriptorUpdate(newDescriptor: ScrollViewDescriptor) {
+    this.props = newDescriptor.props
+    const {contentSizeHeight, contentSizeWidth} = newDescriptor.state
+    this.contentSize = {
+      width: contentSizeWidth,
+      height: contentSizeHeight
+    }
   }
 
   aboutToDisappear() {
@@ -54,16 +70,16 @@ export struct RNScrollView {
     const animation = animated ? { duration: 1000, curve: Curve.Smooth } : undefined;
     this.scroller.scrollTo({ xOffset, yOffset, animation })
     this.ctx.rnInstanceManager.emitComponentEvent(
-      this.descriptor.tag,
+      this.tag,
       "onScroll",
       this.createScrollEvent()
     )
   }
 
   scrollDirection(): ScrollDirection {
-    if (!this.descriptor.props.scrollEnabled) {
+    if (!this.props.scrollEnabled) {
       return ScrollDirection.None
-    } else if (this.descriptor.props.flexDirection === 2) {
+    } else if (this.props.flexDirection === 2) {
       return ScrollDirection.Horizontal
     } else {
       return ScrollDirection.Vertical
@@ -75,16 +91,16 @@ export struct RNScrollView {
 
     return {
       contentSize: {
-        width: this.descriptor.state.contentSizeWidth,
-        height: this.descriptor.state.contentSizeHeight,
+        width: this.contentSize.width,
+        height: this.contentSize.height,
       },
       contentOffset: {
         x: xOffset,
         y: yOffset,
       },
       containerSize: {
-        width: this.descriptor.props.width,
-        height: this.descriptor.props.height,
+        width: this.props.width,
+        height: this.props.height,
       },
       zoomScale: 1,
     }
@@ -123,7 +139,7 @@ export struct RNScrollView {
     descriptor.state.contentOffsetY = yOffset;
 
     this.ctx.rnInstanceManager.emitComponentEvent(
-      this.descriptor.tag,
+      this.tag,
       "onScroll",
       this.createScrollEvent()
     )
@@ -131,7 +147,7 @@ export struct RNScrollView {
 
   onDragBegin() {
     this.ctx.rnInstanceManager.emitComponentEvent(
-      this.descriptor.tag,
+      this.tag,
       "onScrollBeginDrag",
       this.createScrollEvent()
     )
@@ -139,7 +155,7 @@ export struct RNScrollView {
 
   onDragEnd() {
     this.ctx.rnInstanceManager.emitComponentEvent(
-      this.descriptor.tag,
+      this.tag,
       "onScrollEndDrag",
       this.createScrollEvent()
     )
@@ -147,7 +163,7 @@ export struct RNScrollView {
 
   onMomentumBegin() {
     this.ctx.rnInstanceManager.emitComponentEvent(
-      this.descriptor.tag,
+      this.tag,
       "onMomentumScrollBegin",
       this.createScrollEvent()
     )
@@ -155,7 +171,7 @@ export struct RNScrollView {
 
   onMomentumEnd() {
     this.ctx.rnInstanceManager.emitComponentEvent(
-      this.descriptor.tag,
+      this.tag,
       "onMomentumScrollEnd",
       this.createScrollEvent()
     )
@@ -170,8 +186,9 @@ export struct RNScrollView {
     this.scrollState = ScrollState.Idle;
 
     const { xOffset, yOffset } = this.scroller.currentOffset();
-    this.descriptor.state.contentOffsetX = xOffset;
-    this.descriptor.state.contentOffsetY = yOffset;
+    this.state.contentOffsetX = xOffset;
+    this.state.contentOffsetY = yOffset;
+    this.ctx.descriptorRegistry.setState<ScrollViewState>(this.tag, this.state);
   }
 
   build() {
@@ -180,10 +197,10 @@ export struct RNScrollView {
         Stack() {
           this.renderDescriptors()
         }
-        .width(this.descriptor.state.contentSizeWidth)
-        .height(this.descriptor.state.contentSizeHeight)
+        .width(this.contentSize.width)
+        .height(this.contentSize.height)
         .backgroundColor(Color.Transparent)
-        .margin({top: -this.descriptor.props.borderWidth, left: -this.descriptor.props.borderWidth})
+        .margin({ top: -this.props.borderWidth, left: -this.props.borderWidth })
       }
       .width("100%")
       .height("100%")
@@ -192,7 +209,7 @@ export struct RNScrollView {
       .scrollBar(BarState.Off)
       //    .scrollBarColor(Color.Gray)
       //    .scrollBarWidth(30)
-      //    .edgeEffect(this.descriptor.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
+      //    .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
       .onScrollFrameBegin(this.onScroll.bind(this))
       .onScrollStop(this.onScrollEnd.bind(this))
     }
