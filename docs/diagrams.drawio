@@ -1,1 +1,489 @@
-<mxfile host="Electron" modified="2023-04-12T13:00:10.282Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/20.8.10 Chrome/106.0.5249.199 Electron/21.3.5 Safari/537.36" etag="pLvI1pNFug5f3yibskEm" version="20.8.10" type="device"><diagram name="c2" id="NWGSykLGNc-9xcUgOitu">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</diagram></mxfile>
+<mxfile host="Electron" modified="2023-08-18T16:41:19.800Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.5 Chrome/114.0.5735.243 Electron/25.3.1 Safari/537.36" etag="7NB1DE0508wXl0pLDrGK" version="21.6.5" type="device" pages="2">
+  <diagram name="c2" id="NWGSykLGNc-9xcUgOitu">
+    <mxGraphModel dx="2924" dy="2296" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object placeholders="1" c4Name="react-native-some-native-library" c4Type="ContainerScopeBoundary" c4Application="Container" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-99">
+          <mxCell style="rounded=1;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="-460" y="130" width="420" height="350" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="react-native-some-native-library" c4Type="ContainerScopeBoundary" c4Application="Container" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-97">
+          <mxCell style="rounded=1;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="-470" y="120" width="420" height="350" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="RN Application" c4Type="ContainerScopeBoundary" c4Application="Container" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-15">
+          <mxCell style="rounded=1;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry y="-20" width="890" height="460" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="react-native-harmony" c4Type="ContainerScopeBoundary" c4Application="Container" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-52">
+          <mxCell style="rounded=1;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry y="660" width="890" height="200" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-48" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=classic;startFill=1;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-2" target="AjJcmnf1B7j-cDCLLSsf-4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-49" value="[JSI]" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-48" vertex="1" connectable="0">
+          <mxGeometry x="-0.1661" y="-2" relative="1" as="geometry">
+            <mxPoint x="16" y="-2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-62" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;entryX=0.891;entryY=-0.019;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-2" target="AjJcmnf1B7j-cDCLLSsf-20" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="210" y="650" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="350" y="560" />
+              <mxPoint x="234" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-70" value="i" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-62" vertex="1" connectable="0">
+          <mxGeometry x="0.149" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-71" value="imports from &#39;react-native&#39; are redirected&lt;br&gt;to react-native-harmony" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-62" vertex="1" connectable="0">
+          <mxGeometry x="0.1605" y="2" relative="1" as="geometry">
+            <mxPoint x="-27" y="-17" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-93" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.25;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=none;startFill=0;endArrow=classic;endFill=1;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-2" target="AjJcmnf1B7j-cDCLLSsf-23" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-94" value="uses metro to create a bundle" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-93" vertex="1" connectable="0">
+          <mxGeometry x="0.1424" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="RN App" c4Type="Component" c4Technology="React Native, JS/TS" c4Description="Defines business logic and UI with React Native similarly to web React applications." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-2">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#63BEF2;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#2086C9;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="230" y="290" width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-41" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;dashed=1;dashPattern=1 4;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-3" target="AjJcmnf1B7j-cDCLLSsf-38" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-64" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-3" target="AjJcmnf1B7j-cDCLLSsf-6" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="790" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-75" value="imports code that will map&amp;nbsp;&lt;br&gt;data send through napi to ArkUI components,&lt;br&gt;and the code that allows registering packages" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-64" vertex="1" connectable="0">
+          <mxGeometry x="-0.0852" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-72" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=none;startFill=0;endArrow=classic;endFill=1;" parent="1" target="AjJcmnf1B7j-cDCLLSsf-23" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="610" y="90" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-73" value="loads JS bundle" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-72" vertex="1" connectable="0">
+          <mxGeometry x="-0.4483" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-89" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=classic;endFill=1;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-3" target="AjJcmnf1B7j-cDCLLSsf-36" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-690" y="30" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-90" value="can use ArkUI in hybrid applications&amp;nbsp;&amp;nbsp;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-89" vertex="1" connectable="0">
+          <mxGeometry x="0.1942" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="Native App" c4Type="Component" c4Technology="eTS, ArkUI" c4Description="Initialize and run an RN application. Think of it as a web browser" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-3">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#63BEF2;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#2086C9;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="610" width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;dashed=1;dashPattern=1 4;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-4" target="AjJcmnf1B7j-cDCLLSsf-44" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.3;entryY=0.997;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=classic;startFill=1;" parent="1" target="AjJcmnf1B7j-cDCLLSsf-3" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="620" y="160" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-51" value="[NAPI]" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-50" vertex="1" connectable="0">
+          <mxGeometry x="-0.3556" y="1" relative="1" as="geometry">
+            <mxPoint x="17" y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-63" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-4" target="AjJcmnf1B7j-cDCLLSsf-19" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-74" value="imports code that starts RN&lt;br&gt;with specified packages" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-63" vertex="1" connectable="0">
+          <mxGeometry x="-0.105" y="1" relative="1" as="geometry">
+            <mxPoint x="-30" y="-21" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="RN Initializer" c4Type="Component" c4Technology="C++" c4Description="Initializes RN. Provides an interface to ArkTS. Allows registereing Turbo Modules and Fabric Components." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-4">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#63BEF2;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#2086C9;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="500" y="160" width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-87" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=none;startFill=0;endArrow=classic;endFill=1;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-6" target="AjJcmnf1B7j-cDCLLSsf-36" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="760" y="1040" />
+              <mxPoint x="-690" y="1040" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-88" value="uses OHOS to provide&lt;br&gt;common native functionalities" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-87" vertex="1" connectable="0">
+          <mxGeometry x="0.8052" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="react-native-some-native-library" c4Type="ContainerScopeBoundary" c4Application="Container" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-16">
+          <mxCell style="rounded=1;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="-480" y="110" width="420" height="350" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="RNOH" c4Type="Component" c4Technology="eTS, TS, ArkUI" c4Description="Provides API to initialize React Native app, registering packages. Transforms data received from C++ to ArkUI components." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-6">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#999999;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#2086C9;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="610" y="680" width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-57" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=none;startFill=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-19" target="AjJcmnf1B7j-cDCLLSsf-56" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-68" value="reuses common C++ code" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-57" vertex="1" connectable="0">
+          <mxGeometry x="-0.7662" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="RNOH" c4Type="Component" c4Technology="C++" c4Description="Initializes RN. Glue layer." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-19">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#999999;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#2086C9;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="325" y="680" width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=none;startFill=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-20" target="AjJcmnf1B7j-cDCLLSsf-56" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="139.99999999999955" y="930" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-67" value="reuses JS code" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-55" vertex="1" connectable="0">
+          <mxGeometry x="-0.4359" relative="1" as="geometry">
+            <mxPoint x="10" y="16" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=none;startFill=0;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-20" target="AjJcmnf1B7j-cDCLLSsf-23" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-69" value="uses Metro to create a configuration&lt;br&gt;that allows reusing JS code from react-native" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-65" vertex="1" connectable="0">
+          <mxGeometry x="0.0597" y="-1" relative="1" as="geometry">
+            <mxPoint x="52" y="-14" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="react-native-harmony" c4Type="Component" c4Technology="JS, TS, Flow" c4Description="Replaces react-native package when building for Harmony. Reexports react-native JS code if possible. Provides custom JS implementation when necessary." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-20">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#999999;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#2086C9;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="20" y="680" width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-91" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;endArrow=classic;endFill=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-24" target="AjJcmnf1B7j-cDCLLSsf-23" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-200" y="410" />
+              <mxPoint x="-200" y="450" />
+              <mxPoint x="-40" y="450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-92" value="leverages platform-resolution&lt;br&gt;to provide platform specific JS code" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-91" vertex="1" connectable="0">
+          <mxGeometry x="0.1768" y="-1" relative="1" as="geometry">
+            <mxPoint x="18" y="-21" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="Metro" c4Type="Container" c4Technology="NPM" c4Description="Creates JS bundle (one big file) from the RN App and its dependencies." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-23">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#545454;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#404040;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="-130" y="490" width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-58" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=none;startFill=0;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-24" target="AjJcmnf1B7j-cDCLLSsf-20" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-210" y="740" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="JS" c4Type="Component" c4Technology="React Native, JS/TS" c4Description="Provides common interface to the native package. Ideally, the interface is the same for all platforms. May include platform-specific code." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-24">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#999999;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#2086C9;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="-310" y="290" width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-59" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-25" target="AjJcmnf1B7j-cDCLLSsf-36" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-83" value="uses OHOS to provide&lt;br&gt;native functionalities" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-59" vertex="1" connectable="0">
+          <mxGeometry x="0.1413" y="-1" relative="1" as="geometry">
+            <mxPoint x="8" y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-60" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=none;startFill=0;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-25" target="AjJcmnf1B7j-cDCLLSsf-19" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-330" y="1020" />
+              <mxPoint x="505" y="1020" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-86" value="implements Package interface&lt;br&gt;in order to make the process of adding&lt;br&gt;packages consistent in whole ecosystem&amp;nbsp;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-60" vertex="1" connectable="0">
+          <mxGeometry x="-0.6497" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-61" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-25" target="AjJcmnf1B7j-cDCLLSsf-6" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-330" y="1030" />
+              <mxPoint x="750" y="1030" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="harmony" c4Type="Container" c4Technology="eTS, C++" c4Description="Provides Fabric Components and C++ Turbo Modules. It may include C++ code for ArkTSTruboModules, but that code should be generated by RNApplication." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-25">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#999999;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#2086C9;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="-425" y="160" width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Type="Relationship" c4Technology="custom scripts, package.json, eTS, TS" c4Description="imports OHOS module" label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-32">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-3" target="AjJcmnf1B7j-cDCLLSsf-25" edge="1">
+            <mxGeometry width="240" relative="1" as="geometry">
+              <mxPoint x="210" y="130" as="sourcePoint" />
+              <mxPoint x="450" y="130" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="OHOS, ArkUI" c4Type="Container" c4Technology="TS, eTS" c4Description="" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-36">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#545454;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#404040;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="-810" y="160" width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-38" value="DevEcoStudio doesn&#39;t allow importing outside the project directory and symlinks don&#39;t do the job. A script that finds and copies those dependencies is needed. After the native package is copied, it must be registered in harmony/entry/package.json and in ArkTS code. The package should provide ConcretePackage class which is basically an abstract factory. The registration process needs to be automatized in the future (auto-linking) so that a RN developer doesn&#39;t have to do it manually. Ideally the ConcretePackage should provide also UI components but that might be not possible, hence UI components may need to be registered in a different file." style="shape=note;strokeWidth=2;fontSize=14;size=20;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#666600;" parent="1" vertex="1">
+          <mxGeometry x="525" y="-260" width="410" height="200" as="geometry" />
+        </mxCell>
+        <object placeholders="1" c4Type="Relationship" c4Technology="CMake, C++" c4Description="imports package" label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-43">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-4" target="AjJcmnf1B7j-cDCLLSsf-25" edge="1">
+            <mxGeometry width="240" relative="1" as="geometry">
+              <mxPoint x="404.99999999999955" y="230" as="sourcePoint" />
+              <mxPoint x="-380" y="270" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-44" value="After a package is added. CMake file needs to be updated and package registered in the code. That should be responsibility of auto-linking. For the nearest future that would be a responsibility of a developer." style="shape=note;strokeWidth=2;fontSize=14;size=20;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#666600;" parent="1" vertex="1">
+          <mxGeometry x="910" y="120" width="230" height="200" as="geometry" />
+        </mxCell>
+        <object placeholders="1" c4Type="Relationship" c4Technology="package.json, JS/TS" c4Description="imports package" label="&lt;div style=&quot;text-align: left&quot;&gt;&lt;div style=&quot;text-align: center&quot;&gt;&lt;b&gt;%c4Description%&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: center&quot;&gt;[%c4Technology%]&lt;/div&gt;&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-47">
+          <mxCell style="endArrow=blockThin;html=1;fontSize=10;fontColor=#404040;strokeWidth=1;endFill=1;strokeColor=#828282;elbow=vertical;metaEdit=1;endSize=14;startSize=14;jumpStyle=arc;jumpSize=16;rounded=0;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-2" target="AjJcmnf1B7j-cDCLLSsf-24" edge="1">
+            <mxGeometry x="-0.0311" y="-15" width="240" relative="1" as="geometry">
+              <mxPoint x="580" y="370" as="sourcePoint" />
+              <mxPoint x="-400" y="320" as="targetPoint" />
+              <mxPoint as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="react-native" c4Type="Container" c4Technology="JS, Flow, C++" c4Description="Official react-native npm package." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-56">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#545454;fontColor=#ffffff;align=center;arcSize=6;strokeColor=#404040;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="170" y="890" width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-80" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=none;startFill=0;endArrow=none;endFill=0;dashed=1;dashPattern=1 4;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-77" target="AjJcmnf1B7j-cDCLLSsf-4" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="205" y="20" />
+              <mxPoint x="560" y="20" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-77" value="This components should be created from a template. Currently, a RN developer needs to setup them manually." style="shape=note;strokeWidth=2;fontSize=14;size=20;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#666600;" parent="1" vertex="1">
+          <mxGeometry x="90" y="-260" width="230" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-84" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=none;startFill=0;" parent="1" target="AjJcmnf1B7j-cDCLLSsf-56" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-210" y="410" as="sourcePoint" />
+            <mxPoint x="20" y="710" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-210" y="920" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-85" value="loads TurboModule&lt;br&gt;using the official utility&amp;nbsp;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="AjJcmnf1B7j-cDCLLSsf-84" vertex="1" connectable="0">
+          <mxGeometry x="-0.6693" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-95" value="This package has a transitive dependency on the boost library which weights over 500 MB. NPM packages cannot be larger than 500 MB. The boost library needs to be downloaded separately. This process needs to be automated somehow.&amp;nbsp;" style="shape=note;strokeWidth=2;fontSize=14;size=20;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#666600;" parent="1" vertex="1">
+          <mxGeometry x="900" y="450" width="230" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="AjJcmnf1B7j-cDCLLSsf-96" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;dashed=1;dashPattern=1 4;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.75;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="AjJcmnf1B7j-cDCLLSsf-19" target="AjJcmnf1B7j-cDCLLSsf-95" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="710" y="560" as="sourcePoint" />
+            <mxPoint x="880" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="[Components] React Native Open Harmony App" c4Type="ContainerDiagramTitle" c4Description="Relations between RN App, react-native-harmony and npm packages." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Description%&lt;/div&gt;" id="AjJcmnf1B7j-cDCLLSsf-100">
+          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;metaEdit=1;allowArrows=0;resizable=1;rotatable=0;connectable=0;recursiveResize=0;expand=0;pointerEvents=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" parent="1" vertex="1">
+            <mxGeometry x="-800" y="1050" width="440" height="40" as="geometry" />
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="AeaYFMA4bn_TWLlFQhh2" name="CLI">
+    <mxGraphModel dx="2924" dy="1196" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="IM_vdA1whckKK8FfmDVi-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="IM_vdA1whckKK8FfmDVi-5" target="IM_vdA1whckKK8FfmDVi-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z01VX5XHJ6P2SiQUEok6-3" value="Reuses interfaces to ensure&lt;br&gt;compatibility with @react-native-community/cli&lt;br&gt;[TS]" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="IM_vdA1whckKK8FfmDVi-11">
+          <mxGeometry x="-0.1088" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="react-native-harmony-cli" c4Type="Container" c4Technology="TS" c4Description="Provides commands: bundle-harmony, unpack-harmony, pack-harmony." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="IM_vdA1whckKK8FfmDVi-5">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;labelBackgroundColor=none;fillColor=#23A2D9;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#0E7DAD;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1" parent="1">
+            <mxGeometry x="97.5" y="300" width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="IM_vdA1whckKK8FfmDVi-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="IM_vdA1whckKK8FfmDVi-7" target="IM_vdA1whckKK8FfmDVi-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z01VX5XHJ6P2SiQUEok6-2" value="Uses types/interfaces that define configuration format&lt;br&gt;[TS]" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="IM_vdA1whckKK8FfmDVi-12">
+          <mxGeometry x="0.0517" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z01VX5XHJ6P2SiQUEok6-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="IM_vdA1whckKK8FfmDVi-7" target="IM_vdA1whckKK8FfmDVi-4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="670" y="570" />
+              <mxPoint x="360" y="570" />
+              <mxPoint x="360" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z01VX5XHJ6P2SiQUEok6-11" value="builds part of the CLI from react-native.config.js&lt;br&gt;[JS file]" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z01VX5XHJ6P2SiQUEok6-10">
+          <mxGeometry x="0.0577" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z01VX5XHJ6P2SiQUEok6-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.75;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="Z01VX5XHJ6P2SiQUEok6-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="610" y="740" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z01VX5XHJ6P2SiQUEok6-14" value="reads react-native.config.js for iOS and Android&lt;br&gt;[JS file]" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z01VX5XHJ6P2SiQUEok6-13">
+          <mxGeometry x="-0.0383" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="@react-native-community/cli" c4Type="Container" c4Technology="TS" c4Description="Provides `react-native` CLI utility to the developer. Dynamically creates CLI based on react-native.config.js files found in the project." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="IM_vdA1whckKK8FfmDVi-7">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;labelBackgroundColor=none;fillColor=#999999;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#0E7DAD;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1" parent="1">
+            <mxGeometry x="610.5" y="650" width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="IM_vdA1whckKK8FfmDVi-8" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="97.5" y="470" width="240" height="120" as="geometry" />
+        </mxCell>
+        <object placeholders="1" c4Name="react-native-harmony" c4Type="Container" c4Technology="JS, TS, eTS, Cpp" c4Description="Contains `react-native.config.js` which reexport React Native Configuration from react-native-harmony-cli package. Provides metro.config.js." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="IM_vdA1whckKK8FfmDVi-4">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;labelBackgroundColor=none;fillColor=#23A2D9;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#0E7DAD;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1" parent="IM_vdA1whckKK8FfmDVi-8">
+            <mxGeometry width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="@react-native-community/cli-types" c4Type="Container" c4Technology="TS" c4Description="Abstract package." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="IM_vdA1whckKK8FfmDVi-9">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;labelBackgroundColor=none;fillColor=#999999;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#0E7DAD;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1" parent="1">
+            <mxGeometry x="610" y="300" width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="IM_vdA1whckKK8FfmDVi-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="IM_vdA1whckKK8FfmDVi-4" target="IM_vdA1whckKK8FfmDVi-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z01VX5XHJ6P2SiQUEok6-4" value="Imports CLI configuration&lt;br&gt;[JS]" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="IM_vdA1whckKK8FfmDVi-13">
+          <mxGeometry x="0.0793" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IM_vdA1whckKK8FfmDVi-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="IM_vdA1whckKK8FfmDVi-4" target="Z01VX5XHJ6P2SiQUEok6-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z01VX5XHJ6P2SiQUEok6-5" value="reexports or reuses RN code&lt;br&gt;[JS/TS]" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="IM_vdA1whckKK8FfmDVi-14">
+          <mxGeometry x="0.0231" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IM_vdA1whckKK8FfmDVi-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="IM_vdA1whckKK8FfmDVi-15" target="IM_vdA1whckKK8FfmDVi-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IM_vdA1whckKK8FfmDVi-17" value="&amp;gt; react-native bundle-harmony" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="IM_vdA1whckKK8FfmDVi-16">
+          <mxGeometry x="-0.0843" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="RN app developer" c4Type="Person" c4Description="" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#cccccc&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="IM_vdA1whckKK8FfmDVi-15">
+          <mxCell style="html=1;fontSize=11;dashed=0;whiteSpace=wrap;fillColor=#083F75;strokeColor=#06315C;fontColor=#ffffff;shape=mxgraph.c4.person2;align=center;metaEdit=1;points=[[0.5,0,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0]];resizable=0;" vertex="1" parent="1">
+            <mxGeometry x="630" y="820" width="200" height="180" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="VGuqSPHG1opCYHbtnjhv-2" value="&lt;div style=&quot;color: rgb(204, 204, 204); background-color: rgb(31, 31, 31); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; line-height: 150%; font-size: 8px;&quot;&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;&amp;nbsp;// current bundle-harmony implementation:&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; const &lt;span style=&quot;color: #4fc1ff;&quot;&gt;metroConfig&lt;/span&gt; &lt;span style=&quot;color: #d4d4d4;&quot;&gt;=&lt;/span&gt; &lt;span style=&quot;color: #c586c0;&quot;&gt;await&lt;/span&gt; &lt;span style=&quot;color: #9cdcfe;&quot;&gt;Metro&lt;/span&gt;.&lt;span style=&quot;color: #dcdcaa;&quot;&gt;loadConfig&lt;/span&gt;();&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #c586c0;&quot;&gt;await&lt;/span&gt; &lt;span style=&quot;color: #9cdcfe;&quot;&gt;fse&lt;/span&gt;.&lt;span style=&quot;color: #dcdcaa;&quot;&gt;ensureDir&lt;/span&gt;(&lt;span style=&quot;color: #4fc1ff;&quot;&gt;ARK_RESOURCE_PATH&lt;/span&gt;);&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #c586c0;&quot;&gt;await&lt;/span&gt; &lt;span style=&quot;color: #9cdcfe;&quot;&gt;Metro&lt;/span&gt;.&lt;span style=&quot;color: #dcdcaa;&quot;&gt;runBuild&lt;/span&gt;(&lt;span style=&quot;color: #4fc1ff;&quot;&gt;metroConfig&lt;/span&gt;, {&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #9cdcfe;&quot;&gt;entry&lt;/span&gt;&lt;span style=&quot;color: #9cdcfe;&quot;&gt;:&lt;/span&gt; &lt;span style=&quot;color: #9cdcfe;&quot;&gt;args&lt;/span&gt;.&lt;span style=&quot;color: #9cdcfe;&quot;&gt;entryFile&lt;/span&gt;,&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #9cdcfe;&quot;&gt;platform&lt;/span&gt;&lt;span style=&quot;color: #9cdcfe;&quot;&gt;:&lt;/span&gt; &lt;span style=&quot;color: #ce9178;&quot;&gt;&#39;harmony&#39;&lt;/span&gt;,&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #9cdcfe;&quot;&gt;minify&lt;/span&gt;&lt;span style=&quot;color: #9cdcfe;&quot;&gt;:&lt;/span&gt; &lt;span style=&quot;color: #569cd6;&quot;&gt;false&lt;/span&gt;,&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #9cdcfe;&quot;&gt;out&lt;/span&gt;&lt;span style=&quot;color: #9cdcfe;&quot;&gt;:&lt;/span&gt; &lt;span style=&quot;color: #4fc1ff;&quot;&gt;ARK_RESOURCE_PATH&lt;/span&gt; &lt;span style=&quot;color: #d4d4d4;&quot;&gt;+&lt;/span&gt; &lt;span style=&quot;color: #ce9178;&quot;&gt;&#39;/bundle.harmony.js&#39;&lt;/span&gt;,&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #9cdcfe;&quot;&gt;dev&lt;/span&gt;&lt;span style=&quot;color: #9cdcfe;&quot;&gt;:&lt;/span&gt; &lt;span style=&quot;color: #d4d4d4;&quot;&gt;!&lt;/span&gt;&lt;span style=&quot;color: #9cdcfe;&quot;&gt;args&lt;/span&gt;.&lt;span style=&quot;color: #9cdcfe;&quot;&gt;prod&lt;/span&gt;,&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;&amp;nbsp; &amp;nbsp; });&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;&amp;nbsp; &amp;nbsp; &lt;span style=&quot;color: #dcdcaa;&quot;&gt;copyAssets&lt;/span&gt;(&lt;span style=&quot;color: #ce9178;&quot;&gt;&#39;./assets/&#39;&lt;/span&gt;, &lt;span style=&quot;color: #ce9178;&quot;&gt;&#39;./harmony/entry/src/main/ets/assets/assets&#39;&lt;/span&gt;);&lt;/div&gt;&lt;div style=&quot;line-height: 150%;&quot;&gt;&amp;nbsp; },&lt;/div&gt;&lt;/div&gt;" style="shape=note;strokeWidth=2;fontSize=14;size=20;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#666600;align=left;" vertex="1" parent="1">
+          <mxGeometry x="30" y="40" width="375" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="Z01VX5XHJ6P2SiQUEok6-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=none;startFill=0;endArrow=none;endFill=0;dashed=1;dashPattern=1 4;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="VGuqSPHG1opCYHbtnjhv-2" target="IM_vdA1whckKK8FfmDVi-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="172.5" y="-60" as="sourcePoint" />
+            <mxPoint x="527.5" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z01VX5XHJ6P2SiQUEok6-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="Z01VX5XHJ6P2SiQUEok6-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="610" y="680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Z01VX5XHJ6P2SiQUEok6-12" value="specifies this package as a dependency to&lt;br&gt;make package installation easier&lt;br&gt;[package.json]" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Z01VX5XHJ6P2SiQUEok6-9">
+          <mxGeometry x="-0.016" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="react-native" c4Type="Container" c4Technology="JS, Cpp, Java, Objective-C" c4Description="Contains `react-native.config.js` that reexport CLI configuration for iOS and Android platforms." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="Z01VX5XHJ6P2SiQUEok6-8">
+          <mxCell style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;labelBackgroundColor=none;fillColor=#999999;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#0E7DAD;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1" parent="1">
+            <mxGeometry x="98" y="650" width="240" height="120" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="react-native-harmony-cli" c4Type="ContainerDiagramTitle" c4Description="Shows how react-native-harmony-cli works." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Description%&lt;/div&gt;" id="C0ppLu5zFZIlNlqErp3Z-1">
+          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;metaEdit=1;allowArrows=0;resizable=1;rotatable=0;connectable=0;recursiveResize=0;expand=0;pointerEvents=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1" parent="1">
+            <mxGeometry x="20" y="1040" width="440" height="40" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="C0ppLu5zFZIlNlqErp3Z-2" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;metro.config.js provides 2 import modes:&lt;br&gt;1) Imports from &#39;react-native&#39; - when building for Harmony platform, Metro tries to find a file in &#39;react-native-harmony&#39; package. If it can&#39;t be found, it tries to reuse iOS implementation found in &#39;react-native&#39; package.&lt;br&gt;2) Third-party libraries: If a npm package contains harmony directory, Metro opens package.json in order to read harmony configuration. That configuration contains a name of the original package that this package should replace when building for &#39;harmony&#39; platform. In that way, developers of npm packages for Open Harmony don&#39;t have to fork original package.&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontSize=14;align=left;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#666600;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="-300" y="150" width="200" height="350" as="geometry" />
+        </mxCell>
+        <mxCell id="C0ppLu5zFZIlNlqErp3Z-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=none;startFill=0;endArrow=none;endFill=0;dashed=1;dashPattern=1 4;exitX=-0.03;exitY=0.493;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="C0ppLu5zFZIlNlqErp3Z-2" target="IM_vdA1whckKK8FfmDVi-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="610" y="140" as="sourcePoint" />
+            <mxPoint x="530" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="C0ppLu5zFZIlNlqErp3Z-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=none;startFill=0;endArrow=none;endFill=0;dashed=1;dashPattern=1 4;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="C0ppLu5zFZIlNlqErp3Z-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-70" y="240" as="sourcePoint" />
+            <mxPoint x="30" y="160" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-100" y="320" />
+              <mxPoint y="320" />
+              <mxPoint y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
