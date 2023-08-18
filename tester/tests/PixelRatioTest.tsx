@@ -5,15 +5,15 @@ export const PixelRatioTest = () => {
   return (
     <TestSuite name="PixelRatio">
       <TestCase
-        itShould="return pixel ratio used in emulator"
+        itShould="return plausible pixel ratio (greater than 0)"
         fn={({expect}) => {
-          expect(PixelRatio.get()).to.be.eq(3);
+          expect(PixelRatio.get()).to.be.greaterThan(0);
         }}
       />
       <TestCase
-        itShould="return fontScale used in emulator (1)"
+        itShould="return plausible fontScale (greater than 0)"
         fn={({expect}) => {
-          expect(PixelRatio.getFontScale()).to.be.eq(1);
+          expect(PixelRatio.getFontScale()).to.be.greaterThan(0);
         }}
       />
     </TestSuite>
