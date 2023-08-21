@@ -163,4 +163,8 @@ export class DescriptorRegistry {
     }
     return [];
   }
+
+  public getDescriptorByTagMap() {
+    return this.descriptorByTag
+  }
 }
