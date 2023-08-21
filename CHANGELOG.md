@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.72.5
+- added support for Switch component
+- reexported DeviceEventEmitter and findNodeHandle
+- improved logging fatal errors
+- fixed ScrollView offset when a ScrollView had a border
+- fixed tap not stopping scrolling
+
 ## v0.72.4
 - BREAKING CHANGE: replaced `EventEmitterRegistry.cpp` with `ShadowViewRegistry.cpp`
 - added `Modal` component support
