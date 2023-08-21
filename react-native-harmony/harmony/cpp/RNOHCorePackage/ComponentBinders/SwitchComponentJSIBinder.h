@@ -7,7 +7,8 @@ class SwitchComponentJSIBinder : public ViewComponentJSIBinder {
         auto nativeProps = ViewComponentJSIBinder::createNativeProps(rt);
         nativeProps.setProperty(rt, "thumbTintColor", "Color");
         nativeProps.setProperty(rt, "onTintColor", "Color");
-
+        nativeProps.setProperty(rt, "disabled", "boolean");
+        
         return nativeProps;
     }
     facebook::jsi::Object createDirectEventTypes(facebook::jsi::Runtime &rt) override {

@@ -5,6 +5,7 @@ export type SwitchProps = ViewBaseProps & {
   trackColor?: ColorSegments
   thumbColor?: ColorSegments
   value?: boolean
+  disabled?: boolean
 }
 
 export type SwitchDescriptor = Descriptor<"Switch", SwitchProps>
@@ -50,7 +51,7 @@ export struct RNSwitch {
         .selectedColor(convertColorSegmentsToString(this.descriptor.props.trackColor))
         .switchPointColor(convertColorSegmentsToString(this.descriptor.props.thumbColor))
         .onChange(this.onChange.bind(this))
-
+        .enabled(!this.descriptor.props.disabled)
     }
   }
 }

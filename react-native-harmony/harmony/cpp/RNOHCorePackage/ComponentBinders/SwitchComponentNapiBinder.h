@@ -19,7 +19,8 @@ class SwitchComponentNapiBinder : public ViewComponentNapiBinder {
 
         propsBuilder.addProperty("trackColor", switchProps->onTintColor)
             .addProperty("thumbColor", switchProps->thumbTintColor)
-            .addProperty("value", switchProps->value);
+            .addProperty("value", switchProps->value)
+            .addProperty("disabled", switchProps->disabled);
         return propsBuilder.build();
     };
 };
