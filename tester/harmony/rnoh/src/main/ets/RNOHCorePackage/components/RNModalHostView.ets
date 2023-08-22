@@ -68,7 +68,8 @@ export struct RNModalHostView {
         tag: this.tag,
         renderDescriptors: this.renderDescriptors
       }),
-      customStyle: true
+      customStyle: true,
+      maskColor: Color.Transparent
     })
 
     // on the JS side, the native ModalHostView is rendered _only_ if the `visible` prop is set to true,
