@@ -85,6 +85,35 @@ function StatusBarView() {
           </Text>
         </View>
       </TestCase>
+      <TestCase itShould="set status bar color to blue (StatusBar.setBackgroundColor)">
+        <View
+          style={styles.button}
+          onTouchEnd={() => {
+            StatusBar.setBackgroundColor('#0000FF88');
+          }}>
+          <Text style={styles.buttonText}>Set blue</Text>
+        </View>
+      </TestCase>
+      <TestCase itShould="set status bar dark style (light-content(default)/dark-content) (StatusBar.setBarStyle) ">
+        <View
+          style={styles.button}
+          onTouchEnd={() => {
+            StatusBar.setBarStyle('dark-content')
+          }}>
+          <Text style={styles.buttonText}>Set dark-content</Text>
+        </View>
+      </TestCase>
+      <TestCase itShould="set status bar translucent (StatusBar.setTranslucent)">
+        <View
+          style={styles.button}
+          onTouchEnd={() => {
+            StatusBar.setTranslucent(true);
+          }}>
+          <Text style={styles.buttonText}>
+            Set translucent
+          </Text>
+        </View>
+      </TestCase>
       <TestCase
         itShould="return correct status bar height for device"
         fn={({expect}) => {
