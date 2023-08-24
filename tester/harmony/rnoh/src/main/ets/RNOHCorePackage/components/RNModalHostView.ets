@@ -69,7 +69,7 @@ export struct RNModalHostView {
         renderDescriptors: this.renderDescriptors
       }),
       customStyle: true,
-      maskColor: Color.Transparent
+      // maskColor: Color.Transparent // TODO: enable this change after migrating to SDK 10 https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/175
     })
 
     // on the JS side, the native ModalHostView is rendered _only_ if the `visible` prop is set to true,
