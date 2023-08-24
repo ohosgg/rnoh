@@ -8,6 +8,8 @@ namespace rnoh {
 
 class ValueAnimatedNode : public AnimatedNode {
 public:
+    using AnimatedNodeValueListener = std::function<void(double)>;
+
     ValueAnimatedNode() {}
 
     ValueAnimatedNode(folly::dynamic const &config) {
@@ -37,8 +39,26 @@ public:
         m_value = 0;
     }
 
+    void onValueUpdate() {
+        if (m_valueListener.has_value()) {
+            m_valueListener.value()(getValue());
+        }
+    }
+
+    void setValueListener(AnimatedNodeValueListener &&listener) {
+        if (m_valueListener.has_value()) {
+            throw std::runtime_error("AnimatedNode already has a value listener");
+        }
+        m_valueListener = std::move(listener);
+    }
+
+    void removeValueListener() {
+        m_valueListener = std::nullopt;
+    }
+
     double m_value = 0.0;
     double m_offset = 0.0;
+    std::optional<AnimatedNodeValueListener> m_valueListener;
 };
 
 }

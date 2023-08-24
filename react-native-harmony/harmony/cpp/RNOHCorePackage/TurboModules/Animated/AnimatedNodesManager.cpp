@@ -104,6 +104,16 @@ void AnimatedNodesManager::removeAnimatedEventFromView(facebook::react::Tag view
     }));
 }
 
+void AnimatedNodesManager::startListeningToAnimatedNodeValue(facebook::react::Tag tag, ValueAnimatedNode::AnimatedNodeValueListener &&listener) {
+    auto &node = getValueNodeByTag(tag);
+    node.setValueListener(std::move(listener));
+}
+
+void AnimatedNodesManager::stopListeningToAnimatedNodeValue(facebook::react::Tag tag) {
+    auto &node = getValueNodeByTag(tag);
+    node.removeValueListener();
+}
+
 void AnimatedNodesManager::handleEvent(facebook::react::Tag targetTag, std::string const &eventName, folly::dynamic const &eventValue) {
     bool someDriverNeedsUpdate = false;
     for (auto &driver : m_eventDrivers) {
@@ -114,8 +124,7 @@ void AnimatedNodesManager::handleEvent(facebook::react::Tag targetTag, std::stri
     }
 
     if (someDriverNeedsUpdate && !m_isRunningAnimations) {
-        m_isRunningAnimations = true;
-        m_scheduleUpdateFn();
+        maybeStartAnimations();
     }
 }
 
@@ -124,20 +133,14 @@ void AnimatedNodesManager::setValue(facebook::react::Tag tag, double value) {
     stopAnimationsForNode(tag);
     m_nodeTagsToUpdate.insert(tag);
     node.setValue(value);
-    if (!m_isRunningAnimations) {
-        m_isRunningAnimations = true;
-        m_scheduleUpdateFn();
-    }
+    maybeStartAnimations();
 }
 
 void AnimatedNodesManager::setOffset(facebook::react::Tag tag, double offset) {
     auto &node = getValueNodeByTag(tag);
     m_nodeTagsToUpdate.insert(tag);
     node.setOffset(offset);
-    if (!m_isRunningAnimations) {
-        m_isRunningAnimations = true;
-        m_scheduleUpdateFn();
-    }
+    maybeStartAnimations();
 }
 
 void AnimatedNodesManager::flattenOffset(facebook::react::Tag tag) {
@@ -172,10 +175,7 @@ void AnimatedNodesManager::startAnimatingNode(facebook::react::Tag animationId, 
     }
 
     m_animationById.insert({animationId, std::move(driver)});
-    if (!m_isRunningAnimations) {
-        m_isRunningAnimations = true;
-        m_scheduleUpdateFn();
-    }
+    maybeStartAnimations();
 }
 
 void AnimatedNodesManager::stopAnimation(facebook::react::Tag animationId) {
@@ -271,6 +271,10 @@ void AnimatedNodesManager::updateNodes(std::vector<facebook::react::Tag> nodeTag
             propsNode->updateView();
         }
 
+        if (auto valueNode = dynamic_cast<ValueAnimatedNode *>(&node); valueNode != nullptr) {
+            valueNode->onValueUpdate();
+        }
+
         updatedNodesCount++;
 
         for (auto childTag : node.getChildrenTags()) {
@@ -297,6 +301,14 @@ void AnimatedNodesManager::stopAnimationsForNode(facebook::react::Tag tag) {
     }
     for (auto id : animationsToStop) {
         stopAnimation(id);
+    }
+}
+
+void AnimatedNodesManager::maybeStartAnimations() {
+    if (!m_isRunningAnimations) {
+        auto now = std::chrono::high_resolution_clock::now();
+        auto frameTime = std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch());
+        runUpdates(frameTime.count());
     }
 }
 

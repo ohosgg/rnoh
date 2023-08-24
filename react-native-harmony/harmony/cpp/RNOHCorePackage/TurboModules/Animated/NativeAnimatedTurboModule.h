@@ -29,7 +29,7 @@ public:
 
     double getValue(facebook::react::Tag tag);
 
-    void startListeningToAnimatedNodeValue(facebook::react::Tag tag);
+    void startListeningToAnimatedNodeValue(facebook::jsi::Runtime &rt, facebook::react::Tag tag);
 
     void stopListeningToAnimatedNodeValue(facebook::react::Tag tag);
 

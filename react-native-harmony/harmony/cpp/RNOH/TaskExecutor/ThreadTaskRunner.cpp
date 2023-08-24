@@ -19,6 +19,11 @@ ThreadTaskRunner::~ThreadTaskRunner() {
 }
 
 void ThreadTaskRunner::runAsyncTask(Task &&task) {
+    if (std::this_thread::get_id() == thread.get_id()) {
+        task();
+        return;
+    }
+
     {
         std::unique_lock<std::mutex> lock(mutex);
         asyncTaskQueue.emplace(std::move(task));
@@ -32,6 +37,10 @@ void ThreadTaskRunner::runAsyncTask(Task &&task) {
 }
 
 void ThreadTaskRunner::runSyncTask(Task &&task) {
+    if (std::this_thread::get_id() == thread.get_id()) {
+        task();
+        return;
+    }
     std::unique_lock<std::mutex> lock(mutex);
     std::atomic_bool done{false};
     syncTaskQueue.emplace([task = std::move(task), &done] {

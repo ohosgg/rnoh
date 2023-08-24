@@ -65,7 +65,7 @@ jsi::Value startListeningToAnimatedNodeValue(
     const facebook::jsi::Value *args,
     size_t count) {
     auto self = static_cast<NativeAnimatedTurboModule *>(&turboModule);
-    self->startListeningToAnimatedNodeValue(args[0].getNumber());
+    self->startListeningToAnimatedNodeValue(rt, args[0].getNumber());
     return facebook::jsi::Value::undefined();
 }
 
@@ -238,9 +238,9 @@ NativeAnimatedTurboModule::NativeAnimatedTurboModule(const ArkTSTurboModule::Con
     : rnoh::ArkTSTurboModule(ctx, name),
       m_animatedNodesManager(
           [this] {
-            m_ctx.taskExecutor->runTask(TaskThread::MAIN, [this] {this->scheduleUpdate();}); 
+              m_ctx.taskExecutor->runTask(TaskThread::MAIN, [this] { this->scheduleUpdate(); });
           },
-          [this](auto tag, auto props) { this->setNativeProps(tag, props); }) {
+          [this](auto tag, auto props) { m_ctx.taskExecutor->runTask(TaskThread::MAIN, [this, tag, props] {this->setNativeProps(tag, props);}); }) {
     methodMap_ = {
         {"startOperationBatch", {0, rnoh::startOperationBatch}},
         {"finishOperationBatch", {0, rnoh::finishOperationBatch}},
@@ -260,7 +260,9 @@ NativeAnimatedTurboModule::NativeAnimatedTurboModule(const ArkTSTurboModule::Con
         {"restoreDefaultValues", {1, rnoh::restoreDefaultValues}},
         {"dropAnimatedNode", {1, rnoh::dropAnimatedNode}},
         {"addAnimatedEventToView", {3, rnoh::addAnimatedEventToView}},
-        {"removeAnimatedEventFromView", {3, rnoh::removeAnimatedEventFromView}}};
+        {"removeAnimatedEventFromView", {3, rnoh::removeAnimatedEventFromView}},
+        {"startListeningToAnimatedNodeValue", {1, rnoh::startListeningToAnimatedNodeValue}},
+        {"stopListeningToAnimatedNodeValue", {1, rnoh::stopListeningToAnimatedNodeValue}}};
 }
 
 NativeAnimatedTurboModule::~NativeAnimatedTurboModule() {
@@ -289,10 +291,22 @@ double NativeAnimatedTurboModule::getValue(react::Tag tag) {
     return value;
 }
 
-void NativeAnimatedTurboModule::startListeningToAnimatedNodeValue(react::Tag tag) {
+void NativeAnimatedTurboModule::startListeningToAnimatedNodeValue(jsi::Runtime &rt, react::Tag tag) {
+    auto lock = acquireLock();
+    m_animatedNodesManager.startListeningToAnimatedNodeValue(tag, [this, tag, &rt](double value) {
+        this->emitDeviceEvent(rt, "onAnimatedValueUpdate",
+                              [tag, value](jsi::Runtime &rt, std::vector<jsi::Value> &args) {
+                                  auto payload = jsi::Object(rt);
+                                  payload.setProperty(rt, "tag", tag);
+                                  payload.setProperty(rt, "value", value);
+                                  args.push_back(std::move(payload));
+                              });
+    });
 }
 
 void NativeAnimatedTurboModule::stopListeningToAnimatedNodeValue(react::Tag tag) {
+    auto lock = acquireLock();
+    m_animatedNodesManager.stopListeningToAnimatedNodeValue(tag);
 }
 
 void NativeAnimatedTurboModule::connectAnimatedNodes(react::Tag parentNodeTag, react::Tag childNodeTag) {

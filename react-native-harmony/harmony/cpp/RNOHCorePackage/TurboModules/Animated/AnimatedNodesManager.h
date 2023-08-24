@@ -36,6 +36,9 @@ public:
     void addAnimatedEventToView(facebook::react::Tag viewTag, std::string const &eventName, folly::dynamic const &eventMapping);
     void removeAnimatedEventFromView(facebook::react::Tag viewTag, std::string const &eventName, facebook::react::Tag nodeTag);
 
+    void startListeningToAnimatedNodeValue(facebook::react::Tag tag, ValueAnimatedNode::AnimatedNodeValueListener &&listener);
+    void stopListeningToAnimatedNodeValue(facebook::react::Tag tag);
+
     void setValue(facebook::react::Tag tag, double value);
     void setOffset(facebook::react::Tag tag, double offset);
     void flattenOffset(facebook::react::Tag tag);
@@ -63,6 +66,7 @@ public:
 private:
     void updateNodes(std::vector<facebook::react::Tag> nodes);
     void stopAnimationsForNode(facebook::react::Tag tag);
+    void maybeStartAnimations();
 
     std::function<void()> m_scheduleUpdateFn;
     std::unordered_map<facebook::react::Tag, std::unique_ptr<AnimatedNode>> m_nodeByTag;
