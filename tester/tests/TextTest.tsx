@@ -11,7 +11,7 @@ export function TextTest() {
           <Text style={{height: '100%', backgroundColor: 'pink'}}>BAR</Text>
         </View>
       </TestCase>
-      <TestCase itShould="[FAILS] show text with the dancing script font ">
+      <TestCase itShould="[FAIL] show text with the dancing script font">
         <View style={{height: 30, width: '100%'}}>
           <Text
             style={{
@@ -35,6 +35,16 @@ export function TextTest() {
           <Text style={[styles.text, {textAlign: 'right'}]}>
             <Text style={{fontWeight: 'bold'}}>Bold</Text>
             <Text style={{fontStyle: 'italic'}}>Italic</Text>
+          </Text>
+        </View>
+      </TestCase>
+      <TestCase itShould="[FAIL] render red rectangle after 'FOO'">
+        <View
+          style={{height: 32, alignSelf: 'flex-start', flexDirection: 'row'}}>
+          <Text style={{height: '100%', backgroundColor: 'pink'}}>
+            FOO
+            <View style={{width: 32, height: 32, backgroundColor: 'red'}} />
+            BAR
           </Text>
         </View>
       </TestCase>
