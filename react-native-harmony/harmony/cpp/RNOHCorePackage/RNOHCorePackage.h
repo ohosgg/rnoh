@@ -13,6 +13,7 @@
 #include "RNOHCorePackage/TurboModules/DeviceEventManagerTurboModule.h"
 #include "RNOHCorePackage/TurboModules/DeviceInfoTurboModule.h"
 #include "RNOHCorePackage/TurboModules/ExceptionsManagerTurboModule.h"
+#include "RNOHCorePackage/TurboModules/ImageLoaderTurboModule.h"
 #include "RNOHCorePackage/TurboModules/NetworkingTurboModule.h"
 #include "RNOHCorePackage/TurboModules/PlatformConstantsTurboModule.h"
 #include "RNOHCorePackage/TurboModules/SourceCodeTurboModule.h"
@@ -51,6 +52,8 @@ class RNOHCoreTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
             return std::make_shared<DeviceInfoTurboModule>(ctx, name);
         } else if (name == "ExceptionsManager") {
             return std::make_shared<ExceptionsManagerTurboModule>(ctx, name);
+        } else if (name == "ImageLoader") {
+            return std::make_shared<ImageLoaderTurboModule>(ctx, name);
         } else if (name == "NativeAnimatedTurboModule") {
             return std::make_shared<NativeAnimatedTurboModule>(ctx, name);
         } else if (name == "Networking") {

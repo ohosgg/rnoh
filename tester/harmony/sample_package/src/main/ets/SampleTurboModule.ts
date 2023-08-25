@@ -1,4 +1,4 @@
-import {TurboModule} from 'rnoh';
+import { TurboModule } from 'rnoh';
 
 export class SampleTurboModule extends TurboModule {
   voidFunc() {
@@ -20,7 +20,7 @@ export class SampleTurboModule extends TurboModule {
     return arg;
   }
 
-  getObject(arg: {x: {y: number}}): Object {
+  getObject(arg: { x: { y: number } }): Object {
     console.log(`RNOH SampleTurboModule::getString(${arg})`);
     return arg;
   }
@@ -47,5 +47,9 @@ export class SampleTurboModule extends TurboModule {
         }
       }, 1000);
     });
+  }
+
+  getPromisedArray() {
+    return Promise.resolve([1,2,3])
   }
 }

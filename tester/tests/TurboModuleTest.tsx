@@ -11,6 +11,7 @@ interface SampleTurboModuleProtocol {
   getArray(args: any[]): any[];
   registerFunction(onComplete: (value: string) => void): void;
   doAsyncJob(shouldResolve: boolean): Promise<string>;
+  getPromisedArray(): Promise<number[]>;
 }
 
 interface Spec extends TurboModule, SampleTurboModuleProtocol {}
@@ -80,6 +81,14 @@ export function TurboModuleTest() {
           }
 
           expect(errMsg).to.be.eq('rejected on native side');
+        }}
+      />
+      <TestCase
+        itShould="get an array asynchronously"
+        fn={async ({expect}) => {
+          expect(await SampleTurboModule.getPromisedArray()).to.be.eql([
+            1, 2, 3,
+          ]);
         }}
       />
     </TestSuite>

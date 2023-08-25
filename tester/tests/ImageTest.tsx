@@ -16,14 +16,20 @@ export const ImageTest = () => {
           />
         </TestCase>
         <TestCase
-          itShould="[FAILS] retrieve remote image size" // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/243
+          itShould="retrieve remote image size"
           fn={({expect}) => {
-            return new Promise(resolve => {
-              Image.getSize(REMOTE_IMAGE_URL, (width, height) => {
-                expect(width).to.be.eq(100);
-                expect(height).to.be.eq(100);
-                resolve();
-              });
+            return new Promise((resolve, reject) => {
+              Image.getSize(
+                REMOTE_IMAGE_URL,
+                (width, height) => {
+                  expect(width).to.be.eq(100);
+                  expect(height).to.be.eq(100);
+                  resolve();
+                },
+                e => {
+                  reject(e);
+                },
+              );
             });
           }}
         />
