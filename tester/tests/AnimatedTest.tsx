@@ -15,7 +15,7 @@ export function AnimatedTest() {
       </TestCase>
       <TestCase itShould="fade in and out when clicked">
         <FadeInOut />
-        <FadeInOut nativeDriver/>
+        <FadeInOut nativeDriver />
       </TestCase>
     </TestSuite>
   );
@@ -137,7 +137,9 @@ function FadeInOut({nativeDriver = false}) {
           opacity: fadeAnim,
           backgroundColor: 'red',
         }}>
-        <Text style={{width: 100, height: 48}}>Press me to fade{nativeDriver && " using native driver"}</Text>
+        <Text style={{width: 100, height: 48}}>
+          Press me to fade{nativeDriver && ' using native driver'}
+        </Text>
       </Animated.View>
     </Pressable>
   );
