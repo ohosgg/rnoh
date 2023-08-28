@@ -26,8 +26,7 @@ struct ModalHostViewDialog {
   ctx: RNOHContext
   tag: Tag
   @BuilderParam renderDescriptors: () => void
-  @State modalHeight: number = 0
-  @State modalWidth: number = 0
+  @State showContent: boolean = false
   unsubscribeFromDescriptorChanges: () => void | undefined
 
   emitComponentEvent(eventName: string) {
@@ -40,8 +39,7 @@ struct ModalHostViewDialog {
       // NOTE: this should ensure we only update the Stack's dimensions
       // after React rerenders the contents,
       // to prevent flickering when opening the modal
-      this.modalWidth = descriptor.layoutMetrics.frame.size.width
-      this.modalHeight = descriptor.layoutMetrics.frame.size.height
+      this.showContent = true
     })
   }
 
@@ -65,12 +63,9 @@ struct ModalHostViewDialog {
   }
 
   build() {
-    Stack() {
+    if (this.showContent) {
       this.renderDescriptors()
     }
-    .clip(true)
-    .width(this.modalWidth)
-    .height(this.modalHeight)
   }
 }
 
