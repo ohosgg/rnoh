@@ -6,7 +6,7 @@ let storage = LocalStorage.GetShared()
 @Entry(storage)
 @Component
 struct Index {
-  @LocalStorageProp('RNOHContext') rnohContext: RNOHContext | undefined = undefined
+  @LocalStorageLink('RNOHContext') rnohContext: RNOHContext | undefined = undefined
 
   @Builder buildCustomComponent(ctx: ComponentBuilderContext) {
     if (ctx.descriptor.type === SAMPLE_VIEW_TYPE) {
