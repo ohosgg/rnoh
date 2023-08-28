@@ -16,12 +16,19 @@ type ModalHostViewState = {
 };
 type ModalHostViewDescriptor = Descriptor<"ModalHostView", ModalHostViewProps, ModalHostViewState>;
 
+function closeTo(a: number, b: number) {
+  return Math.abs(a - b) < 0.1
+}
+
 @CustomDialog
 struct ModalHostViewDialog {
   controller: CustomDialogController
   ctx: RNOHContext
   tag: Tag
   @BuilderParam renderDescriptors: () => void
+  @State modalHeight: number = 0
+  @State modalWidth: number = 0
+  unsubscribeFromDescriptorChanges: () => void | undefined
 
   emitComponentEvent(eventName: string) {
     this.ctx.rnInstanceManager.emitComponentEvent(this.tag, eventName, {})
@@ -29,6 +36,13 @@ struct ModalHostViewDialog {
 
   aboutToAppear() {
     this.emitComponentEvent("onShow")
+    this.unsubscribeFromDescriptorChanges = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag, (descriptor: ModalHostViewDescriptor) => {
+      // NOTE: this should ensure we only update the Stack's dimensions
+      // after React rerenders the contents,
+      // to prevent flickering when opening the modal
+      this.modalWidth = descriptor.layoutMetrics.frame.size.width
+      this.modalHeight = descriptor.layoutMetrics.frame.size.height
+    })
   }
 
   onLayout(_children, constraints) {
@@ -40,17 +54,23 @@ struct ModalHostViewDialog {
     const screenSize = descriptor.state.screenSize
     const height = px2vp(maxHeight)
     const width = px2vp(maxWidth)
-    if (screenSize.height != height || screenSize.width != width) {
+    if (!closeTo(screenSize.height, height) || !closeTo(screenSize.width, width)) {
       this.ctx.descriptorRegistry.setState(this.tag, { screenSize: { height, width } })
     }
   }
 
   aboutToDisappear() {
     this.emitComponentEvent("onRequestClose")
+    this.unsubscribeFromDescriptorChanges?.()
   }
 
   build() {
-    this.renderDescriptors()
+    Stack() {
+      this.renderDescriptors()
+    }
+    .clip(true)
+    .width(this.modalWidth)
+    .height(this.modalHeight)
   }
 }
 
