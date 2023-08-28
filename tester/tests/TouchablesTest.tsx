@@ -3,7 +3,6 @@ import {
   Touchable,
   TouchableHighlight,
   TouchableNativeFeedback,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
   ViewProps,
@@ -12,6 +11,7 @@ import {TestCase, TestSuite} from '@rnoh/testerino';
 import {useState} from 'react';
 
 export const TouchablesTest = () => {
+  const [pressCountHighlight, setPressCountHighlight] = useState(0);
   return (
     <TestSuite name="Touchables">
       <TestCase
@@ -28,10 +28,11 @@ export const TouchablesTest = () => {
           <PressMe />
         </TouchableHighlight>
       </TestCase>
-      <TestCase itShould="make the text less visible on press in (TouchableOpacity)">
-        <TouchableOpacity onPress={() => {}}>
-          <PressMe />
-        </TouchableOpacity>
+      <TestCase itShould="show number of presses on press in (TouchableHighlight)">
+        <TouchableHighlight
+          onPress={() => setPressCountHighlight(pressCountHighlight + 1)}>
+          <PressMe endLabel={pressCountHighlight}/>
+        </TouchableHighlight>
       </TestCase>
       <TestCase
         itShould="export TouchableNativeFeedback (Android only)"
@@ -40,7 +41,7 @@ export const TouchablesTest = () => {
         }}
       />
       <TestCase itShould="handle press without showing feedback">
-        <TouchableWithoutFeedbackDemo />
+        <TouchableWithoutFeedbackDemo />s
       </TestCase>
     </TestSuite>
   );
