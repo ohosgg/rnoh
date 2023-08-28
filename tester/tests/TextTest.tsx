@@ -38,6 +38,12 @@ export function TextTest() {
           </Text>
         </View>
       </TestCase>
+      <TestCase itShould="test the the left and right padding of the text">
+        <View style={{height: 32, flexDirection: 'row'}}>
+          <Text style={{height: '100%', backgroundColor: 'red', color: 'white', paddingLeft: 10, paddingRight: 30}}>left</Text>
+          <Text style={{height: '100%', backgroundColor: 'red', color: 'white'}}>right</Text>
+        </View>
+      </TestCase>
       <TestCase itShould="[FAIL] render red rectangle after 'FOO'">
         <View
           style={{height: 32, alignSelf: 'flex-start', flexDirection: 'row'}}>

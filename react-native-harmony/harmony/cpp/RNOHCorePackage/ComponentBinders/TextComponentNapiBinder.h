@@ -3,6 +3,9 @@
 #include <react/renderer/components/text/ParagraphState.h>
 #include <react/renderer/components/text/ParagraphProps.h>
 #include <react/renderer/core/ConcreteState.h>
+#include <react/renderer/components/view/YogaStylableProps.h>
+#include <react/renderer/components/view/conversions.h>
+#include <react/renderer/core/LayoutPrimitives.h>
 #define EnumToString(x) #x
 
 namespace rnoh {
@@ -46,6 +49,7 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
             }
             auto fragmentsArray = arkJs.createArray(fragmentsPayload);
             propsObjBuilder.addProperty("fragments", fragmentsArray);
+            propsObjBuilder.addProperty("padding", getParagraphPaddingProps(shadowView));
             return propsObjBuilder.build();
         }
         return napiViewProps;
@@ -65,7 +69,62 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
         case facebook::react::TextAlignment::Justified:
             return "justified";
         }
+    };
+
+    void setHorizontalPadding(YGStyle::Edges const &yogaPadding, bool isRTL, float &left, float &right) {
+        if (facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeLeft]).has_value()) {
+            left = facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeLeft]).value();
+        }
+        if (facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeRight]).has_value()) {
+            right = facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeRight]).value();
+        }
+        if (facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeStart]).has_value()) {
+            float paddingStart = facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeStart]).value();
+            isRTL ? (right = paddingStart) : (left = paddingStart);
+        }
+        if (facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeEnd]).has_value()) {
+            float paddingEnd = facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeEnd]).value();
+        }
+        if (facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeHorizontal]).has_value()) {
+            float paddingHorizontal = facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeHorizontal]).value();
+            left = right = paddingHorizontal;
+        }
+    };
+
+    void setVerticalPadding(YGStyle::Edges const &yogaPadding, float &top, float &bottom) {
+        if (facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeTop]).has_value()) {
+            top = facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeTop]).value();
+        }
+        if (facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeBottom]).has_value()) {
+            bottom = facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeBottom]).value();
+        }
+        if (facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeVertical]).has_value()) {
+            float paddingVertical = facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeVertical]).value();
+            top = bottom = paddingVertical;
+        }
+    };
+
+    /*
+      top: number,
+      right: number,
+      bottom: number,
+      left: number
+    */
+   folly::dynamic getParagraphPaddingProps(facebook::react::ShadowView const shadowView) {
+    float top = 0, right = 0, bottom = 0, left = 0;
+    auto isRTL = 
+        bool{shadowView.layoutMetrics.layoutDirection == facebook::react::LayoutDirection::RightToLeft};
+    if (auto props = std::dynamic_pointer_cast<const facebook::react::ParagraphProps>(shadowView.props)) {
+        auto yogaPadding = props->yogaStyle.padding();
+        if (facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeAll]).has_value()) {
+            float padding = facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeAll]).value();
+            top = right = bottom = left = padding;
+        }
+        setHorizontalPadding(yogaPadding, isRTL, left, right);
+        setVerticalPadding(yogaPadding, top, bottom);
     }
+    return folly::dynamic::object("top", top)("right", right)("bottom", bottom)("left", left);
+   }
 };
 
 } // namespace rnoh

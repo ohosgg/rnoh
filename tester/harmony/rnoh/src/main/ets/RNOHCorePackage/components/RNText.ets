@@ -12,6 +12,14 @@ export type AttributedFragment = {
 export type TextProps = ViewBaseProps & {
   textAlign?: string
   fragments: AttributedFragment[]
+  padding?: PaddingProps
+}
+
+type PaddingProps = {
+  top: number,
+  right: number,
+  bottom: number,
+  left: number
 }
 
 function stringToAlignment(alignment: string) {
@@ -69,6 +77,7 @@ export struct RNText {
       .width("100%")
       .height("100%")
       .textAlign(stringToAlignment(this.descriptor.props.textAlign))
+      .padding(this.descriptor.props.padding)
     }
   }
 }
