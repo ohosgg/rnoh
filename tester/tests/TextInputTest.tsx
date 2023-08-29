@@ -7,7 +7,9 @@ export function TextInputTest() {
 
   return (
     <TestSuite name="TextInput">
-      <TestCase itShould="render textinput and change the text component based on the values inputted">
+      <TestCase
+        modal
+        itShould="render textinput and change the text component based on the values inputted">
         <Text style={styles.text}>{text}</Text>
         <TextInput
           style={styles.textInput}

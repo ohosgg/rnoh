@@ -1,15 +1,23 @@
 {
   app: {
-    compileSdkVersion: 9,
-    compatibleSdkVersion: 9,
     products: [
       {
         name: 'default',
-        signingConfig: 'default'
-      }
+        signingConfig: 'default',
+        compileSdkVersion: '4.0.0(10)',
+        compatibleSdkVersion: '4.0.0(10)',
+        runtimeOS: 'HarmonyOS',
+      },
     ],
-    "signingConfigs": [
-    ]
+    buildModeSet: [
+      {
+        name: 'debug',
+      },
+      {
+        name: 'release',
+      },
+    ],
+    signingConfigs: [],
   },
   modules: [
     {
@@ -18,9 +26,7 @@
       targets: [
         {
           name: 'default',
-          applyToProducts: [
-            'default'
-          ],
+          applyToProducts: ['default'],
         },
       ],
     },
@@ -38,9 +44,7 @@
       targets: [
         {
           name: 'default',
-          applyToProducts: [
-            'default'
-          ],
+          applyToProducts: ['default'],
         },
       ],
     },
@@ -50,23 +54,19 @@
       targets: [
         {
           name: 'default',
-          applyToProducts: [
-            'default'
-          ],
+          applyToProducts: ['default'],
         },
       ],
     },
     {
-      "name": "image_gallery",
-      "srcPath": "./image_gallery",
-      "targets": [
+      name: 'image_gallery',
+      srcPath: './image_gallery',
+      targets: [
         {
-          "name": "default",
-          "applyToProducts": [
-            "default"
-          ]
-        }
-      ]
+          name: 'default',
+          applyToProducts: ['default'],
+        },
+      ],
     },
     {
       name: 'cursor',
@@ -74,9 +74,7 @@
       targets: [
         {
           name: 'default',
-          applyToProducts: [
-            'default'
-          ],
+          applyToProducts: ['default'],
         },
       ],
     },
@@ -86,35 +84,29 @@
       targets: [
         {
           name: 'default',
-          applyToProducts: [
-            'default'
-          ],
+          applyToProducts: ['default'],
         },
       ],
     },
     {
-      "name": "large_image_scroll",
-      "srcPath": "./large_image_scroll",
-      "targets": [
+      name: 'large_image_scroll',
+      srcPath: './large_image_scroll',
+      targets: [
         {
-          "name": "default",
-          "applyToProducts": [
-            "default"
-          ]
-        }
-      ]
+          name: 'default',
+          applyToProducts: ['default'],
+        },
+      ],
     },
     {
-      "name": "components_toggler_example",
-      "srcPath": "./components_toggler_example",
-      "targets": [
+      name: 'components_toggler_example',
+      srcPath: './components_toggler_example',
+      targets: [
         {
-          "name": "default",
-          "applyToProducts": [
-            "default"
-          ]
-        }
-      ]
-    }
-  ]
+          name: 'default',
+          applyToProducts: ['default'],
+        },
+      ],
+    },
+  ],
 }

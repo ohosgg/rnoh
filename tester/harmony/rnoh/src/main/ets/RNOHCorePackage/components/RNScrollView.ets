@@ -132,7 +132,7 @@ export struct RNScrollView {
 
     if (currentScrollState != scrollState) {
       if (currentScrollState === ScrollState.Scroll) {
-        this.onDragEnd();
+        this.handleDragEnd();
       } else if (currentScrollState === ScrollState.Fling) {
         this.onMomentumEnd();
       }
@@ -163,7 +163,7 @@ export struct RNScrollView {
     )
   }
 
-  onDragEnd() {
+  handleDragEnd() {
     this.ctx.rnInstanceManager.emitComponentEvent(
       this.tag,
       "onScrollEndDrag",
@@ -191,7 +191,7 @@ export struct RNScrollView {
     if (this.scrollState === ScrollState.Fling) {
       this.onMomentumEnd();
     } else if (this.scrollState === ScrollState.Scroll) {
-      this.onDragEnd();
+      this.handleDragEnd();
     }
     this.scrollState = ScrollState.Idle;
 

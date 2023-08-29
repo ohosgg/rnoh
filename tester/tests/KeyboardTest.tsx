@@ -10,7 +10,7 @@ export function KeyboardTest() {
           expect(Keyboard.isVisible()).to.be.false;
         }}
       />
-      <TestCase itShould="[FAILS] dismiss keyboard on button press">
+      <TestCase modal itShould="[FAILS] dismiss keyboard on button press">
         <TextInput style={styles.textInput} />
         <View style={styles.button} onTouchEnd={() => Keyboard.dismiss()}>
           <Text style={styles.buttonText}>Dismiss keyboard</Text>

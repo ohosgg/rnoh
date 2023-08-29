@@ -111,9 +111,9 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 
 ### DevEco Studio setup
 
-Currently we use DevEco Studio 3.1. Release for development. Follow steps below to install the IDE and required SDKs.
+Currently we use DevEco Studio 4.0.3.400. Follow steps below to install the IDE and required SDKs.
 
-#### IDE Installation
+#### IDE Installation from official release
 
 1. Open [a website with DevEco Studio releases](https://developer.harmonyos.com/cn/develop/deveco-studio/archive/)
 1. Find the DevEco Studio 3.1 Release download link for your operating system and download the IDE
@@ -144,6 +144,8 @@ If your system language isn't Chinese and region code is different than CN, you 
 
 ##### Installing required SDKs
 
+Warning: This project may use unreleased SDK, if buildProfile.template.json5 specifies SDK version higher than available publicly. In that case refer to section [Installing unreleased SDK](#installing-unreleased-sdk)
+
 After doing a fresh install of the IDE you will see the SDK setup window just after opening the IDE.
 Install the required SDK and proceed through the setup.
 
@@ -154,6 +156,25 @@ You will have to install some additional SDKs:
 1. Select the checkbox near the first item in the list (with the appropriate DevEco Studio version)
 1. Press `Apply` button to begin installation and press `Ok` in the confirmation modal
 1. Press the `Finish` button to finish installation and close the settings window
+
+##### Installing unreleased SDK
+
+1. Download SDK from internal channel or download unreleased DevEcoStudio (unreleased SDK should be included)
+1. Change path to SDK in Dev Eco Studio: `Tools` -> `SDK Manager`
+1. Update your `buildProfile.json5` based on `buildProfile.template.json5`
+1. Update `hvigor`
+   1. Copy contents of `plugins` from internal DevEcoStudio release directory to `tester/harmony/hvigor`
+   1. Open `tester/harmony/hvigor/hvigor-config.json5` in DevEcoStudio
+   1. DevEcoStudio should show yellow pop ups which should allow you to install dependencies and sync the project
+1. DevEcoStudio: `Build` -> `Clean Project`
+1. Remove `.cxx` directory from `entry` module
+1. Build and run the tester app
+1. On Mac, gatekeeper may complain about running unsigned apps. In such case disable gatekeeper completely or
+   1. Press the Cancel button 
+   1. Open Mac Settings and search for Gatekeeper
+   1. Click the button that allows running the cancelled application
+   1. Try building the app again, this time you should be able to click `Open` button instead of `Move to bin`
+   1. Repeat this process until Gatekeeper stops complaining (~20 apps/libs)
 
 ### Git setup
 
