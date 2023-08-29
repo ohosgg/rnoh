@@ -83,7 +83,7 @@ export const ImageTest = () => {
         <TestSuite
           name="resizeMode" // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/245
         >
-          <TestCase skip itShould="render small image in the center (center)">
+          <TestCase itShould="render small image in the center (center)">
             <Image
               style={{width: '100%', height: 100}}
               source={LOCAL_IMAGE_ASSET_ID}
@@ -91,7 +91,6 @@ export const ImageTest = () => {
             />
           </TestCase>
           <TestCase
-            skip
             itShould="render image touching top and bottom edges in the center (contain)">
             <Image
               style={{width: '100%', height: 100}}
@@ -107,7 +106,6 @@ export const ImageTest = () => {
             />
           </TestCase>
           <TestCase
-            skip
             itShould="cover test case area by repeating image (repeat)">
             <Image
               style={{width: '100%', height: 100}}
@@ -116,7 +114,6 @@ export const ImageTest = () => {
             />
           </TestCase>
           <TestCase
-            skip
             itShould="cover test case area by stretching (stretch)">
             <Image
               style={{width: '100%', height: 100}}

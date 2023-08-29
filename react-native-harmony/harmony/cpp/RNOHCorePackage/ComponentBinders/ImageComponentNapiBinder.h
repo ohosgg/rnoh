@@ -15,6 +15,7 @@ class ImageComponentNapiBinder : public ViewComponentNapiBinder {
                 return ArkJS(env)
                     .getObjectBuilder(napiViewProps)
                     .addProperty("uri", imageSource.uri)
+                    .addProperty("resizeMode", static_cast<int>(props->resizeMode))
                     .build();
             }
         }

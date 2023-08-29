@@ -2,7 +2,8 @@ import { Descriptor, RNOHContext } from '../../RNOH'
 import { RNViewBase, ViewBaseProps } from './RNViewBase'
 
 export type ImageProps = ViewBaseProps & {
-  uri: string
+  uri: string,
+  resizeMode: number
 }
 
 export type ImageDescriptor = Descriptor<"Image", ImageProps>
@@ -34,6 +35,31 @@ export struct RNImage {
     return this.descriptor.props.uri
   }
 
+  /*
+  * enum class ImageResizeMode {
+  *   Cover,
+  *   Contain,
+  *   Stretch,
+  *   Center,
+  *   Repeat
+  * }
+   */
+  transResizeModeForImage(resizeMode: number) {
+    switch(resizeMode) {
+      case 0:
+        return ImageFit.Cover;
+      case 1:
+        return ImageFit.Contain;
+      case 2:
+        return ImageFit.Fill;
+      case 3:
+      case 4:
+        return ImageFit.None;
+      default:
+        return ImageFit.Cover;
+    }
+  }
+
   build() {
     RNViewBase({
       ctx: this.ctx,
@@ -43,6 +69,9 @@ export struct RNImage {
         .interpolation(ImageInterpolation.High)
         .width("100%")
         .height("100%")
+        .objectFit(this.transResizeModeForImage(this.descriptor.props.resizeMode))
+        .objectRepeat(this.descriptor.props.resizeMode === 4 ?
+        ImageRepeat.XY : ImageRepeat.NoRepeat )
     }
   }
 }
