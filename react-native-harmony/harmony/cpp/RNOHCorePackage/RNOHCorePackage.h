@@ -24,6 +24,8 @@
 #include "RNOHCorePackage/ComponentBinders/ViewComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ImageComponentJSIBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ImageComponentNapiBinder.h"
+#include "RNOHCorePackage/ComponentBinders/PullToRefreshViewJSIBinder.h"
+#include "RNOHCorePackage/ComponentBinders/PullToRefreshViewNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ScrollViewComponentJSIBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ScrollViewComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/SwitchComponentJSIBinder.h"
@@ -34,6 +36,7 @@
 #include "RNOHCorePackage/ComponentBinders/ModalHostViewNapiBinder.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/TouchEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/TextInputChangeEventEmitRequestHandler.h"
+#include "RNOHCorePackage/EventEmitRequestHandlers/PullToRefreshViewEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/ScrollEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/ModalEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/SwitchEventEmitRequestHandler.h"
@@ -90,6 +93,7 @@ class RNOHCorePackage : public Package {
             facebook::react::concreteComponentDescriptorProvider<facebook::react::ParagraphComponentDescriptor>(),
             facebook::react::concreteComponentDescriptorProvider<facebook::react::TextInputComponentDescriptor>(),
             facebook::react::concreteComponentDescriptorProvider<facebook::react::ScrollViewComponentDescriptor>(),
+            facebook::react::concreteComponentDescriptorProvider<facebook::react::PullToRefreshViewComponentDescriptor>(),
             facebook::react::concreteComponentDescriptorProvider<facebook::react::ModalHostViewComponentDescriptor>(),
             facebook::react::concreteComponentDescriptorProvider<facebook::react::SwitchComponentDescriptor>()};
     }
@@ -104,7 +108,8 @@ class RNOHCorePackage : public Package {
             {"RCTScrollView", std::make_shared<ScrollViewComponentJSIBinder>()},
             {"RCTScrollContentView", std::make_shared<ViewComponentJSIBinder>()},
             {"RCTModalHostView", std::make_shared<ModalHostViewJSIBinder>()},
-            {"RCTSwitch", std::make_shared<SwitchComponentJSIBinder>()}};
+            {"RCTSwitch", std::make_shared<SwitchComponentJSIBinder>()},
+            {"RCTRefreshControl", std::make_shared<PullToRefreshViewJSIBinder>()}};
     };
 
     ComponentNapiBinderByString createComponentNapiBinderByName() override {
@@ -116,7 +121,8 @@ class RNOHCorePackage : public Package {
             {"ScrollView", std::make_shared<ScrollViewComponentNapiBinder>()},
             {"TextInput", std::make_shared<TextInputComponentNapiBinder>()},
             {"ModalHostView", std::make_shared<ModalHostViewNapiBinder>()},
-            {"Switch", std::make_shared<SwitchComponentNapiBinder>()}};
+            {"Switch", std::make_shared<SwitchComponentNapiBinder>()},
+            {"PullToRefreshView", std::make_shared<PullToRefreshViewNapiBinder>()}};
     };
 
     EventEmitRequestHandlers createEventEmitRequestHandlers() override {
@@ -124,7 +130,9 @@ class RNOHCorePackage : public Package {
                 std::make_shared<TextInputChangeEventEmitRequestHandler>(),
                 std::make_shared<ScrollEventEmitRequestHandler>(),
                 std::make_shared<ModalEventEmitRequestHandler>(),
-                std::make_shared<SwitchEventEmitRequestHandler>()};
+                std::make_shared<SwitchEventEmitRequestHandler>(),
+                std::make_shared<PullToRefreshViewEventEmitRequestHandler>()
+                };
     }
 };
 

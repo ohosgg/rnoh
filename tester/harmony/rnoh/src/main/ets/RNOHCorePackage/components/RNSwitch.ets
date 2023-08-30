@@ -19,7 +19,6 @@ export struct RNSwitch {
 
   aboutToAppear() {
     this.descriptor = this.ctx.descriptorRegistry.getDescriptor<SwitchDescriptor>(this.tag)
-    this.ctx.logger.info(JSON.stringify(this.descriptor.props));
     this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
         this.descriptor = (newDescriptor as SwitchDescriptor)

@@ -1,7 +1,6 @@
 @Entry
 @Component
 struct Index {
-  @State message: string = 'Hello World'
   @State numberOfComponents: number = 300
 
   build() {

@@ -67,10 +67,10 @@ module.exports = {
       .default;
   },
   get RefreshControl() {
-    return require('react-native/Libraries/Components/RefreshControl/RefreshControl');
+    return require('./Libraries/Components/RefreshControl/RefreshControl');
   },
   get ScrollView() {
-    return require('react-native/Libraries/Components/ScrollView/ScrollView');
+    return require('./Libraries/Components/ScrollView/ScrollView');
   },
   get StatusBar() {
     return require('./Libraries/Components/StatusBar/StatusBar.harmony');
