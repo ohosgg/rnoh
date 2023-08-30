@@ -45,6 +45,10 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                 } else {
                     fragmentObjBuilder.addProperty("fontStyle", "normal");
                 }
+                auto textDecorationLine = textAttributes.textDecorationLineType;
+                if (textDecorationLine.has_value()) {
+                    fragmentObjBuilder.addProperty("textDecorationLine", static_cast<int>(textDecorationLine.value()));
+                }
                 fragmentsPayload.push_back(fragmentObjBuilder.build());
             }
             auto fragmentsArray = arkJs.createArray(fragmentsPayload);

@@ -7,6 +7,7 @@ export type AttributedFragment = {
   fontWeight?: number
   fontSize?: number
   fontStyle?: string
+  textDecorationLine?: number
 }
 
 export type TextProps = ViewBaseProps & {
@@ -36,6 +37,26 @@ function stringToFontStyle(style: string | undefined): FontStyle {
     return FontStyle.Italic;
   }
   return FontStyle.Normal;
+}
+
+/*
+  * enum class TextDecorationLine {
+  *   none,
+  *   underline,
+  *   line-through,
+  *   underline line-through
+  * }
+  *The 'underline line-through' attribute is not implemented on ArkTS, so it is not implemented here yet.
+   */
+function getTextDecorationLine(fragment: AttributedFragment | undefined) {
+  switch(fragment.textDecorationLine) {
+    case 1:
+      return TextDecorationType.Underline;
+    case 2:
+      return TextDecorationType.LineThrough;
+    default :
+      return TextDecorationType.None;
+  }
 }
 
 export type TextDescriptor = Descriptor<"Paragraph", TextProps>
@@ -72,6 +93,7 @@ export struct RNText {
             .fontWeight(fragment.fontWeight)
             .fontSize(fragment.fontSize)
             .fontStyle(stringToFontStyle(fragment.fontStyle))
+            .decoration({type: getTextDecorationLine(fragment)})
         })
       }
       .width("100%")

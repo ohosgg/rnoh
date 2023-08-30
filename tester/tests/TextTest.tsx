@@ -54,6 +54,13 @@ export function TextTest() {
           </Text>
         </View>
       </TestCase>
+      <TestCase itShould="show text with deferent textDecorationLines">
+        <View style={{width: 150, height: 80, backgroundColor: 'red'}}>
+          <Text style={styles.text}>None</Text>
+          <Text style={{...styles.text, textDecorationLine: 'underline'}}>underline</Text>
+          <Text style={{...styles.text, textDecorationLine: 'line-through'}}>line-through</Text>
+        </View>
+      </TestCase>
     </TestSuite>
   );
 }
