@@ -12,9 +12,10 @@ export const commandBundleHarmony: Command = {
     'Creates JS bundle, creates a special cpp header containing the JS code, copies assets directory to the project.',
   options: [
     {
-      name: '--dev',
+      name: '--dev [boolean]',
       description: 'If false, warnings are disabled and the bundle is minified',
-      default: 'true',
+      parse: (val: string) => val !== 'false',
+      default: true,
     },
     {
       name: '--entry-file <path>',
@@ -40,21 +41,26 @@ export const commandBundleHarmony: Command = {
       name: '--sourcemap-output <path>',
       description: 'File name where to store the resulting source map, ex. /tmp/groups.map',
     },
+    {
+      name: '--minify [boolean]',
+      description: 'Allows overriding whether bundle is minified',
+      parse: (val: string) => val !== 'false',
+    },
   ],
   func: async (argv, config, args: any) => {
-    const metroConfig = (args.config ) ? await Metro.loadConfig(args.config) : await Metro.loadConfig();
+    const metroConfig = (args.config ) ? await Metro.loadConfig({config: args.config}) : await Metro.loadConfig();
     if (args.bundleOutput === ARK_RESOURCE_PATH + '/bundle.harmony.js') {
       await fse.ensureDir(ARK_RESOURCE_PATH);
     }
-
     // casting needed as Metro.runBuild returns Promise<{code: string, map: string}> 
     // despite being typed as Promise<void> 
     ((Metro.runBuild(metroConfig, {
       entry: args.entryFile,
       platform: 'harmony',
-      minify: false,
-      dev: args.dev ?? true,    
+      minify: args.minify !== undefined ? args.minify : !args.dev,
+      dev: args.dev,    
       sourceMap: args.sourcemapOutput,
+      sourceMapUrl: args.sourcemapOutput,
     }) as unknown) as Promise<{code: string, map:string}>).then((bundle) => {
       saveBundle(bundle, args.bundleOutput, args.sourcemapOutput)
       copyAssets('./assets/', args.assetsDest);
