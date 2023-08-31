@@ -20,6 +20,10 @@ export type ViewBaseProps = LayoutProps & {
   opacity?: number
   transform?: TransformMatrix,
   pointerEvents?: "auto" | "none" | "box-none" | "box-only"
+  shadowColor?: ColorSegments,
+  shadowOffset?: {width: number, height: number},
+  shadowOpacity?: number,
+  shadowRadius?: number
 }
 
 export type ViewDynamicProps = {
@@ -167,6 +171,27 @@ export struct RNViewBase {
     }
   }
 
+  getShadow(): {
+    radius: number;
+    color?: string;
+    offsetX?: number;
+    offsetY?: number;
+  } | undefined {
+    const shadowRadius = this.descriptor.props.shadowRadius
+    if (shadowRadius === undefined || shadowRadius === 0)
+      return undefined
+
+    const props = this.descriptor.props
+    const colorSegments = props.shadowColor ?? [0,0,0,1]
+    colorSegments[3] *= (props.shadowOpacity ?? 1)
+    return {
+      radius: shadowRadius,
+      color: convertColorSegmentsToString(colorSegments),
+      offsetX: props.shadowOffset?.width,
+      offsetY: props.shadowOffset?.height,
+    }
+  }
+
   build() {
     Stack() {
       this.renderChildren()
@@ -183,5 +208,6 @@ export struct RNViewBase {
     .transform(this.descriptor.props.transform != undefined ? convertMatrixArrayToMatrix4(this.descriptor.props.transform) : undefined)
     .clip(true)
     .hitTestBehavior(this.getHitTestMode())
+    .shadow(this.getShadow())
   }
 }

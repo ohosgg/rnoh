@@ -95,6 +95,20 @@ export function ViewTest() {
           />
         </View>
       </TestCase>
+      <TestCase itShould="render light blue shadow shifted towards bottom and right">
+        <View
+          style={{
+            width: 64,
+            height: 64,
+            margin: 8,
+            backgroundColor: 'green',
+            shadowColor: 'blue',
+            shadowOffset: {width: 16, height: 16},
+            shadowOpacity: 0.25,
+            shadowRadius: 16,
+          }}
+        />
+      </TestCase>
     </TestSuite>
   );
 }

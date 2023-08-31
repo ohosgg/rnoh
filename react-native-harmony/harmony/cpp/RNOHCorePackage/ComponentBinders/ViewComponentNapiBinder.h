@@ -23,6 +23,14 @@ class ViewComponentNapiBinder : public BaseComponentNapiBinder {
                 .addProperty("borderRadius", borderMetrics.borderRadii)
                 .addProperty("transform", props->transform.matrix)
                 .addProperty("pointerEvents", this->stringifyPointerEvents(props->pointerEvents))
+                .addProperty("shadowColor", props->shadowColor)
+                .addProperty("shadowOffset", ArkJS(env).createObjectBuilder()
+                    .addProperty("width", props->shadowOffset.width)
+                    .addProperty("height", props->shadowOffset.height)
+                    .build()
+                )
+                .addProperty("shadowOpacity", props->shadowOpacity)
+                .addProperty("shadowRadius", props->shadowRadius)
                 .build();
         }
         return napiBaseProps;
