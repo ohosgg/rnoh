@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 
 import {Animated, Pressable, Text, View} from 'react-native';
 
@@ -16,6 +16,31 @@ export function AnimatedTest() {
       <TestCase itShould="fade in and out when clicked">
         <FadeInOut />
         <FadeInOut nativeDriver />
+      </TestCase>
+      <TestCase itShould="rotate grey square after red square with 0.5 second delay">
+        <Delay />
+      </TestCase>
+      <TestCase itShould="rotate red square in a loop">
+        <Loop />
+      </TestCase>
+      <TestCase itShould="rotate both squares in paralell">
+        <Parallel />
+      </TestCase>
+      <TestCase itShould="rotate button on press">
+        <AnimatedPressableView />
+      </TestCase>
+      <TestCase
+        itShould="rotate squares with different stiffness/mass"
+        skip
+        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/261
+      >
+        <Spring />
+      </TestCase>
+      <TestCase itShould="move grey square 2x further horizontally than red">
+        <Multiply />
+      </TestCase>
+      <TestCase itShould="move square both vertically and horizontally">
+        <ValueXY />
       </TestCase>
     </TestSuite>
   );
@@ -144,3 +169,342 @@ function FadeInOut({nativeDriver = false}) {
     </Pressable>
   );
 }
+
+const Delay = () => {
+  const square1Anim = useRef(new Animated.Value(0)).current;
+  const square2Anim = useRef(new Animated.Value(0)).current;
+  const animation = Animated.sequence([
+    Animated.timing(square1Anim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }),
+    Animated.delay(500),
+    Animated.timing(square2Anim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }),
+  ]);
+
+  const handleAnimation = () => {
+    animation.reset();
+    animation.start();
+  };
+
+  return (
+    <AnimatedRotatingSquaresView
+      handleAnimation={handleAnimation}
+      square1Anim={square1Anim}
+      square2Anim={square2Anim}
+    />
+  );
+};
+const Loop = () => {
+  const squareAnim = useRef(new Animated.Value(0)).current;
+  const [isRunning, setIsRunning] = useState(false);
+  const animation = Animated.loop(
+    Animated.sequence([
+      Animated.timing(squareAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.timing(squareAnim, {
+        toValue: 0,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+    ]),
+  );
+
+  const handleAnimation = () => {
+    if (isRunning) {
+      animation.stop();
+      setIsRunning(false);
+    } else {
+      animation.reset();
+      animation.start();
+      setIsRunning(true);
+    }
+  };
+
+  return (
+    <AnimatedRotatingSquaresView
+      handleAnimation={handleAnimation}
+      square1Anim={squareAnim}
+      square2Anim={new Animated.Value(0)}
+    />
+  );
+};
+
+const Parallel = () => {
+  const square1Anim = useRef(new Animated.Value(0)).current;
+  const square2Anim = useRef(new Animated.Value(0)).current;
+
+  const animation = Animated.parallel([
+    Animated.timing(square1Anim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }),
+    Animated.timing(square2Anim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }),
+  ]);
+  const handleAnimation = () => {
+    animation.reset();
+    animation.start();
+  };
+
+  return (
+    <AnimatedRotatingSquaresView
+      handleAnimation={handleAnimation}
+      square1Anim={square1Anim}
+      square2Anim={square2Anim}
+    />
+  );
+};
+
+const AnimatedRotatingSquaresView = (props: {
+  square1Anim: Animated.Value;
+  square2Anim: Animated.Value;
+  handleAnimation: () => void;
+}) => {
+  return (
+    <Pressable
+      style={{height: 100, width: '100%'}}
+      onPress={props.handleAnimation}>
+      <View style={{flexDirection: 'row'}}>
+        <Animated.View
+          style={{
+            height: 50,
+            width: 50,
+            margin: 10,
+            backgroundColor: 'red',
+            transform: [
+              {
+                rotateZ: props.square1Anim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: ['0deg', '360deg'],
+                }),
+              },
+            ],
+          }}
+        />
+        <Animated.View
+          style={{
+            height: 50,
+            width: 50,
+            margin: 10,
+            backgroundColor: 'grey',
+            transform: [
+              {
+                rotateZ: props.square2Anim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: ['0deg', '360deg'],
+                }),
+              },
+            ],
+          }}
+        />
+      </View>
+      <Text style={{height: 20}}>Press me to start animation</Text>
+    </Pressable>
+  );
+};
+
+const AnimatedPressableView = () => {
+  const pressableAnim = useRef(new Animated.Value(0)).current;
+  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+  const animation = Animated.timing(pressableAnim, {
+    toValue: 1,
+    duration: 500,
+    useNativeDriver: true,
+  });
+  const onPress = () => {
+    animation.reset();
+    animation.start();
+  };
+  return (
+    <View style={{height: 80, width: '100%'}}>
+      <AnimatedPressable
+        style={{
+          width: 100,
+          margin: 20,
+          backgroundColor: 'red',
+          transform: [
+            {
+              rotateZ: pressableAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: ['0deg', '360deg'],
+              }),
+            },
+          ],
+        }}
+        onPress={onPress}>
+        <Text style={{height: 40}}>Press me to start animation</Text>
+      </AnimatedPressable>
+    </View>
+  );
+};
+
+const Spring = () => {
+  const square1Anim = useRef(new Animated.Value(0)).current;
+  const square2Anim = useRef(new Animated.Value(0)).current;
+
+  const animation = Animated.parallel([
+    Animated.spring(square1Anim, {
+      toValue: 1,
+      stiffness: 1,
+      useNativeDriver: true,
+    }),
+    Animated.spring(square2Anim, {
+      toValue: 1,
+      mass: 20,
+      useNativeDriver: true,
+    }),
+  ]);
+  const handleAnimation = () => {
+    animation.reset();
+    animation.start();
+  };
+
+  return (
+    <Pressable style={{height: 120, width: '100%'}} onPress={handleAnimation}>
+      <Animated.View
+        style={{
+          height: 50,
+          width: 50,
+          backgroundColor: 'red',
+          transform: [
+            {
+              translateX: square1Anim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 200],
+              }),
+            },
+          ],
+        }}
+      />
+      <Animated.View
+        style={{
+          height: 50,
+          width: 50,
+          backgroundColor: 'grey',
+          transform: [
+            {
+              translateX: square2Anim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 200],
+              }),
+            },
+          ],
+        }}
+      />
+      <Text style={{height: 20}}>Press me to start animation</Text>
+    </Pressable>
+  );
+};
+
+const Multiply = () => {
+  const square1Anim = useRef(new Animated.Value(0)).current;
+  const multValue = new Animated.Value(2);
+  const squareMultAnim = Animated.multiply(square1Anim, multValue);
+
+  const animation = Animated.timing(square1Anim, {
+    toValue: 100,
+    duration: 1000,
+    useNativeDriver: true,
+  });
+  const handleAnimation = () => {
+    animation.reset();
+    animation.start();
+  };
+
+  return (
+    <Pressable style={{height: 120, width: '100%'}} onPress={handleAnimation}>
+      <Animated.View
+        style={{
+          height: 50,
+          width: 50,
+          backgroundColor: 'red',
+          transform: [
+            {
+              translateX: square1Anim,
+            },
+          ],
+        }}
+      />
+      <Animated.View
+        style={{
+          height: 50,
+          width: 50,
+          backgroundColor: 'grey',
+          transform: [
+            {
+              translateX: squareMultAnim,
+            },
+          ],
+        }}
+      />
+      <Text style={{height: 20}}>Press me to start animation</Text>
+    </Pressable>
+  );
+};
+
+const ValueXY = () => {
+  const square1Anim = useRef(new Animated.ValueXY({x: 50, y: 50})).current;
+
+  const animation = Animated.sequence([
+    Animated.timing(square1Anim, {
+      toValue: {x: 0, y: 0},
+      duration: 1000,
+      useNativeDriver: true,
+    }),
+    Animated.timing(square1Anim, {
+      toValue: {x: 0, y: 50},
+      duration: 1000,
+      useNativeDriver: true,
+    }),
+    Animated.timing(square1Anim, {
+      toValue: {x: 50, y: 0},
+      duration: 1000,
+      useNativeDriver: true,
+    }),
+    Animated.timing(square1Anim, {
+      toValue: {x: 50, y: 50},
+      duration: 1000,
+      useNativeDriver: true,
+    }),
+  ]);
+  const handleAnimation = () => {
+    animation.reset();
+    animation.start();
+  };
+
+  return (
+    <Pressable style={{height: 120, width: '100%'}} onPress={handleAnimation}>
+      <View style={{height: 100}}>
+        <Animated.View
+          style={{
+            height: 40,
+            width: 40,
+            backgroundColor: 'red',
+            transform: [
+              {
+                translateX: square1Anim.x,
+              },
+              {
+                translateY: square1Anim.y,
+              },
+            ],
+          }}
+        />
+      </View>
+      <Text style={{height: 20}}>Press me to start animation</Text>
+    </Pressable>
+  );
+};
