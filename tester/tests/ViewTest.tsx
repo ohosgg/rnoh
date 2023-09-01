@@ -376,7 +376,7 @@ export function ViewTest() {
             style={{
               width: 100,
               backgroundColor: 'blue',
-              transform: [{rotateZ: '180deg'}],
+              transform: [{rotateY: '180deg'}],
               backfaceVisibility: 'visible',
             }}>
             <Text style={{height: 20}}>Backface</Text>
@@ -393,7 +393,7 @@ export function ViewTest() {
             style={{
               width: 100,
               backgroundColor: 'blue',
-              transform: [{rotateZ: '180deg'}],
+              transform: [{rotateY: '180deg'}],
               backfaceVisibility: 'hidden',
             }}>
             <Text style={{height: 20}}>Backface</Text>
