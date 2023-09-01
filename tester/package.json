@@ -28,7 +28,7 @@
     "@babel/runtime": "^7.20.0",
     "@react-native-community/eslint-config": "^3.2.0",
     "@react-native/metro-config": "^0.72.6",
-    "@rnoh/testerino": "^0.0.5",
+    "@rnoh/testerino": "^0.0.6",
     "@tsconfig/react-native": "^2.0.2",
     "@types/chai": "^4.3.4",
     "@types/d3-scale-chromatic": "^3.0.0",
