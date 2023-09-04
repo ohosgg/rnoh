@@ -21,6 +21,9 @@ module.exports = {
     return require('react-native/Libraries/EventEmitter/RCTDeviceEventEmitter')
       .default;
   },
+  get DrawerLayoutAndroid() {
+    return require("react-native/Libraries/Components/DrawerAndroid/DrawerLayoutAndroid");
+  },
   get Easing() {
     return require('react-native/Libraries/Animated/Easing').default;
   },

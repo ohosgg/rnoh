@@ -6,6 +6,7 @@ import {
   Platform,
   DeviceEventEmitter,
   findNodeHandle,
+  DrawerLayoutAndroid,
 } from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 
@@ -40,6 +41,12 @@ export const MiscTest = () => {
         itShould="export findNodeHandle"
         fn={({expect}) => {
           expect(findNodeHandle).to.be.not.undefined;
+        }}
+      />
+      <TestCase
+        itShould="export DrawerLayoutAndroid"
+        fn={({expect}) => {
+          expect(DrawerLayoutAndroid).to.be.not.undefined;
         }}
       />
     </TestSuite>

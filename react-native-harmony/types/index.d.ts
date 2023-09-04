@@ -9,7 +9,7 @@ export * from 'react-native/Libraries/BatchedBridge/NativeModules';
 // export * from 'react-native/Libraries/Components/ActivityIndicator/ActivityIndicator';
 // export * from 'react-native/Libraries/Components/Clipboard/Clipboard';
 // export * from 'react-native/Libraries/Components/DatePicker/DatePickerIOS';
-// export * from 'react-native/Libraries/Components/DrawerAndroid/DrawerLayoutAndroid';
+export * from "react-native/Libraries/Components/DrawerAndroid/DrawerLayoutAndroid";
 export * from 'react-native/Libraries/Components/Keyboard/Keyboard';
 // export * from 'react-native/Libraries/Components/Keyboard/KeyboardAvoidingView';
 export * from 'react-native/Libraries/Components/Pressable/Pressable';
