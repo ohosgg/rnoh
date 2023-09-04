@@ -102,8 +102,8 @@ void RNInstance::loadScriptFromString(std::string const &&bundle, std::string co
     });
 }
 
-void RNInstance::runApplication(float width, float height, std::string const &moduleName, folly::dynamic &&initialProps) {
-    this->taskExecutor->runTask(TaskThread::JS, [this, width, height, moduleName, initialProps = std::move(initialProps)]() {
+void RNInstance::startSurface(float width, float height, float viewportOffsetX, float viewportOffsetY, std::string const &moduleName, folly::dynamic &&initialProps) {
+    this->taskExecutor->runTask(TaskThread::JS, [this, width, height, viewportOffsetX, viewportOffsetY, moduleName, initialProps = std::move(initialProps)]() {
         try {
             auto surfaceHandler = std::make_shared<facebook::react::SurfaceHandler>(moduleName, 1);
             surfaceHandler->setProps(std::move(initialProps));
@@ -112,18 +112,20 @@ void RNInstance::runApplication(float width, float height, std::string const &mo
             layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
                 .width = width,
                 .height = height};
-            surfaceHandler->constraintLayout(layoutConstraints, surfaceHandler->getLayoutContext());
+            auto layoutContext = surfaceHandler->getLayoutContext();
+            layoutContext.viewportOffset = {viewportOffsetX, viewportOffsetY};
+            surfaceHandler->constraintLayout(layoutConstraints, layoutContext);
             scheduler->registerSurface(*surfaceHandler);
             surfaceHandler->start();
             surfaceHandlers[moduleName] = surfaceHandler;
         } catch (const std::exception &e) {
-            LOG(ERROR) << "runApplication: " << e.what() << "\n";
+            LOG(ERROR) << "startSurface: " << e.what() << "\n";
             throw e;
         };
     });
 }
-void RNInstance::updateSurfaceConstraints(std::string const &moduleName, float width, float height) {
-    this->taskExecutor->runTask(TaskThread::JS, [this, width, height, moduleName]() {
+void RNInstance::updateSurfaceConstraints(std::string const &moduleName, float width, float height, float viewportOffsetX, float viewportOffsetY) {
+    this->taskExecutor->runTask(TaskThread::JS, [this, width, height, viewportOffsetX, viewportOffsetY, moduleName]() {
         try {
             if (surfaceHandlers[moduleName] == nullptr) {
                 return;
@@ -132,7 +134,9 @@ void RNInstance::updateSurfaceConstraints(std::string const &moduleName, float w
             layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
                 .width = width,
                 .height = height};
-            surfaceHandlers[moduleName]->constraintLayout(layoutConstraints, surfaceHandlers[moduleName]->getLayoutContext());
+            auto layoutContext = surfaceHandlers[moduleName]->getLayoutContext();
+            layoutContext.viewportOffset = {viewportOffsetX, viewportOffsetY};
+            surfaceHandlers[moduleName]->constraintLayout(layoutConstraints, layoutContext);
         } catch (const std::exception &e) {
             LOG(ERROR) << "updateSurfaceConstraints: " << e.what() << "\n";
             throw e;

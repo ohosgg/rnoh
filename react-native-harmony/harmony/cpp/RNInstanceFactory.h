@@ -24,8 +24,12 @@
 using namespace rnoh;
 
 std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboModuleProviderRef, napi_ref measureTextFnRef) {
+    static std::shared_ptr<TaskExecutor> taskExecutor = nullptr;
+    if (taskExecutor == nullptr) {
+        taskExecutor = std::make_shared<TaskExecutor>(env);
+    }
+
     auto contextContainer = std::make_shared<facebook::react::ContextContainer>();
-    auto taskExecutor = std::make_shared<TaskExecutor>(env);
     auto textMeasurer = std::make_shared<TextMeasurer>(env, measureTextFnRef, taskExecutor);
     contextContainer->insert("textLayoutManagerDelegate", textMeasurer);
     PackageProvider packageProvider;

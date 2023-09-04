@@ -8,52 +8,78 @@ export class NapiBridge {
   constructor(private libRNOHApp: any) {
   }
 
-  registerTurboModuleProvider(turboModuleProvider: TurboModuleProvider) {
-    this.libRNOHApp?.registerTurboModuleProvider(turboModuleProvider);
+  initializeReactNative(instanceId: number, turboModuleProvider: TurboModuleProvider) {
+    this.libRNOHApp?.initializeReactNative(
+      instanceId,
+      turboModuleProvider,
+      (config: { textContent: string }) => {
+        // @ts-ignore px2vp is not properly declared on Ark side
+        return { width: px2vp(TextMeasurer.measureText({ textContent: config.textContent })), height: 0 }
+      });
   }
 
-  initializeReactNative() {
-    this.libRNOHApp?.initializeReactNative((config: { textContent: string }) => {
-      return { width: px2vp(TextMeasurer.measureText({ textContent: config.textContent })), height: 0 }
-    });
-  }
-
-  emitComponentEvent(tag: Tag, eventEmitRequestHandlerName: string, payload: any) {
-    this.libRNOHApp?.emitComponentEvent(tag, eventEmitRequestHandlerName, payload);
+  emitComponentEvent(instanceId: number, tag: Tag, eventEmitRequestHandlerName: string, payload: any) {
+    this.libRNOHApp?.emitComponentEvent(instanceId, tag, eventEmitRequestHandlerName, payload);
   }
 
   subscribeToShadowTreeChanges(
+    instanceId: number,
     mutationsListener: (mutations: Mutation[]) => void,
     dispatchedCommandsListener: (tag: Tag, commandName: string, args: unknown) => void
   ) {
-    this.libRNOHApp?.subscribeToShadowTreeChanges(mutationsListener, dispatchedCommandsListener);
+    this.libRNOHApp?.subscribeToShadowTreeChanges(instanceId, mutationsListener, dispatchedCommandsListener);
   }
 
-  loadScriptFromString(script: string, sourceURL = "bundle.harmony.js") {
-    this.libRNOHApp?.loadScriptFromString(script, sourceURL);
+  loadScriptFromString(instanceId: number, script: string, sourceURL = "bundle.harmony.js") {
+    this.libRNOHApp?.loadScriptFromString(instanceId, script, sourceURL);
   }
 
-  run(initialSurfaceWidth: number, initialSurfaceHeight: number, appName: string, initialProps: any) {
-    this.libRNOHApp?.startSurface(initialSurfaceWidth, initialSurfaceHeight, appName, initialProps);
+  startSurface(
+    instanceId: number,
+    initialSurfaceWidth: number,
+    initialSurfaceHeight: number,
+    surfaceOffsetX: number,
+    surfaceOffsetY: number,
+    appName: string,
+    initialProps: any) {
+    this.libRNOHApp?.startSurface(
+      instanceId,
+      initialSurfaceWidth,
+      initialSurfaceHeight,
+      surfaceOffsetX,
+      surfaceOffsetY,
+      appName,
+      initialProps,
+    );
   }
 
-  updateSurfaceConstraints(appName: string, surfaceWidth: number, surfaceHeight: number) {
-    this.libRNOHApp?.updateSurfaceConstraints(appName, surfaceWidth, surfaceHeight);
+  updateSurfaceConstraints(
+    instanceId: number,
+    appName: string,
+    surfaceWidth: number,
+    surfaceHeight: number,
+    surfaceOffsetX: number,
+    surfaceOffsetY: number,
+  ) {
+    this.libRNOHApp?.updateSurfaceConstraints(
+      instanceId,
+      appName,
+      surfaceWidth,
+      surfaceHeight,
+      surfaceOffsetX,
+      surfaceOffsetY
+    );
   }
 
-  callRNFunction(moduleName: string, functionName: string, args: unknown[]): void {
-    this.libRNOHApp?.callRNFunction(moduleName, functionName, args);
-  }
-
-  add(a: number, b: number): number {
-    return this.libRNOHApp?.add(a, b)
+  callRNFunction(instanceId: number, moduleName: string, functionName: string, args: unknown[]): void {
+    this.libRNOHApp?.callRNFunction(instanceId, moduleName, functionName, args);
   }
 
   onMemoryLevel(level: number): void {
     this.libRNOHApp?.onMemoryLevel(level)
   }
 
-  updateState(componentName: string, tag: Tag, state: unknown): void {
-    this.libRNOHApp?.updateState(componentName, tag, state)
+  updateState(instanceId: number, componentName: string, tag: Tag, state: unknown): void {
+    this.libRNOHApp?.updateState(instanceId, componentName, tag, state)
   }
 }

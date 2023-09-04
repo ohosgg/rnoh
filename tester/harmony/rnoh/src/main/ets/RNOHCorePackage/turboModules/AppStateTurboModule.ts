@@ -1,5 +1,5 @@
+import { LifecycleState } from '../../RNOH';
 import { TurboModule, TurboModuleContext } from "../../RNOH/TurboModule";
-import { LifecycleState } from '../../RNOH/RNAbility';
 
 export class AppStateTurboModule extends TurboModule {
   public static readonly NAME = 'AppState';

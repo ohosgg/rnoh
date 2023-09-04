@@ -1,12 +1,14 @@
-import { RNApp, ComponentBuilderContext, RNOHContext } from 'rnoh'
+import { RNApp, ComponentBuilderContext, RNInstanceFactory, RNAbility } from 'rnoh'
 import { SampleView, SAMPLE_VIEW_TYPE, PropsDisplayer } from "rnoh-sample-package"
+import { createRNPackages } from '../RNPackagesFactory'
 
-let storage = LocalStorage.GetShared()
+let storage = LocalStorage.getShared()
 
 @Entry(storage)
 @Component
 struct Index {
-  @LocalStorageLink('RNOHContext') rnohContext: RNOHContext | undefined = undefined
+  @LocalStorageLink('RNAbility') rnAbility: RNAbility | undefined = undefined
+  @LocalStorageLink('RNInstanceFactory') rnInstanceFactory: RNInstanceFactory | undefined = undefined
 
   @Builder buildCustomComponent(ctx: ComponentBuilderContext) {
     if (ctx.descriptor.type === SAMPLE_VIEW_TYPE) {
@@ -24,17 +26,24 @@ struct Index {
   }
 
   onBackPress() {
-    this.rnohContext.rnInstanceManager.onBackPress()
-    return true;
+    // NOTE: this is required since `Ability`'s `onBackPressed` function always
+    // terminates or puts the app in the background, but we want Ark to ignore it completely
+    // when handled by RN
+    return this.rnAbility?.onBackPress();
   }
 
   build() {
     Column() {
-      RNApp({
-        rnohContext: this.rnohContext !,
-        appName: "app_name",
-        buildCustomComponent: this.buildCustomComponent.bind(this)
-      })
+        RNApp({
+          rnInstance: this.rnInstanceFactory.createInstance({
+            bundleUrl: 'http://localhost:8081/index.bundle?platform=harmony&dev=false&minify=false',
+            initialProps: { foo: 'bar' },
+            packages: createRNPackages({})
+          }),
+          appName: "app_name",
+          buildCustomComponent: this.buildCustomComponent.bind(this),
+          dev: true,
+        })
     }
     .height('100%')
     .width('100%')

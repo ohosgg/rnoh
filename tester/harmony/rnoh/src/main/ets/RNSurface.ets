@@ -1,5 +1,5 @@
 import { RNComponentFactory, ComponentBuilderContext } from './RNComponentFactory'
-import { RNOHContext } from "./RNOH"
+import { RNOHContext, Tag } from "./RNOH"
 import { Descriptor } from './RNOH'
 import { ViewBaseProps } from './RNOHCorePackage/Components/RNViewBase'
 import { convertColorSegmentsToString } from './RNOH'
@@ -31,26 +31,20 @@ const rootDescriptor: RootDescriptor = {
 @Component
 export struct RNSurface {
   ctx: RNOHContext
+  tag: Tag
   appName: string
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
-  @State initialSurfaceWidth: number = 0
-  @State initialSurfaceHeight: number = 0
+  surfaceWidth: number = 0
+  surfaceHeight: number = 0
+  surfaceOffsetX: number = 0
+  surfaceOffsetY: number = 0
   @State descriptor: RootDescriptor = rootDescriptor
+  @State hasStartedSurface: boolean = false
   private cleanup?: () => void = undefined
 
   aboutToAppear() {
-    this.ctx.__napiBridge.subscribeToShadowTreeChanges((mutations) => {
-      this.updateDescriptorRegistry(mutations)
-    }, (tag, commandName, args) => {
-      this.dispatchCommand(tag, commandName, args)
-    });
-    this.ctx.surfaceLifecycle.onSurfaceAboutToAppear({
-      appName: this.appName,
-      width: this.initialSurfaceWidth,
-      height: this.initialSurfaceHeight,
-    })
     this.cleanup = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
-      1,
+      this.tag,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
     )
   }
@@ -59,26 +53,50 @@ export struct RNSurface {
     this.cleanup?.();
   }
 
-  updateDescriptorRegistry(mutations) {
-    this.ctx.descriptorRegistry.applyMutations(mutations)
-  }
-
-  dispatchCommand(tag, commandName, args) {
-    this.ctx.commandDispatcher.dispatchCommand(tag, commandName, args)
-  }
-
   onUpdateComponent(newDescriptor: Descriptor) {
     this.descriptor = newDescriptor as RootDescriptor
   }
 
+  handleAreaChange(_oldValue: Area, newValue: Area) {
+    this.surfaceWidth = newValue.width as number
+    this.surfaceHeight = newValue.height as number
+    this.surfaceOffsetX = newValue.globalPosition.x as number
+    this.surfaceOffsetY = newValue.globalPosition.y as number
+    this.updateSurfaceConstraints()
+  }
+
+  updateSurfaceConstraints() {
+    if (!this.hasStartedSurface) {
+      this.ctx.rnInstanceManager.startSurface({
+        appName: this.appName,
+        width: this.surfaceWidth,
+        height: this.surfaceHeight,
+        surfaceOffsetX: this.surfaceOffsetX,
+        surfaceOffsetY: this.surfaceOffsetY,
+      })
+      this.hasStartedSurface = true
+    } else {
+      this.ctx.rnInstanceManager.updateSurfaceConstraints({
+        appName: this.appName,
+        width: this.surfaceWidth,
+        height: this.surfaceHeight,
+        surfaceOffsetX: this.surfaceOffsetX,
+        surfaceOffsetY: this.surfaceOffsetY,
+      });
+    }
+  }
+
   build() {
     Stack() {
-      ForEach(this.descriptor.childrenTags, (childrenTag) => {
-        RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
-      }, childrenTag => childrenTag)
+      if (this.hasStartedSurface) {
+        ForEach(this.descriptor.childrenTags, (childrenTag) => {
+          RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
+        }, childrenTag => childrenTag)
+      }
     }
     .width("100%")
     .height("100%")
     .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
+    .onAreaChange(this.handleAreaChange.bind(this))
   }
 }

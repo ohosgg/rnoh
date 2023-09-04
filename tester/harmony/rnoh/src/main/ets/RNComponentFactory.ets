@@ -25,8 +25,9 @@ export struct RNComponentFactory {
 
   aboutToAppear() {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor(this.tag)
-    this.descriptorType = descriptor.type
-    this.setDescriptor(descriptor)
+    if (descriptor) {
+      this.setDescriptor(descriptor)
+    }
     this.cleanupCallback = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
       this.tag,
       (newDescriptor) => this.setDescriptor(newDescriptor)
@@ -38,6 +39,7 @@ export struct RNComponentFactory {
   }
 
   setDescriptor(newDescriptor: Descriptor) {
+    this.descriptorType = newDescriptor.type
     this.childrenTags = newDescriptor.childrenTags
   }
 

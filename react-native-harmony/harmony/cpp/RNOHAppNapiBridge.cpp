@@ -5,6 +5,7 @@
 #include <string>
 #include <array>
 #include <vector>
+#include <unordered_map>
 #include "RNOH/ArkJS.h"
 #include "RNOH/RNInstance.h"
 #include "RNOH/LogSink.h"
@@ -12,142 +13,132 @@
 
 using namespace rnoh;
 
-static napi_ref listener_ref;
-static napi_ref arkTsTurboModuleProviderRef;
-static napi_ref measureTextFnRef;
-
-std::unique_ptr<RNInstance> rnInstance;
+std::unordered_map<size_t, std::unique_ptr<RNInstance>> rnInstances;
 
 static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
     LogSink::initializeLogging();
     LOG(INFO) << "initializeReactNative"
               << "\n";
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 1);
-    measureTextFnRef = arkJs.createReference(args[0]);
-    rnInstance = createRNInstance(env, arkTsTurboModuleProviderRef, measureTextFnRef);
-    rnInstance->start();
-    return arkJs.getUndefined();
-}
-
-static napi_value registerTurboModuleProvider(napi_env env, napi_callback_info info) {
-    ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 1);
-    arkTsTurboModuleProviderRef = arkJs.createReference(args[0]);
+    auto args = arkJs.getCallbackArgs(info, 3);
+    size_t instanceId = arkJs.getDouble(args[0]);
+    auto arkTsTurboModuleProviderRef = arkJs.createReference(args[1]);
+    auto measureTextFnRef = arkJs.createReference(args[2]);
+    auto rnInstance = createRNInstance(env, arkTsTurboModuleProviderRef, measureTextFnRef);
+    auto [it, inserted] = rnInstances.insert_or_assign(instanceId, std::move(rnInstance));
+    it->second->start();
     return arkJs.getUndefined();
 }
 
 static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 2);
-    listener_ref = arkJs.createReference(args[0]);
-    auto commandDispatcherRef = arkJs.createReference(args[1]);
+    auto args = arkJs.getCallbackArgs(info, 3);
+    size_t instanceId = arkJs.getDouble(args[0]);
+    auto &rnInstance = rnInstances.at(instanceId);
+    auto listener_ref = arkJs.createReference(args[1]);
+    auto commandDispatcherRef = arkJs.createReference(args[2]);
     rnInstance->registerSurface(
-        [env](MutationsToNapiConverter mutationsToNapiConverter, auto const &mutations) {
+        [env, listener_ref](MutationsToNapiConverter mutationsToNapiConverter, auto const &mutations) {
             ArkJS arkJs(env);
             auto napiMutations = mutationsToNapiConverter.convert(env, mutations);
             std::array<napi_value, 1> args = {napiMutations};
             auto listener = arkJs.getReferenceValue(listener_ref);
-            arkJs.call(listener, args);
+            arkJs.call<1>(listener, args);
         },
         [env, commandDispatcherRef](auto tag, auto const &commandName, auto args) {
             ArkJS arkJs(env);
             auto napiArgs = arkJs.convertIntermediaryValueToNapiValue(args);
             std::array<napi_value, 3> napiArgsArray = {arkJs.createDouble(tag), arkJs.createString(commandName), napiArgs};
             auto commandDispatcher = arkJs.getReferenceValue(commandDispatcherRef);
-            arkJs.call(commandDispatcher, napiArgsArray);
+            arkJs.call<3>(commandDispatcher, napiArgsArray);
         });
     return arkJs.getUndefined();
 }
 
 static napi_value loadScriptFromString(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 2);
+    auto args = arkJs.getCallbackArgs(info, 3);
+    size_t instanceId = arkJs.getDouble(args[0]);
+    auto &rnInstance = rnInstances.at(instanceId);
     rnInstance->loadScriptFromString(
-        arkJs.getString(args[0]),
-        arkJs.getString(args[1]));
+        arkJs.getString(args[1]),
+        arkJs.getString(args[2]));
     return arkJs.getUndefined();
 }
 
 static napi_value updateSurfaceConstraints(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 3);
-    rnInstance->updateSurfaceConstraints(arkJs.getString(args[0]),
-                                         arkJs.getDouble(args[1]),
-                                         arkJs.getDouble(args[2]));
+    auto args = arkJs.getCallbackArgs(info, 6);
+    size_t instanceId = arkJs.getDouble(args[0]);
+    auto &rnInstance = rnInstances.at(instanceId);
+    rnInstance->updateSurfaceConstraints(arkJs.getString(args[1]),
+                                         arkJs.getDouble(args[2]),
+                                         arkJs.getDouble(args[3]),
+                                         arkJs.getDouble(args[4]),
+                                         arkJs.getDouble(args[5]));
     return arkJs.getUndefined();
 }
 
 static napi_value startSurface(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 4);
-    rnInstance->runApplication(arkJs.getDouble(args[0]),
-                               arkJs.getDouble(args[1]),
-                               arkJs.getString(args[2]),
-                               arkJs.getDynamic(args[3]));
+    auto args = arkJs.getCallbackArgs(info, 7);
+    size_t instanceId = arkJs.getDouble(args[0]);
+    auto &rnInstance = rnInstances.at(instanceId);
+    rnInstance->startSurface(arkJs.getDouble(args[1]),
+                               arkJs.getDouble(args[2]),
+                               arkJs.getDouble(args[3]),
+                               arkJs.getDouble(args[4]),
+                               arkJs.getString(args[5]),
+                               arkJs.getDynamic(args[6]));
     return arkJs.getUndefined();
 }
 
 static napi_value emitComponentEvent(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 3);
+    auto args = arkJs.getCallbackArgs(info, 5);
+    size_t instanceId = arkJs.getDouble(args[0]);
+    auto &rnInstance = rnInstances.at(instanceId);
     rnInstance->emitComponentEvent(env,
-                                   arkJs.getDouble(args[0]),
-                                   arkJs.getString(args[1]),
-                                   args[2]);
+                                   arkJs.getDouble(args[1]),
+                                   arkJs.getString(args[2]),
+                                   args[3]);
     return arkJs.getUndefined();
 }
 
 static napi_value callRNFunction(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 3);
-    auto moduleString = arkJs.getString(args[0]);
-    auto nameString = arkJs.getString(args[1]);
-    auto argsDynamic = arkJs.getDynamic(args[2]);
+    auto args = arkJs.getCallbackArgs(info, 4);
+    size_t instanceId = arkJs.getDouble(args[0]);
+    auto &rnInstance = rnInstances.at(instanceId);
+    auto moduleString = arkJs.getString(args[1]);
+    auto nameString = arkJs.getString(args[2]);
+    auto argsDynamic = arkJs.getDynamic(args[3]);
 
     rnInstance->callFunction(std::move(moduleString), std::move(nameString), std::move(argsDynamic));
 
     return arkJs.getUndefined();
-}
-static napi_value add(napi_env env, napi_callback_info info) {
-    size_t requireArgc = 2;
-    size_t argc = 2;
-    napi_value args[2] = {nullptr};
-
-    napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
-
-    napi_valuetype valuetype0;
-    napi_typeof(env, args[0], &valuetype0);
-
-    napi_valuetype valuetype1;
-    napi_typeof(env, args[1], &valuetype1);
-
-    double value0;
-    napi_get_value_double(env, args[0], &value0);
-
-    double value1;
-    napi_get_value_double(env, args[1], &value1);
-
-    napi_value sum;
-    napi_create_double(env, value0 + value1, &sum);
-
-    return sum;
 }
 
 static napi_value onMemoryLevel(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 1);
     auto memoryLevel = arkJs.getDouble(args[0]);
-    rnInstance->onMemoryLevel(static_cast<size_t>(memoryLevel));
+    for (auto &[id, instance] : rnInstances) {
+        if (instance != nullptr) {
+            instance->onMemoryLevel(static_cast<size_t>(memoryLevel));
+        }
+    }
     return arkJs.getUndefined();
 }
 
 static napi_value updateState(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 3);
-    auto componentName = arkJs.getString(args[0]);
-    auto tag = arkJs.getDouble(args[1]);
-    auto state = args[2];
+    auto args = arkJs.getCallbackArgs(info, 4);
+    size_t instanceId = arkJs.getDouble(args[0]);
+    auto &rnInstance = rnInstances.at(instanceId);
+    auto componentName = arkJs.getString(args[1]);
+    auto tag = arkJs.getDouble(args[2]);
+    auto state = args[3];
     rnInstance->updateState(env, componentName, static_cast<facebook::react::Tag>(tag), state);
     return arkJs.getUndefined();
 }
@@ -161,8 +152,6 @@ static napi_value Init(napi_env env, napi_value exports) {
         {"startSurface", nullptr, startSurface, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"updateSurfaceConstraints", nullptr, updateSurfaceConstraints, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"emitComponentEvent", nullptr, emitComponentEvent, nullptr, nullptr, nullptr, napi_default, nullptr},
-        {"registerTurboModuleProvider", nullptr, registerTurboModuleProvider, nullptr, nullptr, nullptr, napi_default, nullptr},
-        {"add", nullptr, add, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"callRNFunction", nullptr, callRNFunction, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"onMemoryLevel", nullptr, onMemoryLevel, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"updateState", nullptr, updateState, nullptr, nullptr, nullptr, napi_default, nullptr}};

@@ -49,9 +49,9 @@ class RNInstance {
         MutationsListener&&,
         MountingManager::CommandDispatcher&&);
     void start();
-    void updateSurfaceConstraints(std::string const &moduleName, float width, float height);
+    void updateSurfaceConstraints(std::string const &moduleName, float width, float height, float viewportOffsetX, float viewportOffsetY);
     void loadScriptFromString(std::string const &&bundle, std::string const sourceURL);
-    void runApplication(float width, float height, std::string const &moduleName, folly::dynamic &&initialProps);
+    void startSurface(float width, float height, float viewportOffsetX, float viewportOffsetY, std::string const &moduleName, folly::dynamic &&initialProps);
     void callFunction(std::string &&module, std::string &&method, folly::dynamic &&params);
     void emitComponentEvent(napi_env env, facebook::react::Tag tag, std::string eventName, napi_value payload);
     void onMemoryLevel(size_t memoryLevel);

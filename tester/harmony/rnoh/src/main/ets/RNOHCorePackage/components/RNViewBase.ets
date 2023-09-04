@@ -1,16 +1,13 @@
 import matrix4 from '@ohos.matrix4'
-import display from '@ohos.display'
 import {
   Descriptor,
   LayoutProps,
-  Tag,
   ColorSegments,
   RNOHContext,
   convertColorSegmentsToString,
   convertColorValueToColorSegments
 } from '../../RNOH'
 import { RNOHEventEmitRequestHandlerName } from "./../RNOHEventEmitRequestHandler"
-import type { ScrollViewState } from './RNScrollView'
 
 export type ViewBaseProps = LayoutProps & {
   backgroundColor?: ColorSegments
@@ -146,13 +143,15 @@ export struct RNViewBase {
     }
     RNViewBase.lastTouchEventTimestamp = event.timestamp
 
+    const surfaceOffset = this.ctx.rnInstanceManager.getSurfaceOffset()
+
     for (const touch of event.touches) {
-      touch['pageX'] = touch.screenX;
-      touch['pageY'] = touch.screenY;
+      touch['pageX'] = touch.screenX - surfaceOffset.x;
+      touch['pageY'] = touch.screenY - surfaceOffset.y;
     }
     for (const touch of event.changedTouches) {
-      touch['pageX'] = touch.screenX;
-      touch['pageY'] = touch.screenY;
+      touch['pageX'] = touch.screenX - surfaceOffset.x;
+      touch['pageY'] = touch.screenY - surfaceOffset.y;
     }
 
     this.ctx.rnInstanceManager.emitComponentEvent(this.tag, RNOHEventEmitRequestHandlerName.Touch, event)
