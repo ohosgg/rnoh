@@ -1,4 +1,12 @@
-import { RNApp, ComponentBuilderContext, RNInstanceFactory, RNAbility } from 'rnoh'
+import {
+  RNApp,
+  ComponentBuilderContext,
+  RNInstanceFactory,
+  RNAbility,
+  AnyJSBundleProvider,
+  MetroJSBundleProvider,
+  ResourceJSBundleProvider
+} from 'rnoh'
 import { SampleView, SAMPLE_VIEW_TYPE, PropsDisplayer } from "rnoh-sample-package"
 import { createRNPackages } from '../RNPackagesFactory'
 
@@ -10,7 +18,8 @@ struct Index {
   @LocalStorageLink('RNAbility') rnAbility: RNAbility | undefined = undefined
   @LocalStorageLink('RNInstanceFactory') rnInstanceFactory: RNInstanceFactory | undefined = undefined
 
-  @Builder buildCustomComponent(ctx: ComponentBuilderContext) {
+  @Builder
+  buildCustomComponent(ctx: ComponentBuilderContext) {
     if (ctx.descriptor.type === SAMPLE_VIEW_TYPE) {
       SampleView({
         ctx: ctx.rnohContext,
@@ -34,16 +43,18 @@ struct Index {
 
   build() {
     Column() {
-        RNApp({
-          rnInstance: this.rnInstanceFactory.createInstance({
-            bundleUrl: 'http://localhost:8081/index.bundle?platform=harmony&dev=false&minify=false',
-            initialProps: { foo: 'bar' },
-            packages: createRNPackages({})
-          }),
-          appName: "app_name",
-          buildCustomComponent: this.buildCustomComponent.bind(this),
-          dev: true,
-        })
+      RNApp({
+        rnInstance: this.rnInstanceFactory.createInstance({
+          initialProps: { foo: 'bar' },
+          packages: createRNPackages({})
+        }),
+        jsBundleProvider: new AnyJSBundleProvider([
+          new MetroJSBundleProvider(), new ResourceJSBundleProvider(this.rnAbility.context.resourceManager)
+        ]),
+        appName: "app_name",
+        buildCustomComponent: this.buildCustomComponent.bind(this),
+        dev: true,
+      })
     }
     .height('100%')
     .width('100%')

@@ -9,6 +9,7 @@ import { RNOHLogger } from './RNOHLogger';
 import { RNPackage } from './RNPackage';
 import { TurboModule } from './TurboModule';
 import { TurboModuleProvider } from './TurboModuleProvider';
+import { JSBundleProvider, JSBundleProviderError } from "./JSBundleProvider"
 
 const rootDescriptor = {
   isDynamicBinder: false,
@@ -43,7 +44,7 @@ export class RNInstanceRegistry implements RNInstanceFactory {
 
   public createInstance(
     options: {
-      bundleUrl: string,
+      jsBundleProvider: JSBundleProvider,
       initialProps: Record<string, any>,
       packages: RNPackage[]
     }
@@ -56,8 +57,7 @@ export class RNInstanceRegistry implements RNInstanceFactory {
       options.packages,
       this.abilityContext,
       this.napiBridge,
-      props,
-      options.bundleUrl
+      props
     )
     this.instanceMap.set(id, instance)
     return instance
@@ -96,8 +96,7 @@ class RNInstanceManagerImpl implements RNInstance {
     packages: RNPackage[],
     public abilityContext: common.UIAbilityContext,
     private napiBridge: NapiBridge,
-    private initialProps: Record<string, any>,
-    private bundleUrl: string) {
+    private initialProps: Record<string, any>) {
     this.descriptorRegistry = new DescriptorRegistry(
       {
         '1': { ...rootDescriptor },
@@ -124,10 +123,6 @@ class RNInstanceManagerImpl implements RNInstance {
         return pkg.createTurboModulesFactory(turboModuleContext);
       }))
     }
-  }
-
-  public getBundleURL(): string {
-    return this.bundleUrl
   }
 
   public getInitialProps() {
@@ -157,8 +152,15 @@ class RNInstanceManagerImpl implements RNInstance {
     this.napiBridge.callRNFunction(this.id, "RCTDeviceEventEmitter", "emit", [eventName, params]);
   }
 
-  public loadScriptFromString(script: string, sourceURL = "bundle.harmony.js") {
-    this.napiBridge.loadScriptFromString(this.id, script, sourceURL);
+  public async executeJS(jsBundleProvider: JSBundleProvider) {
+    try {
+      this.napiBridge.loadScriptFromString(this.id, await jsBundleProvider.getBundle(), await jsBundleProvider.getURL());
+    } catch (err) {
+      if (err instanceof JSBundleProviderError) {
+        this.logger.error(err.message)
+      }
+      throw err
+    }
   }
 
   public getTurboModule<T extends TurboModule>(name: string): T {
