@@ -69,11 +69,7 @@ export function ViewTest() {
           />
         </View>
       </TestCase>
-      <TestCase
-        itShould="render square with borders with different colors"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/254
-      >
+      <TestCase itShould="render square with borders with different colors">
         <View style={{width: '100%', height: 100, backgroundColor: 'gray'}}>
           <View
             style={{
@@ -88,11 +84,7 @@ export function ViewTest() {
           />
         </View>
       </TestCase>
-      <TestCase
-        itShould="render square with borders with different start/end colors"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/254
-      >
+      <TestCase itShould="render square with borders with different start/end colors">
         <View style={{width: '100%', height: 100, backgroundColor: 'gray'}}>
           <View
             style={{

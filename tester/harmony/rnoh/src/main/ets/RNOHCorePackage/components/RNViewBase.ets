@@ -12,7 +12,7 @@ import { RNOHEventEmitRequestHandlerName } from "./../RNOHEventEmitRequestHandle
 export type ViewBaseProps = LayoutProps & {
   backgroundColor?: ColorSegments
   borderWidth?: number
-  borderColor?: ColorSegments
+  borderColor?: BorderColors
   borderRadius?: BorderRadii
   opacity?: number
   transform?: TransformMatrix,
@@ -40,6 +40,13 @@ type BorderRadii = {
   topRight?: number
   bottomLeft?: number
   bottomRight?: number
+}
+
+type BorderColors = {
+  left?: ColorSegments
+  top?: ColorSegments
+  right?: ColorSegments
+  bottom?: ColorSegments
 }
 
 type TransformMatrix = [
@@ -77,7 +84,12 @@ function convertViewDynamicDescriptor(dynamicDescriptor: ViewDynamicDescriptor):
       width: 0,
       backgroundColor: convertColorValueToColorSegments(p.backgroundColor),
       borderWidth: p.borderWidth,
-      borderColor: convertColorValueToColorSegments(p.borderColor),
+      borderColor: {
+        left: convertColorValueToColorSegments(p.borderColor),
+        top: convertColorValueToColorSegments(p.borderColor),
+        right: convertColorValueToColorSegments(p.borderColor),
+        bottom: convertColorValueToColorSegments(p.borderColor),
+      },
       borderRadius: {
         topLeft: p.borderRadius,
         topRight: p.borderRadius,
@@ -200,7 +212,13 @@ export struct RNViewBase {
     .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
     .position({ y: this.descriptor.layoutMetrics.frame.origin.y, x: this.descriptor.layoutMetrics.frame.origin.x })
     .borderWidth(this.descriptor.props.borderWidth)
-    .borderColor(convertColorSegmentsToString(this.descriptor.props.borderColor))
+    .borderColor({
+        left: convertColorSegmentsToString(this.descriptor.props.borderColor.left),
+        top: convertColorSegmentsToString(this.descriptor.props.borderColor.top),
+        right: convertColorSegmentsToString(this.descriptor.props.borderColor.right),
+        bottom: convertColorSegmentsToString(this.descriptor.props.borderColor.bottom),
+      }
+    )
     .borderRadius(this.descriptor.props.borderRadius)
     .onTouch((event) => this.onTouchEvent(event))
     .opacity(this.descriptor.props.opacity)
