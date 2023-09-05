@@ -42,9 +42,7 @@ void MountingManager::performMountInstructions(react::ShadowViewMutationList con
 }
 
 void MountingManager::scheduleTransaction(react::MountingCoordinator::Shared const &mountingCoordinator) {
-    taskExecutor->runTask(TaskThread::MAIN, [this, mountingCoordinator] {
-        performTransaction(mountingCoordinator);
-    });
+    performTransaction(mountingCoordinator);
 }
 
 void MountingManager::performTransaction(facebook::react::MountingCoordinator::Shared const &mountingCoordinator) {
@@ -60,7 +58,9 @@ void MountingManager::performTransaction(facebook::react::MountingCoordinator::S
         },
         [this](react::MountingTransaction const &transaction, react::SurfaceTelemetry const &surfaceTelemetry) {
             // Did mount
-            this->triggerUICallback(transaction.getMutations());
+            taskExecutor->runTask(TaskThread::MAIN, [this, transaction] {
+                this->triggerUICallback(transaction.getMutations());
+            });
         });
 }
 
