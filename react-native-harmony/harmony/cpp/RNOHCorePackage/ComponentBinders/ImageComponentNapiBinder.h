@@ -16,6 +16,7 @@ class ImageComponentNapiBinder : public ViewComponentNapiBinder {
                     .getObjectBuilder(napiViewProps)
                     .addProperty("uri", imageSource.uri)
                     .addProperty("resizeMode", static_cast<int>(props->resizeMode))
+                    .addProperty("tintColor", props->tintColor)
                     .build();
             }
         }

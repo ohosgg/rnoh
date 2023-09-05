@@ -1,9 +1,10 @@
-import { Descriptor, RNOHContext } from '../../RNOH'
+import { ColorSegments, Descriptor, getTintColorMatrix, RNOHContext } from '../../RNOH'
 import { RNViewBase, ViewBaseProps } from './RNViewBase'
 
 export type ImageProps = ViewBaseProps & {
   uri: string,
-  resizeMode: number
+  resizeMode: number,
+  tintColor?: ColorSegments
 }
 
 export type ImageDescriptor = Descriptor<"Image", ImageProps>
@@ -13,6 +14,12 @@ export struct RNImage {
   ctx: RNOHContext
   tag: number
   @State descriptor: ImageDescriptor = {} as ImageDescriptor
+  defaultColorFilter: number[] = [
+    1, 0, 0, 0, 0,
+    0, 1, 0, 0, 0,
+    0, 0, 1, 0, 0,
+    0, 0, 0, 1, 0,
+  ]
   private unregisterDescriptorChangesListener?: () => void = undefined
 
   aboutToAppear() {
@@ -72,6 +79,9 @@ export struct RNImage {
         .objectFit(this.getResizeMode(this.descriptor.props.resizeMode))
         .objectRepeat(this.descriptor.props.resizeMode === 4 ?
         ImageRepeat.XY : ImageRepeat.NoRepeat )
+        .colorFilter(this.descriptor.props.tintColor.every((element) => element === 0)
+          ? this.defaultColorFilter
+          : getTintColorMatrix(this.descriptor.props.tintColor))
     }
   }
 }

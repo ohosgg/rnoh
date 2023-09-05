@@ -8,6 +8,24 @@ export function convertColorSegmentsToString(colorSegments?: ColorSegments) {
   )}, ${a})`
 }
 
+export function getTintColorMatrix(colorSegments?: ColorSegments) {
+  if (!colorSegments || colorSegments.every((element) => element === 0)) {
+    return [
+      1, 0, 0, 0, 0,
+      0, 1, 0, 0, 0,
+      0, 0, 1, 0, 0,
+      0, 0, 0, 1, 0,
+    ]
+  }
+  const [r, g, b, a] = colorSegments
+  return [
+    0, 0, 0, r, 0,
+    0, 0, 0, g, 0,
+    0, 0, 0, b, 0,
+    0, 0, 0, 1, 0,
+  ]
+}
+
 export function convertColorValueToRGBA(colorValue: ColorValue | undefined, defaultColor: string = "rgba(0,0,0,0.0)") {
   if (colorValue === undefined) return defaultColor;
   const rgba = {

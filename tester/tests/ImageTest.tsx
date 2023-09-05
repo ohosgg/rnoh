@@ -1,4 +1,4 @@
-import {Image} from 'react-native';
+import {Image, View} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 
 const LOCAL_IMAGE_ASSET_ID = require('../assets/pravatar-131.jpg');
@@ -120,6 +120,20 @@ export const ImageTest = () => {
               source={LOCAL_IMAGE_ASSET_ID}
               resizeMode="stretch"
             />
+          </TestCase>
+          <TestCase
+            itShould="replace opaque pixels with the green color (tintColor)">
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around'}}>
+              <Image source={require("../assets/expo.png")} style={{
+                width: 100,
+                height: 100,
+              }} />
+              <Image source={require("../assets/expo.png")} style={{
+                width: 100,
+                height: 100,
+                tintColor: "green",
+              }} />
+            </View>
           </TestCase>
         </TestSuite>
       </TestSuite>
