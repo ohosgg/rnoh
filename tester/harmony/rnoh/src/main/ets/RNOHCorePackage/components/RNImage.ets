@@ -44,7 +44,7 @@ export struct RNImage {
   *   Repeat
   * }
    */
-  transResizeModeForImage(resizeMode: number) {
+  getResizeMode(resizeMode: number) {
     switch(resizeMode) {
       case 0:
         return ImageFit.Cover;
@@ -69,7 +69,7 @@ export struct RNImage {
         .interpolation(ImageInterpolation.High)
         .width("100%")
         .height("100%")
-        .objectFit(this.transResizeModeForImage(this.descriptor.props.resizeMode))
+        .objectFit(this.getResizeMode(this.descriptor.props.resizeMode))
         .objectRepeat(this.descriptor.props.resizeMode === 4 ?
         ImageRepeat.XY : ImageRepeat.NoRepeat )
     }
