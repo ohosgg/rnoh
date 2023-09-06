@@ -9,5 +9,12 @@ class ImageComponentJSIBinder : public ViewComponentJSIBinder {
         object.setProperty(rt, "resizeMode", "string");
         return object;
     }
+    facebook::jsi::Object createDirectEventTypes(facebook::jsi::Runtime &rt) override {
+        facebook::jsi::Object events(rt);
+
+        events.setProperty(rt, "topLoadStart", createDirectEvent(rt, "onLoadStart"));
+
+        return events;
+    }
 };
 } // namespace rnoh

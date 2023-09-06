@@ -1,5 +1,6 @@
-import {Image, View} from 'react-native';
+import {Image, Pressable, Text, View} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
+import {useState} from 'react';
 
 const LOCAL_IMAGE_ASSET_ID = require('../assets/pravatar-131.jpg');
 const REMOTE_IMAGE_URL = 'https://i.pravatar.cc/100?img=31';
@@ -65,7 +66,6 @@ export const ImageTest = () => {
           />
         </TestCase>
         <TestCase
-          skip
           itShould="call onLoadStart"
           initialState={'not called'}
           arrange={({setState}) => {
@@ -121,22 +121,33 @@ export const ImageTest = () => {
               resizeMode="stretch"
             />
           </TestCase>
-          <TestCase
-            itShould="replace opaque pixels with the green color (tintColor)">
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around'}}>
-              <Image source={require("../assets/expo.png")} style={{
-                width: 100,
-                height: 100,
-              }} />
-              <Image source={require("../assets/expo.png")} style={{
-                width: 100,
-                height: 100,
-                tintColor: "green",
-              }} />
-            </View>
-          </TestCase>
         </TestSuite>
+        <TestCase itShould="replace opaque pixels with the green color (tintColor)">
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+            }}>
+            <Image
+              source={require('../assets/expo.png')}
+              style={{
+                width: 100,
+                height: 100,
+              }}
+            />
+            <Image
+              source={require('../assets/expo.png')}
+              style={{
+                width: 100,
+                height: 100,
+                tintColor: 'green',
+              }}
+            />
+          </View>
+        </TestCase>
       </TestSuite>
     </>
   );
 };
+

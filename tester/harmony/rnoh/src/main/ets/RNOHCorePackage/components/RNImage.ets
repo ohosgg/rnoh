@@ -24,9 +24,14 @@ export struct RNImage {
 
   aboutToAppear() {
     this.descriptor = this.ctx.descriptorRegistry.getDescriptor<ImageDescriptor>(this.tag)
+    this.onLoadStart();
     this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
-        this.descriptor = (newDescriptor as ImageDescriptor)
+        const newImageDescriptor = (newDescriptor as ImageDescriptor);
+        if(newImageDescriptor.props.uri !== this.descriptor.props.uri) {
+          this.onLoadStart();
+        }
+        this.descriptor = newImageDescriptor;
       }
     )
   }
@@ -65,6 +70,14 @@ export struct RNImage {
       default:
         return ImageFit.Cover;
     }
+  }
+
+  onLoadStart() {
+    this.ctx.rnInstanceManager.emitComponentEvent(
+      this.descriptor.tag,
+      "loadStart",
+      null
+    )
   }
 
   build() {
