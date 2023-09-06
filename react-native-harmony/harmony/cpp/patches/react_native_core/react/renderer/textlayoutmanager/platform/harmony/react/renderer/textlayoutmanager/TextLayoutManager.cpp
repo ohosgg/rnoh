@@ -20,20 +20,32 @@ TextMeasurement TextLayoutManager::measure(
     LayoutConstraints layoutConstraints) const {
     attributedStringBox.getValue().getString();
     auto &attributedString = attributedStringBox.getValue();
-
-    TextMeasurement::Attachments attachments;
-    for (auto const &fragment : attributedStringBox.getValue().getFragments()) {
-        if (fragment.isAttachment()) {
-            attachments.push_back(
-                TextMeasurement::Attachment{{{0, 0}, {0, 0}}, false});
-        }
-    }
-    auto measurement = m_measureCache.get(
+    return m_measureCache.get(
         {attributedString, paragraphAttributes, layoutConstraints},
         [&](TextMeasureCacheKey const & /*key*/) {
-            return TextMeasurement{m_textLayoutManagerDelegate->measure(attributedStringBox.getValue().getString()), attachments};
+            auto attachments = TextMeasurement::Attachments{};
+            auto maximumSize = layoutConstraints.maximumSize;
+            auto maxHeight = 0;
+            int numberOfLines = paragraphAttributes.maximumNumberOfLines;
+            facebook::react::Size measureRes = {};
+            for (auto const &fragment : attributedStringBox.getValue().getFragments()) {
+                auto fontSize = fragment.textAttributes.fontSize;
+                auto lineHeight = fragment.textAttributes.lineHeight;
+                auto fontWeight = fragment.textAttributes.fontWeight;
+                int fontWeightNum = 0;
+                if (fontWeight.has_value()) {
+                    fontWeightNum = static_cast<int>(fontWeight.value());
+                }
+                measureRes = m_textLayoutManagerDelegate->measure(attributedStringBox.getValue().getString(),
+                                                                  fontSize, lineHeight, fontWeightNum, maximumSize.width, numberOfLines);
+                maxHeight = (maxHeight > measureRes.height ? maxHeight : measureRes.height);
+                if (fragment.isAttachment()) {
+                    attachments.push_back(TextMeasurement::Attachment{{{0, 0}, {0, 0}}, false});
+                }
+            }
+            measureRes.height = maxHeight;
+            return TextMeasurement{measureRes, attachments};
         });
-    return measurement;
 }
 
 TextMeasurement TextLayoutManager::measure(

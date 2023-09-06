@@ -3,6 +3,16 @@ import { Mutation } from "./Mutation";
 import { Tag } from "./DescriptorBase";
 import TextMeasurer from "@ohos.measure"
 
+declare function px2vp(px: number): number
+
+type TextMeasurerConfig = {
+  textContent: string;
+  fontSize: number;
+  lineHeight: number;
+  fontWeight?: number;
+  maxWidth?: number;
+  numberOfLines: number;
+}
 
 export class NapiBridge {
   constructor(private libRNOHApp: any) {
@@ -12,10 +22,33 @@ export class NapiBridge {
     this.libRNOHApp?.initializeReactNative(
       instanceId,
       turboModuleProvider,
-      (config: { textContent: string }) => {
-        // @ts-ignore px2vp is not properly declared on Ark side
-        return { width: px2vp(TextMeasurer.measureText({ textContent: config.textContent })), height: 0 }
+      (config: TextMeasurerConfig) => {
+        const result = this.measureText(config)
+        return {width: px2vp(result.width), height: px2vp(result.height)}
       });
+  }
+
+  private measureText(config: TextMeasurerConfig){
+    let textSize = TextMeasurer.measureTextSize({
+      textContent: config.textContent,
+      fontSize: config.fontSize,
+      lineHeight: config.lineHeight,
+      fontWeight: config.fontWeight,
+      maxLines: config.numberOfLines
+    });
+
+    if (px2vp(textSize.width as number) < config.maxWidth) {
+      return textSize as {width: number, height: number};
+    }
+
+    return TextMeasurer.measureTextSize({
+      textContent: config.textContent,
+      fontSize: config.fontSize,
+      lineHeight: config.lineHeight,
+      fontWeight: config.fontWeight,
+      constraintWidth: config.maxWidth,
+      maxLines: config.numberOfLines
+    }) as {width: number, height: number};
   }
 
   emitComponentEvent(instanceId: number, tag: Tag, eventEmitRequestHandlerName: string, payload: any) {

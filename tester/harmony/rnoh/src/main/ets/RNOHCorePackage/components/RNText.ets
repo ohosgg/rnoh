@@ -8,12 +8,14 @@ export type AttributedFragment = {
   fontSize?: number
   fontStyle?: string
   textDecorationLine?: number
+  lineHeight?: number
 }
 
 export type TextProps = ViewBaseProps & {
   textAlign?: string
   fragments: AttributedFragment[]
   padding?: PaddingProps
+  maximumNumberOfLines?: number
 }
 
 type PaddingProps = {
@@ -81,23 +83,31 @@ export struct RNText {
     this.unregisterDescriptorChangesListener?.()
   }
 
+  getMaxLines() {
+    const maxLines = this.descriptor.props.maximumNumberOfLines
+    return (maxLines ?? 0) > 0 ? maxLines : undefined
+  }
+
   build() {
     RNViewBase({
       ctx: this.ctx,
       tag: this.tag,
     }) {
       Text() {
-        ForEach(this.descriptor.props.fragments, fragment => {
+        ForEach(this.descriptor.props.fragments, (fragment: AttributedFragment) => {
           Span(fragment.text)
             .fontColor(convertColorSegmentsToString(fragment.fontColor))
             .fontWeight(fragment.fontWeight)
             .fontSize(fragment.fontSize)
             .fontStyle(stringToFontStyle(fragment.fontStyle))
             .decoration({type: getTextDecorationLine(fragment)})
+            .lineHeight(fragment.lineHeight)
         })
       }
       .width("100%")
       .height("100%")
+      .maxLines(this.getMaxLines())
+      .textOverflow({overflow: TextOverflow.Ellipsis})
       .textAlign(stringToAlignment(this.descriptor.props.textAlign))
       .padding(this.descriptor.props.padding)
     }

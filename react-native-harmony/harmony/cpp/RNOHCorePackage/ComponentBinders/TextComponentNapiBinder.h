@@ -20,20 +20,23 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
             auto propsObjBuilder = arkJs.getObjectBuilder(napiViewProps);
             auto fragmentsPayload = std::vector<napi_value>();
             auto fragments = data.attributedString.getFragments();
-            
-            if (auto props = std::dynamic_pointer_cast<const facebook::react::BaseTextProps>(shadowView.props)) {
-                auto textAlign = props->textAttributes.alignment;   
+
+            if (auto props = std::dynamic_pointer_cast<const facebook::react::ParagraphProps>(shadowView.props)) {
+                auto textAlign = props->textAttributes.alignment;
                 if (textAlign.has_value()) {
                     propsObjBuilder.addProperty("textAlign", textAlignmentToString(textAlign.value()));
                 }
+                propsObjBuilder.addProperty("maximumNumberOfLines", props->paragraphAttributes.maximumNumberOfLines);
             }
-            
+
             for (auto fragment : fragments) {
                 auto fragmentObjBuilder = arkJs.createObjectBuilder();
                 auto textAttributes = fragment.textAttributes;
+
                 fragmentObjBuilder
                     .addProperty("text", fragment.string)
                     .addProperty("fontColor", textAttributes.foregroundColor)
+                    .addProperty("lineHeight", textAttributes.lineHeight)
                     .addProperty("fontSize", textAttributes.fontSize);
                 auto fontWeight = textAttributes.fontWeight;
                 if (fontWeight.has_value()) {
@@ -114,21 +117,21 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
       bottom: number,
       left: number
     */
-   folly::dynamic getParagraphPaddingProps(facebook::react::ShadowView const shadowView) {
-    float top = 0, right = 0, bottom = 0, left = 0;
-    auto isRTL = 
-        bool{shadowView.layoutMetrics.layoutDirection == facebook::react::LayoutDirection::RightToLeft};
-    if (auto props = std::dynamic_pointer_cast<const facebook::react::ParagraphProps>(shadowView.props)) {
-        auto yogaPadding = props->yogaStyle.padding();
-        if (facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeAll]).has_value()) {
-            float padding = facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeAll]).value();
-            top = right = bottom = left = padding;
+    folly::dynamic getParagraphPaddingProps(facebook::react::ShadowView const shadowView) {
+        float top = 0, right = 0, bottom = 0, left = 0;
+        auto isRTL =
+            bool{shadowView.layoutMetrics.layoutDirection == facebook::react::LayoutDirection::RightToLeft};
+        if (auto props = std::dynamic_pointer_cast<const facebook::react::ParagraphProps>(shadowView.props)) {
+            auto yogaPadding = props->yogaStyle.padding();
+            if (facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeAll]).has_value()) {
+                float padding = facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeAll]).value();
+                top = right = bottom = left = padding;
+            }
+            setHorizontalPadding(yogaPadding, isRTL, left, right);
+            setVerticalPadding(yogaPadding, top, bottom);
         }
-        setHorizontalPadding(yogaPadding, isRTL, left, right);
-        setVerticalPadding(yogaPadding, top, bottom);
+        return folly::dynamic::object("top", top)("right", right)("bottom", bottom)("left", left);
     }
-    return folly::dynamic::object("top", top)("right", right)("bottom", bottom)("left", left);
-   }
 };
 
 } // namespace rnoh

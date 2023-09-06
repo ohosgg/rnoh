@@ -14,7 +14,13 @@ class TextMeasurer : public facebook::react::TextLayoutManagerDelegate {
           m_measureTextFnRef(measureTextFnRef),
           m_taskExecutor(taskExecutor) {}
 
-    facebook::react::Size measure(std::string textContent) override;
+    facebook::react::Size measure(
+        std::string textContent,
+        float fontSize,
+        float lineHeight,
+        int fontWeight,
+        float maxWidth,
+        int numberOfLines);
 
   private:
     napi_env m_env;
