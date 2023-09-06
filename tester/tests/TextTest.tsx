@@ -1,5 +1,7 @@
 import {StyleSheet, Text, View} from 'react-native';
 import {TestSuite, TestCase} from '@rnoh/testerino';
+import {Button} from '../components';
+import {useState} from 'react';
 
 const SAMPLE_PARAGRAPH_TEXT = `Quis exercitation do eu in laboris nulla sit elit officia. Incididunt ipsum aliquip commodo proident ad laborum aliquip fugiat sunt aute ea laboris mollit reprehenderit. Culpa non incididunt cupidatat esse laborum nulla quis mollit voluptate proident commodo. Consectetur ad deserunt do nulla sunt veniam magna laborum reprehenderit et ullamco fugiat fugiat.`;
 
@@ -7,63 +9,335 @@ export function TextTest() {
   return (
     <TestSuite name="Text">
       <TestCase
-        skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/154
-        itShould="show text with the dancing script font">
-        <View style={{height: 30, width: '100%'}}>
+        itShould="show selectable text with blue selection color"
+        skip
+        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/273
+      >
+        <View style={styles.smallContainer}>
           <Text
-            style={{
-              ...styles.blackText,
-              fontFamily: 'DancingScript-Regular',
-              padding: 5,
-            }}>
+            style={styles.smallText}
+            selectionColor={'blue'}
+            selectable={true}>
+            Selection: blue
+          </Text>
+        </View>
+      </TestCase>
+      <TestCase
+        itShould="show 3 texts each with a different line break startegy"
+        skip
+        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/274
+      >
+        <View style={styles.bigContainer}>
+          <Text style={styles.smallTextWidth} lineBreakStrategyIOS="none">
+            Lorem ipsum dolor sit amet
+          </Text>
+          <Text style={styles.smallTextWidth} lineBreakStrategyIOS="standard">
+            Lorem ipsum dolor sit amet
+          </Text>
+          <Text style={styles.smallTextWidth} lineBreakStrategyIOS="push-out">
             Lorem ipsum dolor sit amet
           </Text>
         </View>
       </TestCase>
-      <TestCase itShould="show text with different alignments">
+      <TestCase
+        itShould="wrap two texts differently (hangul-word linebreak stategy)"
+        skip
+        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/274
+      >
         <View style={styles.container}>
-          <Text style={styles.text}>Left</Text>
-          <Text style={{...styles.text, textAlign: 'center'}}>Center</Text>
-          <Text style={{...styles.text, textAlign: 'right'}}>Right</Text>
-        </View>
-      </TestCase>
-      <TestCase itShould="format nested Text components">
-        <View style={styles.container}>
-          <Text style={[styles.text, {textAlign: 'right'}]}>
-            <Text style={{fontWeight: 'bold'}}>Bold</Text>
-            <Text style={{fontStyle: 'italic'}}>Italic</Text>
-          </Text>
-        </View>
-      </TestCase>
-      <TestCase itShould="test the the left and right padding of the text">
-        <View style={{height: 32, flexDirection: 'row'}}>
-          <Text
-            style={{
-              height: '100%',
-              backgroundColor: 'red',
-              color: 'white',
-              paddingLeft: 10,
-              paddingRight: 30,
-            }}>
-            left
+          <Text style={styles.smallTextWidth} lineBreakStrategyIOS="none">
+            ㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱ ㄱㄱㄱㄱ
           </Text>
           <Text
-            style={{height: '100%', backgroundColor: 'red', color: 'white'}}>
-            right
+            style={styles.smallTextWidth}
+            lineBreakStrategyIOS="hangul-word">
+            ㄱㄱㄱㄱㄱㄱㄱㄱㄱㄱ ㄱㄱㄱㄱ
           </Text>
         </View>
       </TestCase>
-      <TestCase itShould="show text with deferent textDecorationLines">
-        <View style={{width: 150, height: 80, backgroundColor: 'red'}}>
-          <Text style={styles.text}>None</Text>
-          <Text style={{...styles.text, textDecorationLine: 'underline'}}>
-            underline
-          </Text>
-          <Text style={{...styles.text, textDecorationLine: 'line-through'}}>
-            line-through
+      <TestCase
+        itShould="show disabled text"
+        skip
+        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/275
+      >
+        <View style={styles.smallContainer}>
+          <Text style={styles.smallText} disabled>
+            Disabled
           </Text>
         </View>
       </TestCase>
+      <TestCase
+        itShould="show text with different ellipsize mode"
+        skip
+        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/276
+        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/283
+      >
+        <View style={styles.hugeContainer}>
+          <Text style={styles.smallText} ellipsizeMode="head" numberOfLines={1}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </Text>
+          <Text
+            style={styles.smallText}
+            ellipsizeMode="middle"
+            numberOfLines={1}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </Text>
+          <Text style={styles.smallText} ellipsizeMode="tail" numberOfLines={1}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </Text>
+          <Text style={styles.smallText} ellipsizeMode="clip" numberOfLines={1}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </Text>
+        </View>
+      </TestCase>
+      <TestCase
+        itShould="fire onTextLayoutEvent after layout change"
+        initialState={false}
+        arrange={ctx => <OnTextLayoutView ctx={ctx} />}
+        assert={({expect, state}) => {
+          expect(state).to.be.true;
+        }}
+        skip
+        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/277
+      />
+      <TestSuite name="TextStyle">
+        <TestCase
+          skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/154
+          itShould="show text with the dancing script font">
+          <View style={{height: 30, width: '100%'}}>
+            <Text
+              style={{
+                ...styles.blackText,
+                fontFamily: 'DancingScript-Regular',
+                padding: 5,
+              }}>
+              Lorem ipsum dolor sit amet
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase itShould="show text with different alignments">
+          <View style={styles.container}>
+            <Text style={styles.text}>Left</Text>
+            <Text style={{...styles.text, textAlign: 'center'}}>Center</Text>
+            <Text style={{...styles.text, textAlign: 'right'}}>Right</Text>
+          </View>
+        </TestCase>
+        <TestCase
+          itShould="show text with different vertical alignments (textAlignVertical)"
+          skip
+          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/270
+        >
+          <View style={styles.smallContainerRow}>
+            <Text style={styles.blueShortText}>Auto</Text>
+            <Text
+              style={{
+                ...styles.blueShortText,
+                textAlignVertical: 'top',
+              }}>
+              Top
+            </Text>
+            <Text
+              style={{
+                ...styles.blueShortText,
+                textAlignVertical: 'center',
+              }}>
+              Center
+            </Text>
+            <Text
+              style={{
+                ...styles.blueShortText,
+                textAlignVertical: 'bottom',
+              }}>
+              Bottom
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase
+          itShould="show text with different vertical alignments (verticalAlign)"
+          skip
+          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/270
+        >
+          <View style={styles.smallContainerRow}>
+            <Text style={styles.blueShortText}>Auto</Text>
+            <Text style={{...styles.blueShortText, verticalAlign: 'top'}}>
+              Top
+            </Text>
+            <Text
+              style={{
+                ...styles.blueShortText,
+                verticalAlign: 'middle',
+              }}>
+              Middle
+            </Text>
+            <Text
+              style={{
+                ...styles.blueShortText,
+                verticalAlign: 'bottom',
+              }}>
+              Bottom
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase itShould="format nested Text components">
+          <View style={styles.container}>
+            <Text style={{...styles.text, textAlign: 'right'}}>
+              <Text style={{fontWeight: 'bold'}}>Bold</Text>
+              <Text style={{fontStyle: 'italic'}}>Italic</Text>
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase itShould="test the the left and right padding of the text">
+          <View style={{height: 32, flexDirection: 'row'}}>
+            <Text
+              style={{
+                height: '100%',
+                backgroundColor: 'red',
+                color: 'white',
+                paddingLeft: 10,
+                paddingRight: 30,
+              }}>
+              left
+            </Text>
+            <Text
+              style={{height: '100%', backgroundColor: 'red', color: 'white'}}>
+              right
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase itShould="show text with different textDecorationLines">
+          <View style={styles.container}>
+            <Text style={styles.text}>None</Text>
+            <Text style={{...styles.text, textDecorationLine: 'underline'}}>
+              underline
+            </Text>
+            <Text style={{...styles.text, textDecorationLine: 'line-through'}}>
+              line-through
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase
+          itShould="show lined-through text with text decoration color"
+          skip
+          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/271
+        >
+          <View style={styles.smallContainer}>
+            <Text
+              style={{
+                ...styles.smallText,
+                textDecorationLine: 'line-through',
+                textDecorationColor: 'blue',
+              }}>
+              line-trough blue
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase
+          itShould="show text with big letter spacing"
+          skip
+          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/272
+        >
+          <View style={styles.smallContainer}>
+            <Text style={{...styles.smallText, letterSpacing: 8}}>
+              Spacing: 4
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase
+          itShould="show text with shadow"
+          skip
+          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/278
+        >
+          <View>
+            <Text
+              style={{
+                height: 40,
+                fontSize: 20,
+                fontWeight: '900',
+                textShadowColor: 'rgba(0,0,255,0.8)',
+                textShadowOffset: {width: 1, height: 1},
+                textShadowRadius: 20,
+              }}>
+              Text with shadow
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase
+          itShould="show text with text transformed"
+          skip
+          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/279
+        >
+          <View style={styles.bigContainer}>
+            <Text style={styles.smallText}>Text transform none</Text>
+            <Text
+              style={{
+                ...styles.smallText,
+                textTransform: 'capitalize',
+              }}>
+              Text transform capitalize
+            </Text>
+            <Text
+              style={{
+                ...styles.smallText,
+                textTransform: 'uppercase',
+              }}>
+              Text transform uppercase
+            </Text>
+            <Text
+              style={{
+                ...styles.smallText,
+                textTransform: 'lowercase',
+              }}>
+              Text transform lowercase
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase
+          itShould="show text with different writing direction"
+          skip
+          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/280
+        >
+          <View style={styles.container}>
+            <Text style={styles.smallText}>Writing direction auto</Text>
+            <Text
+              style={{
+                ...styles.smallText,
+                writingDirection: 'ltr',
+              }}>
+              Writing direction ltr
+            </Text>
+            <Text
+              style={{
+                ...styles.smallText,
+                writingDirection: 'rtl',
+              }}>
+              Writing direction rtl
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase
+          itShould="show text aligned vertically with/without font padding included"
+          skip
+          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/281
+        >
+          <View style={styles.smallContainerRow}>
+            <Text
+              style={{
+                ...styles.smallText,
+                textAlignVertical: 'center',
+                includeFontPadding: false,
+              }}>
+              TEXT
+            </Text>
+            <Text
+              style={{
+                ...styles.smallText,
+                textAlignVertical: 'center',
+              }}>
+              TEXT
+            </Text>
+          </View>
+        </TestCase>
+      </TestSuite>
       <TestSuite name="text measuring">
         <TestCase itShould="display: 'FOO''BAR' next to each other">
           <View
@@ -130,16 +404,84 @@ export function TextTest() {
     </TestSuite>
   );
 }
+
+const OnTextLayoutView = (props: {
+  ctx: {
+    state: boolean;
+    setState: React.Dispatch<React.SetStateAction<boolean>>;
+    reset: () => void;
+  };
+}) => {
+  const [width, setWidth] = useState(100);
+
+  return (
+    <View style={styles.container}>
+      <Text
+        style={{
+          ...styles.smallText,
+          width: width,
+          backgroundColor: 'blue',
+        }}
+        onTextLayout={() => props.ctx.setState(true)}>
+        Lorem ipsum dolor sit amet
+      </Text>
+      <Button
+        label="Restart"
+        onPress={() => {
+          setWidth(width === 100 ? 200 : 100);
+          props.ctx.reset();
+        }}
+      />
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
-    width: 80,
+    width: 200,
     height: 80,
+    backgroundColor: 'red',
+  },
+  smallContainer: {
+    width: 200,
+    height: 40,
+    backgroundColor: 'red',
+  },
+  smallContainerRow: {
+    width: 200,
+    height: 40,
+    backgroundColor: 'red',
+    flexDirection: 'row',
+  },
+  bigContainer: {
+    width: 200,
+    height: 120,
+    backgroundColor: 'red',
+  },
+  hugeContainer: {
+    width: 200,
+    height: 160,
     backgroundColor: 'red',
   },
   text: {
     width: '100%',
     height: '33%',
     color: 'white',
+  },
+  smallText: {
+    height: 30,
+    color: 'white',
+  },
+  smallTextWidth: {
+    height: 30,
+    color: 'white',
+    width: 150,
+  },
+  blueShortText: {
+    height: 30,
+    width: 50,
+    color: 'white',
+    backgroundColor: 'blue',
   },
   blackText: {
     width: '100%',
