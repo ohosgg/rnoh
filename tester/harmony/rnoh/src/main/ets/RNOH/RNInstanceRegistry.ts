@@ -10,6 +10,7 @@ import { RNPackage } from './RNPackage';
 import { TurboModule } from './TurboModule';
 import { TurboModuleProvider } from './TurboModuleProvider';
 import { JSBundleProvider, JSBundleProviderError } from "./JSBundleProvider"
+import { ComponentManagerRegistry } from './ComponentManagerRegistry';
 
 const rootDescriptor = {
   isDynamicBinder: false,
@@ -89,6 +90,7 @@ class RNInstanceManagerImpl implements RNInstance {
     x: 0,
     y: 0,
   }
+  public componentManagerRegistry: ComponentManagerRegistry;
 
   constructor(
     private id: number,
@@ -104,6 +106,7 @@ class RNInstanceManagerImpl implements RNInstance {
       this.updateState.bind(this));
     this.commandDispatcher = new CommandDispatcher();
     this.turboModuleProvider = this.processPackages(packages).turboModuleProvider
+    this.componentManagerRegistry = new ComponentManagerRegistry();
   }
 
   public initialize() {

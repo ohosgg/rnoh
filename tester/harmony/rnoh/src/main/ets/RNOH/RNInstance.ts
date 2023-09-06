@@ -6,6 +6,7 @@ import type { DescriptorRegistry } from "./DescriptorRegistry"
 import type { RNPackage } from "./RNPackage"
 import type { TurboModule } from "./TurboModule"
 import type { JSBundleProvider } from "./JSBundleProvider"
+import { ComponentManagerRegistry } from './ComponentManagerRegistry'
 
 export type SurfaceContext = {
   appName: string
@@ -30,6 +31,7 @@ export interface LifecycleEventListenerByName {
 export interface RNInstance {
   descriptorRegistry: DescriptorRegistry;
   commandDispatcher: CommandDispatcher;
+  componentManagerRegistry: ComponentManagerRegistry;
   abilityContext: common.UIAbilityContext;
 
   getLifecycleState(): LifecycleState;

@@ -1,4 +1,5 @@
 import { Descriptor, RNOHContext } from '../../RNOH'
+import { RNScrollViewManager } from '../componentManagers/RNScrollViewManager'
 import { ViewBaseProps, RNViewBase } from './RNViewBase'
 
 export type ScrollViewProps = ViewBaseProps & {
@@ -36,6 +37,7 @@ export struct RNScrollView {
   private scroller = new Scroller()
   private cleanupCommandCallback?: () => void = undefined
   private unregisterDescriptorChangesListener?: () => void = undefined
+  private unregisterComponentManager?: () => void = undefined
   private scrollState: ScrollState = ScrollState.Idle
 
   aboutToAppear() {
@@ -52,6 +54,8 @@ export struct RNScrollView {
           this.scrollTo(args[0], args[1], args[2]);
         }
       });
+    this.unregisterComponentManager = this.ctx.rnInstanceManager.componentManagerRegistry
+      .registerComponentManager(this.tag, new RNScrollViewManager(this.scroller))
   }
 
   onDescriptorUpdate(newDescriptor: ScrollViewDescriptor) {
@@ -66,6 +70,7 @@ export struct RNScrollView {
   aboutToDisappear() {
     this.cleanupCommandCallback?.();
     this.unregisterDescriptorChangesListener?.()
+    this.unregisterComponentManager?.();
   }
 
   scrollTo(xOffset, yOffset, animated) {
