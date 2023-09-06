@@ -1,15 +1,7 @@
-type PackagerAsset = {
-  readonly __packager_asset: boolean;
-  readonly fileSystemLocation?: string;
-  readonly httpServerLocation: string;
-  readonly width?: number;
-  readonly height?: number;
-  readonly scales: number[];
-  readonly hash: string;
-  readonly name: string;
-  readonly type: string;
-  [key: string]: any;
-};
+import {
+  getAssetDestRelativePath,
+  Asset,
+} from '@rnoh/react-native-harmony-cli/src/assetResolver';
 
 type ResolvedAssetSource = {
   readonly __packager_asset: boolean;
@@ -20,24 +12,21 @@ type ResolvedAssetSource = {
 };
 
 class AssetSourceResolver {
-  constructor(private serverUrl: string | undefined, private jsbundleUrl: string | undefined, private asset: PackagerAsset) {
-  }
+  constructor(
+    private serverUrl: string | undefined,
+    private jsbundleUrl: string | undefined,
+    private asset: Asset
+  ) {}
 
   public defaultAsset(): ResolvedAssetSource {
     return {
       __packager_asset: this.asset.__packager_asset,
-      uri: this.getResourcePath(),
+      uri: `asset://${getAssetDestRelativePath(this.asset)}`,
       scale: 1,
       width: this.asset.width,
-      height: this.asset.height
+      height: this.asset.height,
     };
-  }
-
-  private getResourcePath() {
-    const dirPathRelativeToProjectRoot = this.asset.httpServerLocation.replace("/assets/", "");
-    return `asset://${dirPathRelativeToProjectRoot}/${this.asset.name}.${this.asset.type}`;
   }
 }
 
 module.exports = AssetSourceResolver;
-

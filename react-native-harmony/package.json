@@ -3,6 +3,7 @@
   "version": "0.72.5",
   "description": "",
   "scripts": {
+    "install:dev-cli": "cd ../react-native-harmony-cli && npm pack && cd ../react-native-harmony && npm i ../react-native-harmony-cli/rnoh-react-native-harmony-cli-0.0.13.tgz && cd ../react-native-harmony",
     "pack:harmony": "react-native pack-harmony --oh-module-path ../tester/harmony/rnoh --harmony-dir-path ./harmony --package-json-path ./package.json",
     "pack:prod": "npm run pack:harmony && npm pack",
     "prepublishOnly": "npm run pack:harmony"
@@ -29,7 +30,7 @@
     "./*.json"
   ],
   "dependencies": {
-    "@rnoh/react-native-harmony-cli": "^0.0.12",
+    "@rnoh/react-native-harmony-cli": "^0.0.13",
     "fs-extra": "^11.1.1",
     "metro": "^0.76.3",
     "metro-config": "^0.76.3"

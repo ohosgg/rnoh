@@ -41,10 +41,11 @@ export struct RNImage {
   }
 
   getSource() {
-    if (this.descriptor.props.uri.startsWith("asset://")) {
-      return this.descriptor.props.uri.replace("asset://", "/assets/");
+    const uri = this.descriptor.props.uri
+    if (uri.startsWith("asset://")) {
+      return uri.replace("asset://", "/assets/");
     }
-    return this.descriptor.props.uri
+    return uri
   }
 
   /*

@@ -5,6 +5,7 @@
   "scripts": {
     "preinstall": "cd ../react-native-harmony && npm pack && cd ../tester",
     "postinstall": "node ./scripts/create-build-profile && npm uninstall react-native-harmony && npm i react-native-harmony@file:../react-native-harmony/rnoh-react-native-harmony-0.72.5.tgz",
+    "dev:cli": "cd ../react-native-harmony && npm run install:dev-cli && cd ../tester && npm i",
     "dev:rn": "npm i && npm run dev",
     "dev": "react-native bundle-harmony --dev",
     "android": "react-native run-android",
