@@ -9,6 +9,7 @@ export type AttributedFragment = {
   fontStyle?: string
   textDecorationLine?: number
   lineHeight?: number
+  backgroundColor?: ColorSegments
 }
 
 export type TextProps = ViewBaseProps & {
@@ -102,6 +103,7 @@ export struct RNText {
             .fontStyle(stringToFontStyle(fragment.fontStyle))
             .decoration({type: getTextDecorationLine(fragment)})
             .lineHeight(fragment.lineHeight)
+            .backgroundColor(convertColorSegmentsToString(fragment.backgroundColor)) // not supported
         })
       }
       .width("100%")

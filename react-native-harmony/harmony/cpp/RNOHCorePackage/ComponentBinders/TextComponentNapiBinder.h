@@ -37,6 +37,7 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                     .addProperty("text", fragment.string)
                     .addProperty("fontColor", textAttributes.foregroundColor)
                     .addProperty("lineHeight", textAttributes.lineHeight)
+                    .addProperty("backgroundColor", textAttributes.backgroundColor)
                     .addProperty("fontSize", textAttributes.fontSize);
                 auto fontWeight = textAttributes.fontWeight;
                 if (fontWeight.has_value()) {

@@ -400,6 +400,19 @@ export function TextTest() {
             </Text>
           </View>
         </TestCase>
+        <TestCase
+          skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/230
+          itShould="use green background color for INNER (backgroundColor in text fragments)">
+          <View
+            style={{
+              flexDirection: 'row',
+            }}>
+            <Text style={{backgroundColor: 'red'}}>
+              <Text style={{backgroundColor: 'green'}}>INNER</Text>
+              OUTER
+            </Text>
+          </View>
+        </TestCase>
       </TestSuite>
     </TestSuite>
   );
