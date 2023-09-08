@@ -19,6 +19,20 @@ export class DescriptorRegistry {
     return this.descriptorByTag.get(tag) as TDescriptor;
   }
 
+  /**
+   * @returns [...ancestors, descriptor]
+   */
+  public getDescriptorLineage(tag: Tag): Descriptor[] {
+    const results: Descriptor[]  = []
+    let currentTag: Tag | undefined = tag
+    do {
+      let descriptor = this.getDescriptor(currentTag)
+      currentTag = descriptor.parentTag
+      results.push(descriptor)
+    } while(currentTag !== undefined);
+    return results.reverse();
+  }
+
   public setProps<TProps>(tag: Tag, props: TProps): void {
     let descriptor = this.getDescriptor<Descriptor<string, TProps>>(tag);
 

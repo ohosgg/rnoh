@@ -22,7 +22,7 @@ module.exports = {
       .default;
   },
   get DrawerLayoutAndroid() {
-    return require("react-native/Libraries/Components/DrawerAndroid/DrawerLayoutAndroid");
+    return require('react-native/Libraries/Components/DrawerAndroid/DrawerLayoutAndroid');
   },
   get Easing() {
     return require('react-native/Libraries/Animated/Easing').default;
@@ -119,7 +119,7 @@ module.exports = {
       .default;
   },
   get View() {
-    return require('react-native/Libraries/Components/View/View');
+    return require('./Libraries/Components/View/View');
   },
   get InteractionManager() {
     return require('react-native/Libraries/Interaction/InteractionManager');

@@ -216,7 +216,7 @@ export function ViewTest() {
       </TestCase>
       <TestSuite name="pointerEvents">
         <TestCase
-          itShould="allow touch on both views"
+          itShould="call inner and outer view when pressing inner"
           initialState={{inner: false, outer: false, outerContainer: false}}
           arrange={({setState, reset}) => {
             return (
@@ -236,7 +236,7 @@ export function ViewTest() {
           }}
         />
         <TestCase
-          itShould="allow touch only on outer(gray) view (pointerEvent on outer)"
+          itShould="call only outer when pressing inner view"
           initialState={{inner: false, outer: false, outerContainer: true}}
           arrange={({setState, reset}) => {
             return (
@@ -254,32 +254,28 @@ export function ViewTest() {
               outerContainer: true,
             });
           }}
-          skip
-          // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/263
         />
         <TestCase
-          itShould="allow touch only on outer(gray) view (pointerEvent on inner)"
+          itShould="call inner and outer only when pressing inner view"
           initialState={{inner: false, outer: false, outerContainer: false}}
           arrange={({setState, reset}) => {
             return (
               <PointerEventsView
-                pointerEventsInner="box-none"
+                disableOuterContainerTouch
+                pointerEventsOuter="box-none"
                 setState={setState}
                 reset={reset}
               />
             );
           }}
           assert={({expect, state}) => {
-            expect(state).to.be.deep.eq({
-              inner: false,
-              outer: true,
-              outerContainer: true,
-            });
+            expect(state.inner).to.be.true;
+            expect(state.outer).to.be.true;
           }}
         />
         <TestCase
-          itShould="not allow touch on any of the views"
-          initialState={{inner: false, outer: false, outerContainer: true}}
+          itShould="not call inner or outer when pressing inner or outer views"
+          initialState={{inner: false, outer: false, outerContainer: false}}
           arrange={({setState, reset}) => {
             return (
               <PointerEventsView
@@ -296,8 +292,6 @@ export function ViewTest() {
               outerContainer: true,
             });
           }}
-          skip
-          // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/263
         />
       </TestSuite>
       <TestCase
@@ -411,6 +405,7 @@ export function ViewTest() {
 }
 
 function PointerEventsView(props: {
+  disableOuterContainerTouch?: boolean;
   pointerEventsOuter?: 'box-none' | 'none' | 'box-only' | 'auto';
   pointerEventsInner?: 'box-none' | 'none' | 'box-only' | 'auto';
   setState: React.Dispatch<
@@ -425,11 +420,16 @@ function PointerEventsView(props: {
   return (
     <View style={{height: 100, width: '100%', flexDirection: 'row'}}>
       <View
-        onTouchEnd={() => {
-          props.setState(prev => ({...prev, outerContainer: true}));
-        }}>
+        style={{backgroundColor: 'green'}}
+        onTouchEnd={
+          props.disableOuterContainerTouch
+            ? undefined
+            : () => {
+                props.setState(prev => ({...prev, outerContainer: true}));
+              }
+        }>
         <View
-          style={{height: 100, width: 100, backgroundColor: 'grey'}}
+          style={{height: 100, width: 100, backgroundColor: 'red'}}
           pointerEvents={props.pointerEventsOuter}
           onTouchEnd={() => {
             props.setState(prev => ({...prev, outer: true}));

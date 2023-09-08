@@ -9,6 +9,8 @@ import {
 } from '../../RNOH'
 import { RNOHEventEmitRequestHandlerName } from "./../RNOHEventEmitRequestHandler"
 
+export type PointerEvents = "auto" | "none" | "box-none" | "box-only"
+
 export type ViewBaseProps = LayoutProps & {
   backgroundColor?: ColorSegments
   borderWidth?: number
@@ -16,9 +18,12 @@ export type ViewBaseProps = LayoutProps & {
   borderRadius?: BorderRadii
   opacity?: number
   transform?: TransformMatrix,
-  pointerEvents?: "auto" | "none" | "box-none" | "box-only"
+  pointerEvents?: PointerEvents
   shadowColor?: ColorSegments,
-  shadowOffset?: {width: number, height: number},
+  shadowOffset?: {
+    width: number,
+    height: number
+  },
   shadowOpacity?: number,
   shadowRadius?: number
 }
@@ -72,7 +77,11 @@ export type ViewBaseDescriptor = Descriptor<string, ViewBaseProps>
 
 export type ViewDynamicDescriptor = Descriptor<string, ViewDynamicProps>
 
-function convertViewDynamicDescriptor(dynamicDescriptor: ViewDynamicDescriptor): ViewBaseDescriptor {
+function convertViewDynamicDescriptor(descriptor: ViewBaseDescriptor | ViewDynamicDescriptor): ViewBaseDescriptor {
+  if (!descriptor.isDynamicBinder) {
+    return descriptor as ViewBaseDescriptor
+  }
+  const dynamicDescriptor = descriptor as ViewDynamicDescriptor
   const p = dynamicDescriptor.props
   return {
     isDynamicBinder: false,
@@ -130,18 +139,30 @@ export struct RNViewBase {
   }
 
   private setDescriptor(descriptor: ViewBaseDescriptor | ViewDynamicDescriptor) {
-    if (descriptor.isDynamicBinder) {
-      descriptor = convertViewDynamicDescriptor(descriptor as ViewDynamicDescriptor)
-    }
-    this.descriptor = descriptor as ViewBaseDescriptor
+    this.descriptor = convertViewDynamicDescriptor(descriptor)
   }
 
   aboutToDisappear() {
     this.unregisterDescriptorChangesListener?.()
   }
 
+  private hasAncestorWithPointerEvents(pointerEvents: PointerEvents): boolean {
+    let parentTag = this.descriptor.parentTag
+    while (parentTag !== undefined) {
+      let descriptor = convertViewDynamicDescriptor(this.ctx.descriptorRegistry.getDescriptor<ViewBaseDescriptor | ViewDynamicDescriptor>(parentTag))
+      if (descriptor.props.pointerEvents === pointerEvents) {
+        return true
+      }
+      parentTag = descriptor.parentTag
+    }
+    return false
+  }
+
   onTouchEvent(event: TouchEvent) {
-    if (this.descriptor.props.pointerEvents === "box-none") {
+    if (this.descriptor.props.pointerEvents === "box-none"
+      || this.hasAncestorWithPointerEvents("box-only")
+      || this.hasAncestorWithPointerEvents("none")
+      || this.descriptor.props.pointerEvents === "none") {
       return;
     }
 
@@ -172,7 +193,8 @@ export struct RNViewBase {
   getHitTestMode() {
     switch (this.descriptor.props.pointerEvents) {
       case "none":
-        return HitTestMode.None
+      // handled in onTouchEvent
+        return HitTestMode.Transparent
       case "box-none":
         return HitTestMode.None
       case "box-only":
@@ -193,7 +215,7 @@ export struct RNViewBase {
       return undefined
 
     const props = this.descriptor.props
-    const colorSegments = props.shadowColor ?? [0,0,0,1]
+    const colorSegments = props.shadowColor ?? [0, 0, 0, 1]
     colorSegments[3] *= (props.shadowOpacity ?? 1)
     return {
       radius: shadowRadius,
@@ -213,11 +235,11 @@ export struct RNViewBase {
     .position({ y: this.descriptor.layoutMetrics.frame.origin.y, x: this.descriptor.layoutMetrics.frame.origin.x })
     .borderWidth(this.descriptor.props.borderWidth)
     .borderColor({
-        left: convertColorSegmentsToString(this.descriptor.props.borderColor.left),
-        top: convertColorSegmentsToString(this.descriptor.props.borderColor.top),
-        right: convertColorSegmentsToString(this.descriptor.props.borderColor.right),
-        bottom: convertColorSegmentsToString(this.descriptor.props.borderColor.bottom),
-      }
+      left: convertColorSegmentsToString(this.descriptor.props.borderColor.left),
+      top: convertColorSegmentsToString(this.descriptor.props.borderColor.top),
+      right: convertColorSegmentsToString(this.descriptor.props.borderColor.right),
+      bottom: convertColorSegmentsToString(this.descriptor.props.borderColor.bottom),
+    }
     )
     .borderRadius(this.descriptor.props.borderRadius)
     .onTouch((event) => this.onTouchEvent(event))
