@@ -18,16 +18,10 @@ export struct RNApp {
   @State private shouldShow: boolean = false
 
   aboutToAppear() {
+    this.rnohContext = new RNOHContext("0.0.0", this.rnInstance, this.logger)
     // delay running the app so that debugger has a chance to connect before a potential error is thrown
     setTimeout(() => {
-      if (!this.jsBundleProvider) {
-        throw new Error("JSBundleProvider must be provided")
-      }
-      this.rnohContext = new RNOHContext("0.0.0", this.rnInstance, this.logger)
-      this.rnInstance.initialize()
-      this.rnInstance.executeJS(this.jsBundleProvider).then(() => {
-        this.shouldShow = true
-      })
+      this.shouldShow = true
     }, this.dev ? 2000 : 0)
   }
 

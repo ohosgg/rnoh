@@ -65,6 +65,8 @@ export interface RNInstance {
     x: number,
     y: number
   }
+
+  getID(): number;
 }
 
 export type RNInstanceOptions = {
@@ -73,5 +75,5 @@ export type RNInstanceOptions = {
 }
 
 export interface RNInstanceFactory {
-  createInstance(options: RNInstanceOptions): RNInstance
+  createInstance(options: RNInstanceOptions): RNInstance;
 }

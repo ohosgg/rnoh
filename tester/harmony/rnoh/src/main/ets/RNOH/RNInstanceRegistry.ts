@@ -45,7 +45,6 @@ export class RNInstanceRegistry implements RNInstanceFactory {
 
   public createInstance(
     options: {
-      jsBundleProvider: JSBundleProvider,
       initialProps: Record<string, any>,
       packages: RNPackage[]
     }
@@ -60,8 +59,21 @@ export class RNInstanceRegistry implements RNInstanceFactory {
       this.napiBridge,
       props
     )
+    instance.initialize()
     this.instanceMap.set(id, instance)
-    return instance
+    return instance;
+  }
+
+  public getInstance(id: number): RNInstance {
+    return this.instanceMap.get(id);
+  }
+
+  public deleteInstance(id: number): boolean {
+    if (this.instanceMap.has(id)) {
+      this.instanceMap.delete(id);
+      return true;
+    }
+    return false;
   }
 
   public onBackPress() {
@@ -107,6 +119,10 @@ class RNInstanceManagerImpl implements RNInstance {
     this.commandDispatcher = new CommandDispatcher();
     this.turboModuleProvider = this.processPackages(packages).turboModuleProvider
     this.componentManagerRegistry = new ComponentManagerRegistry();
+  }
+
+  getID(): number {
+    return this.id;
   }
 
   public initialize() {

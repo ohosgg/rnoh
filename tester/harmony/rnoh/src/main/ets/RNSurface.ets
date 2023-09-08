@@ -43,6 +43,7 @@ export struct RNSurface {
   private cleanup?: () => void = undefined
 
   aboutToAppear() {
+    this.descriptor = this.ctx.descriptorRegistry.getDescriptor(this.tag);
     this.cleanup = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
       this.tag,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)

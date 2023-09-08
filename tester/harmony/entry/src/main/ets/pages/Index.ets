@@ -5,7 +5,8 @@ import {
   RNAbility,
   AnyJSBundleProvider,
   MetroJSBundleProvider,
-  ResourceJSBundleProvider
+  ResourceJSBundleProvider,
+  RNInstance,
 } from 'rnoh'
 import { SampleView, SAMPLE_VIEW_TYPE, PropsDisplayer } from "rnoh-sample-package"
 import { createRNPackages } from '../RNPackagesFactory'
@@ -15,6 +16,7 @@ import { createRNPackages } from '../RNPackagesFactory'
 struct Index {
   @StorageLink('RNAbility') rnAbility: RNAbility | undefined = undefined
   @StorageLink('RNInstanceFactory') rnInstanceFactory: RNInstanceFactory | undefined = undefined
+  rnInstance: RNInstance = undefined
 
   @Builder
   buildCustomComponent(ctx: ComponentBuilderContext) {
@@ -39,16 +41,19 @@ struct Index {
     return this.rnAbility?.onBackPress();
   }
 
+  aboutToAppear() {
+    this.rnInstance = this.rnInstanceFactory.createInstance({
+      initialProps: { foo: 'bar' },
+      packages: createRNPackages({}),
+    });
+    this.rnInstance.executeJS(new AnyJSBundleProvider(
+      [new MetroJSBundleProvider(), new ResourceJSBundleProvider(this.rnAbility.context.resourceManager)]));
+  }
+
   build() {
     Column() {
       RNApp({
-        rnInstance: this.rnInstanceFactory.createInstance({
-          initialProps: { foo: 'bar' },
-          packages: createRNPackages({})
-        }),
-        jsBundleProvider: new AnyJSBundleProvider([
-          new MetroJSBundleProvider(), new ResourceJSBundleProvider(this.rnAbility.context.resourceManager)
-        ]),
+        rnInstance: this.rnInstance,
         appName: "app_name",
         buildCustomComponent: this.buildCustomComponent.bind(this),
         dev: true,
