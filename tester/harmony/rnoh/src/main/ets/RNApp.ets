@@ -7,8 +7,8 @@ import { RNSurface } from "./RNSurface"
 @Component
 @Preview
 export struct RNApp {
-  @LocalStorageLink('RNInstanceFactory') rnInstanceFactory: RNInstanceFactory | undefined = undefined
-  @LocalStorageLink('RNOHLogger') logger: RNOHLogger | undefined = undefined;
+  @StorageLink('RNInstanceFactory') rnInstanceFactory: RNInstanceFactory | undefined = undefined
+  @StorageLink('RNOHLogger') logger: RNOHLogger | undefined = undefined;
   @State public rnInstance: RNInstance | undefined = undefined
   public appName: string
   @BuilderParam public buildCustomComponent: (ctx: ComponentBuilderContext) => void

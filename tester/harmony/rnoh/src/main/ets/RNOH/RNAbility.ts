@@ -19,10 +19,9 @@ export abstract class RNAbility extends UIAbility {
     this.logger = this.createLogger()
     this.napiBridge = new NapiBridge(libRNOHApp)
     this.rnInstanceRegistry = new RNInstanceRegistry(this.logger, this.napiBridge, this.context)
-    this.storage = new LocalStorage()
-    this.storage.setOrCreate('RNOHLogger', this.logger)
-    this.storage.setOrCreate('RNInstanceFactory', this.rnInstanceRegistry)
-    this.storage.setOrCreate('RNAbility', this)
+    AppStorage.setOrCreate('RNOHLogger', this.logger)
+    AppStorage.setOrCreate('RNInstanceFactory', this.rnInstanceRegistry)
+    AppStorage.setOrCreate('RNAbility', this)
   }
 
   protected createLogger(): RNOHLogger {

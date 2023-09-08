@@ -10,13 +10,11 @@ import {
 import { SampleView, SAMPLE_VIEW_TYPE, PropsDisplayer } from "rnoh-sample-package"
 import { createRNPackages } from '../RNPackagesFactory'
 
-let storage = LocalStorage.getShared()
-
-@Entry(storage)
+@Entry
 @Component
 struct Index {
-  @LocalStorageLink('RNAbility') rnAbility: RNAbility | undefined = undefined
-  @LocalStorageLink('RNInstanceFactory') rnInstanceFactory: RNInstanceFactory | undefined = undefined
+  @StorageLink('RNAbility') rnAbility: RNAbility | undefined = undefined
+  @StorageLink('RNInstanceFactory') rnInstanceFactory: RNInstanceFactory | undefined = undefined
 
   @Builder
   buildCustomComponent(ctx: ComponentBuilderContext) {
