@@ -1,3 +1,4 @@
+export * from './ActivityIndicatorTest';
 export * from './AnimatedEasingTest';
 export * from './AnimatedTest';
 export * from './AppRegistryTest';
