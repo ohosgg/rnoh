@@ -69,6 +69,7 @@ export class NapiBridge {
 
   startSurface(
     instanceId: number,
+    surfaceId: number,
     initialSurfaceWidth: number,
     initialSurfaceHeight: number,
     surfaceOffsetX: number,
@@ -77,6 +78,7 @@ export class NapiBridge {
     initialProps: any) {
     this.libRNOHApp?.startSurface(
       instanceId,
+      surfaceId,
       initialSurfaceWidth,
       initialSurfaceHeight,
       surfaceOffsetX,
@@ -88,6 +90,7 @@ export class NapiBridge {
 
   updateSurfaceConstraints(
     instanceId: number,
+    surfaceId: number,
     appName: string,
     surfaceWidth: number,
     surfaceHeight: number,
@@ -96,11 +99,44 @@ export class NapiBridge {
   ) {
     this.libRNOHApp?.updateSurfaceConstraints(
       instanceId,
+      surfaceId,
       appName,
       surfaceWidth,
       surfaceHeight,
       surfaceOffsetX,
       surfaceOffsetY
+    );
+  }
+
+  createSurface(
+    instanceId: number,
+    surfaceId: number,
+    moduleName: string,
+  ) {
+    this.libRNOHApp?.createSurface(
+      instanceId,
+      surfaceId,
+      moduleName,
+    );
+  }
+
+  stopSurface(
+    instanceId: number,
+    surfaceId: number,
+  ) {
+    this.libRNOHApp?.stopSurface(
+      instanceId,
+      surfaceId,
+    );
+  }
+
+  destroySurface(
+    instanceId: number,
+    surfaceId: number,
+  ) {
+    this.libRNOHApp?.destroySurface(
+      instanceId,
+      surfaceId,
     );
   }
 

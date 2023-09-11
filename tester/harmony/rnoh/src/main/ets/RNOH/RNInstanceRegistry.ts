@@ -95,13 +95,14 @@ export class RNInstanceRegistry implements RNInstanceFactory {
 
 class RNInstanceManagerImpl implements RNInstance {
   private turboModuleProvider: TurboModuleProvider
-  public descriptorRegistry: DescriptorRegistry;
-  public commandDispatcher: CommandDispatcher;
+  private surfaceCounter = 0;
   private lifecycleState: LifecycleState = LifecycleState.BEFORE_CREATE
   private surfaceOffset = {
     x: 0,
     y: 0,
   }
+  public descriptorRegistry: DescriptorRegistry;
+  public commandDispatcher: CommandDispatcher;
   public componentManagerRegistry: ComponentManagerRegistry;
 
   constructor(
@@ -186,14 +187,15 @@ class RNInstanceManagerImpl implements RNInstance {
     return this.turboModuleProvider.getModule(name);
   }
 
-  public startSurface(ctx: SurfaceContext) {
+  public startSurface(tag: Tag, ctx: SurfaceContext) {
     this.napiBridge.startSurface(
       this.id,
+      tag,
       ctx.width,
       ctx.height,
       ctx.surfaceOffsetX,
       ctx.surfaceOffsetY,
-      ctx.appName,
+      ctx.appKey,
       this.getInitialProps())
     this.lifecycleState = LifecycleState.READY
     this.surfaceOffset = {
@@ -203,8 +205,9 @@ class RNInstanceManagerImpl implements RNInstance {
   }
 
   public updateSurfaceConstraints(
+    tag: Tag,
     {
-      appName,
+      appKey,
       width,
       height,
       surfaceOffsetX,
@@ -213,7 +216,8 @@ class RNInstanceManagerImpl implements RNInstance {
   ) {
     this.napiBridge.updateSurfaceConstraints(
       this.id,
-      appName,
+      tag,
+      appKey,
       width,
       height,
       surfaceOffsetX,
@@ -223,6 +227,22 @@ class RNInstanceManagerImpl implements RNInstance {
       x: surfaceOffsetX,
       y: surfaceOffsetY,
     }
+  }
+
+  public createSurface(moduleName: string) {
+    const tag = this.getNextSurfaceTag();
+    this.descriptorRegistry.createRootDescriptor(tag);
+    this.napiBridge.createSurface(this.id, tag, moduleName);
+    return tag;
+  }
+
+  public stopSurface(tag: number): void {
+    this.napiBridge.stopSurface(this.id, tag);
+  }
+
+  public destroySurface(tag: number): void {
+    this.napiBridge.destroySurface(this.id, tag);
+    this.descriptorRegistry.deleteRootDescriptor(tag)
   }
 
   public updateState(componentName: string, tag: Tag, state: unknown): void {
@@ -243,5 +263,11 @@ class RNInstanceManagerImpl implements RNInstance {
 
   public getSurfaceOffset() {
     return this.surfaceOffset
+  }
+
+  private getNextSurfaceTag(): Tag {
+    // NOTE: this is done to mirror the iOS implementation.
+    // For details, see `RCTAllocateRootViewTag` in iOS implementation.
+    return (this.surfaceCounter++ * 10) + 1;
   }
 }

@@ -13,7 +13,7 @@
 
 using namespace rnoh;
 
-std::unordered_map<size_t, std::unique_ptr<RNInstance>> rnInstances;
+std::unordered_map<size_t, std::unique_ptr<RNInstance>> rnInstanceById;
 
 static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
     LogSink::initializeLogging();
@@ -25,7 +25,7 @@ static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
     auto arkTsTurboModuleProviderRef = arkJs.createReference(args[1]);
     auto measureTextFnRef = arkJs.createReference(args[2]);
     auto rnInstance = createRNInstance(env, arkTsTurboModuleProviderRef, measureTextFnRef);
-    auto [it, inserted] = rnInstances.insert_or_assign(instanceId, std::move(rnInstance));
+    auto [it, inserted] = rnInstanceById.insert_or_assign(instanceId, std::move(rnInstance));
     it->second->start();
     return arkJs.getUndefined();
 }
@@ -34,7 +34,7 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 3);
     size_t instanceId = arkJs.getDouble(args[0]);
-    auto &rnInstance = rnInstances.at(instanceId);
+    auto &rnInstance = rnInstanceById.at(instanceId);
     auto listener_ref = arkJs.createReference(args[1]);
     auto commandDispatcherRef = arkJs.createReference(args[2]);
     rnInstance->registerSurface(
@@ -59,7 +59,7 @@ static napi_value loadScriptFromString(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 3);
     size_t instanceId = arkJs.getDouble(args[0]);
-    auto &rnInstance = rnInstances.at(instanceId);
+    auto &rnInstance = rnInstanceById.at(instanceId);
     rnInstance->loadScriptFromString(
         arkJs.getString(args[1]),
         arkJs.getString(args[2]));
@@ -68,28 +68,59 @@ static napi_value loadScriptFromString(napi_env env, napi_callback_info info) {
 
 static napi_value updateSurfaceConstraints(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 6);
+    auto args = arkJs.getCallbackArgs(info, 7);
     size_t instanceId = arkJs.getDouble(args[0]);
-    auto &rnInstance = rnInstances.at(instanceId);
-    rnInstance->updateSurfaceConstraints(arkJs.getString(args[1]),
-                                         arkJs.getDouble(args[2]),
+    auto &rnInstance = rnInstanceById.at(instanceId);
+    rnInstance->updateSurfaceConstraints(arkJs.getDouble(args[1]),
+                                         arkJs.getString(args[2]),
                                          arkJs.getDouble(args[3]),
                                          arkJs.getDouble(args[4]),
-                                         arkJs.getDouble(args[5]));
+                                         arkJs.getDouble(args[5]),
+                                         arkJs.getDouble(args[6]));
+    return arkJs.getUndefined();
+}
+
+static napi_value createSurface(napi_env env, napi_callback_info info) {
+    ArkJS arkJs(env);
+    auto args = arkJs.getCallbackArgs(info, 3);
+    size_t instanceId = arkJs.getDouble(args[0]);
+    auto &rnInstance = rnInstanceById.at(instanceId);
+    facebook::react::Tag surfaceId = arkJs.getDouble(args[1]);
+    auto appKey = arkJs.getString(args[2]);
+    rnInstance->createSurface(surfaceId, appKey);
     return arkJs.getUndefined();
 }
 
 static napi_value startSurface(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 7);
+    auto args = arkJs.getCallbackArgs(info, 8);
     size_t instanceId = arkJs.getDouble(args[0]);
-    auto &rnInstance = rnInstances.at(instanceId);
+    auto &rnInstance = rnInstanceById.at(instanceId);
     rnInstance->startSurface(arkJs.getDouble(args[1]),
-                               arkJs.getDouble(args[2]),
-                               arkJs.getDouble(args[3]),
-                               arkJs.getDouble(args[4]),
-                               arkJs.getString(args[5]),
-                               arkJs.getDynamic(args[6]));
+                             arkJs.getDouble(args[2]),
+                             arkJs.getDouble(args[3]),
+                             arkJs.getDouble(args[4]),
+                             arkJs.getDouble(args[5]),
+                             arkJs.getString(args[6]),
+                             arkJs.getDynamic(args[7]));
+    return arkJs.getUndefined();
+}
+
+static napi_value stopSurface(napi_env env, napi_callback_info info) {
+    ArkJS arkJs(env);
+    auto args = arkJs.getCallbackArgs(info, 2);
+    size_t instanceId = arkJs.getDouble(args[0]);
+    auto &rnInstance = rnInstanceById.at(instanceId);
+    rnInstance->stopSurface(arkJs.getDouble(args[1]));
+    return arkJs.getUndefined();
+}
+
+static napi_value destroySurface(napi_env env, napi_callback_info info) {
+    ArkJS arkJs(env);
+    auto args = arkJs.getCallbackArgs(info, 2);
+    size_t instanceId = arkJs.getDouble(args[0]);
+    auto &rnInstance = rnInstanceById.at(instanceId);
+    rnInstance->destroySurface(arkJs.getDouble(args[1]));
     return arkJs.getUndefined();
 }
 
@@ -97,7 +128,7 @@ static napi_value emitComponentEvent(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 5);
     size_t instanceId = arkJs.getDouble(args[0]);
-    auto &rnInstance = rnInstances.at(instanceId);
+    auto &rnInstance = rnInstanceById.at(instanceId);
     rnInstance->emitComponentEvent(env,
                                    arkJs.getDouble(args[1]),
                                    arkJs.getString(args[2]),
@@ -109,7 +140,7 @@ static napi_value callRNFunction(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 4);
     size_t instanceId = arkJs.getDouble(args[0]);
-    auto &rnInstance = rnInstances.at(instanceId);
+    auto &rnInstance = rnInstanceById.at(instanceId);
     auto moduleString = arkJs.getString(args[1]);
     auto nameString = arkJs.getString(args[2]);
     auto argsDynamic = arkJs.getDynamic(args[3]);
@@ -123,7 +154,7 @@ static napi_value onMemoryLevel(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 1);
     auto memoryLevel = arkJs.getDouble(args[0]);
-    for (auto &[id, instance] : rnInstances) {
+    for (auto &[id, instance] : rnInstanceById) {
         if (instance != nullptr) {
             instance->onMemoryLevel(static_cast<size_t>(memoryLevel));
         }
@@ -135,7 +166,7 @@ static napi_value updateState(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 4);
     size_t instanceId = arkJs.getDouble(args[0]);
-    auto &rnInstance = rnInstances.at(instanceId);
+    auto &rnInstance = rnInstanceById.at(instanceId);
     auto componentName = arkJs.getString(args[1]);
     auto tag = arkJs.getDouble(args[2]);
     auto state = args[3];
@@ -150,6 +181,9 @@ static napi_value Init(napi_env env, napi_value exports) {
         {"initializeReactNative", nullptr, initializeReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"loadScriptFromString", nullptr, loadScriptFromString, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"startSurface", nullptr, startSurface, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"stopSurface", nullptr, stopSurface, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"destroySurface", nullptr, destroySurface, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"createSurface", nullptr, createSurface, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"updateSurfaceConstraints", nullptr, updateSurfaceConstraints, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"emitComponentEvent", nullptr, emitComponentEvent, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"callRNFunction", nullptr, callRNFunction, nullptr, nullptr, nullptr, napi_default, nullptr},

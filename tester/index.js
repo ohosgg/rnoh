@@ -7,6 +7,7 @@ import {AppRegistry, View, Text} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
 import {InitialParamsContext} from './contexts';
+import { TesterExample } from './examples';
 
 AppRegistry.setWrapperComponentProvider(appParams => {
   return ({children, ...otherProps}) => (
@@ -32,3 +33,4 @@ AppRegistry.setWrapperComponentProvider(appParams => {
 });
 
 AppRegistry.registerComponent(appName, () => App);
+AppRegistry.registerComponent('tester', () => TesterExample)

@@ -1,7 +1,5 @@
 import React from 'react';
-import {Tester} from '@rnoh/testerino';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import * as tests from './tests';
+import {StyleSheet, View} from 'react-native';
 import {
   AnimationsExample,
   CheckerboardExample,
@@ -13,32 +11,18 @@ import {
   LargeImageScrollExample,
   TogglingComponentExample,
   StickyHeadersExample,
+  TesterExample,
 } from './examples';
-import {Button, NavigationContainer, Page} from './components';
+import {NavigationContainer, Page} from './components';
 import {Benchmarker, DeepTree, SierpinskiTriangle} from './benchmarks';
 import {PortalHost, PortalProvider} from '@gorhom/portal';
 
 function App() {
-  const scrollRef = React.useRef<ScrollView>(null);
-
   return (
     <NavigationContainer>
       <PortalProvider>
         <Page name="TESTS">
-          <ScrollView style={styles.container} ref={scrollRef}>
-            <Tester>
-              {Object.keys(tests).map(testSuiteName => {
-                const TestSuite = tests[testSuiteName as keyof typeof tests];
-                return <TestSuite key={testSuiteName} />;
-              })}
-            </Tester>
-            <Button
-              label="Scroll to Top"
-              onPress={() => {
-                scrollRef.current?.scrollTo({y: 0, animated: false});
-              }}
-            />
-          </ScrollView>
+          <TesterExample />
         </Page>
         <Page name="BENCHMARK: DEEP TREE">
           <Benchmarker
@@ -129,13 +113,5 @@ function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#333',
-  },
-});
 
 export default App;

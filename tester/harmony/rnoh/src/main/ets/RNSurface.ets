@@ -4,46 +4,25 @@ import { Descriptor } from './RNOH'
 import { ViewBaseProps } from './RNOHCorePackage/Components/RNViewBase'
 import { convertColorSegmentsToString } from './RNOH'
 
-
 export type RootDescriptor = Descriptor<"RootView", ViewBaseProps>
-
-const rootDescriptor: RootDescriptor = {
-  isDynamicBinder: false,
-  type: 'RootView',
-  tag: 1,
-  childrenTags: [],
-  props: { top: 0, left: 0, width: 0, height: 0 },
-  state: {},
-  layoutMetrics: {
-    frame: {
-      origin: {
-        x: 0,
-        y: 0,
-      },
-      size: {
-        width: 0,
-        height: 0,
-      }
-    }
-  }
-}
 
 @Component
 export struct RNSurface {
   ctx: RNOHContext
   tag: Tag
-  appName: string
+  appKey: string
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   surfaceWidth: number = 0
   surfaceHeight: number = 0
   surfaceOffsetX: number = 0
   surfaceOffsetY: number = 0
-  @State descriptor: RootDescriptor = rootDescriptor
+  @State descriptor: RootDescriptor = {} as RootDescriptor
   @State hasStartedSurface: boolean = false
   private cleanup?: () => void = undefined
 
   aboutToAppear() {
-    this.descriptor = this.ctx.descriptorRegistry.getDescriptor(this.tag);
+    this.tag = this.ctx.rnInstanceManager.createSurface(this.appKey);
+    this.descriptor = this.ctx.rnInstanceManager.descriptorRegistry.getDescriptor(this.tag)
     this.cleanup = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
       this.tag,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
@@ -52,6 +31,8 @@ export struct RNSurface {
 
   aboutToDisappear() {
     this.cleanup?.();
+    this.ctx.rnInstanceManager.stopSurface(this.tag);
+    this.ctx.rnInstanceManager.destroySurface(this.tag);
   }
 
   onUpdateComponent(newDescriptor: Descriptor) {
@@ -68,8 +49,8 @@ export struct RNSurface {
 
   updateSurfaceConstraints() {
     if (!this.hasStartedSurface) {
-      this.ctx.rnInstanceManager.startSurface({
-        appName: this.appName,
+      this.ctx.rnInstanceManager.startSurface(this.tag, {
+        appKey: this.appKey,
         width: this.surfaceWidth,
         height: this.surfaceHeight,
         surfaceOffsetX: this.surfaceOffsetX,
@@ -77,8 +58,8 @@ export struct RNSurface {
       })
       this.hasStartedSurface = true
     } else {
-      this.ctx.rnInstanceManager.updateSurfaceConstraints({
-        appName: this.appName,
+      this.ctx.rnInstanceManager.updateSurfaceConstraints(this.tag, {
+        appKey: this.appKey,
         width: this.surfaceWidth,
         height: this.surfaceHeight,
         surfaceOffsetX: this.surfaceOffsetX,

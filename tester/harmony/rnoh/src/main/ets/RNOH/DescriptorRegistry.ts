@@ -1,8 +1,11 @@
 import { Tag, Descriptor } from './DescriptorBase';
 import { MutationType, Mutation } from './Mutation';
 
+type RootDescriptor = Descriptor<"RootView", any>
+
 type SubtreeListener = () => void;
 type SetNativeStateFn = (componentName: string, tag: Tag, state: unknown) => void
+
 export class DescriptorRegistry {
   private descriptorByTag: Map<Tag, Descriptor>;
   private descriptorListenersSetByTag: Map<Tag, Set<(descriptor: Descriptor) => void>> = new Map();
@@ -40,8 +43,8 @@ export class DescriptorRegistry {
       return;
     }
 
-    descriptor.props = {...descriptor.props, ...props};
-    const updatedDescriptor = {...descriptor};
+    descriptor.props = { ...descriptor.props, ...props };
+    const updatedDescriptor = { ...descriptor };
     this.descriptorByTag.set(tag, updatedDescriptor);
 
     this.descriptorListenersSetByTag.get(tag)?.forEach(cb => cb(updatedDescriptor));
@@ -61,7 +64,7 @@ export class DescriptorRegistry {
 
   public applyMutations(mutations: Mutation[]) {
     const updatedComponents = mutations.flatMap(mutation =>
-      this.applyMutation(mutation),
+    this.applyMutation(mutation),
     );
     const uniqueUpdated = [...new Set(updatedComponents)];
     uniqueUpdated.forEach(tag => {
@@ -157,7 +160,7 @@ export class DescriptorRegistry {
       this.descriptorByTag.set(mutation.descriptor.tag, {
         ...currentDescriptor,
         ...mutation.descriptor,
-        props: {...currentDescriptor.props, ...mutation.descriptor.props}
+        props: { ...currentDescriptor.props, ...mutation.descriptor.props }
       });
       this.descriptorByTag.get(mutation.descriptor.tag).childrenTags = children;
       return [mutation.descriptor.tag];
@@ -176,6 +179,37 @@ export class DescriptorRegistry {
       return [];
     }
     return [];
+  }
+
+  public createRootDescriptor(tag: Tag) {
+    const rootDescriptor: RootDescriptor = {
+      isDynamicBinder: false,
+      type: 'RootView',
+      tag: 1,
+      childrenTags: [],
+      props: { top: 0, left: 0, width: 0, height: 0 },
+      state: {},
+      layoutMetrics: {
+        frame: {
+          origin: {
+            x: 0,
+            y: 0,
+          },
+          size: {
+            width: 0,
+            height: 0,
+          }
+        }
+      }
+    }
+    this.descriptorByTag.set(tag, rootDescriptor)
+  }
+
+  public deleteRootDescriptor(tag: Tag) {
+    if (this.getDescriptor(tag).type !== "RootView") {
+      return;
+    }
+    this.descriptorByTag.delete(tag);
   }
 
   public getDescriptorByTagMap() {

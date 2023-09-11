@@ -31,7 +31,7 @@ export struct RNApp {
         RNSurface({
           tag: 1,
           ctx: this.rnohContext,
-          appName: this.appName,
+          appKey: this.appName,
           buildCustomComponent: this.buildCustomComponent,
         })
       }

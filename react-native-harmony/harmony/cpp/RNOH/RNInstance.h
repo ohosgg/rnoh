@@ -49,9 +49,12 @@ class RNInstance {
         MutationsListener&&,
         MountingManager::CommandDispatcher&&);
     void start();
-    void updateSurfaceConstraints(std::string const &moduleName, float width, float height, float viewportOffsetX, float viewportOffsetY);
     void loadScriptFromString(std::string const &&bundle, std::string const sourceURL);
-    void startSurface(float width, float height, float viewportOffsetX, float viewportOffsetY, std::string const &moduleName, folly::dynamic &&initialProps);
+    void createSurface(facebook::react::Tag surfaceId, std::string const &moduleName);
+    void updateSurfaceConstraints(facebook::react::Tag surfaceId, std::string const &moduleName, float width, float height, float viewportOffsetX, float viewportOffsetY);
+    void startSurface(facebook::react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY, std::string const &moduleName, folly::dynamic &&initialProps);
+    void stopSurface(facebook::react::Tag surfaceId);
+    void destroySurface(facebook::react::Tag surfaceId);
     void callFunction(std::string &&module, std::string &&method, folly::dynamic &&params);
     void emitComponentEvent(napi_env env, facebook::react::Tag tag, std::string eventName, napi_value payload);
     void onMemoryLevel(size_t memoryLevel);
@@ -60,7 +63,7 @@ class RNInstance {
   private:
     std::shared_ptr<facebook::react::ContextContainer> m_contextContainer;
     std::shared_ptr<facebook::react::Instance> instance;
-    std::map<std::string, std::shared_ptr<facebook::react::SurfaceHandler>> surfaceHandlers;
+    std::map<facebook::react::Tag, std::shared_ptr<facebook::react::SurfaceHandler>> surfaceHandlers;
     std::function<void(MutationsToNapiConverter, facebook::react::ShadowViewMutationList const &mutations)> mutationsListener;
     MountingManager::CommandDispatcher commandDispatcher;
     std::unique_ptr<facebook::react::Scheduler> scheduler;

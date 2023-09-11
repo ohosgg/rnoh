@@ -1,11 +1,8 @@
 import { DescriptorRegistry } from './DescriptorRegistry';
 import { CommandDispatcher } from './CommandDispatcher';
-import { Descriptor } from './DescriptorBase';
 import { RNOHLogger } from "./RNOHLogger";
 import common from '@ohos.app.ability.common';
 import { RNInstance } from '.';
-
-export type RootDescriptor = Descriptor<"RootView", any>
 
 export class RNOHContext {
   // TODO: deprecate these properties, use RNInstance instead
