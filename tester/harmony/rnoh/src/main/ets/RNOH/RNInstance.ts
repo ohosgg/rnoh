@@ -3,7 +3,7 @@ import common from '@ohos.app.ability.common'
 import type { Tag } from './DescriptorBase'
 import type { CommandDispatcher } from "./CommandDispatcher"
 import type { DescriptorRegistry } from "./DescriptorRegistry"
-import type { RNPackage } from "./RNPackage"
+import type { RNPackage, RNPackageContext } from "./RNPackage"
 import type { TurboModule } from "./TurboModule"
 import type { JSBundleProvider } from "./JSBundleProvider"
 import { ComponentManagerRegistry } from './ComponentManagerRegistry'
@@ -28,6 +28,8 @@ export interface LifecycleEventListenerByName {
   BACKGROUND: () => void;
 }
 
+export type BundleExecutionStatus = "RUNNING" | "DONE"
+
 export interface RNInstance {
   descriptorRegistry: DescriptorRegistry;
   commandDispatcher: CommandDispatcher;
@@ -49,7 +51,9 @@ export interface RNInstance {
 
   emitComponentEvent(tag: Tag, eventEmitRequestHandlerName: string, payload: any): void;
 
-  executeJS(jsBundleProvider: JSBundleProvider): Promise<void>;
+  getBundleExecutionStatus(bundleURL: string): BundleExecutionStatus | undefined
+
+  runJSBundle(jsBundleProvider: JSBundleProvider): Promise<void>;
 
   getTurboModule<T extends TurboModule>(name: string): T;
 
@@ -72,14 +76,10 @@ export interface RNInstance {
     y: number
   }
 
-  getID(): number;
+  getId(): number;
 }
 
 export type RNInstanceOptions = {
   initialProps: Record<string, any>,
-  packages: RNPackage[]
-}
-
-export interface RNInstanceFactory {
-  createInstance(options: RNInstanceOptions): RNInstance;
+  createRNPackages: (ctx: RNPackageContext) => RNPackage[]
 }

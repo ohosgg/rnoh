@@ -9,7 +9,6 @@ export type RootDescriptor = Descriptor<"RootView", ViewBaseProps>
 @Component
 export struct RNSurface {
   ctx: RNOHContext
-  tag: Tag
   appKey: string
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   surfaceWidth: number = 0
@@ -18,6 +17,7 @@ export struct RNSurface {
   surfaceOffsetY: number = 0
   @State descriptor: RootDescriptor = {} as RootDescriptor
   @State hasStartedSurface: boolean = false
+  private tag: Tag
   private cleanup?: () => void = undefined
 
   aboutToAppear() {

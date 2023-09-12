@@ -1,37 +1,65 @@
 import { ComponentBuilderContext } from './RNComponentFactory'
-import { RNInstanceFactory, RNInstance, JSBundleProvider } from './RNOH'
-import { RNOHContext } from "./RNOH/RNOHContext"
-import { RNOHLogger } from './RNOH/RNOHLogger'
+import { RNInstance, JSBundleProvider, RNInstanceOptions, RNAbility } from './RNOH'
 import { RNSurface } from "./RNSurface"
 
 @Component
 @Preview
 export struct RNApp {
-  @StorageLink('RNInstanceFactory') rnInstanceFactory: RNInstanceFactory | undefined = undefined
-  @StorageLink('RNOHLogger') logger: RNOHLogger | undefined = undefined;
-  @State public rnInstance: RNInstance | undefined = undefined
-  public appName: string
+  /**
+   * RNInstance or RNInstanceOptions used to create RNInstance.
+   * If RNInstanceOptions are provided, this component takes the responsibility for creating and managing RNInstance.
+   */
+  public rnInstance: RNInstance | RNInstanceOptions = undefined
+  /**
+   * App name. Check react-native/Libraries/AppRegistry for more info.
+   */
+  public appKey: string
+  /**
+   * If provided, Runs JS Bundle against rnInstance. Creates surface after bundle has been loaded.
+   */
+  public jsBundleProvider: JSBundleProvider | undefined = undefined
+  /**
+   * Builds a custom fabric component.
+   */
   @BuilderParam public buildCustomComponent: (ctx: ComponentBuilderContext) => void
-  public dev: boolean = false
-  public jsBundleProvider: JSBundleProvider
-  private rnohContext: RNOHContext
+  // -------------------------------------------------------------------------------------------------------------------
+  @StorageLink('RNAbility') private rnAbility: RNAbility = undefined
+  private rnInstance_: RNInstance
   @State private shouldShow: boolean = false
+  private shouldDestroyRNInstance: boolean = false
 
   aboutToAppear() {
-    this.rnohContext = new RNOHContext("0.0.0", this.rnInstance, this.logger)
-    // delay running the app so that debugger has a chance to connect before a potential error is thrown
-    setTimeout(() => {
+    this.rnInstance_ = this.getOrCreateRNInstance()
+    if (this.jsBundleProvider && this.rnInstance_.getBundleExecutionStatus(this.jsBundleProvider.getURL()) === undefined) {
+      this.rnInstance_.runJSBundle(this.jsBundleProvider).then(() => {
+        this.shouldShow = true
+      })
+    } else {
       this.shouldShow = true
-    }, this.dev ? 2000 : 0)
+    }
+  }
+
+  aboutToDisappear() {
+    if (this.shouldDestroyRNInstance)
+      this.rnAbility.destroyAndUnregisterRNInstance(this.rnInstance_)
+  }
+
+  private getOrCreateRNInstance(): RNInstance {
+    if ("getId" in this.rnInstance) {
+      return this.rnInstance
+    } else {
+      const options = this.rnInstance
+      this.shouldDestroyRNInstance = true
+      return this.rnAbility.createAndRegisterRNInstance(options)
+    }
   }
 
   build() {
     Stack() {
       if (this.shouldShow) {
         RNSurface({
-          tag: 1,
-          ctx: this.rnohContext,
-          appKey: this.appName,
+          ctx: this.rnAbility.createRNOHContext({ rnInstance: this.rnInstance_ }),
+          appKey: this.appKey,
           buildCustomComponent: this.buildCustomComponent,
         })
       }

@@ -6,7 +6,8 @@ import hilog from '@ohos.hilog';
 import { TurboModuleProvider } from "./TurboModuleProvider"
 import libRNOHApp from 'librnoh_app.so'
 import { RNInstanceRegistry } from './RNInstanceRegistry';
-import { LifecycleEventListenerByName } from './RNInstance';
+import { LifecycleEventListenerByName, RNInstance, RNInstanceOptions } from './RNInstance';
+import { RNOHContext } from "./RNOHContext"
 
 export abstract class RNAbility extends UIAbility {
   protected storage: LocalStorage
@@ -22,6 +23,18 @@ export abstract class RNAbility extends UIAbility {
     AppStorage.setOrCreate('RNOHLogger', this.logger)
     AppStorage.setOrCreate('RNInstanceFactory', this.rnInstanceRegistry)
     AppStorage.setOrCreate('RNAbility', this)
+  }
+
+  public createAndRegisterRNInstance(options: RNInstanceOptions): RNInstance {
+    return this.rnInstanceRegistry.createInstance(options)
+  }
+
+  public destroyAndUnregisterRNInstance(rnInstance: RNInstance): void {
+    this.rnInstanceRegistry.deleteInstance(rnInstance.getId())
+  }
+
+  public createRNOHContext({rnInstance}: Pick<RNOHContext, "rnInstance">) {
+    return new RNOHContext("0.0.0", rnInstance, this.logger)
   }
 
   protected createLogger(): RNOHLogger {

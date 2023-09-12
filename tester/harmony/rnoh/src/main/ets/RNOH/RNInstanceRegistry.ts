@@ -3,10 +3,10 @@ import { CommandDispatcher, DescriptorRegistry, RNInstance } from '.';
 import { RNOHCorePackage } from '../RNOHCorePackage/Package';
 import { Tag } from './DescriptorBase';
 import { NapiBridge } from './NapiBridge';
-import { RNInstanceFactory, LifecycleState, LifecycleEventListenerByName, SurfaceContext } from './RNInstance';
+import { LifecycleState, LifecycleEventListenerByName, SurfaceContext, BundleExecutionStatus } from './RNInstance';
 import { RNOHContext } from './RNOHContext';
 import { RNOHLogger } from './RNOHLogger';
-import { RNPackage } from './RNPackage';
+import { RNPackage, RNPackageContext } from './RNPackage';
 import { TurboModule } from './TurboModule';
 import { TurboModuleProvider } from './TurboModuleProvider';
 import { JSBundleProvider, JSBundleProviderError } from "./JSBundleProvider"
@@ -33,7 +33,7 @@ const rootDescriptor = {
   }
 }
 
-export class RNInstanceRegistry implements RNInstanceFactory {
+export class RNInstanceRegistry {
   private nextInstanceId = 0;
   private instanceMap: Map<number, RNInstanceManagerImpl> = new Map();
 
@@ -46,15 +46,16 @@ export class RNInstanceRegistry implements RNInstanceFactory {
   public createInstance(
     options: {
       initialProps: Record<string, any>,
-      packages: RNPackage[]
+      createRNPackages: (ctx: RNPackageContext) => RNPackage[]
     }
   ): RNInstance {
     const props = { ...this.getDefaultProps(), ...options.initialProps }
     const id = this.nextInstanceId++;
+
     const instance = new RNInstanceManagerImpl(
       id,
       this.logger,
-      options.packages,
+      options.createRNPackages({}),
       this.abilityContext,
       this.napiBridge,
       props
@@ -101,9 +102,11 @@ class RNInstanceManagerImpl implements RNInstance {
     x: 0,
     y: 0,
   }
+  private bundleExecutionStatusByBundleURL: Map<string, BundleExecutionStatus> = new Map()
   public descriptorRegistry: DescriptorRegistry;
   public commandDispatcher: CommandDispatcher;
   public componentManagerRegistry: ComponentManagerRegistry;
+
 
   constructor(
     private id: number,
@@ -122,7 +125,7 @@ class RNInstanceManagerImpl implements RNInstance {
     this.componentManagerRegistry = new ComponentManagerRegistry();
   }
 
-  getID(): number {
+  getId(): number {
     return this.id;
   }
 
@@ -172,10 +175,18 @@ class RNInstanceManagerImpl implements RNInstance {
     this.napiBridge.callRNFunction(this.id, "RCTDeviceEventEmitter", "emit", [eventName, params]);
   }
 
-  public async executeJS(jsBundleProvider: JSBundleProvider) {
+  public getBundleExecutionStatus(bundleURL: string): BundleExecutionStatus | undefined {
+    return this.bundleExecutionStatusByBundleURL.get(bundleURL)
+  }
+
+  public async runJSBundle(jsBundleProvider: JSBundleProvider) {
+    const bundleURL = jsBundleProvider.getURL()
     try {
-      this.napiBridge.loadScriptFromString(this.id, await jsBundleProvider.getBundle(), await jsBundleProvider.getURL());
+      this.bundleExecutionStatusByBundleURL.set(bundleURL, "RUNNING")
+      this.napiBridge.loadScriptFromString(this.id, await jsBundleProvider.getBundle(), bundleURL)
+      this.bundleExecutionStatusByBundleURL.set(bundleURL, "DONE")
     } catch (err) {
+      this.bundleExecutionStatusByBundleURL.delete(bundleURL)
       if (err instanceof JSBundleProviderError) {
         this.logger.error(err.message)
       }

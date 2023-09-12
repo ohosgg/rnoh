@@ -98,7 +98,7 @@ struct Index {
         appKey: "app_name",
         buildCustomComponent: this.buildCustomComponent.bind(this),
         rnInstance: this.rnInstance,
-        jsBundleProvider: new AssetsBundleProvider("featureA.bundle.js", { canOnlyRunOnce: true, })
+        jsBundleProvider: new AssetsBundleProvider("featureA.bundle.js")
       })
     }
     .height('100%')
@@ -146,14 +146,13 @@ struct Index {
         appKey: "first_app",
         buildCustomComponent: this.buildCustomComponent.bind(this),
         rnInstance: { createRNPackages },
-        // canOnlyRunOnce prevents RNInstance from running the same bundle. It's useful, if `RNInstance`` lives in `RNAbility` and bundle is loaded from `aboutToAppear``
-        jsBundleProvider: new AssetsJSBundleProvider("first.bundle.js", { canOnlyRunOnce: true })
+        jsBundleProvider: new AssetsJSBundleProvider("first.bundle.js")
       }),
       RNApp({
         appKey: "second_app",
         buildCustomComponent: this.buildCustomComponent.bind(this),
         rnInstance: { createRNPackages },
-        jsBundleProvider: new AssetsJSBundleProvider("second.bundle.js", { canOnlyRunOnce: true })
+        jsBundleProvider: new AssetsJSBundleProvider("second.bundle.js")
       })
     }
     .height('100%')
@@ -267,7 +266,7 @@ struct Index {
 
   aboutToAppear() {
     this.rnInstance = this.rnAbility.createAndRegisterRNInstance({ createRNPackages })
-    this.rnohContext = this.rnAbility.createRNOHContext(rnInstance)
+    this.rnohContext = this.rnAbility.createRNOHContext(this.rnInstance)
     this.rnInstance.runJSBundle(new DefaultJSBundleProvider()).then(() => {
       this.shouldShowSurfaces = true
     })

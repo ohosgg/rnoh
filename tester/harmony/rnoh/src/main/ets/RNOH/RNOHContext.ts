@@ -5,18 +5,27 @@ import common from '@ohos.app.ability.common';
 import { RNInstance } from '.';
 
 export class RNOHContext {
-  // TODO: deprecate these properties, use RNInstance instead
   public get descriptorRegistry(): DescriptorRegistry {
-    return this.rnInstanceManager.descriptorRegistry;
+    return this.rnInstance.descriptorRegistry;
   }
   public get commandDispatcher(): CommandDispatcher {
-    return this.rnInstanceManager.commandDispatcher;
+    return this.rnInstance.commandDispatcher;
   }
   public get uiAbilityContext(): common.UIAbilityContext {
-    return this.rnInstanceManager.abilityContext
+    return this.rnInstance.abilityContext
+  }
+  public get componentManagerRegistry() {
+    return this.rnInstance.componentManagerRegistry
+  }
+
+  /**
+   * @deprecated Use `rnInstance` instead.
+   */
+  public get rnInstanceManager(): RNInstance {
+    return this.rnInstance
   }
 
   constructor(public reactNativeVersion: string,
-              public rnInstanceManager: RNInstance,
+              public rnInstance: RNInstance,
               public logger: RNOHLogger) {}
 }
