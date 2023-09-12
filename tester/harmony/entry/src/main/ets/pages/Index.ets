@@ -40,7 +40,8 @@ struct Index {
   build() {
     Column() {
       RNApp({
-        rnInstance: {createRNPackages, initialProps: {}},
+        rnInstance: {createRNPackages},
+        initialProps: { foo: "bar" },
         appKey: "app_name",
         buildCustomComponent: this.buildCustomComponent.bind(this),
         jsBundleProvider: new AnyJSBundleProvider([new MetroJSBundleProvider(), new ResourceJSBundleProvider(this.rnAbility.context.resourceManager)]),

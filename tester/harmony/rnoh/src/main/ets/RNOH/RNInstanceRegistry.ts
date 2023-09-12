@@ -45,11 +45,9 @@ export class RNInstanceRegistry {
 
   public createInstance(
     options: {
-      initialProps: Record<string, any>,
       createRNPackages: (ctx: RNPackageContext) => RNPackage[]
     }
   ): RNInstance {
-    const props = { ...this.getDefaultProps(), ...options.initialProps }
     const id = this.nextInstanceId++;
 
     const instance = new RNInstanceManagerImpl(
@@ -58,7 +56,7 @@ export class RNInstanceRegistry {
       options.createRNPackages({}),
       this.abilityContext,
       this.napiBridge,
-      props
+      this.getDefaultProps()
     )
     instance.initialize()
     this.instanceMap.set(id, instance)
@@ -114,7 +112,7 @@ class RNInstanceManagerImpl implements RNInstance {
     packages: RNPackage[],
     public abilityContext: common.UIAbilityContext,
     private napiBridge: NapiBridge,
-    private initialProps: Record<string, any>) {
+    private defaultProps: Record<string, any>) {
     this.descriptorRegistry = new DescriptorRegistry(
       {
         '1': { ...rootDescriptor },
@@ -146,10 +144,6 @@ class RNInstanceManagerImpl implements RNInstance {
         return pkg.createTurboModulesFactory(turboModuleContext);
       }))
     }
-  }
-
-  public getInitialProps() {
-    return this.initialProps
   }
 
   public subscribeToLifecycleEvents<TEventName extends keyof LifecycleEventListenerByName>(type: TEventName, listener: LifecycleEventListenerByName[TEventName]) {
@@ -198,7 +192,8 @@ class RNInstanceManagerImpl implements RNInstance {
     return this.turboModuleProvider.getModule(name);
   }
 
-  public startSurface(tag: Tag, ctx: SurfaceContext) {
+  public startSurface(tag: Tag, ctx: SurfaceContext, initialProps: Record<string, any>) {
+    const props = {...this.defaultProps, ...initialProps};
     this.napiBridge.startSurface(
       this.id,
       tag,
@@ -207,7 +202,7 @@ class RNInstanceManagerImpl implements RNInstance {
       ctx.surfaceOffsetX,
       ctx.surfaceOffsetY,
       ctx.appKey,
-      this.getInitialProps())
+      props)
     this.lifecycleState = LifecycleState.READY
     this.surfaceOffset = {
       x: ctx.surfaceOffsetX,

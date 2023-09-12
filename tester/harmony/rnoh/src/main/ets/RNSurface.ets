@@ -10,6 +10,7 @@ export type RootDescriptor = Descriptor<"RootView", ViewBaseProps>
 export struct RNSurface {
   ctx: RNOHContext
   appKey: string
+  initialProps: Record<string, any>
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
   surfaceWidth: number = 0
   surfaceHeight: number = 0
@@ -49,13 +50,16 @@ export struct RNSurface {
 
   updateSurfaceConstraints() {
     if (!this.hasStartedSurface) {
-      this.ctx.rnInstanceManager.startSurface(this.tag, {
-        appKey: this.appKey,
-        width: this.surfaceWidth,
-        height: this.surfaceHeight,
-        surfaceOffsetX: this.surfaceOffsetX,
-        surfaceOffsetY: this.surfaceOffsetY,
-      })
+      this.ctx.rnInstanceManager.startSurface(
+        this.tag,
+        {
+          appKey: this.appKey,
+          width: this.surfaceWidth,
+          height: this.surfaceHeight,
+          surfaceOffsetX: this.surfaceOffsetX,
+          surfaceOffsetY: this.surfaceOffsetY,
+        },
+        this.initialProps)
       this.hasStartedSurface = true
     } else {
       this.ctx.rnInstanceManager.updateSurfaceConstraints(this.tag, {

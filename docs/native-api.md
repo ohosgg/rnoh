@@ -41,6 +41,8 @@ struct Index {
         buildCustomComponent: this.buildCustomComponent.bind(this),
         // RNApp takes the responsibility of creating and managing RNInstance
         rnInstance: { createRNPackages },
+        // initial properties passed to the React Native application
+        initialProps: { foo: "bar" },
         // if provided, RNApp will try to run the bundle on rnInstance
         jsBundleProvider: new DefaultJSBundleProvider()
       })
@@ -212,12 +214,14 @@ struct Index {
         appKey: "first_app",
         buildCustomComponent: this.buildCustomComponent.bind(this),
         rnInstance: this.rnInstance1,
+        initialProps: { foo: "bar" },
         jsBundleProvider: new AssetsJSBundleProvider("featureA.bundle.js")
       }),
       RNApp({
         appKey: "second_app",
         buildCustomComponent: this.buildCustomComponent.bind(this),
         rnInstance: this.rnInstance2,
+        initialProps: { foo: "baz" },
         jsBundleProvider: new AssetsJSBundleProvider("featureB.bundle.js")
       })
     }
@@ -282,12 +286,14 @@ struct Index {
         RNSurface({
           appKey: "componentA",
           ctx: this.rnohContext,
+          initialProps: { foo: "bar" },
           buildCustomComponent: this.buildCustomComponent.bind(this),
           rnInstance: this.rnInstance
         })
         RNSurface({
           appKey: "componentB",
           ctx: this.rnohContext,
+          initialProps: { foo: "baz" },
           buildCustomComponent: this.buildCustomComponent.bind(this),
           rnInstance: this.rnInstance
         })

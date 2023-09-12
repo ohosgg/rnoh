@@ -38,8 +38,6 @@ export interface RNInstance {
 
   getLifecycleState(): LifecycleState;
 
-  getInitialProps(): Record<string, any>;
-
   subscribeToLifecycleEvents: <TEventName extends keyof LifecycleEventListenerByName>(
     eventName: TEventName,
     listener: LifecycleEventListenerByName[TEventName]
@@ -59,7 +57,7 @@ export interface RNInstance {
 
   createSurface(moduleName: string): Tag;
 
-  startSurface(tag: Tag, surfaceContext: SurfaceContext): void;
+  startSurface(tag: Tag, surfaceContext: SurfaceContext, initialProps: Record<string, any>): void;
 
   updateSurfaceConstraints(tag: Tag, surfaceContext: SurfaceContext): void;
 
@@ -80,6 +78,5 @@ export interface RNInstance {
 }
 
 export type RNInstanceOptions = {
-  initialProps: Record<string, any>,
   createRNPackages: (ctx: RNPackageContext) => RNPackage[]
 }

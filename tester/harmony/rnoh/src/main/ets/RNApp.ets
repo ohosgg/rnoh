@@ -19,6 +19,10 @@ export struct RNApp {
    */
   public jsBundleProvider: JSBundleProvider | undefined = undefined
   /**
+   * Initial properties for the main component of the React Native app.
+   */
+  public initialProps: Record<string, any>
+  /**
    * Builds a custom fabric component.
    */
   @BuilderParam public buildCustomComponent: (ctx: ComponentBuilderContext) => void
@@ -61,6 +65,7 @@ export struct RNApp {
           ctx: this.rnAbility.createRNOHContext({ rnInstance: this.rnInstance_ }),
           appKey: this.appKey,
           buildCustomComponent: this.buildCustomComponent,
+          initialProps: this.initialProps ?? {}
         })
       }
     }
