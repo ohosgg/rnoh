@@ -73,16 +73,11 @@ void TouchEventEmitRequestHandler::handleEvent(TouchEventEmitRequestHandler::Con
             LOG(FATAL) << "Invalid touch event type received from Ark";
         }
     }
-
-    if (isTouchEnd) {
-        for (auto &touch : changedTouches) {
-            m_tagsForTouchIds.erase(touch.identifier);
-        }
-    }
 }
 
 facebook::react::Touch TouchEventEmitRequestHandler::convertTouchObject(ArkJS &arkJs, napi_value touchObject) {
     facebook::react::Tag id = arkJs.getDouble(arkJs.getObjectProperty(touchObject, "id"));
+    facebook::react::Tag target = arkJs.getDouble(arkJs.getObjectProperty(touchObject, "targetTag"));
     facebook::react::Float screenX = arkJs.getDouble(arkJs.getObjectProperty(touchObject, "screenX"));
     facebook::react::Float screenY = arkJs.getDouble(arkJs.getObjectProperty(touchObject, "screenY"));
     facebook::react::Float pageX = arkJs.getDouble(arkJs.getObjectProperty(touchObject, "pageX"));
@@ -94,6 +89,7 @@ facebook::react::Touch TouchEventEmitRequestHandler::convertTouchObject(ArkJS &a
         .offsetPoint = {.x = x, .y = y},
         .screenPoint = {.x = screenX, .y = screenY},
         .identifier = id,
+        .target = target,
         .force = 1};
 }
 
@@ -104,11 +100,6 @@ facebook::react::Touches TouchEventEmitRequestHandler::convertTouches(ArkJS &ark
         auto touchObject = arkJs.getArrayElement(touchArray, i);
         auto touch = convertTouchObject(arkJs, touchObject);
         touch.timestamp = timestamp;
-
-        // `unordered_map::insert` doesn't update the value if the key already exists (https://en.cppreference.com/w/cpp/container/unordered_map/insert),
-        // so we can use it to get the tag for the touch id if already present
-        auto tagIt =  m_tagsForTouchIds.insert({touch.identifier, tag}).first;
-        touch.target = tagIt->second;
 
         touches.insert(std::move(touch));
     }

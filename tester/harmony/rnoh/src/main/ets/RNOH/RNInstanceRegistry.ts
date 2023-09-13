@@ -96,10 +96,6 @@ class RNInstanceManagerImpl implements RNInstance {
   private turboModuleProvider: TurboModuleProvider
   private surfaceCounter = 0;
   private lifecycleState: LifecycleState = LifecycleState.BEFORE_CREATE
-  private surfaceOffset = {
-    x: 0,
-    y: 0,
-  }
   private bundleExecutionStatusByBundleURL: Map<string, BundleExecutionStatus> = new Map()
   public descriptorRegistry: DescriptorRegistry;
   public commandDispatcher: CommandDispatcher;
@@ -204,10 +200,6 @@ class RNInstanceManagerImpl implements RNInstance {
       ctx.appKey,
       props)
     this.lifecycleState = LifecycleState.READY
-    this.surfaceOffset = {
-      x: ctx.surfaceOffsetX,
-      y: ctx.surfaceOffsetY,
-    }
   }
 
   public updateSurfaceConstraints(
@@ -229,10 +221,6 @@ class RNInstanceManagerImpl implements RNInstance {
       surfaceOffsetX,
       surfaceOffsetY
     );
-    this.surfaceOffset = {
-      x: surfaceOffsetX,
-      y: surfaceOffsetY,
-    }
   }
 
   public createSurface(moduleName: string) {
@@ -266,10 +254,6 @@ class RNInstanceManagerImpl implements RNInstance {
 
   public onBackground() {
     this.lifecycleState = LifecycleState.PAUSED
-  }
-
-  public getSurfaceOffset() {
-    return this.surfaceOffset
   }
 
   private getNextSurfaceTag(): Tag {

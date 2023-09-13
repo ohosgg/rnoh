@@ -2,6 +2,7 @@ import { Descriptor, Tag } from '../../RNOH/DescriptorBase'
 import { RNOHContext } from '../../RNOH/RNOHContext'
 import { RNViewBase, ViewBaseProps } from './RNViewBase'
 import { RNComponentFactory } from '../../RNComponentFactory'
+import { TouchDispatcher } from '../../RNOH/TouchDispatcher'
 
 type ModalHostViewProps = ViewBaseProps & {
   transparent: boolean;
@@ -28,9 +29,10 @@ struct ModalHostViewDialog {
   @BuilderParam renderDescriptors: () => void
   @State showContent: boolean = false
   unsubscribeFromDescriptorChanges: () => void | undefined
+  touchDispatcher: TouchDispatcher;
 
   emitComponentEvent(eventName: string) {
-    this.ctx.rnInstanceManager.emitComponentEvent(this.tag, eventName, {})
+    this.ctx.rnInstanceManager.emitComponentEvent(this.tag, eventName, {});
   }
 
   aboutToAppear() {
@@ -41,6 +43,7 @@ struct ModalHostViewDialog {
       // to prevent flickering when opening the modal
       this.showContent = true
     })
+    this.touchDispatcher = new TouchDispatcher(this.tag, this.ctx.rnInstance, this.ctx.logger);
   }
 
   onLayout(_children, constraints) {
@@ -64,7 +67,9 @@ struct ModalHostViewDialog {
 
   build() {
     if (this.showContent) {
-      this.renderDescriptors()
+      Stack() {
+        this.renderDescriptors()
+      }.onTouch((touchEvent) => this.touchDispatcher.handleTouchEvent(touchEvent))
     }
   }
 }

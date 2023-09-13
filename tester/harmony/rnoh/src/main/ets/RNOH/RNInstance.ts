@@ -69,11 +69,6 @@ export interface RNInstance {
 
   initialize(): void;
 
-  getSurfaceOffset(): {
-    x: number,
-    y: number
-  }
-
   getId(): number;
 }
 

@@ -3,6 +3,7 @@ import { RNOHContext, Tag } from "./RNOH"
 import { Descriptor } from './RNOH'
 import { ViewBaseProps } from './RNOHCorePackage/Components/RNViewBase'
 import { convertColorSegmentsToString } from './RNOH'
+import { TouchDispatcher } from './RNOH/TouchDispatcher'
 
 export type RootDescriptor = Descriptor<"RootView", ViewBaseProps>
 
@@ -20,10 +21,12 @@ export struct RNSurface {
   @State hasStartedSurface: boolean = false
   private tag: Tag
   private cleanup?: () => void = undefined
+  private touchDispatcher: TouchDispatcher
 
   aboutToAppear() {
     this.tag = this.ctx.rnInstanceManager.createSurface(this.appKey);
     this.descriptor = this.ctx.rnInstanceManager.descriptorRegistry.getDescriptor(this.tag)
+    this.touchDispatcher = new TouchDispatcher(this.tag, this.ctx.rnInstance, this.ctx.logger)
     this.cleanup = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
       this.tag,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
@@ -72,6 +75,10 @@ export struct RNSurface {
     }
   }
 
+  handleTouch(event: TouchEvent) {
+    this.touchDispatcher.handleTouchEvent(event)
+  }
+
   build() {
     Stack() {
       if (this.hasStartedSurface) {
@@ -84,5 +91,6 @@ export struct RNSurface {
     .height("100%")
     .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
     .onAreaChange(this.handleAreaChange.bind(this))
+    .onTouch(this.handleTouch.bind(this))
   }
 }

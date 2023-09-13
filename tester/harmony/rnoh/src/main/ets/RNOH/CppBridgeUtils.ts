@@ -1,4 +1,8 @@
+import matrix4 from '@ohos.matrix4'
 import { ColorSegments, ColorValue } from './DescriptorBase'
+
+// gets rid of DevEco warnings
+declare function vp2px(vp: number): number;
 
 export function convertColorSegmentsToString(colorSegments?: ColorSegments) {
   if (!colorSegments) return undefined
@@ -57,4 +61,33 @@ export function convertColorValueToColorSegments(colorValue: ColorValue | undefi
     b: ((colorValue >> 0) & 0xff) / 255,
   }
   return [rgba.r, rgba.g, rgba.b, rgba.a]
+}
+
+export type TransformMatrix = [
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number
+];
+
+export function convertMatrixArrayToMatrix4(transform: TransformMatrix) {
+  if (transform.length < 16)
+    return matrix4.identity();
+  transform = transform.slice() as TransformMatrix;
+  transform[12] = vp2px(transform[12]);
+  transform[13] = vp2px(transform[13]);
+  transform[14] = vp2px(transform[14]);
+  return matrix4.init(transform);
 }

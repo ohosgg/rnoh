@@ -1,13 +1,13 @@
-import matrix4 from '@ohos.matrix4'
 import {
   Descriptor,
   LayoutProps,
   ColorSegments,
   RNOHContext,
   convertColorSegmentsToString,
-  convertColorValueToColorSegments
+  convertColorValueToColorSegments,
+  convertMatrixArrayToMatrix4,
+  TransformMatrix
 } from '../../RNOH'
-import { RNOHEventEmitRequestHandlerName } from "./../RNOHEventEmitRequestHandler"
 
 export type PointerEvents = "auto" | "none" | "box-none" | "box-only"
 
@@ -54,25 +54,6 @@ type BorderColors = {
   bottom?: ColorSegments
 }
 
-type TransformMatrix = [
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number
-];
-
 export type ViewBaseDescriptor = Descriptor<string, ViewBaseProps>
 
 export type ViewDynamicDescriptor = Descriptor<string, ViewDynamicProps>
@@ -110,18 +91,8 @@ function convertViewDynamicDescriptor(descriptor: ViewBaseDescriptor | ViewDynam
   }
 }
 
-function convertMatrixArrayToMatrix4(transform: TransformMatrix) {
-  if (transform.length < 16)
-    return matrix4.identity();
-  transform[12] = vp2px(transform[12]);
-  transform[13] = vp2px(transform[13]);
-  transform[14] = vp2px(transform[14]);
-  return matrix4.init(transform);
-}
-
 @Component
 export struct RNViewBase {
-  private static lastTouchEventTimestamp = 0
   ctx: RNOHContext
   tag: number
   @BuilderParam renderChildren: () => void
@@ -146,55 +117,10 @@ export struct RNViewBase {
     this.unregisterDescriptorChangesListener?.()
   }
 
-  private hasAncestorWithPointerEvents(pointerEvents: PointerEvents): boolean {
-    let parentTag = this.descriptor.parentTag
-    while (parentTag !== undefined) {
-      let descriptor = convertViewDynamicDescriptor(this.ctx.descriptorRegistry.getDescriptor<ViewBaseDescriptor | ViewDynamicDescriptor>(parentTag))
-      if (descriptor.props.pointerEvents === pointerEvents) {
-        return true
-      }
-      parentTag = descriptor.parentTag
-    }
-    return false
-  }
-
-  onTouchEvent(event: TouchEvent) {
-    if (this.descriptor.props.pointerEvents === "box-none"
-      || this.hasAncestorWithPointerEvents("box-only")
-      || this.hasAncestorWithPointerEvents("none")
-      || this.descriptor.props.pointerEvents === "none") {
-      return;
-    }
-
-    // report a single event only to the innermost React component,
-    // since React handles event propagation on its own.
-    // We cannot use `event.stopPropagation` since it breaks other native components
-    // (e.g `Scroll` not stopping when touched)
-    // We identify TouchEvents by their timestamp, they should be unique enough.
-    if (RNViewBase.lastTouchEventTimestamp === event.timestamp) {
-      return;
-    }
-    RNViewBase.lastTouchEventTimestamp = event.timestamp
-
-    const surfaceOffset = this.ctx.rnInstanceManager.getSurfaceOffset()
-
-    for (const touch of event.touches) {
-      touch['pageX'] = touch.screenX - surfaceOffset.x;
-      touch['pageY'] = touch.screenY - surfaceOffset.y;
-    }
-    for (const touch of event.changedTouches) {
-      touch['pageX'] = touch.screenX - surfaceOffset.x;
-      touch['pageY'] = touch.screenY - surfaceOffset.y;
-    }
-
-    this.ctx.rnInstanceManager.emitComponentEvent(this.tag, RNOHEventEmitRequestHandlerName.Touch, event)
-  }
-
   getHitTestMode() {
     switch (this.descriptor.props.pointerEvents) {
       case "none":
-      // handled in onTouchEvent
-        return HitTestMode.Transparent
+        return HitTestMode.None
       case "box-none":
         return HitTestMode.None
       case "box-only":
@@ -242,7 +168,6 @@ export struct RNViewBase {
     }
     )
     .borderRadius(this.descriptor.props.borderRadius)
-    .onTouch((event) => this.onTouchEvent(event))
     .opacity(this.descriptor.props.opacity)
     .transform(this.descriptor.props.transform != undefined ? convertMatrixArrayToMatrix4(this.descriptor.props.transform) : undefined)
     .clip(true)

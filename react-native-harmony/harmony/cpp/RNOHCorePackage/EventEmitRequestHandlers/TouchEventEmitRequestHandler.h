@@ -27,8 +27,6 @@ class TouchEventEmitRequestHandler : public EventEmitRequestHandler {
         facebook::react::Float timestamp, 
         napi_value touchArray
     );
-
-    std::unordered_map<facebook::react::Tag, facebook::react::Tag> m_tagsForTouchIds;
 };
 
 } // namespace rnoh
