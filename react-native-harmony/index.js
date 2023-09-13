@@ -37,6 +37,9 @@ module.exports = {
   get Image() {
     return require('react-native/Libraries/Image/Image');
   },
+  get ImageBackground() {
+    return require("react-native/Libraries/Image/ImageBackground");
+  },
   get I18nManager() {
     return require('react-native/Libraries/ReactNative/I18nManager');
   },

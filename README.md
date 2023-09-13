@@ -35,7 +35,7 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 - [x] Button\*
 - [x] FlatList
 - [x] Image
-- [ ] ImageBackground
+- [x] ImageBackground
 - [ ] InputAccessoryView
 - [ ] KeyboardAvoidingView
 - [ ] Modal

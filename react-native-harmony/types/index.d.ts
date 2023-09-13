@@ -37,6 +37,7 @@ export * from 'react-native/Libraries/EventEmitter/NativeEventEmitter';
 export * from 'react-native/Libraries/EventEmitter/RCTDeviceEventEmitter';
 // export * from 'react-native/Libraries/EventEmitter/RCTNativeAppEventEmitter';
 export * from 'react-native/Libraries/Image/Image';
+export * from "react-native/Libraries/Image/ImageBackground";
 // export * from 'react-native/Libraries/Image/ImageResizeMode';
 // export * from 'react-native/Libraries/Image/ImageSource';
 export * from 'react-native/Libraries/Interaction/InteractionManager';
