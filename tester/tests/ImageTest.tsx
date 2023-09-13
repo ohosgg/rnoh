@@ -1,6 +1,5 @@
-import {Image, Pressable, Text, View} from 'react-native';
+import {Image, View} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
-import {useState} from 'react';
 
 const LOCAL_IMAGE_ASSET_ID = require('../assets/pravatar-131.jpg');
 const REMOTE_IMAGE_URL = 'https://i.pravatar.cc/100?img=31';
@@ -43,8 +42,7 @@ export const ImageTest = () => {
           }}
         />
         <TestCase
-          skip
-          itShould="prefetch image" // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/206
+          itShould="prefetch image"
           fn={async ({expect}) => {
             let ex: any;
             try {
@@ -90,8 +88,7 @@ export const ImageTest = () => {
               resizeMode="center"
             />
           </TestCase>
-          <TestCase
-            itShould="render image touching top and bottom edges in the center (contain)">
+          <TestCase itShould="render image touching top and bottom edges in the center (contain)">
             <Image
               style={{width: '100%', height: 100}}
               source={LOCAL_IMAGE_ASSET_ID}
@@ -105,16 +102,14 @@ export const ImageTest = () => {
               resizeMode="cover"
             />
           </TestCase>
-          <TestCase
-            itShould="cover test case area by repeating image (repeat)">
+          <TestCase itShould="cover test case area by repeating image (repeat)">
             <Image
               style={{width: '100%', height: 100}}
               source={LOCAL_IMAGE_ASSET_ID}
               resizeMode="repeat"
             />
           </TestCase>
-          <TestCase
-            itShould="cover test case area by stretching (stretch)">
+          <TestCase itShould="cover test case area by stretching (stretch)">
             <Image
               style={{width: '100%', height: 100}}
               source={LOCAL_IMAGE_ASSET_ID}

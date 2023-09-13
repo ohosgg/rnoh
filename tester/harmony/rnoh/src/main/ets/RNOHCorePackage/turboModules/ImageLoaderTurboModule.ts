@@ -1,5 +1,5 @@
 import { TurboModule, TurboModuleContext } from '../../RNOH/TurboModule';
-import { RemoteImageCache, RemoteImageLoader } from "../../RemoteImageLoader"
+import { RemoteImageLoader, RemoteImageMemoryCache, RemoteImageDiskCache } from "../../RemoteImageLoader"
 
 export class ImageLoaderTurboModule extends TurboModule {
   static NAME = "ImageLoader" as const
@@ -8,7 +8,8 @@ export class ImageLoaderTurboModule extends TurboModule {
 
   constructor(protected ctx: TurboModuleContext) {
     super(ctx)
-    this.imageLoader = new RemoteImageLoader(new RemoteImageCache(128))
+    this.imageLoader = new RemoteImageLoader(
+      new RemoteImageMemoryCache(128), new RemoteImageDiskCache(128), ctx.uiAbilityContext)
   }
 
   public getConstants() {
@@ -29,9 +30,8 @@ export class ImageLoaderTurboModule extends TurboModule {
     return Promise.resolve({ width: 0, height: 0 })
   }
 
-  public prefetchImage(uri: string): Promise<boolean> {
-    this.ctx.logger.warn("ImageLoader::prefetchImage is not supported")
-    return Promise.resolve(false)
+  public async prefetchImage(uri: string): Promise<boolean> {
+    return this.imageLoader.prefetch(uri);
   }
 
   public prefetchImageWithMetadata(uri: string, queryRootName: string, rootTag: number): Promise<boolean> {
@@ -42,5 +42,9 @@ export class ImageLoaderTurboModule extends TurboModule {
   public queryCache(uris: Array<string>): Promise<Object> {
     this.ctx.logger.warn("ImageLoader::queryCache is not supported")
     return Promise.resolve({})
+  }
+
+  public getCachedImage(uri: string): string | undefined {
+    return this.imageLoader.getImageFromCache(uri)
   }
 }

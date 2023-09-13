@@ -1,43 +1,43 @@
-import image from '@ohos.multimedia.image'
+import image from '@ohos.multimedia.image';
 
-export class RemoteImageCache {
-  private data: { [key: string]: image.ImageSource };
-  private maxSize: number;
+export class RemoteImageCache<T> {
+  protected data: Map<string, T>;
+  protected maxSize: number;
 
   constructor(maxSize: number) {
-    this.data = {};
+    this.data = new Map<string, T>();
     this.maxSize = maxSize;
   }
 
-  set(key: string, value: image.ImageSource): void {
-    this.data[key] = value;
+  set(key: string, value: T): void {
+    this.data.set(key, value);
 
-    // Check if cache size exceeds maxSize, and if so, remove the oldest entry
-    if (Object.keys(this.data).length > this.maxSize) {
-      const oldestKey = Object.keys(this.data)[0];
-      delete this.data[oldestKey];
+    // Check if memoryCache size exceeds maxSize, and if so, remove the oldest entry
+    if (this.data.size > this.maxSize) {
+      const oldestKey = this.data.keys()[0];
+      this.remove(oldestKey);
     }
   }
 
-  get(key: string): image.ImageSource | undefined {
-    return this.data[key];
+  get(key: string): T | undefined {
+    return this.data.get(key);
   }
 
   has(key: string): boolean {
-    return key in this.data;
+    return this.data.has(key);
   }
 
   remove(key: string): void {
-    if (key in this.data) {
-      delete this.data[key];
-    }
+    this.data.delete(key);
   }
 
   clear(): void {
-    this.data = {};
+    this.data.clear();
   }
 
   size(): number {
-    return Object.keys(this.data).length;
+    return this.data.size;
   }
 }
+
+export class RemoteImageMemoryCache extends RemoteImageCache<image.ImageSource> {};

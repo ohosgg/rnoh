@@ -1,4 +1,6 @@
+import image from '@ohos.multimedia.image'
 import { ColorSegments, Descriptor, getTintColorMatrix, RNOHContext } from '../../RNOH'
+import { ImageLoaderTurboModule } from '../turboModules/ImageLoaderTurboModule'
 import { RNViewBase, ViewBaseProps } from './RNViewBase'
 
 export type ImageProps = ViewBaseProps & {
@@ -45,7 +47,10 @@ export struct RNImage {
     if (uri.startsWith("asset://")) {
       return uri.replace("asset://", "/assets/");
     }
-    return uri
+    const filePath =
+      this.ctx.rnInstanceManager.getTurboModule<ImageLoaderTurboModule>("ImageLoader")
+        .getCachedImage(uri)
+    return filePath ?? uri
   }
 
   /*
