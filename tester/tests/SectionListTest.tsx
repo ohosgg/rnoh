@@ -8,7 +8,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
-import {Button, Modal} from '../components';
+import {Button, Modal, ObjectDisplayer} from '../components';
 
 interface SectionData {
   title: string;
@@ -358,22 +358,6 @@ function DelayedDisplayer(props: {
   }, []);
 
   return <>{isVisible ? props.renderContent() : null}</>;
-}
-
-function ObjectDisplayer(props: {
-  renderContent: (setObject: (obj: Object) => void) => any;
-}) {
-  const [object, setObject] = useState<Object>();
-
-  return (
-    <View style={{width: 256, height: '100%'}}>
-      <Text
-        style={{width: 256, height: 128, fontSize: 8, backgroundColor: '#EEE'}}>
-        {typeof object === undefined ? 'undefined' : JSON.stringify(object)}
-      </Text>
-      {props.renderContent(setObject)}
-    </View>
-  );
 }
 
 const styles = StyleSheet.create({

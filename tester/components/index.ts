@@ -3,3 +3,4 @@ export * from './Navigation';
 export * from './colorUtils';
 export * from './Modal';
 export * from './StateKeeper';
+export * from './ObjectDisplayer'

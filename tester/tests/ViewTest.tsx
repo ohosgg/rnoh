@@ -1,13 +1,13 @@
-import {Text, View} from 'react-native';
-import {TestSuite, TestCase} from '@rnoh/testerino';
-import React, {useState} from 'react';
-import {Button} from '../components';
+import { Text, View } from 'react-native';
+import { TestSuite, TestCase } from '@rnoh/testerino';
+import React, { useState } from 'react';
+import { Button } from '../components';
 
 export function ViewTest() {
   return (
     <TestSuite name="View">
       <TestCase itShould="render square with transparent background on gray background">
-        <View style={{width: '100%', height: 100, backgroundColor: 'gray'}}>
+        <View style={{ width: '100%', height: 100, backgroundColor: 'gray' }}>
           <View
             style={{
               width: 100,
@@ -19,7 +19,7 @@ export function ViewTest() {
         </View>
       </TestCase>
       <TestCase itShould="render square with rounded corners with different radii (left/right)">
-        <View style={{width: '100%', height: 100, backgroundColor: 'gray'}}>
+        <View style={{ width: '100%', height: 100, backgroundColor: 'gray' }}>
           <View
             style={{
               width: 100,
@@ -35,7 +35,7 @@ export function ViewTest() {
         </View>
       </TestCase>
       <TestCase itShould="render square with rounded corners with different radii (start/end)">
-        <View style={{width: '100%', height: 100, backgroundColor: 'gray'}}>
+        <View style={{ width: '100%', height: 100, backgroundColor: 'gray' }}>
           <View
             style={{
               width: 100,
@@ -53,9 +53,9 @@ export function ViewTest() {
       <TestCase
         itShould="render square with borders with different widths"
         skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/253
+      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/253
       >
-        <View style={{width: '100%', height: 100, backgroundColor: 'gray'}}>
+        <View style={{ width: '100%', height: 100, backgroundColor: 'gray' }}>
           <View
             style={{
               width: 100,
@@ -70,7 +70,7 @@ export function ViewTest() {
         </View>
       </TestCase>
       <TestCase itShould="render square with borders with different colors">
-        <View style={{width: '100%', height: 100, backgroundColor: 'gray'}}>
+        <View style={{ width: '100%', height: 100, backgroundColor: 'gray' }}>
           <View
             style={{
               width: 100,
@@ -85,7 +85,7 @@ export function ViewTest() {
         </View>
       </TestCase>
       <TestCase itShould="render square with borders with different start/end colors">
-        <View style={{width: '100%', height: 100, backgroundColor: 'gray'}}>
+        <View style={{ width: '100%', height: 100, backgroundColor: 'gray' }}>
           <View
             style={{
               width: 100,
@@ -100,7 +100,7 @@ export function ViewTest() {
       <TestCase
         itShould="render squares with borders with different style"
         skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/256
+      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/256
       >
         <View
           style={{
@@ -200,9 +200,9 @@ export function ViewTest() {
       <TestCase
         itShould="render square with elevation"
         skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/238
+      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/238
       >
-        <View style={{width: '100%', height: 100}}>
+        <View style={{ width: '100%', height: 100 }}>
           <View
             style={{
               width: 80,
@@ -214,11 +214,33 @@ export function ViewTest() {
           />
         </View>
       </TestCase>
+      <TestCase
+        skip
+        itShould="show inner rectangle with the same color as the reference (needsOffscreenAlphaCompositing)"
+      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/322
+      >
+        <View
+          style={{
+            opacity: 0.5,
+            backgroundColor: 'red',
+            height: 100,
+            width: 100,
+          }}
+          needsOffscreenAlphaCompositing>
+          <View
+            style={{ backgroundColor: 'black', width: 60, height: 40, opacity: 0.5 }}
+          />
+        </View>
+        <Text style={{ height: 20 }}>
+          Reference black color with opacity: 0.5
+        </Text>
+        <View style={{ width: 60, height: 40, backgroundColor: 'black', opacity: 0.5 }} />
+      </TestCase>
       <TestSuite name="pointerEvents">
         <TestCase
           itShould="call inner and outer view when pressing inner"
-          initialState={{inner: false, outer: false, outerContainer: false}}
-          arrange={({setState, reset}) => {
+          initialState={{ inner: false, outer: false, outerContainer: false }}
+          arrange={({ setState, reset }) => {
             return (
               <PointerEventsView
                 pointerEventsOuter="auto"
@@ -227,7 +249,7 @@ export function ViewTest() {
               />
             );
           }}
-          assert={({expect, state}) => {
+          assert={({ expect, state }) => {
             expect(state).to.be.deep.eq({
               inner: true,
               outer: true,
@@ -237,8 +259,8 @@ export function ViewTest() {
         />
         <TestCase
           itShould="call only outer when pressing inner view"
-          initialState={{inner: false, outer: false, outerContainer: true}}
-          arrange={({setState, reset}) => {
+          initialState={{ inner: false, outer: false, outerContainer: true }}
+          arrange={({ setState, reset }) => {
             return (
               <PointerEventsView
                 pointerEventsOuter="box-only"
@@ -247,7 +269,7 @@ export function ViewTest() {
               />
             );
           }}
-          assert={({expect, state}) => {
+          assert={({ expect, state }) => {
             expect(state).to.be.deep.eq({
               inner: false,
               outer: true,
@@ -257,8 +279,8 @@ export function ViewTest() {
         />
         <TestCase
           itShould="call inner and outer only when pressing inner view"
-          initialState={{inner: false, outer: false, outerContainer: false}}
-          arrange={({setState, reset}) => {
+          initialState={{ inner: false, outer: false, outerContainer: false }}
+          arrange={({ setState, reset }) => {
             return (
               <PointerEventsView
                 disableOuterContainerTouch
@@ -268,15 +290,15 @@ export function ViewTest() {
               />
             );
           }}
-          assert={({expect, state}) => {
+          assert={({ expect, state }) => {
             expect(state.inner).to.be.true;
             expect(state.outer).to.be.true;
           }}
         />
         <TestCase
           itShould="not call inner or outer when pressing inner or outer views"
-          initialState={{inner: false, outer: false, outerContainer: false}}
-          arrange={({setState, reset}) => {
+          initialState={{ inner: false, outer: false, outerContainer: false }}
+          arrange={({ setState, reset }) => {
             return (
               <PointerEventsView
                 pointerEventsOuter="none"
@@ -285,7 +307,7 @@ export function ViewTest() {
               />
             );
           }}
-          assert={({expect, state}) => {
+          assert={({ expect, state }) => {
             expect(state).to.be.deep.eq({
               inner: false,
               outer: false,
@@ -297,9 +319,9 @@ export function ViewTest() {
       <TestCase
         itShould="render view focusable with a non-touch input device"
         skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/258
+      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/258
       >
-        <View style={{width: '100%', height: 100}}>
+        <View style={{ width: '100%', height: 100 }}>
           <View
             style={{
               width: 100,
@@ -313,7 +335,7 @@ export function ViewTest() {
         </View>
       </TestCase>
       <TestCase itShould="render view not focusable with a non-touch input device">
-        <View style={{width: '100%', height: 100}}>
+        <View style={{ width: '100%', height: 100 }}>
           <View
             style={{
               width: 100,
@@ -326,7 +348,7 @@ export function ViewTest() {
         </View>
       </TestCase>
       <TestCase itShould="render view with fixed width and aspectRatio 1">
-        <View style={{width: '100%', height: 100}}>
+        <View style={{ width: '100%', height: 100 }}>
           <View
             style={{
               width: 100,
@@ -337,7 +359,7 @@ export function ViewTest() {
         </View>
       </TestCase>
       <TestCase itShould="render views with set flex and aspectRatio 1">
-        <View style={{width: '100%', height: 100}}>
+        <View style={{ width: '100%', height: 100 }}>
           <View
             style={{
               width: 100,
@@ -357,32 +379,32 @@ export function ViewTest() {
         </View>
       </TestCase>
       <TestCase itShould="show view rotated by 180deg(backfaceVisibility: visible)">
-        <View style={{width: '100%', height: 20}}>
+        <View style={{ width: '100%', height: 20 }}>
           <View
             style={{
               width: 100,
               backgroundColor: 'blue',
-              transform: [{rotateY: '180deg'}],
+              transform: [{ rotateY: '180deg' }],
               backfaceVisibility: 'visible',
             }}>
-            <Text style={{height: 20}}>Backface</Text>
+            <Text style={{ height: 20 }}>Backface</Text>
           </View>
         </View>
       </TestCase>
       <TestCase
         itShould="not show view rotated by 180deg(backfaceVisibility: hidden)"
         skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/259
+      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/259
       >
-        <View style={{width: '100%', height: 20}}>
+        <View style={{ width: '100%', height: 20 }}>
           <View
             style={{
               width: 100,
               backgroundColor: 'blue',
-              transform: [{rotateY: '180deg'}],
+              transform: [{ rotateY: '180deg' }],
               backfaceVisibility: 'hidden',
             }}>
-            <Text style={{height: 20}}>Backface</Text>
+            <Text style={{ height: 20 }}>Backface</Text>
           </View>
         </View>
       </TestCase>
@@ -394,7 +416,7 @@ export function ViewTest() {
             margin: 8,
             backgroundColor: 'green',
             shadowColor: 'blue',
-            shadowOffset: {width: 16, height: 16},
+            shadowOffset: { width: 16, height: 16 },
             shadowOpacity: 0.25,
             shadowRadius: 16,
           }}
@@ -418,21 +440,21 @@ function PointerEventsView(props: {
   reset: () => void;
 }) {
   return (
-    <View style={{height: 100, width: '100%', flexDirection: 'row'}}>
+    <View style={{ height: 100, width: '100%', flexDirection: 'row' }}>
       <View
-        style={{backgroundColor: 'green'}}
+        style={{ backgroundColor: 'green' }}
         onTouchEnd={
           props.disableOuterContainerTouch
             ? undefined
             : () => {
-                props.setState(prev => ({...prev, outerContainer: true}));
-              }
+              props.setState(prev => ({ ...prev, outerContainer: true }));
+            }
         }>
         <View
-          style={{height: 100, width: 100, backgroundColor: 'red'}}
+          style={{ height: 100, width: 100, backgroundColor: 'red' }}
           pointerEvents={props.pointerEventsOuter}
           onTouchEnd={() => {
-            props.setState(prev => ({...prev, outer: true}));
+            props.setState(prev => ({ ...prev, outer: true }));
           }}>
           <View
             style={{
@@ -442,7 +464,7 @@ function PointerEventsView(props: {
               margin: 30,
             }}
             onTouchEnd={() => {
-              props.setState(prev => ({...prev, inner: true}));
+              props.setState(prev => ({ ...prev, inner: true }));
             }}
             pointerEvents={props.pointerEventsInner}
           />
