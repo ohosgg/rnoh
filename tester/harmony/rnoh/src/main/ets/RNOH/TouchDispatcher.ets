@@ -18,6 +18,10 @@ export class TouchDispatcher {
 
     this.recordNewTouchTargets(touchEvent);
 
+    // sometimes Ark reports Move and End events out of order -- don't send touches
+    // we already reported as ended to RN.
+    touchEvent.touches = touchEvent.touches.filter(touch => this.targetTagByTouchId.has(touch.id));
+
     touchEvent.touches.forEach(this.convertTouchObject);
     touchEvent.changedTouches = touchEvent.touches.filter(touch => changedIds.includes(touch.id));
 
