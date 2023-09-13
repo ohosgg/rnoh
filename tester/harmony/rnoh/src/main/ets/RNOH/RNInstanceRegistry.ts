@@ -248,7 +248,8 @@ class RNInstanceManagerImpl implements RNInstance {
 
   public destroySurface(tag: number): void {
     this.napiBridge.destroySurface(this.id, tag);
-    this.descriptorRegistry.deleteRootDescriptor(tag)
+    // TODO: fix crashes with descriptor registry caused by this:
+    // this.descriptorRegistry.deleteRootDescriptor(tag);
   }
 
   public updateState(componentName: string, tag: Tag, state: unknown): void {
