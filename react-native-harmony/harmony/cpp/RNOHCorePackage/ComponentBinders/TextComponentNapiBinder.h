@@ -27,6 +27,13 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                     propsObjBuilder.addProperty("textAlign", textAlignmentToString(textAlign.value()));
                 }
                 propsObjBuilder.addProperty("maximumNumberOfLines", props->paragraphAttributes.maximumNumberOfLines);
+                
+                auto rawProps = props->rawProps;
+                std::string textAlignVertical = "auto";
+                if (rawProps.count("textAlignVertical") > 0) {
+                    textAlignVertical = rawProps["textAlignVertical"].asString();
+                }
+                propsObjBuilder.addProperty("textAlignVertical", textAlignVertical);
             }
 
             for (auto fragment : fragments) {

@@ -122,11 +122,7 @@ export function TextTest() {
             <Text style={{...styles.text, textAlign: 'right'}}>Right</Text>
           </View>
         </TestCase>
-        <TestCase
-          itShould="show text with different vertical alignments (textAlignVertical)"
-          skip
-          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/270
-        >
+        <TestCase itShould="show text with different vertical alignments (textAlignVertical)">
           <View style={styles.smallContainerRow}>
             <Text style={styles.blueShortText}>Auto</Text>
             <Text
@@ -152,11 +148,7 @@ export function TextTest() {
             </Text>
           </View>
         </TestCase>
-        <TestCase
-          itShould="show text with different vertical alignments (verticalAlign)"
-          skip
-          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/270
-        >
+        <TestCase itShould="show text with different vertical alignments (verticalAlign)">
           <View style={styles.smallContainerRow}>
             <Text style={styles.blueShortText}>Auto</Text>
             <Text style={{...styles.blueShortText, verticalAlign: 'top'}}>

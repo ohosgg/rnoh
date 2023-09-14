@@ -18,6 +18,7 @@ export type TextProps = ViewBaseProps & {
   fragments: AttributedFragment[]
   padding?: PaddingProps
   maximumNumberOfLines?: number
+  textAlignVertical?: string
 }
 
 type PaddingProps = {
@@ -34,6 +35,19 @@ function stringToAlignment(alignment: string) {
     return TextAlign.End
   else
     return TextAlign.Start
+}
+
+function stringToVerticalAlign(textAlignVertical: string) {
+  switch (textAlignVertical) {
+    case "top":
+      return Alignment.TopStart
+    case "bottom":
+      return Alignment.BottomStart
+    case "center":
+      return Alignment.Start
+    default:
+      return undefined
+  }
 }
 
 function stringToFontStyle(style: string | undefined): FontStyle {
@@ -112,6 +126,7 @@ export struct RNText {
       .maxLines(this.getMaxLines())
       .textOverflow({overflow: TextOverflow.Ellipsis})
       .textAlign(stringToAlignment(this.descriptor.props.textAlign))
+      .align(stringToVerticalAlign(this.descriptor.props.textAlignVertical))
       .padding(this.descriptor.props.padding)
     }
   }
