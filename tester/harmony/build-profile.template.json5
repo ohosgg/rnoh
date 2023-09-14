@@ -108,5 +108,17 @@
         },
       ],
     },
+    {
+      "name": "multi_surface",
+      "srcPath": "./multi_surface",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
   ],
 }

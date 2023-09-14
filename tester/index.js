@@ -7,7 +7,7 @@ import {AppRegistry, View, Text} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
 import {InitialParamsContext} from './contexts';
-import { TesterExample } from './examples';
+import { AnimationsExample, CheckerboardExample, ChessboardExample, CursorExample, FlatListVsScrollViewExample, ImageGalleryExample, LargeImageScrollExample, StickyHeadersExample, TesterExample, TextScrollExample, TogglingComponentExample } from './examples';
 
 AppRegistry.setWrapperComponentProvider(appParams => {
   return ({children, ...otherProps}) => (
@@ -33,4 +33,15 @@ AppRegistry.setWrapperComponentProvider(appParams => {
 });
 
 AppRegistry.registerComponent(appName, () => App);
-AppRegistry.registerComponent('tester', () => TesterExample)
+
+AppRegistry.registerComponent('tester', () => TesterExample);
+AppRegistry.registerComponent('animations', () => AnimationsExample);
+AppRegistry.registerComponent('checkerboard', () => CheckerboardExample);
+AppRegistry.registerComponent('chessboard', () => ChessboardExample);
+AppRegistry.registerComponent('cursor', () => CursorExample);
+AppRegistry.registerComponent('image_gallery', () => ImageGalleryExample);
+AppRegistry.registerComponent('large_image_scroll', () => LargeImageScrollExample);
+AppRegistry.registerComponent('text_scroll', () => TextScrollExample);
+AppRegistry.registerComponent('flat_list', () => FlatListVsScrollViewExample);
+AppRegistry.registerComponent('toggling', () => TogglingComponentExample);
+AppRegistry.registerComponent('sticky_headers', () => StickyHeadersExample);
