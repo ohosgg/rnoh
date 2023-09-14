@@ -16,10 +16,14 @@ export class TouchDispatcher {
   public handleTouchEvent(touchEvent: TouchEvent) {
     const changedIds = touchEvent.changedTouches.map(touch => touch.id);
 
+    // sometimes views are deleted while a touch event is in flight.
+    // We remove them from the touch targets registry and don't include them
+    // in the touch event.
+    this.maybeRemoveDeletedTargets();
+
     this.recordNewTouchTargets(touchEvent);
 
-    // sometimes Ark reports Move and End events out of order -- don't send touches
-    // we already reported as ended to RN.
+    // only report touches RN we have calculated targets for
     touchEvent.touches = touchEvent.touches.filter(touch => this.targetTagByTouchId.has(touch.id));
 
     touchEvent.touches.forEach(this.convertTouchObject);
@@ -60,6 +64,13 @@ export class TouchDispatcher {
         this.targetTagByTouchId.set(touch.id, touchTarget.tag);
       }
     }
+  }
+
+  private maybeRemoveDeletedTargets() {
+    const deletedTargetIds = [...this.targetTagByTouchId.entries()]
+      .filter(([touchId, targetTag]) => !this.rnInstance.descriptorRegistry.getDescriptor(targetTag))
+      .map(([touchId, targetTag]) => touchId);
+    deletedTargetIds.forEach(id => this.targetTagByTouchId.delete(id));
   }
 
   private removeEndedTouches(touchEvent: TouchEvent, changedIds: number[]) {
