@@ -38,7 +38,8 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                     .addProperty("fontColor", textAttributes.foregroundColor)
                     .addProperty("lineHeight", textAttributes.lineHeight)
                     .addProperty("backgroundColor", textAttributes.backgroundColor)
-                    .addProperty("fontSize", textAttributes.fontSize);
+                    .addProperty("fontSize", textAttributes.fontSize)
+                    .addProperty("textDecorationColor", textAttributes.textDecorationColor);
                 auto fontWeight = textAttributes.fontWeight;
                 if (fontWeight.has_value()) {
                     fragmentObjBuilder.addProperty("fontWeight", static_cast<int>(fontWeight.value()));
@@ -52,7 +53,7 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                 auto textDecorationLine = textAttributes.textDecorationLineType;
                 if (textDecorationLine.has_value()) {
                     fragmentObjBuilder.addProperty("textDecorationLine", static_cast<int>(textDecorationLine.value()));
-                }
+                }            
                 fragmentsPayload.push_back(fragmentObjBuilder.build());
             }
             auto fragmentsArray = arkJs.createArray(fragmentsPayload);

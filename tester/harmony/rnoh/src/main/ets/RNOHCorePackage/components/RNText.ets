@@ -8,6 +8,7 @@ export type AttributedFragment = {
   fontSize?: number
   fontStyle?: string
   textDecorationLine?: number
+  textDecorationColor?: ColorSegments
   lineHeight?: number
   backgroundColor?: ColorSegments
 }
@@ -101,7 +102,7 @@ export struct RNText {
             .fontWeight(fragment.fontWeight)
             .fontSize(fragment.fontSize)
             .fontStyle(stringToFontStyle(fragment.fontStyle))
-            .decoration({type: getTextDecorationLine(fragment)})
+            .decoration({type: getTextDecorationLine(fragment), color: convertColorSegmentsToString(fragment.textDecorationColor)})
             .lineHeight(fragment.lineHeight)
             .backgroundColor(convertColorSegmentsToString(fragment.backgroundColor)) // not supported
         })
