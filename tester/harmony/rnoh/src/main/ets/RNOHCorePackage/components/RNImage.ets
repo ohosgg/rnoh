@@ -45,7 +45,7 @@ export struct RNImage {
   getSource() {
     const uri = this.descriptor.props.uri
     if (uri.startsWith("asset://")) {
-      return uri.replace("asset://", "/assets/");
+      return $rawfile(uri.replace("asset://, "assets/));
     }
     const filePath =
       this.ctx.rnInstanceManager.getTurboModule<ImageLoaderTurboModule>("ImageLoader")

@@ -9,7 +9,7 @@ import { getAssetDestRelativePath } from '../assetResolver';
 import { ConfigT as MetroConfig } from 'metro-config';
 
 const ARK_RESOURCE_PATH = './harmony/entry/src/main/resources/rawfile';
-const ASSETS_DEFAULT_DEST_PATH = './harmony/entry/src/main/ets/assets';
+const ASSETS_DEFAULT_DEST_PATH = './harmony/entry/src/main/resources/rawfile/assets';
 
 type AssetData = Metro.AssetData;
 type Bundle = { code: string; map: string };
