@@ -31,7 +31,7 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 ### Components
 
 - [ ] AccesibilityInfo
-- [ ] ActivityIndicator
+- [x] ActivityIndicator
 - [x] Button\*
 - [x] FlatList
 - [x] Image

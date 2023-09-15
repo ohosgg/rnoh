@@ -6,7 +6,7 @@ export * from 'react-native/Libraries/Animated/useAnimatedValue';
 export * from 'react-native/Libraries/AppState/AppState';
 export * from 'react-native/Libraries/BatchedBridge/NativeModules';
 // export * from 'react-native/Libraries/Components/AccessibilityInfo/AccessibilityInfo';
-// export * from 'react-native/Libraries/Components/ActivityIndicator/ActivityIndicator';
+export * from "react-native/Libraries/Components/ActivityIndicator/ActivityIndicator";
 // export * from 'react-native/Libraries/Components/Clipboard/Clipboard';
 // export * from 'react-native/Libraries/Components/DatePicker/DatePickerIOS';
 export * from "react-native/Libraries/Components/DrawerAndroid/DrawerLayoutAndroid";

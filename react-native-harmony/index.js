@@ -1,4 +1,8 @@
 module.exports = {
+  get ActivityIndicator() {
+    return require("./Libraries/Components/ActivityIndicator/ActivityIndicator")
+      .default;
+  },
   get Animated() {
     return require('react-native/Libraries/Animated/Animated').default;
   },

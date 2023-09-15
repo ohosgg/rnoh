@@ -8,6 +8,7 @@ import { RNOHContext } from "./RNOH/RNOHContext"
 import { RNModalHostView } from './RNOHCorePackage/components/RNModalHostView'
 import { RNSwitch } from './RNOHCorePackage/components/RNSwitch'
 import { RNPullToRefreshView } from './RNOHCorePackage/components/RNPullToRefreshView'
+import { RNActivityIndicator } from './RNOHCorePackage/components/RNActivityIndicator'
 
 export type ComponentBuilderContext = {
   rnohContext: RNOHContext
@@ -82,6 +83,11 @@ export struct RNComponentFactory {
         ctx: this.ctx,
         tag: this.tag,
         renderDescriptors: this.renderDescriptors.bind(this)
+      })
+    } else if (this.descriptorType === "ActivityIndicatorView") {
+      RNActivityIndicator({
+        ctx: this.ctx,
+        tag: this.tag,
       })
     } else if (this.descriptorType !== '') {
       this.buildCustomComponent({

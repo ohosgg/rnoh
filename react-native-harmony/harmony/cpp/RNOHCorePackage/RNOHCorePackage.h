@@ -34,6 +34,8 @@
 #include "RNOHCorePackage/ComponentBinders/TextInputComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ModalHostViewJSIBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ModalHostViewNapiBinder.h"
+#include "RNOHCorePackage/ComponentBinders/ActivityIndicatorComponentJSIBinder.h"
+#include "RNOHCorePackage/ComponentBinders/ActivityIndicatorComponentNapiBinder.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/TouchEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/TextInputChangeEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/PullToRefreshViewEventEmitRequestHandler.h"
@@ -96,7 +98,8 @@ class RNOHCorePackage : public Package {
             facebook::react::concreteComponentDescriptorProvider<facebook::react::ScrollViewComponentDescriptor>(),
             facebook::react::concreteComponentDescriptorProvider<facebook::react::PullToRefreshViewComponentDescriptor>(),
             facebook::react::concreteComponentDescriptorProvider<facebook::react::ModalHostViewComponentDescriptor>(),
-            facebook::react::concreteComponentDescriptorProvider<facebook::react::SwitchComponentDescriptor>()};
+            facebook::react::concreteComponentDescriptorProvider<facebook::react::SwitchComponentDescriptor>(),
+            facebook::react::concreteComponentDescriptorProvider<facebook::react::ActivityIndicatorViewComponentDescriptor>()};
     }
 
     ComponentJSIBinderByString
@@ -110,7 +113,9 @@ class RNOHCorePackage : public Package {
             {"RCTScrollContentView", std::make_shared<ViewComponentJSIBinder>()},
             {"RCTModalHostView", std::make_shared<ModalHostViewJSIBinder>()},
             {"RCTSwitch", std::make_shared<SwitchComponentJSIBinder>()},
-            {"RCTRefreshControl", std::make_shared<PullToRefreshViewJSIBinder>()}};
+            {"RCTRefreshControl", std::make_shared<PullToRefreshViewJSIBinder>()},
+            {"RCTActivityIndicatorView", std::make_shared<ActivityIndicatorComponentJSIBinder>()}
+            };
     };
 
     ComponentNapiBinderByString createComponentNapiBinderByName() override {
@@ -123,7 +128,9 @@ class RNOHCorePackage : public Package {
             {"TextInput", std::make_shared<TextInputComponentNapiBinder>()},
             {"ModalHostView", std::make_shared<ModalHostViewNapiBinder>()},
             {"Switch", std::make_shared<SwitchComponentNapiBinder>()},
-            {"PullToRefreshView", std::make_shared<PullToRefreshViewNapiBinder>()}};
+            {"PullToRefreshView", std::make_shared<PullToRefreshViewNapiBinder>()},
+            {"ActivityIndicatorView", std::make_shared<ActivityIndicatorComponentNapiBinder>()}
+            };
     };
 
     EventEmitRequestHandlers createEventEmitRequestHandlers() override {
