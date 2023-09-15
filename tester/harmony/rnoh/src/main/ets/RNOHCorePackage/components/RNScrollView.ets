@@ -9,6 +9,7 @@ export type ScrollViewProps = ViewBaseProps & {
   contentOffsetY: number
   flexDirection: number
   bounces: boolean
+  persistentScrollbar: boolean
   showsHorizontalScrollIndicator: boolean
   showsVerticalScrollIndicator: boolean
 }
@@ -102,7 +103,7 @@ export struct RNScrollView {
       || ((this.props.flexDirection !== 2) && !this.props.showsVerticalScrollIndicator)) {
       return BarState.Off
     }
-    return BarState.Auto
+    return this.props.persistentScrollbar?BarState.On: BarState.Auto
   }
 
   createScrollEvent() {

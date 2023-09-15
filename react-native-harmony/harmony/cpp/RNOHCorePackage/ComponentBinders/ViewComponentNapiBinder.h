@@ -12,7 +12,6 @@ class ViewComponentNapiBinder : public BaseComponentNapiBinder {
         napi_value napiBaseProps = BaseComponentNapiBinder::createProps(env, shadowView);
         if (auto props = std::dynamic_pointer_cast<const facebook::react::ViewProps>(shadowView.props)) {
             auto borderMetrics = props->resolveBorderMetrics(shadowView.layoutMetrics);
-            auto rawProps = shadowView.props->rawProps;
 
             return ArkJS(env)
                 .getObjectBuilder(napiBaseProps)

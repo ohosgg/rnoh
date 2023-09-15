@@ -203,8 +203,7 @@ export function ScrollViewTest() {
         </TestCase>
       </TestSuite>
       <TestSuite name="scroll indicators / scrollbar">
-        <TestCase modal skip itShould="have persistent scrollbar"
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/313
+        <TestCase modal itShould="have persistent scrollbar"
         >
           <View style={styles.wrapperView}>
             <ScrollView persistentScrollbar={true} {...commonProps} />

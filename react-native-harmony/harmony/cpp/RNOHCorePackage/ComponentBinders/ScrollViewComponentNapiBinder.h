@@ -11,6 +11,14 @@ class ScrollViewComponentNapiBinder : public ViewComponentNapiBinder {
     napi_value createProps(napi_env env, facebook::react::ShadowView const shadowView) override {
         napi_value napiViewProps = ViewComponentNapiBinder::createProps(env, shadowView);
         if (auto props = std::dynamic_pointer_cast<const facebook::react::ScrollViewProps>(shadowView.props)) {
+            auto rawProps = shadowView.props->rawProps;
+
+            auto persistentScrollbar = false;
+
+            if (rawProps.count("persistentScrollbar") > 0) {
+                persistentScrollbar = rawProps["persistentScrollbar"].asBool();
+            }
+
             ArkJS(env)
                 .getObjectBuilder(napiViewProps)
                 .addProperty("contentOffsetX", props->contentOffset.x)
@@ -20,6 +28,7 @@ class ScrollViewComponentNapiBinder : public ViewComponentNapiBinder {
                 .addProperty("showsHorizontalScrollIndicator", props->showsHorizontalScrollIndicator)
                 .addProperty("showsVerticalScrollIndicator", props->showsVerticalScrollIndicator)
                 .addProperty("flexDirection", props->yogaStyle.flexDirection())
+                .addProperty("persistentScrollbar", persistentScrollbar)
                 .build();
         }
         return napiViewProps;
