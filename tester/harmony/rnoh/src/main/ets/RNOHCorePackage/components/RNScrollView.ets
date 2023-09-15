@@ -1,6 +1,7 @@
-import { Descriptor, RNOHContext } from '../../RNOH'
+import { Descriptor, RNOHContext, Tag } from '../../RNOH'
 import { RNScrollViewManager } from '../componentManagers/RNScrollViewManager'
 import { ViewBaseProps, RNViewBase } from './RNViewBase'
+import { RNPullToRefreshView, RN_PULL_TO_REFRESH_VIEW_NAME } from './RNPullToRefreshView'
 
 export type ScrollViewProps = ViewBaseProps & {
   scrollEnabled?: boolean
@@ -33,6 +34,7 @@ export struct RNScrollView {
   @BuilderParam renderDescriptors: () => void
   @State props: ScrollViewProps = {} as ScrollViewProps
   @State contentSize: Size = {} as Size
+  @State descriptor: ScrollViewDescriptor = {} as ScrollViewDescriptor
   state: ScrollViewState = {} as ScrollViewState
   private scroller = new Scroller()
   private cleanupCommandCallback?: () => void = undefined
@@ -42,6 +44,7 @@ export struct RNScrollView {
 
   aboutToAppear() {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag)
+    this.descriptor = descriptor
     this.onDescriptorUpdate(descriptor)
     this.state = descriptor.state
     this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
@@ -65,6 +68,7 @@ export struct RNScrollView {
       width: contentSizeWidth,
       height: contentSizeHeight
     }
+    this.descriptor = newDescriptor
   }
 
   aboutToDisappear() {
@@ -206,27 +210,57 @@ export struct RNScrollView {
     this.ctx.descriptorRegistry.setState<ScrollViewState>(this.tag, this.state);
   }
 
+  private shouldWrapWithPullToRefresh() {
+    const pullToRefreshTag = this.maybeGetPullToRefreshTag()
+    if (pullToRefreshTag === undefined) {
+      return false
+    }
+    const childDescriptor = this.ctx.descriptorRegistry.getDescriptor(pullToRefreshTag)
+    if (childDescriptor.type !== RN_PULL_TO_REFRESH_VIEW_NAME) {
+      throw new Error(`The second child of native scroll component must be ${RN_PULL_TO_REFRESH_VIEW_NAME}`)
+    }
+    return true
+  }
+
+  private maybeGetPullToRefreshTag(): Tag | undefined {
+    if (this.descriptor.childrenTags.length === 2) {
+      return this.descriptor.childrenTags[1]
+    }
+    return undefined
+  }
+
+  @Builder
+  buildScrollCore() {
+    Scroll(this.scroller) {
+      Stack() {
+        this.renderDescriptors()
+      }
+      .width(this.contentSize.width)
+      .height(this.contentSize.height)
+      .backgroundColor(Color.Transparent)
+      .margin({ top: -this.props.borderWidth, left: -this.props.borderWidth })
+    }
+    .width("100%")
+    .height("100%")
+    .align(Alignment.TopStart)
+    .scrollable(this.scrollDirection())
+    .scrollBar(this.scrollBarState())
+    // .scrollBarColor(Color.Gray)
+    // .scrollBarWidth(30)
+    // .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
+    .onScrollFrameBegin(this.onScroll.bind(this))
+    .onScrollStop(this.onScrollEnd.bind(this))
+  }
+
   build() {
     RNViewBase({ ctx: this.ctx, tag: this.tag }) {
-      Scroll(this.scroller) {
-        Stack() {
-          this.renderDescriptors()
+      if (this.shouldWrapWithPullToRefresh()) {
+        RNPullToRefreshView({ ctx: this.ctx, tag: this.descriptor.childrenTags[1] }) {
+          this.buildScrollCore()
         }
-        .width(this.contentSize.width)
-        .height(this.contentSize.height)
-        .backgroundColor(Color.Transparent)
-        .margin({ top: -this.props.borderWidth, left: -this.props.borderWidth })
+      } else {
+        this.buildScrollCore()
       }
-      .width("100%")
-      .height("100%")
-      .align(Alignment.TopStart)
-      .scrollable(this.scrollDirection())
-      .scrollBar(this.scrollBarState())
-         // .scrollBarColor(Color.Gray)
-         // .scrollBarWidth(30)
-         // .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
-      .onScrollFrameBegin(this.onScroll.bind(this))
-      .onScrollStop(this.onScrollEnd.bind(this))
     }
   }
 }

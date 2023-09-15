@@ -43,7 +43,8 @@ export struct RNComponentFactory {
     this.childrenTags = newDescriptor.childrenTags
   }
 
-  @Builder renderDescriptors() {
+  @Builder
+  renderDescriptors() {
     ForEach(this.childrenTags, (childrenTag) => {
       RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
     }, childrenTag => childrenTag)
@@ -63,11 +64,7 @@ export struct RNComponentFactory {
     } else if (this.descriptorType === "Paragraph") {
       RNText({ ctx: this.ctx, tag: this.tag })
     } else if (this.descriptorType === "PullToRefreshView") {
-      RNPullToRefreshView({
-        ctx: this.ctx,
-        tag: this.tag,
-        renderDescriptors: this.renderDescriptors.bind(this)
-      })
+      // virtual component handled by ScrollView
     }
     else if (this.descriptorType === "ScrollView") {
       RNScrollView({

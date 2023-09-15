@@ -1,6 +1,6 @@
 import {Tester} from '@rnoh/testerino';
 import * as React from 'react';
-import {ScrollView, StyleSheet} from 'react-native-harmony';
+import {ScrollView, StyleSheet} from 'react-native';
 import * as tests from '../tests';
 import {Button} from '../components';
 

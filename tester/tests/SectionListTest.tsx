@@ -41,8 +41,16 @@ const commonProps = {
   renderSectionHeader: ({section}) => (
     <Text style={styles.title}>{section.title}</Text>
   ),
-  renderItem: ({item}) => (
+  renderItem: ({item, index}) => (
     <View style={styles.item}>
+      {index === 1 && (
+        <Button
+          label="Crash"
+          onPress={() => {
+            throw new Error('Error triggered by user');
+          }}
+        />
+      )}
       <Text style={styles.title}>{item}</Text>
     </View>
   ),
@@ -194,7 +202,7 @@ export const SectionListTest = () => {
           <SectionList {...commonProps} overScrollMode="always" />
         </Modal>
       </TestCase>
-      <TestCase itShould="[FAILS] render custom RefreshControl on pull to refresh">
+      <TestCase itShould="render custom RefreshControl on pull to refresh">
         <Modal>
           <ObjectDisplayer
             renderContent={setObject => {
@@ -208,7 +216,8 @@ export const SectionListTest = () => {
                         setObject({onRefreshCalled: true});
                       }}
                       refreshing={false}
-                      colors={['red', 'green']}
+                      tintColor={'red'} // iOS. It's unknown how to set the color of the refreshing widget in ArkUI.
+                      colors={['red', 'green']} // Android
                     />
                   }
                 />
@@ -217,7 +226,7 @@ export const SectionListTest = () => {
           />
         </Modal>
       </TestCase>
-      <TestCase itShould="[FAILS] render standard RefreshControl on pull to refresh">
+      <TestCase itShould="render standard RefreshControl on pull to refresh">
         <Modal>
           <ObjectDisplayer
             renderContent={setObject => {

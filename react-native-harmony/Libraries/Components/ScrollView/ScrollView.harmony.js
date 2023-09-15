@@ -1834,27 +1834,15 @@ class ScrollView extends React.Component<Props, State> {
     );
 
     if (refreshControl) {
-      // RNOH: patch - because Refresh is a container, we use the android logic of wrapping NativeDirectionalScrollView with RefreshControl.
-
-      // On Android wrap the ScrollView with a AndroidSwipeRefreshLayout.
-      // Since the ScrollView is wrapped add the style props to the
-      // AndroidSwipeRefreshLayout and use flex: 1 for the ScrollView.
-      // Note: we should split props.style on the inner and outer props
-      // however, the ScrollView still needs the baseStyle to be scrollable
-      // $FlowFixMe[underconstrained-implicit-instantiation]
-      const { outer, inner } = splitLayoutProps(flattenStyle(props.style));
-      return React.cloneElement(
-        refreshControl,
-        { style: StyleSheet.compose(baseStyle, outer) },
-        <NativeDirectionalScrollView
-          {...props}
-          style={StyleSheet.compose(baseStyle, inner)}
-          ref={scrollViewRef}
-        >
+      // RNOH: patch - Native Scroll checks for the second child and sets up a proper structure that makes pull to refresh work
+      return (
+        <NativeDirectionalScrollView {...props} ref={scrollViewRef}>
           {contentContainer}
+          {refreshControl}
         </NativeDirectionalScrollView>
       );
     }
+
     return (
       <NativeDirectionalScrollView {...props} ref={scrollViewRef}>
         {contentContainer}
