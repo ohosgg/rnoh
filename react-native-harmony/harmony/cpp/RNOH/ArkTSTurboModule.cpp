@@ -22,6 +22,7 @@ std::string preparePromiseRejectionResult(const std::vector<folly::dynamic> args
 
 ArkTSTurboModule::ArkTSTurboModule(Context ctx, std::string name) : m_ctx(ctx), TurboModule(ctx, name) {}
 
+// calls a TurboModule method and blocks until it returns, returning its result
 jsi::Value ArkTSTurboModule::call(jsi::Runtime &runtime, const std::string &methodName, const jsi::Value *jsiArgs, size_t argsCount) {
     folly::dynamic result;
     auto args = convertJSIValuesToIntermediaryValues(runtime, m_ctx.jsInvoker, jsiArgs, argsCount);
@@ -35,6 +36,18 @@ jsi::Value ArkTSTurboModule::call(jsi::Runtime &runtime, const std::string &meth
     return jsi::valueFromDynamic(runtime, result);
 }
 
+// calls a TurboModule method without blocking and ignores its result
+void rnoh::ArkTSTurboModule::scheduleCall(facebook::jsi::Runtime &runtime, const std::string &methodName, const facebook::jsi::Value *jsiArgs, size_t argsCount) {
+    auto args = convertJSIValuesToIntermediaryValues(runtime, m_ctx.jsInvoker, jsiArgs, argsCount);
+    m_ctx.taskExecutor->runTask(TaskThread::MAIN, [ctx = m_ctx, methodName, args = std::move(args), &runtime]() {
+        ArkJS arkJs(ctx.env);
+        auto napiArgs = arkJs.convertIntermediaryValuesToNapiValues(args);
+        auto napiTurboModuleObject = arkJs.getObject(ctx.arkTsTurboModuleInstanceRef);
+        napiTurboModuleObject.call(methodName, napiArgs);
+    });
+}
+
+// calls an async TurboModule method and returns a Promise
 jsi::Value ArkTSTurboModule::callAsync(jsi::Runtime &runtime, const std::string &methodName, const jsi::Value *jsiArgs, size_t argsCount) {
     auto args = convertJSIValuesToIntermediaryValues(runtime, m_ctx.jsInvoker, jsiArgs, argsCount);
     napi_ref napiResultRef;

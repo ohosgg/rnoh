@@ -19,11 +19,6 @@ ThreadTaskRunner::~ThreadTaskRunner() {
 }
 
 void ThreadTaskRunner::runAsyncTask(Task &&task) {
-    if (std::this_thread::get_id() == thread.get_id()) {
-        task();
-        return;
-    }
-
     {
         std::unique_lock<std::mutex> lock(mutex);
         asyncTaskQueue.emplace(std::move(task));
@@ -32,8 +27,10 @@ void ThreadTaskRunner::runAsyncTask(Task &&task) {
     // the only threads waiting on the condition variable are the
     // runner thread and the thread that called runSyncTask,
     // and if some thread is waiting in runSyncTask,
-    // the runner thread should be running executing its task
-    cv.notify_one();
+    // the runner thread should be running and executing its task
+    if (std::this_thread::get_id() != thread.get_id()) {
+        cv.notify_one();
+    }
 }
 
 void ThreadTaskRunner::runSyncTask(Task &&task) {

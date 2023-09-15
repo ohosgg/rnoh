@@ -57,6 +57,11 @@ class ArkTSTurboModule : public TurboModule {
                               const facebook::jsi::Value *args,
                               size_t argsCount);
 
+    void scheduleCall(facebook::jsi::Runtime &runtime,
+                              const std::string &methodName,
+                              const facebook::jsi::Value *args,
+                              size_t argsCount);
+
     facebook::jsi::Value callAsync(facebook::jsi::Runtime &runtime,
                                    const std::string &methodName,
                                    const facebook::jsi::Value *args,

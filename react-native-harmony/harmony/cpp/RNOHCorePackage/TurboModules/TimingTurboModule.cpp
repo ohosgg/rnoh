@@ -9,21 +9,24 @@ static jsi::Value __hostFunction_TimingTurboModule_createTimer(
     react::TurboModule &turboModule,
     const jsi::Value *args,
     size_t count) {
-    return static_cast<ArkTSTurboModule &>(turboModule).call(rt, "createTimer", args, count);
+    static_cast<ArkTSTurboModule &>(turboModule).scheduleCall(rt, "createTimer", args, count);
+    return jsi::Value::undefined();
 }
 static jsi::Value __hostFunction_TimingTurboModule_deleteTimer(
     jsi::Runtime &rt,
     react::TurboModule &turboModule,
     const jsi::Value *args,
     size_t count) {
-    return static_cast<ArkTSTurboModule &>(turboModule).call(rt, "deleteTimer", args, count);
+    static_cast<ArkTSTurboModule &>(turboModule).scheduleCall(rt, "deleteTimer", args, count);
+    return jsi::Value::undefined();
 }
 static jsi::Value __hostFunction_TimingTurboModule_setSendIdleEvents(
     jsi::Runtime &rt,
     react::TurboModule &turboModule,
     const jsi::Value *args,
     size_t count) {
-    return static_cast<ArkTSTurboModule &>(turboModule).call(rt, "setSendIdleEvents", args, count);
+    static_cast<ArkTSTurboModule &>(turboModule).scheduleCall(rt, "setSendIdleEvents", args, count);
+    return jsi::Value::undefined();
 }
 
 TimingTurboModule::TimingTurboModule(const ArkTSTurboModule::Context ctx, const std::string name) : ArkTSTurboModule(ctx, name) {
