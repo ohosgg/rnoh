@@ -86,6 +86,14 @@ export struct RNImage {
     )
   }
 
+  getColorFilter() {
+    if (!this.descriptor.props.tintColor || this.descriptor.props.tintColor.every((element) => element === 0)){
+      return this.defaultColorFilter;
+    }
+
+    return getTintColorMatrix(this.descriptor.props.tintColor)
+  }
+
   build() {
     RNViewBase({
       ctx: this.ctx,
@@ -98,9 +106,7 @@ export struct RNImage {
         .objectFit(this.getResizeMode(this.descriptor.props.resizeMode))
         .objectRepeat(this.descriptor.props.resizeMode === 4 ?
         ImageRepeat.XY : ImageRepeat.NoRepeat )
-        .colorFilter(this.descriptor.props.tintColor.every((element) => element === 0)
-          ? this.defaultColorFilter
-          : getTintColorMatrix(this.descriptor.props.tintColor))
+        .colorFilter(this.getColorFilter())
     }
   }
 }

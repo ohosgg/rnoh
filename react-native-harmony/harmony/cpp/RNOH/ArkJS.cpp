@@ -378,10 +378,10 @@ RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, char
 }
 
 RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, facebook::react::SharedColor value) {
-    // for some unknown reason, (undefined) transparent colors don't work properly without this check, even though
-    // there's basically the same check in colorComponentsFromColor
-    if (!value)
-        value = facebook::react::clearColor();
+    if(!value) {
+        napi_set_named_property(m_env, m_object, name, m_arkJs.getUndefined());
+        return *this;
+    }
     auto colorComponents = colorComponentsFromColor(value);
     napi_value n_value;
     napi_create_array(m_env, &n_value);

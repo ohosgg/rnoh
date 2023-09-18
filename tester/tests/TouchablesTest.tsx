@@ -41,7 +41,7 @@ export const TouchablesTest = () => {
         }}
       />
       <TestCase itShould="handle press without showing feedback">
-        <TouchableWithoutFeedbackDemo />s
+        <TouchableWithoutFeedbackDemo />
       </TestCase>
     </TestSuite>
   );
