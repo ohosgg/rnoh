@@ -19,6 +19,7 @@ export type TextProps = ViewBaseProps & {
   padding?: PaddingProps
   maximumNumberOfLines?: number
   textAlignVertical?: string
+  selectable?: boolean
 }
 
 type PaddingProps = {
@@ -128,6 +129,7 @@ export struct RNText {
       .textAlign(stringToAlignment(this.descriptor.props.textAlign))
       .align(stringToVerticalAlign(this.descriptor.props.textAlignVertical))
       .padding(this.descriptor.props.padding)
+      .copyOption(this.descriptor.props.selectable ? CopyOptions.LocalDevice : CopyOptions.None)
     }
   }
 }

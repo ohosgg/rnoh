@@ -8,17 +8,10 @@ const SAMPLE_PARAGRAPH_TEXT = `Quis exercitation do eu in laboris nulla sit elit
 export function TextTest() {
   return (
     <TestSuite name="Text">
-      <TestCase
-        itShould="show selectable text with blue selection color"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/273
-      >
+      <TestCase itShould="show selectable text">
         <View style={styles.smallContainer}>
-          <Text
-            style={styles.smallText}
-            selectionColor={'blue'}
-            selectable={true}>
-            Selection: blue
+          <Text style={styles.smallText} selectable={true}>
+            Selectable text
           </Text>
         </View>
       </TestCase>
