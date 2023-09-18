@@ -27,7 +27,7 @@ using SharedTextLayoutManager = std::shared_ptr<const TextLayoutManager>;
 class TextLayoutManagerDelegate {
   public:
    virtual facebook::react::Size measure(std::string textContent, float fontSize, float lineHeight, int fontWeight, 
-                                        float maxWidth, int numberOfLines) = 0;
+                                        float maxWidth, int numberOfLines, float letterSpacing) = 0;
 };
 
 /*

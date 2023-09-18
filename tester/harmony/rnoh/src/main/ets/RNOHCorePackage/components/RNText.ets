@@ -11,6 +11,7 @@ export type AttributedFragment = {
   textDecorationColor?: ColorSegments
   lineHeight?: number
   backgroundColor?: ColorSegments
+  letterSpacing?: number
 }
 
 export type TextProps = ViewBaseProps & {
@@ -56,6 +57,13 @@ function stringToFontStyle(style: string | undefined): FontStyle {
     return FontStyle.Italic;
   }
   return FontStyle.Normal;
+}
+
+function getLetterSpacing(letterSpacing: number) {
+  if(isNaN(letterSpacing)) {
+    return undefined
+  }
+  return letterSpacing
 }
 
 /*
@@ -120,6 +128,7 @@ export struct RNText {
             .decoration({type: getTextDecorationLine(fragment), color: convertColorSegmentsToString(fragment.textDecorationColor)})
             .lineHeight(fragment.lineHeight)
             .backgroundColor(convertColorSegmentsToString(fragment.backgroundColor)) // not supported
+            .letterSpacing(getLetterSpacing(fragment.letterSpacing))
         })
       }
       .width("100%")

@@ -20,7 +20,9 @@ class TextMeasurer : public facebook::react::TextLayoutManagerDelegate {
         float lineHeight,
         int fontWeight,
         float maxWidth,
-        int numberOfLines);
+        int numberOfLines,
+        float letterSpacing
+        );
 
   private:
     napi_env m_env;

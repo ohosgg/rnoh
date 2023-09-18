@@ -36,8 +36,9 @@ TextMeasurement TextLayoutManager::measure(
                 if (fontWeight.has_value()) {
                     fontWeightNum = static_cast<int>(fontWeight.value());
                 }
+                auto letterSpacing = fragment.textAttributes.letterSpacing;
                 measureRes = m_textLayoutManagerDelegate->measure(attributedStringBox.getValue().getString(),
-                                                                  fontSize, lineHeight, fontWeightNum, maximumSize.width, numberOfLines);
+                                                                  fontSize, lineHeight, fontWeightNum, maximumSize.width, numberOfLines, letterSpacing);
                 maxHeight = (maxHeight > measureRes.height ? maxHeight : measureRes.height);
                 if (fragment.isAttachment()) {
                     attachments.push_back(TextMeasurement::Attachment{{{0, 0}, {0, 0}}, false});

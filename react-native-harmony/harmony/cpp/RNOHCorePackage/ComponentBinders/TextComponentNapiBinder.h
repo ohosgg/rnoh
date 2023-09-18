@@ -52,7 +52,8 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                     .addProperty("lineHeight", textAttributes.lineHeight)
                     .addProperty("backgroundColor", textAttributes.backgroundColor)
                     .addProperty("fontSize", textAttributes.fontSize)
-                    .addProperty("textDecorationColor", textAttributes.textDecorationColor);
+                    .addProperty("textDecorationColor", textAttributes.textDecorationColor)
+                    .addProperty("letterSpacing", textAttributes.letterSpacing);
                 auto fontWeight = textAttributes.fontWeight;
                 if (fontWeight.has_value()) {
                     fragmentObjBuilder.addProperty("fontWeight", static_cast<int>(fontWeight.value()));

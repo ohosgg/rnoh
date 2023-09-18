@@ -216,14 +216,10 @@ export function TextTest() {
             </Text>
           </View>
         </TestCase>
-        <TestCase
-          itShould="show text with big letter spacing"
-          skip
-          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/272
-        >
+        <TestCase itShould="show text with big letter spacing">
           <View style={styles.smallContainer}>
             <Text style={{...styles.smallText, letterSpacing: 8}}>
-              Spacing: 4
+              Spacing: 8
             </Text>
           </View>
         </TestCase>
@@ -329,6 +325,27 @@ export function TextTest() {
             style={{height: 32, alignSelf: 'flex-start', flexDirection: 'row'}}>
             <Text style={{height: '100%', backgroundColor: 'pink'}}>FOO</Text>
             <Text style={{height: '100%', backgroundColor: 'pink'}}>BAR</Text>
+          </View>
+        </TestCase>
+        <TestCase itShould="display: 'FOO''BAR' next to each other with different letterSpacing">
+          <View
+            style={{height: 32, alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text
+              style={{
+                height: '100%',
+                backgroundColor: 'pink',
+                letterSpacing: 8,
+              }}>
+              FOO
+            </Text>
+            <Text
+              style={{
+                height: '100%',
+                backgroundColor: 'pink',
+                letterSpacing: 4,
+              }}>
+              BAR
+            </Text>
           </View>
         </TestCase>
         <TestCase

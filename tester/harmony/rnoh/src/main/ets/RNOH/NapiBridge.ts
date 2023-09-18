@@ -12,6 +12,7 @@ type TextMeasurerConfig = {
   fontWeight?: number;
   maxWidth?: number;
   numberOfLines: number;
+  letterSpacing?: number;
 }
 
 export class NapiBridge {
@@ -34,7 +35,8 @@ export class NapiBridge {
       fontSize: config.fontSize,
       lineHeight: config.lineHeight,
       fontWeight: config.fontWeight,
-      maxLines: config.numberOfLines
+      maxLines: config.numberOfLines,
+      letterSpacing: config.letterSpacing
     });
 
     if (px2vp(textSize.width as number) < config.maxWidth) {
@@ -47,7 +49,8 @@ export class NapiBridge {
       lineHeight: config.lineHeight,
       fontWeight: config.fontWeight,
       constraintWidth: config.maxWidth,
-      maxLines: config.numberOfLines
+      maxLines: config.numberOfLines,
+      letterSpacing: config.letterSpacing
     }) as {width: number, height: number};
   }
 

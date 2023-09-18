@@ -10,9 +10,10 @@ react::Size TextMeasurer::measure(
     float lineHeight,
     int fontWeight,
     float maxWidth,
-    int numberOfLines) {
+    int numberOfLines,
+    float letterSpacing) {
     react::Size result = {};
-    m_taskExecutor->runSyncTask(TaskThread::MAIN, [&result, measureTextRef = m_measureTextFnRef, env = m_env, &textContent, fontSize, lineHeight, fontWeight, maxWidth, numberOfLines]() {
+    m_taskExecutor->runSyncTask(TaskThread::MAIN, [&result, measureTextRef = m_measureTextFnRef, env = m_env, &textContent, fontSize, lineHeight, fontWeight, maxWidth, numberOfLines, letterSpacing]() {
         ArkJS arkJs(env);
         auto measureTextNapiValue = arkJs.getReferenceValue(measureTextRef);
         auto objectBuilder = arkJs.createObjectBuilder();
@@ -24,6 +25,9 @@ react::Size TextMeasurer::measure(
             .addProperty("numberOfLines", numberOfLines);
         if (fontWeight != 0) {
             objectBuilder.addProperty("fontWeight", fontWeight);
+        }
+        if (!isnan(letterSpacing)) {
+            objectBuilder.addProperty("letterSpacing", letterSpacing);
         }
         auto resultNapiValue = arkJs.call(measureTextNapiValue, {objectBuilder.build()});
         result.width = arkJs.getDouble(arkJs.getObjectProperty(resultNapiValue, "width"));
