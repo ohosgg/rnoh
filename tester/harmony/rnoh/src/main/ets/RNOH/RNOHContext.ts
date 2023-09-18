@@ -3,6 +3,7 @@ import { CommandDispatcher } from './CommandDispatcher';
 import { RNOHLogger } from "./RNOHLogger";
 import common from '@ohos.app.ability.common';
 import { RNInstance } from '.';
+import { ComponentManagerRegistry } from './ComponentManagerRegistry';
 
 export class RNOHContext {
   public get descriptorRegistry(): DescriptorRegistry {
@@ -14,7 +15,7 @@ export class RNOHContext {
   public get uiAbilityContext(): common.UIAbilityContext {
     return this.rnInstance.abilityContext
   }
-  public get componentManagerRegistry() {
+  public get componentManagerRegistry(): ComponentManagerRegistry {
     return this.rnInstance.componentManagerRegistry
   }
 
