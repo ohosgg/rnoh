@@ -97,11 +97,7 @@ export function ViewTest() {
           />
         </View>
       </TestCase>
-      <TestCase
-        itShould="render squares with borders with different style"
-        skip
-      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/256
-      >
+      <TestCase itShould="render squares with borders with different style">
         <View
           style={{
             width: '100%',

@@ -26,6 +26,7 @@ class ViewComponentNapiBinder : public BaseComponentNapiBinder {
                     .build()
                 )
                 .addProperty("borderRadius", borderMetrics.borderRadii)
+                .addProperty("borderStyle", this->stringifyBorderStyle(borderMetrics.borderStyles.top))
                 .addProperty("transform", props->transform.matrix)
                 .addProperty("pointerEvents", this->stringifyPointerEvents(props->pointerEvents))
                 .addProperty("shadowColor", props->shadowColor)
@@ -52,6 +53,16 @@ class ViewComponentNapiBinder : public BaseComponentNapiBinder {
             return "box-only";
         case facebook::react::PointerEventsMode::None:
             return "none";
+        }
+    }
+    std::string stringifyBorderStyle(facebook::react::BorderStyle borderStyle) {
+        switch (borderStyle) {
+        case facebook::react::BorderStyle::Solid:
+            return "solid";
+        case facebook::react::BorderStyle::Dashed:
+            return "dashed";
+        case facebook::react::BorderStyle::Dotted:
+            return "dotted";
         }
     }
 };

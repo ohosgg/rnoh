@@ -16,6 +16,7 @@ export type ViewBaseProps = LayoutProps & {
   borderWidth?: number
   borderColor?: BorderColors
   borderRadius?: BorderRadii
+  borderStyle?: string
   opacity?: number
   transform?: TransformMatrix,
   pointerEvents?: PointerEvents
@@ -38,6 +39,7 @@ export type ViewDynamicProps = {
   borderWidth?: number,
   borderRadius?: number,
   borderColor?: number,
+  borderStyle?: string,
 }
 
 type BorderRadii = {
@@ -86,6 +88,7 @@ function convertViewDynamicDescriptor(descriptor: ViewBaseDescriptor | ViewDynam
         bottomLeft: p.borderRadius,
         bottomRight: p.borderRadius
       },
+      borderStyle: p.borderStyle,
       opacity: p.opacity,
     }
   }
@@ -151,6 +154,17 @@ export struct RNViewBase {
     }
   }
 
+  getBorderStyle(): BorderStyle{
+    switch (this.descriptor.props.borderStyle) {
+      case "dashed":
+        return BorderStyle.Dashed
+      case "dotted":
+        return BorderStyle.Dotted
+      default:
+        return BorderStyle.Solid
+    }
+  }
+
   build() {
     Stack() {
       this.renderChildren()
@@ -168,6 +182,7 @@ export struct RNViewBase {
     }
     )
     .borderRadius(this.descriptor.props.borderRadius)
+    .borderStyle(this.getBorderStyle())
     .opacity(this.descriptor.props.opacity)
     .transform(this.descriptor.props.transform != undefined ? convertMatrixArrayToMatrix4(this.descriptor.props.transform) : undefined)
     .clip(true)
