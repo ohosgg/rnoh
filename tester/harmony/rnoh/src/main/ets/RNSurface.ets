@@ -1,7 +1,7 @@
 import { RNComponentFactory, ComponentBuilderContext } from './RNComponentFactory'
 import { RNOHContext, Tag } from "./RNOH"
 import { Descriptor } from './RNOH'
-import { ViewBaseProps } from './RNOHCorePackage/Components/RNViewBase'
+import { ViewBaseProps } from './RNOHCorePackage/components/RNViewBase'
 import { convertColorSegmentsToString } from './RNOH'
 import { TouchDispatcher } from './RNOH/TouchDispatcher'
 

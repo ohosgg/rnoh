@@ -1,8 +1,8 @@
-import { RNView } from "./RNOHCorePackage/Components/RNView"
-import { RNImage } from "./RNOHCorePackage/Components/RNImage"
-import { RNTextInput } from "./RNOHCorePackage/Components/RNTextInput"
-import { RNText } from "./RNOHCorePackage/Components/RNText"
-import { RNScrollView } from "./RNOHCorePackage/Components/RNScrollView"
+import { RNView } from "./RNOHCorePackage/components/RNView"
+import { RNImage } from "./RNOHCorePackage/components/RNImage"
+import { RNTextInput } from "./RNOHCorePackage/components/RNTextInput"
+import { RNText } from "./RNOHCorePackage/components/RNText"
+import { RNScrollView } from "./RNOHCorePackage/components/RNScrollView"
 import { Descriptor, Tag } from "./RNOH/DescriptorBase"
 import { RNOHContext } from "./RNOH/RNOHContext"
 import { RNModalHostView } from './RNOHCorePackage/components/RNModalHostView'
