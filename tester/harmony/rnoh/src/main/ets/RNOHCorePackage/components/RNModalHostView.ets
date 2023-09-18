@@ -1,3 +1,4 @@
+import display from '@ohos.display';
 import { Descriptor, Tag } from '../../RNOH/DescriptorBase'
 import { RNOHContext } from '../../RNOH/RNOHContext'
 import { RNViewBase, ViewBaseProps } from './RNViewBase'
@@ -44,20 +45,11 @@ struct ModalHostViewDialog {
       this.showContent = true
     })
     this.touchDispatcher = new TouchDispatcher(this.tag, this.ctx.rnInstance, this.ctx.logger);
-  }
 
-  onLayout(_children, constraints) {
-    const { maxHeight, maxWidth } = constraints
-    const descriptor = this.ctx.descriptorRegistry.getDescriptor<ModalHostViewDescriptor>(this.tag)
-    if (!descriptor) {
-      return
-    }
-    const screenSize = descriptor.state.screenSize
-    const height = px2vp(maxHeight)
-    const width = px2vp(maxWidth)
-    if (!closeTo(screenSize.height, height) || !closeTo(screenSize.width, width)) {
-      this.ctx.descriptorRegistry.setState(this.tag, { screenSize: { height, width } })
-    }
+    const displayClass = display.getDefaultDisplaySync();
+    const height = px2vp(displayClass.height);
+    const width = px2vp(displayClass.width);
+    this.ctx.descriptorRegistry.setState(this.tag, { screenSize: { height, width } });
   }
 
   aboutToDisappear() {
