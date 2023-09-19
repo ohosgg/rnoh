@@ -11,6 +11,7 @@ class ScrollViewComponentJSIBinder : public ViewComponentJSIBinder {
         object.setProperty(rt, "showsHorizontalScrollIndicator", "boolean");
         object.setProperty(rt, "showsVerticalScrollIndicator", "boolean");
         object.setProperty(rt, "persistentScrollbar", "boolean");
+        object.setProperty(rt, "contentOffset", "Object");
         
         return object;
     }

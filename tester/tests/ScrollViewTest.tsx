@@ -421,11 +421,17 @@ export function ScrollViewTest() {
         </TestCase>
         <TestCase
           modal
-          skip
           itShould="display ScrollView with the third view at the top (contentOffset)"
         //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/305
         >
           <ContentOffsetTestCase />
+        </TestCase>
+        <TestCase
+          modal
+          itShould="scroll when contentOffset property is changed (contentOffset)"
+        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/305
+        >
+          <ToggleContentOffsetTestCase />
         </TestCase>
         <TestCase
           modal
@@ -670,10 +676,28 @@ function ScrollToOverflowEnabledTestCase() {
 }
 
 function ContentOffsetTestCase() {
-  //hack, because hardcoding contentOffset didn't work
-  const [contentOffset, setContentOffset] = useState(0);
+  return (
+    <View style={styles.wrapperView}>
+      <ScrollView
+        style={{
+          ...styles.wrapperView,
+        }}
+        contentOffset={{ x: 0, y: 100 }}>
+        {getScrollViewContent({})}
+      </ScrollView>
+    </View>
+  );
+}
+
+function ToggleContentOffsetTestCase() {
+  const [contentOffset, setContentOffset] = useState(100);
   useEffect(() => {
-    setContentOffset(100);
+    const id = setInterval(() => {
+      setContentOffset(prev => (prev + 50) % 200);
+    }, 1000);
+    return () => {
+      clearInterval(id);
+    }
   }, []);
 
   return (

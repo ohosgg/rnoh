@@ -35,7 +35,7 @@ export struct RNScrollView {
   @BuilderParam renderDescriptors: () => void
   @State props: ScrollViewProps = {} as ScrollViewProps
   @State contentSize: Size = {} as Size
-  @State descriptor: ScrollViewDescriptor = {} as ScrollViewDescriptor
+  @State childrenTags: Tag[] = []
   state: ScrollViewState = {} as ScrollViewState
   private scroller = new Scroller()
   private cleanupCommandCallback?: () => void = undefined
@@ -45,7 +45,6 @@ export struct RNScrollView {
 
   aboutToAppear() {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag)
-    this.descriptor = descriptor
     this.onDescriptorUpdate(descriptor)
     this.state = descriptor.state
     this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
@@ -63,13 +62,25 @@ export struct RNScrollView {
   }
 
   onDescriptorUpdate(newDescriptor: ScrollViewDescriptor) {
+    const oldProps = this.props
     this.props = newDescriptor.props
     const {contentSizeHeight, contentSizeWidth} = newDescriptor.state
     this.contentSize = {
       width: contentSizeWidth,
       height: contentSizeHeight
     }
-    this.descriptor = newDescriptor
+    this.childrenTags = newDescriptor.childrenTags
+
+    const {contentOffsetX, contentOffsetY} = newDescriptor.props
+    if (contentOffsetX !== oldProps.contentOffsetX || contentOffsetY !== oldProps.contentOffsetY) {
+      this.scrollToContentOffset();
+    }
+  }
+
+  scrollToContentOffset() {
+    const xOffset = this.props.contentOffsetX;
+    const yOffset = this.props.contentOffsetY;
+    this.scroller.scrollTo({ xOffset, yOffset });
   }
 
   aboutToDisappear() {
@@ -103,7 +114,7 @@ export struct RNScrollView {
       || ((this.props.flexDirection !== 2) && !this.props.showsVerticalScrollIndicator)) {
       return BarState.Off
     }
-    return this.props.persistentScrollbar?BarState.On: BarState.Auto
+    return this.props.persistentScrollbar ? BarState.On : BarState.Auto
   }
 
   createScrollEvent() {
@@ -224,8 +235,8 @@ export struct RNScrollView {
   }
 
   private maybeGetPullToRefreshTag(): Tag | undefined {
-    if (this.descriptor.childrenTags.length === 2) {
-      return this.descriptor.childrenTags[1]
+    if (this.childrenTags.length === 2) {
+      return this.childrenTags[1]
     }
     return undefined
   }
@@ -251,12 +262,13 @@ export struct RNScrollView {
     // .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
     .onScrollFrameBegin(this.onScroll.bind(this))
     .onScrollStop(this.onScrollEnd.bind(this))
+    .onAppear(this.scrollToContentOffset.bind(this))
   }
 
   build() {
     RNViewBase({ ctx: this.ctx, tag: this.tag }) {
       if (this.shouldWrapWithPullToRefresh()) {
-        RNPullToRefreshView({ ctx: this.ctx, tag: this.descriptor.childrenTags[1] }) {
+        RNPullToRefreshView({ ctx: this.ctx, tag: this.childrenTags[1] }) {
           this.buildScrollCore()
         }
       } else {
