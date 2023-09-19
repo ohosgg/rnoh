@@ -250,7 +250,7 @@ export struct RNScrollView {
       .width(this.contentSize.width)
       .height(this.contentSize.height)
       .backgroundColor(Color.Transparent)
-      .margin({ top: -this.props.borderWidth, left: -this.props.borderWidth })
+      .margin({ top: -this.props.borderWidth.top, left: -this.props.borderWidth.left })
     }
     .width("100%")
     .height("100%")

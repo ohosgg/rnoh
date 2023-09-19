@@ -1,5 +1,5 @@
 import matrix4 from '@ohos.matrix4'
-import { ColorSegments, ColorValue } from './DescriptorBase'
+import { BorderMetrics, ColorSegments, ColorValue } from './DescriptorBase'
 
 // gets rid of DevEco warnings
 declare function vp2px(vp: number): number;
@@ -90,4 +90,50 @@ export function convertMatrixArrayToMatrix4(transform: TransformMatrix) {
   transform[13] = vp2px(transform[13]);
   transform[14] = vp2px(transform[14]);
   return matrix4.init(transform);
+}
+
+export enum BorderEdgePropsType {
+  COLOR = "Color",
+  WIDTH = "Width",
+}
+
+export function resolveBorderMetrics(props: BorderMetrics, isRTL: boolean): BorderMetrics {
+  const colorProps = resolveBorderEdgeProps(props, BorderEdgePropsType.COLOR, isRTL);
+  const widthProps = resolveBorderEdgeProps(props, BorderEdgePropsType.WIDTH, isRTL);
+  const radiusProps = resolveBorderRadius(props);
+  return {...colorProps, ...widthProps, ...radiusProps, borderStyle: props.borderStyle};
+}
+
+export function resolveBorderRadius(props: BorderMetrics): BorderMetrics {
+  const topLeft = props.borderTopLeftRadius;
+  const topRight = props.borderTopRightRadius;
+  const bottomLeft = props.borderBottomLeftRadius;
+  const bottomRight = props.borderBottomRightRadius;
+  const all = props.borderRadius;
+  const resolvedProps = {
+    borderTopLeftRadius: topLeft ?? all,
+    borderTopRightRadius: topRight ?? all,
+    borderBottomLeftRadius: bottomLeft ?? all,
+    borderBottomRightRadius: bottomRight ?? all,
+  }
+  return resolvedProps;
+}
+
+export function resolveBorderEdgeProps(props: BorderMetrics, type: BorderEdgePropsType, isRTL: boolean): BorderMetrics {
+  const left = props[`borderLeft${type}`]
+  const top = props[`borderTop${type}`]
+  const right = props[`borderRight${type}`]
+  const bottom = props[`borderBottom${type}`]
+  const all = props[`border${type}`]
+  const start = props[`borderStart${type}`]
+  const end = props[`borderEnd${type}`]
+
+  const resolvedProps = {
+    [`borderLeft${type}`]: left ?? ((isRTL ? end : start) ?? all),
+    [`borderTop${type}`]: top ?? all,
+    [`borderRight${type}`]: right ?? ((isRTL ? start : end) ?? all),
+    [`borderBottom${type}`]: bottom ?? all,
+  };
+
+  return resolvedProps;
 }

@@ -6,14 +6,17 @@ import {
   convertColorSegmentsToString,
   convertColorValueToColorSegments,
   convertMatrixArrayToMatrix4,
-  TransformMatrix
+  TransformMatrix,
+  BorderMetrics,
+  resolveBorderMetrics,
+  LayoutDirectionRN
 } from '../../RNOH'
 
 export type PointerEvents = "auto" | "none" | "box-none" | "box-only"
 
 export type ViewBaseProps = LayoutProps & {
   backgroundColor?: ColorSegments
-  borderWidth?: number
+  borderWidth?: BorderWidths
   borderColor?: BorderColors
   borderRadius?: BorderRadii
   borderStyle?: string
@@ -29,17 +32,13 @@ export type ViewBaseProps = LayoutProps & {
   shadowRadius?: number
 }
 
-export type ViewDynamicProps = {
+export type ViewDynamicProps = BorderMetrics & {
   backgroundColor?: number,
   width?: number,
   height?: number,
   justifyContent?: string,
   opacity?: number,
   alignItems?: string,
-  borderWidth?: number,
-  borderRadius?: number,
-  borderColor?: number,
-  borderStyle?: string,
 }
 
 type BorderRadii = {
@@ -56,6 +55,13 @@ type BorderColors = {
   bottom?: ColorSegments
 }
 
+type BorderWidths = {
+  left?: number
+  top?: number
+  right?: number
+  bottom?: number
+}
+
 export type ViewBaseDescriptor = Descriptor<string, ViewBaseProps>
 
 export type ViewDynamicDescriptor = Descriptor<string, ViewDynamicProps>
@@ -66,6 +72,8 @@ function convertViewDynamicDescriptor(descriptor: ViewBaseDescriptor | ViewDynam
   }
   const dynamicDescriptor = descriptor as ViewDynamicDescriptor
   const p = dynamicDescriptor.props
+  const isRTL = dynamicDescriptor.layoutMetrics.layoutDirection === LayoutDirectionRN.RightToLeft
+  const borderMetrics = resolveBorderMetrics(p as BorderMetrics, isRTL)
   return {
     isDynamicBinder: false,
     ...dynamicDescriptor,
@@ -75,20 +83,25 @@ function convertViewDynamicDescriptor(descriptor: ViewBaseDescriptor | ViewDynam
       height: 0,
       width: 0,
       backgroundColor: convertColorValueToColorSegments(p.backgroundColor),
-      borderWidth: p.borderWidth,
+      borderWidth: {
+        left: borderMetrics.borderLeftWidth,
+        top: borderMetrics.borderTopWidth,
+        right: borderMetrics.borderRightWidth,
+        bottom: borderMetrics.borderBottomWidth,
+      },
       borderColor: {
-        left: convertColorValueToColorSegments(p.borderColor),
-        top: convertColorValueToColorSegments(p.borderColor),
-        right: convertColorValueToColorSegments(p.borderColor),
-        bottom: convertColorValueToColorSegments(p.borderColor),
+        left: convertColorValueToColorSegments(borderMetrics.borderLeftColor),
+        top: convertColorValueToColorSegments(borderMetrics.borderTopColor),
+        right: convertColorValueToColorSegments(borderMetrics.borderRightColor),
+        bottom: convertColorValueToColorSegments(borderMetrics.borderBottomColor),
       },
       borderRadius: {
-        topLeft: p.borderRadius,
-        topRight: p.borderRadius,
-        bottomLeft: p.borderRadius,
-        bottomRight: p.borderRadius
+        topLeft: borderMetrics.borderTopLeftRadius,
+        topRight: borderMetrics.borderTopRightRadius,
+        bottomLeft: borderMetrics.borderBottomLeftRadius,
+        bottomRight: borderMetrics.borderBottomRightRadius,
       },
-      borderStyle: p.borderStyle,
+      borderStyle: borderMetrics.borderStyle,
       opacity: p.opacity,
     }
   }

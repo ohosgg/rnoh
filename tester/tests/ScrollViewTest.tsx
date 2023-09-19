@@ -47,10 +47,7 @@ export function ScrollViewTest() {
         </TestCase>
         <TestCase
           modal
-          skip
-          itShould="render scroll view with different border widths (left, right, top, bottom)"
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/253
-        >
+          itShould="render scroll view with different border widths (left, right, top, bottom)">
           <View style={styles.wrapperView}>
             <ScrollView
               {...commonProps}
@@ -99,10 +96,7 @@ export function ScrollViewTest() {
         </TestCase>
         <TestCase
           modal
-          skip
-          itShould="render scroll view with different border widths (start, end)"
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/253
-        >
+          itShould="render scroll view with different border widths (start, end)">
           <View style={styles.wrapperView}>
             <ScrollView
               {...commonProps}
@@ -160,7 +154,6 @@ export function ScrollViewTest() {
         </TestCase>
         <TestCase
           modal
-          skip
           itShould="render scroll view with contentContainer with different border widths (left, right, top, bottom) (contentContainerStyle)">
           <View style={styles.wrapperView}>
             <ScrollView

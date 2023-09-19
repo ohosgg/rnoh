@@ -20,6 +20,12 @@ export type LayoutProps = {
   height: number;
 };
 
+export enum LayoutDirectionRN {
+  Undefined = 0,
+  LeftToRight = 1,
+  RightToLeft = 2,
+};
+
 export type LayoutMetrics = {
   frame: {
     origin: {
@@ -31,6 +37,7 @@ export type LayoutMetrics = {
       height: number;
     };
   };
+  layoutDirection?: LayoutDirectionRN;
 };
 
 export type Descriptor<TType = string,
@@ -45,3 +52,27 @@ TState = {}> = {
   layoutMetrics: LayoutMetrics;
   isDynamicBinder: boolean;
 };
+
+export type BorderMetrics = {
+  borderWidth?: number;
+  borderLeftWidth?: number;
+  borderTopWidth?: number;
+  borderRightWidth?: number;
+  borderBottomWidth?: number;
+
+  borderColor?: number;
+  borderLeftColor?: number;
+  borderTopColor?: number;
+  borderRightColor?: number;
+  borderBottomColor?: number;
+  borderStartColor?: number;
+  borderEndColor?: number;
+
+  borderRadius?: number;
+  borderTopLeftRadius?: number;
+  borderTopRightRadius?: number;
+  borderBottomLeftRadius?: number;
+  borderBottomRightRadius?: number;
+
+  borderStyle?: string;
+}
