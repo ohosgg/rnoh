@@ -5,6 +5,7 @@ import { RemoteImageLoaderError } from "./RemoteImageLoaderError"
 import request from '@ohos.request'
 import common from '@ohos.app.ability.common'
 import { RemoteImageDiskCache } from './RemoteImageDiskCache'
+import fs from '@ohos.file.fs';
 
 export class RemoteImageLoader {
   public constructor(
@@ -44,16 +45,25 @@ export class RemoteImageLoader {
   public async prefetch(uri: string): Promise<boolean> {
     const reg = /[^a-zA-Z0-9 -]/g;
     const path = `${this.context.cacheDir}/${uri.replace(reg, '')}`;
-    if (this.diskCache.has(uri)) {
-      return true
-    }
     try {
       await request.downloadFile(this.context, { url: uri, filePath: path });
       this.diskCache.set(uri, `file://${path}`);
     } catch (e) {
-      return Promise.reject("Failed to fetch the image")
+      // if we want to prefetch the same file again it needs to be manually deleted first,
+      // as request.downloadFile does not allow overwriting
+      if(e.code === request.EXCEPTION_FILEPATH) {
+        try {
+          await fs.unlink(path);
+          await request.downloadFile(this.context, { url: uri, filePath: path });
+          this.diskCache.set(uri, `file://${path}`)
+        } catch (e1) {
+          return Promise.reject("Failed to fetch the image")
+        }
+      } else {
+        return Promise.reject("Failed to fetch the image")
+      }
     }
-
+    
     return true
   }
 
