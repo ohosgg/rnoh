@@ -48,14 +48,18 @@ export function TextTest() {
           </Text>
         </View>
       </TestCase>
-      <TestCase
-        itShould="show disabled text"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/275
-      >
-        <View style={styles.smallContainer}>
-          <Text style={styles.smallText} disabled>
+      <TestCase itShould="show two texts, both selectable, but one disabled ">
+        <View
+          style={{
+            ...styles.smallContainer,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <Text style={styles.smallText} disabled selectable>
             Disabled
+          </Text>
+          <Text style={styles.smallText} selectable>
+            Enabled
           </Text>
         </View>
       </TestCase>

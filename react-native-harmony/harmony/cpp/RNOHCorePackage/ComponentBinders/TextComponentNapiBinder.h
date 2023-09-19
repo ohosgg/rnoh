@@ -39,9 +39,15 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                 if (rawProps.count("selectable") > 0) {
                     selectable = rawProps["selectable"].asBool();
                 }
+                auto disabled = false;
+                if (rawProps.count("disabled") > 0) {
+                    disabled = rawProps["disabled"].asBool();
+                }
+
                 propsObjBuilder
                     .addProperty("textAlignVertical", textAlignVertical)
-                    .addProperty("selectable", selectable);
+                    .addProperty("selectable", selectable)
+                    .addProperty("disabled", disabled);
             }
 
             for (auto fragment : fragments) {

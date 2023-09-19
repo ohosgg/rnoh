@@ -21,6 +21,7 @@ export type TextProps = ViewBaseProps & {
   maximumNumberOfLines?: number
   textAlignVertical?: string
   selectable?: boolean
+  disabled?: boolean
   ellipsizeMode?: EllipsizeMode
 }
 
@@ -154,6 +155,7 @@ export struct RNText {
       .align(stringToVerticalAlign(this.descriptor.props.textAlignVertical))
       .padding(this.descriptor.props.padding)
       .copyOption(this.descriptor.props.selectable ? CopyOptions.LocalDevice : CopyOptions.None)
+      .enabled(!this.descriptor.props.disabled)
     }
   }
 }
