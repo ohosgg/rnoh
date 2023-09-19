@@ -410,6 +410,11 @@ export function ScrollViewTest() {
         </TestCase>
       </TestSuite>
       <TestSuite name="other props">
+        <TestCase modal itShould="scroll should be disabled (it renders with the 5th element at the top)">
+          <View style={styles.wrapperView}>
+            <ScrollView {...commonProps} scrollEnabled={false} />
+          </View>
+        </TestCase>
         <TestCase modal itShould="display horizontal scroll view">
           <View
             style={{
@@ -469,6 +474,12 @@ export function ScrollViewTest() {
           modal
           itShould="display amount of on drag/momentum begin/end events">
           <MomentumTestCase />
+        </TestCase>
+        <TestCase
+          modal
+          itShould="display current contentHeight (onContentSizeChange)"
+        >
+          <OnContentSizeChangeTestCase />
         </TestCase>
         <TestCase
           modal
@@ -663,7 +674,7 @@ function ScrollToOverflowEnabledTestCase() {
   return (
     <View style={styles.wrapperView}>
       <Button
-        label={`[FAILS on Android/Harmony] Scroll outside of the content`}
+        label={`Scroll outside of the content`}
         onPress={() => {
           ref.current?.scrollTo({ x: 0, y: -60, animated: true });
         }}
@@ -673,6 +684,31 @@ function ScrollToOverflowEnabledTestCase() {
       </ScrollView>
     </View>
   );
+}
+function OnContentSizeChangeTestCase() {
+  const [amountOfChildren, setAmountOfChildren] = useState(3);
+  return (
+    <ObjectDisplayer
+      renderContent={setObject => {
+        return (
+          <View style={{ width: '100%', height: '70%' }}>
+            <Button
+              label={`Add one more item`}
+              onPress={() => {
+                setAmountOfChildren(amountOfChildren + 1);
+              }}
+            />
+            <ScrollView
+              onContentSizeChange={(_, contentHeight) => {
+                setObject({ contentHeight });
+              }}
+            >
+              {getScrollViewContent({ amountOfChildren: amountOfChildren })}
+            </ScrollView>
+          </View>
+        );
+      }}
+    />);
 }
 
 function ContentOffsetTestCase() {

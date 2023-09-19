@@ -1,7 +1,7 @@
 @Entry
 @Component
 struct Index {
-  @State numberOfComponents: number = 10000
+  @State numberOfComponents: number = 100
   scroller: Scroller = new Scroller()
   timerId: number
 
