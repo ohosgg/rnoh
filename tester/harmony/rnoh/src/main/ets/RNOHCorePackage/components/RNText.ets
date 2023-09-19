@@ -21,6 +21,7 @@ export type TextProps = ViewBaseProps & {
   maximumNumberOfLines?: number
   textAlignVertical?: string
   selectable?: boolean
+  ellipsizeMode?: EllipsizeMode
 }
 
 type PaddingProps = {
@@ -28,6 +29,13 @@ type PaddingProps = {
   right: number,
   bottom: number,
   left: number
+}
+
+enum EllipsizeMode {
+  Clip,
+  Head,
+  Tail,
+  Middle,
 }
 
 function stringToAlignment(alignment: string) {
@@ -113,6 +121,13 @@ export struct RNText {
     return (maxLines ?? 0) > 0 ? maxLines : undefined
   }
 
+  getTextOverflow(): TextOverflow {
+    if (this.descriptor.props.ellipsizeMode === EllipsizeMode.Clip) {
+      return TextOverflow.Clip
+    }
+    return TextOverflow.Ellipsis
+  }
+
   build() {
     RNViewBase({
       ctx: this.ctx,
@@ -134,7 +149,7 @@ export struct RNText {
       .width("100%")
       .height("100%")
       .maxLines(this.getMaxLines())
-      .textOverflow({overflow: TextOverflow.Ellipsis})
+      .textOverflow({overflow: this.getTextOverflow()})
       .textAlign(stringToAlignment(this.descriptor.props.textAlign))
       .align(stringToVerticalAlign(this.descriptor.props.textAlignVertical))
       .padding(this.descriptor.props.padding)

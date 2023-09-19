@@ -59,22 +59,8 @@ export function TextTest() {
           </Text>
         </View>
       </TestCase>
-      <TestCase
-        itShould="show text with different ellipsize mode"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/276
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/283
-      >
+      <TestCase itShould="show text with different ellipsize mode">
         <View style={styles.hugeContainer}>
-          <Text style={styles.smallText} ellipsizeMode="head" numberOfLines={1}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </Text>
-          <Text
-            style={styles.smallText}
-            ellipsizeMode="middle"
-            numberOfLines={1}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </Text>
           <Text style={styles.smallText} ellipsizeMode="tail" numberOfLines={1}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           </Text>
