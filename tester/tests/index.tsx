@@ -29,6 +29,7 @@ export * from './ScrollViewTest';
 export * from './SectionListTest';
 export * from './StatusBarTest';
 export * from './SwitchTest';
+export * from './StyleSheetTest';
 export * from './TextInputTest';
 export * from './TextTest';
 export * from './TransformTest';
