@@ -7,9 +7,10 @@ import {
   convertColorValueToColorSegments,
   convertMatrixArrayToMatrix4,
   TransformMatrix,
+  OverflowMode,
   BorderMetrics,
   resolveBorderMetrics,
-  LayoutDirectionRN
+  LayoutDirectionRN,
 } from '../../RNOH'
 
 export type PointerEvents = "auto" | "none" | "box-none" | "box-only"
@@ -29,7 +30,8 @@ export type ViewBaseProps = LayoutProps & {
     height: number
   },
   shadowOpacity?: number,
-  shadowRadius?: number
+  shadowRadius?: number,
+  overflow?: OverflowMode,
 }
 
 export type ViewDynamicProps = BorderMetrics & {
@@ -198,7 +200,7 @@ export struct RNViewBase {
     .borderStyle(this.getBorderStyle())
     .opacity(this.descriptor.props.opacity)
     .transform(this.descriptor.props.transform != undefined ? convertMatrixArrayToMatrix4(this.descriptor.props.transform) : undefined)
-    .clip(true)
+    .clip(this.descriptor.props.overflow === OverflowMode.HIDDEN ? true : false)
     .hitTestBehavior(this.getHitTestMode())
     .shadow(this.getShadow())
   }

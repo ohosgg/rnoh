@@ -138,8 +138,9 @@ export function ViewTest() {
             width: 64,
             height: 64,
             backgroundColor: 'red',
-            overflow: 'hidden',
-          }}>
+            overflow: 'hidden'
+          }}
+          collapsable={false}>
           <View
             style={{
               width: 64,
@@ -156,7 +157,8 @@ export function ViewTest() {
             width: 64,
             height: 64,
             backgroundColor: 'red',
-          }}>
+          }}
+          collapsable={false}>
           <View
             style={{
               width: 64,

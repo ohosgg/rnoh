@@ -15,7 +15,7 @@ void TouchEventEmitRequestHandler::handleEvent(TouchEventEmitRequestHandler::Con
     auto touchEvent = ctx.payload;
 
     auto timestampNanos = arkJs.getDouble(arkJs.getObjectProperty(touchEvent, "timestamp"));
-    react::Float timestamp = timestampNanos / 1e9;
+    react::Float timestamp = timestampNanos / 1e6;
 
     auto touches = convertTouches(arkJs, ctx.tag, timestamp, arkJs.getObjectProperty(touchEvent, "touches"));
     auto changedTouches = convertTouches(arkJs, ctx.tag, timestamp, arkJs.getObjectProperty(touchEvent, "changedTouches"));
@@ -23,29 +23,21 @@ void TouchEventEmitRequestHandler::handleEvent(TouchEventEmitRequestHandler::Con
     auto eventType = (TouchType)(arkJs.getDouble(arkJs.getObjectProperty(ctx.payload, "type")));
     bool isTouchEnd = eventType == TouchType::UP || eventType == TouchType::CANCEL;
 
-    if (isTouchEnd) {
-        // `touches` should only contain touches that are still active,
-        // so we exclude the touches that just ended
-        for (auto &touch : changedTouches) {
-            touches.erase(touch);
-        }
-    }
-
     std::unordered_set<react::Tag> changedTargets;
     for (auto &touch : changedTouches) {
         changedTargets.insert(touch.target);
     }
-
-    react::TouchEvent event {
-        .touches = touches,
-        .changedTouches = changedTouches
-    };
 
     for (auto target : changedTargets) {
         auto eventEmitter = ctx.shadowViewRegistry->getEventEmitter<react::TouchEventEmitter>(target);
         if (!eventEmitter) {
             continue;
         }
+
+        react::TouchEvent event {
+            .touches = touches,
+            .changedTouches = changedTouches
+        };
 
         react::Touches targetTouches;
         for (auto &touch : touches) {

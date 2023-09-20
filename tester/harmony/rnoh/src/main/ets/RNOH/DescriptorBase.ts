@@ -40,6 +40,12 @@ export type LayoutMetrics = {
   layoutDirection?: LayoutDirectionRN;
 };
 
+export enum OverflowMode {
+  VISIBLE = 0,
+  HIDDEN = 1,
+  SCROLL = 2,
+};
+
 export type Descriptor<TType = string,
 TProps extends Object = Object,
 TState = {}> = {

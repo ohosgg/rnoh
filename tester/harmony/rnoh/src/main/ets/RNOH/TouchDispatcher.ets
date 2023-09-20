@@ -41,7 +41,7 @@ export class TouchDispatcher {
 
   public findTargetForTouch(touch: TouchObject): TouchTarget {
     const {x, y} = touch;
-    return this.touchTargetHelper.findTouchTarget({x, y}, this.surfaceTag);
+    return this.touchTargetHelper.findTouchTarget({x, y}, {x, y}, this.surfaceTag);
   }
 
   private convertTouchObject(touch: TouchObject): void {

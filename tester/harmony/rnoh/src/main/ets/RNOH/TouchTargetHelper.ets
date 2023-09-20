@@ -1,9 +1,9 @@
 import { RNScrollViewManager } from '../RNOHCorePackage/componentManagers/RNScrollViewManager';
 import { ComponentManagerRegistry } from './ComponentManagerRegistry';
-import { Tag } from './DescriptorBase';
+import { Tag, OverflowMode } from './DescriptorBase';
 import { DescriptorRegistry } from './DescriptorRegistry';
 import { RNOHLogger } from './RNOHLogger';
-import { convertMatrixArrayToMatrix4 } from './CppBridgeUtils';
+import matrix4 from '@ohos.matrix4';
 
 export type TouchTarget = {
   tag: Tag,
@@ -42,6 +42,13 @@ export class TouchTargetHelper {
     return withinX && withinY;
   }
 
+  public isPointInBoundingBox({x, y}: Point, tag: Tag): boolean {
+    const {left, right, top, bottom} = this.descriptorRegistry.getBoundingBox(tag);
+    const withinX = x >= left && x <= right;
+    const withinY = y >= top && y <= bottom;
+    return withinX && withinY;
+  }
+
   public getRelativePoint({x, y}: Point, tag: Tag): Point {
     const descriptor = this.descriptorRegistry.getDescriptor(tag);
     const offset = descriptor.layoutMetrics.frame.origin;
@@ -59,7 +66,7 @@ export class TouchTargetHelper {
 
     if ("transform" in descriptor.props) {
       const transformArray = (descriptor.props["transform"] as any)
-      const transform = convertMatrixArrayToMatrix4(transformArray);
+      const transform = matrix4.init(transformArray);
       const inverse = transform.invert()
       const transformedLocal = inverse.transformPoint([localX, localY])
       localX = transformedLocal[0];
@@ -71,11 +78,16 @@ export class TouchTargetHelper {
 
   public findTouchTarget(
     viewPoint: Point,
+    parentPoint: Point,
     tag: Tag,
   ): TouchTarget | null {
     const descriptor = this.descriptorRegistry.getDescriptor(tag);
+    if (!descriptor) {
+      return null;
+    }
+
     const pointerEvents = descriptor.props["pointerEvents"] ?? "auto" as PointerEvents
-    const canHandleTouch = ["auto", "box-only"].includes(pointerEvents)
+    let canHandleTouch = ["auto", "box-only"].includes(pointerEvents)
     const canChildrenHandleTouch = ["auto", "box-none"].includes(pointerEvents)
 
     if (!canHandleTouch && !canChildrenHandleTouch) {
@@ -83,8 +95,14 @@ export class TouchTargetHelper {
     }
 
     if (!this.isPointInView(viewPoint, tag)) {
-      // TODO: check overflow once implemented
-      return null;
+      const overflow = descriptor.props['overflow'];
+      if (overflow === OverflowMode.HIDDEN
+        || overflow === OverflowMode.SCROLL
+        || !this.isPointInBoundingBox(parentPoint, tag)) {
+        return null;
+      }
+
+      canHandleTouch = false;
     }
 
     if (canChildrenHandleTouch) {
@@ -92,7 +110,7 @@ export class TouchTargetHelper {
       // since the last child is the one on top
       for (const childTag of descriptor.childrenTags.slice().reverse()) {
         const childPoint = this.getRelativePoint(viewPoint, childTag);
-        const childTarget = this.findTouchTarget(childPoint, childTag);
+        const childTarget = this.findTouchTarget(childPoint, viewPoint, childTag);
         if (childTarget !== null) {
           return childTarget;
         }

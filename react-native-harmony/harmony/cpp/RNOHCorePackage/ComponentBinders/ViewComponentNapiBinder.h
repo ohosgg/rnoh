@@ -43,6 +43,7 @@ class ViewComponentNapiBinder : public BaseComponentNapiBinder {
                 )
                 .addProperty("shadowOpacity", props->shadowOpacity)
                 .addProperty("shadowRadius", props->shadowRadius)
+                .addProperty("overflow", props->yogaStyle.overflow())
                 .build();
         }
         return napiBaseProps;
