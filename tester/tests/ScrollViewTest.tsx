@@ -202,12 +202,7 @@ export function ScrollViewTest() {
             <ScrollView persistentScrollbar={true} {...commonProps} />
           </View>
         </TestCase>
-        <TestCase
-          modal
-          skip
-          itShould="shows white vertical scroll indicator"
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/308
-        >
+        <TestCase modal itShould="shows white vertical scroll indicator">
           <View style={styles.wrapperView}>
             <ScrollView {...commonProps} indicatorStyle={'white'} />
           </View>

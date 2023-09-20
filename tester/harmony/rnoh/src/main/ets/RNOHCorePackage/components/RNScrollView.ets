@@ -12,6 +12,7 @@ export type ScrollViewProps = ViewBaseProps & {
   persistentScrollbar: boolean
   showsHorizontalScrollIndicator: boolean
   showsVerticalScrollIndicator: boolean
+  indicatorStyle?: IndicatorStyle
 }
 
 export type ScrollViewState = {
@@ -24,6 +25,12 @@ export type ScrollViewState = {
 type Size = {
   width: number
   height: number
+}
+
+enum IndicatorStyle {
+  Default = 0, 
+  Black = 1,
+  White = 2,
 }
 
 export type ScrollViewDescriptor = Descriptor<"ScrollView", ScrollViewProps, ScrollViewState>
@@ -115,6 +122,13 @@ export struct RNScrollView {
       return BarState.Off
     }
     return this.props.persistentScrollbar ? BarState.On : BarState.Auto
+  }
+
+  scrollBarColor() {
+    if (this.props.indicatorStyle === IndicatorStyle.White) {
+      return Color.White;
+    }
+    return Color.Black;
   }
 
   createScrollEvent() {
@@ -257,7 +271,7 @@ export struct RNScrollView {
     .align(Alignment.TopStart)
     .scrollable(this.scrollDirection())
     .scrollBar(this.scrollBarState())
-    // .scrollBarColor(Color.Gray)
+    .scrollBarColor(this.scrollBarColor())
     // .scrollBarWidth(30)
     // .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
     .onScrollFrameBegin(this.onScroll.bind(this))

@@ -29,6 +29,7 @@ class ScrollViewComponentNapiBinder : public ViewComponentNapiBinder {
                 .addProperty("showsVerticalScrollIndicator", props->showsVerticalScrollIndicator)
                 .addProperty("flexDirection", props->yogaStyle.flexDirection())
                 .addProperty("persistentScrollbar", persistentScrollbar)
+                .addProperty("indicatorStyle", static_cast<int>(props->indicatorStyle))
                 .build();
         }
         return napiViewProps;
