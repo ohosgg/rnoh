@@ -15,7 +15,9 @@ export struct RNTextInput {
   ctx: RNOHContext
   tag: number
   @State descriptor: TextInputDescriptor = {} as TextInputDescriptor
+  controller: TextInputController = new TextInputController()
   private unregisterDescriptorChangesListener?: () => void = undefined
+  private cleanupCommandCallback?: () => void = undefined
 
   handleChangeEvent(value: string) {
     this.ctx.rnInstanceManager.emitComponentEvent(this.descriptor.tag, RNOHEventEmitRequestHandlerName.TextInputChange, value)
@@ -28,15 +30,23 @@ export struct RNTextInput {
         this.descriptor = (newDescriptor as TextInputDescriptor)
       }
     )
+    this.cleanupCommandCallback = this.ctx.commandDispatcher.registerCommandCallback(
+      this.tag,
+      (command) => {
+        if (command === 'blur') {
+          this.controller.stopEditing();
+        }
+      });
   }
 
   aboutToDisappear() {
     this.unregisterDescriptorChangesListener?.()
+    this.cleanupCommandCallback?.();
   }
 
   build() {
-    RNViewBase({ctx: this.ctx, tag: this.tag}) {
-      TextInput()
+    RNViewBase({ ctx: this.ctx, tag: this.tag }) {
+      TextInput({ controller: this.controller })
         .width("100%")
         .height("100%")
         .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))

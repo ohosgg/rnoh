@@ -1,5 +1,7 @@
 import {TestSuite, TestCase} from '@rnoh/testerino';
 import {Keyboard, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Button, ObjectDisplayer} from '../components';
+import {useEffect} from 'react';
 
 export function KeyboardTest() {
   return (
@@ -10,10 +12,47 @@ export function KeyboardTest() {
           expect(Keyboard.isVisible()).to.be.false;
         }}
       />
-      <TestCase modal itShould="[FAILS] dismiss keyboard on button press">
+      <TestCase modal itShould="dismiss keyboard on button press">
         <TextInput style={styles.textInput} />
-        <View style={styles.button} onTouchEnd={() => Keyboard.dismiss()}>
-          <Text style={styles.buttonText}>Dismiss keyboard</Text>
+        <Button label="Dismiss keyboard" onPress={() => Keyboard.dismiss()} />
+      </TestCase>
+      <TestCase
+        modal
+        skip
+        itShould="display info when opening and hiding keyboard">
+        <View style={{height: 300}}>
+          <ObjectDisplayer
+            renderContent={setObject => {
+              useEffect(() => {
+                const showSubscription = Keyboard.addListener(
+                  'keyboardDidShow',
+                  () => {
+                    setObject('Keyboard Shown');
+                  },
+                );
+                const hideSubscription = Keyboard.addListener(
+                  'keyboardDidHide',
+                  () => {
+                    setObject('Keyboard Hidden');
+                  },
+                );
+
+                return () => {
+                  showSubscription.remove();
+                  hideSubscription.remove();
+                };
+              }, []);
+              return (
+                <>
+                  <TextInput style={styles.textInput} />
+                  <Button
+                    label={'Dismiss keyboard'}
+                    onPress={() => Keyboard.dismiss()}
+                  />
+                </>
+              );
+            }}
+          />
         </View>
       </TestCase>
     </TestSuite>
@@ -31,14 +70,6 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 16,
     color: 'white',
-  },
-  button: {
-    width: 160,
-    height: 36,
-    backgroundColor: 'hsl(190, 50%, 70%)',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
   },
   buttonText: {
     width: '100%',
