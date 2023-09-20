@@ -1,37 +1,39 @@
-import {BackHandler, Text, TouchableOpacity, View} from 'react-native';
-import {TestCase, TestSuite} from '@rnoh/testerino';
-import {useState} from 'react';
+import { BackHandler, Text, TouchableOpacity, View } from 'react-native';
+import { TestCase, TestSuite } from '@rnoh/testerino';
+import { useCallback, useEffect, useState } from 'react';
+import { Button } from '../components';
 
 export const BackHandlerTest = () => {
   const [counter, setCounter] = useState(0);
 
-  BackHandler.addEventListener('hardwareBackPress', () => {
-    setCounter(counter + 1);
+  const handleBackPress = useCallback(() => {
+    setCounter(prev => prev + 1);
     return true;
-  });
-
+  }, []);
   return (
     <TestSuite name="BackHandler">
       <TestCase
         itShould="be exported"
-        fn={({expect}) => {
+        fn={({ expect }) => {
           expect(BackHandler).to.be.not.undefined;
         }}
       />
       <TestCase itShould="exit app on press">
         <TouchableOpacity
-          style={{height: 64}}
+          style={{ height: 64 }}
           onPress={() => {
             BackHandler.exitApp();
           }}>
-          <Text style={{width: '100%', height: '100%'}}>Exit</Text>
+          <Text style={{ width: '100%', height: '100%' }}>Exit</Text>
         </TouchableOpacity>
       </TestCase>
-      <TestCase itShould="display number of back presses">
-        <View style={{height: 64}}>
-          <Text style={{width: '100%', height: '100%'}}>
-            Back pressed {counter} time{counter == 1 ? '' : 's'}
-          </Text>
+      <TestCase itShould="allow to add, remove eventListener and display number of back presses accordingly">
+        <Text style={{ width: '100%' }}>
+          Back pressed {counter} time{counter == 1 ? '' : 's'}
+        </Text>
+        <View style={{ flexDirection: 'row' }}>
+          <Button label={'Add event listener'} onPress={() => { BackHandler.addEventListener('hardwareBackPress', handleBackPress) }} />
+          <Button label={'Remove event listener'} onPress={() => { BackHandler.removeEventListener('hardwareBackPress', handleBackPress) }} />
         </View>
       </TestCase>
     </TestSuite>
