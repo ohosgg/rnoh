@@ -100,13 +100,7 @@ export struct RNScrollView {
   }
 
   scrollDirection(): ScrollDirection {
-    if (!this.props.scrollEnabled) {
-      return ScrollDirection.None
-    } else if (this.props.flexDirection === 2) {
-      return ScrollDirection.Horizontal
-    } else {
-      return ScrollDirection.Vertical
-    }
+    return this.props.flexDirection === 2 ? ScrollDirection.Horizontal : ScrollDirection.Vertical;
   }
 
   scrollBarState(): BarState {
@@ -257,6 +251,7 @@ export struct RNScrollView {
     .align(Alignment.TopStart)
     .scrollable(this.scrollDirection())
     .scrollBar(this.scrollBarState())
+    .enableScrollInteraction(this.props.scrollEnabled)
     // .scrollBarColor(Color.Gray)
     // .scrollBarWidth(30)
     // .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)

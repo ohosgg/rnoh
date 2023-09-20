@@ -607,6 +607,11 @@ export function ScrollViewTest() {
             </ScrollView>
           </View>
         </TestCase>
+        <TestCase
+          modal
+          itShould="Only buttons can be used to scroll the view (scrollEnabled)">
+          <ScrollEnabledTestCase />
+        </TestCase>
       </TestSuite>
     </TestSuite>
   );
@@ -660,6 +665,22 @@ function MomentumTestCase() {
       </View>
     </>
   );
+}
+
+function ScrollEnabledTestCase() {
+  const scrollRef = React.useRef<ScrollView>(null);
+  return (
+    <View style={styles.wrapperView}>
+      <Button 
+        label={'Scroll To offset y 150'}
+        onPress={() => {
+          scrollRef.current?.scrollTo({ x: 0, y: 150, animated: false});
+        }} />
+      <ScrollView style={{ flex: 1 }} scrollEnabled={false} ref={scrollRef}>
+        {getScrollViewContent({})}
+      </ScrollView>
+    </View>
+  )
 }
 
 function ScrollToOverflowEnabledTestCase() {
