@@ -19,7 +19,7 @@ module.exports = {
     return require('react-native/Libraries/Components/Button');
   },
   get Dimensions() {
-    return require('react-native/Libraries/Utilities/Dimensions');
+    return require('react-native/Libraries/Utilities/Dimensions').default;
   },
   get DeviceEventEmitter() {
     return require('react-native/Libraries/EventEmitter/RCTDeviceEventEmitter')

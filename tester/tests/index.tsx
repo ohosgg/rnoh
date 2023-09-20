@@ -6,6 +6,7 @@ export * from './AppStateTest';
 export * from './BackHandlerTest';
 export * from './ButtonTest';
 export * from './CustomNativeComponentTest';
+export * from './DimensionsText';
 export * from './FlatListTest';
 export * from './I18nManagerTest';
 export * from './ImageTest';
