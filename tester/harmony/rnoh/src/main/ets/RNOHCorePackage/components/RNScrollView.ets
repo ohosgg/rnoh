@@ -28,7 +28,7 @@ type Size = {
 }
 
 enum IndicatorStyle {
-  Default = 0, 
+  Default = 0,
   Black = 1,
   White = 2,
 }
@@ -44,6 +44,7 @@ export struct RNScrollView {
   @State contentSize: Size = {} as Size
   @State childrenTags: Tag[] = []
   state: ScrollViewState = {} as ScrollViewState
+  private parentTag: Tag | undefined = undefined
   private scroller = new Scroller()
   private cleanupCommandCallback?: () => void = undefined
   private unregisterDescriptorChangesListener?: () => void = undefined
@@ -77,7 +78,7 @@ export struct RNScrollView {
       height: contentSizeHeight
     }
     this.childrenTags = newDescriptor.childrenTags
-
+    this.parentTag = newDescriptor.parentTag
     const {contentOffsetX, contentOffsetY} = newDescriptor.props
     if (contentOffsetX !== oldProps.contentOffsetX || contentOffsetY !== oldProps.contentOffsetY) {
       this.scrollToContentOffset();
@@ -237,22 +238,15 @@ export struct RNScrollView {
   }
 
   private shouldWrapWithPullToRefresh() {
-    const pullToRefreshTag = this.maybeGetPullToRefreshTag()
+    const pullToRefreshTag = this.parentTag
     if (pullToRefreshTag === undefined) {
       return false
     }
-    const childDescriptor = this.ctx.descriptorRegistry.getDescriptor(pullToRefreshTag)
-    if (childDescriptor.type !== RN_PULL_TO_REFRESH_VIEW_NAME) {
-      throw new Error(`The second child of native scroll component must be ${RN_PULL_TO_REFRESH_VIEW_NAME}`)
+    const parentDescriptor = this.ctx.descriptorRegistry.getDescriptor(pullToRefreshTag)
+    if (parentDescriptor.type !== RN_PULL_TO_REFRESH_VIEW_NAME) {
+      return false
     }
     return true
-  }
-
-  private maybeGetPullToRefreshTag(): Tag | undefined {
-    if (this.childrenTags.length === 2) {
-      return this.childrenTags[1]
-    }
-    return undefined
   }
 
   @Builder
@@ -280,12 +274,14 @@ export struct RNScrollView {
   }
 
   build() {
-    RNViewBase({ ctx: this.ctx, tag: this.tag }) {
-      if (this.shouldWrapWithPullToRefresh()) {
-        RNPullToRefreshView({ ctx: this.ctx, tag: this.childrenTags[1] }) {
+    if (this.shouldWrapWithPullToRefresh()) {
+      RNViewBase({ ctx: this.ctx, tag: this.parentTag }) {
+        RNPullToRefreshView({ ctx: this.ctx, tag: this.parentTag }) {
           this.buildScrollCore()
         }
-      } else {
+      }
+    } else {
+      RNViewBase({ ctx: this.ctx, tag: this.tag }) {
         this.buildScrollCore()
       }
     }

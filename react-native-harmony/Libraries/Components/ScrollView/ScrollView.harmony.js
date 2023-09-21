@@ -1834,11 +1834,17 @@ class ScrollView extends React.Component<Props, State> {
     );
 
     if (refreshControl) {
-      // RNOH: patch - Native Scroll checks for the second child and sets up a proper structure that makes pull to refresh work
-      return (
-        <NativeDirectionalScrollView {...props} ref={scrollViewRef}>
+      // RNOH: patch - use Android implementation
+      const { outer, inner } = splitLayoutProps(flattenStyle(props.style));
+      return React.cloneElement(
+        refreshControl,
+        { style: StyleSheet.compose(baseStyle, outer) },
+        <NativeDirectionalScrollView
+          {...props}
+          style={StyleSheet.compose(baseStyle, inner)}
+          ref={scrollViewRef}
+        >
           {contentContainer}
-          {refreshControl}
         </NativeDirectionalScrollView>
       );
     }

@@ -65,7 +65,15 @@ export struct RNComponentFactory {
     } else if (this.descriptorType === "Paragraph") {
       RNText({ ctx: this.ctx, tag: this.tag })
     } else if (this.descriptorType === "PullToRefreshView") {
-      // virtual component handled by ScrollView
+      /**
+       * RNScrollView displays Refresh component if PullToRefreshView is its direct parent.
+       * Native Refresh component works correctly, only when a native Scroll is its direct child.
+       */
+      RNComponentFactory({
+        ctx: this.ctx,
+        tag: this.childrenTags[0],
+        buildCustomComponent: this.buildCustomComponent.bind(this)
+      })
     }
     else if (this.descriptorType === "ScrollView") {
       RNScrollView({
