@@ -609,7 +609,7 @@ export function ScrollViewTest() {
         </TestCase>
         <TestCase
           modal
-          itShould="Only buttons can be used to scroll the view (scrollEnabled)">
+          itShould="scroll down on the btn press, but prevent scrolling by dragging (scrollEnabled)">
           <ScrollEnabledTestCase />
         </TestCase>
       </TestSuite>
