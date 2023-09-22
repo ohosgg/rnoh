@@ -1,8 +1,6 @@
 import {
   RNAbility,
-  RNInstance,
 } from 'rnoh'
-import { createRNPackages } from '../RNPackagesFactory'
 
 const PAGES = [
   ['app_name', "App"],

@@ -29,6 +29,7 @@ class NapiTaskRunner : public AbstractTaskRunner  {
     uv_async_t asyncHandle;
     std::mutex tasksMutex;
     std::queue<Task> tasksQueue;
+    std::thread::id threadId;
 };
 
 } // namespace rnoh

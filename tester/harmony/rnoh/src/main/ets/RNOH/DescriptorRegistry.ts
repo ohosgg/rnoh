@@ -296,10 +296,22 @@ export class DescriptorRegistry {
   }
 
   public deleteRootDescriptor(tag: Tag) {
-    if (this.getDescriptor(tag).type !== "RootView") {
+    const descriptor = this.getDescriptor(tag);
+    if (descriptor?.type !== "RootView") {
       return;
     }
-    this.descriptorByTag.delete(tag);
+    // delay deleting the root descriptor until the mutation
+    // removing all its children has been applied
+    if (descriptor.childrenTags.length === 0) {
+      this.descriptorByTag.delete(tag);
+      return;
+    }
+    const unsubscribe = this.subscribeToDescriptorChanges(tag, (newDescriptor) => {
+      if (newDescriptor.childrenTags.length === 0) {
+        unsubscribe();
+        this.descriptorByTag.delete(tag);
+      }
+    });
   }
 
   public getDescriptorByTagMap() {

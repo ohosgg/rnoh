@@ -40,7 +40,7 @@ struct Index {
   build() {
     Column() {
       RNApp({
-        rnInstance: {createRNPackages},
+        rnInstanceConfig: {createRNPackages},
         initialProps: { foo: "bar" },
         appKey: "app_name",
         buildCustomComponent: this.buildCustomComponent.bind(this),

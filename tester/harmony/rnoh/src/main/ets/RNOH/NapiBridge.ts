@@ -2,6 +2,7 @@ import { TurboModuleProvider } from "./TurboModuleProvider";
 import { Mutation } from "./Mutation";
 import { Tag } from "./DescriptorBase";
 import TextMeasurer from "@ohos.measure"
+import { DisplayMode } from './CppBridgeUtils';
 
 declare function px2vp(px: number): number
 
@@ -72,29 +73,26 @@ export class NapiBridge {
 
   startSurface(
     instanceId: number,
-    surfaceId: number,
+    surfaceTag: number,
     initialSurfaceWidth: number,
     initialSurfaceHeight: number,
     surfaceOffsetX: number,
     surfaceOffsetY: number,
-    appName: string,
     initialProps: any) {
     this.libRNOHApp?.startSurface(
       instanceId,
-      surfaceId,
+      surfaceTag,
       initialSurfaceWidth,
       initialSurfaceHeight,
       surfaceOffsetX,
       surfaceOffsetY,
-      appName,
       initialProps,
     );
   }
 
   updateSurfaceConstraints(
     instanceId: number,
-    surfaceId: number,
-    appName: string,
+    surfaceTag: number,
     surfaceWidth: number,
     surfaceHeight: number,
     surfaceOffsetX: number,
@@ -102,8 +100,7 @@ export class NapiBridge {
   ) {
     this.libRNOHApp?.updateSurfaceConstraints(
       instanceId,
-      surfaceId,
-      appName,
+      surfaceTag,
       surfaceWidth,
       surfaceHeight,
       surfaceOffsetX,
@@ -113,34 +110,50 @@ export class NapiBridge {
 
   createSurface(
     instanceId: number,
-    surfaceId: number,
-    moduleName: string,
+    surfaceTag: number,
+    appKey: string,
   ) {
     this.libRNOHApp?.createSurface(
       instanceId,
-      surfaceId,
-      moduleName,
+      surfaceTag,
+      appKey,
     );
+  }
+
+  setSurfaceProps(
+    instanceId: number,
+    surfaceTag: number,
+    props: Record<string, any>,
+  ) {
+    this.libRNOHApp?.setSurfaceProps(
+      instanceId,
+      surfaceTag,
+      props,
+    )
   }
 
   stopSurface(
     instanceId: number,
-    surfaceId: number,
+    surfaceTag: number,
   ) {
     this.libRNOHApp?.stopSurface(
       instanceId,
-      surfaceId,
+      surfaceTag,
     );
   }
 
   destroySurface(
     instanceId: number,
-    surfaceId: number,
+    surfaceTag: number,
   ) {
     this.libRNOHApp?.destroySurface(
       instanceId,
-      surfaceId,
+      surfaceTag,
     );
+  }
+
+  setSurfaceDisplayMode(instanceId: number, surfaceTag: Tag, displayMode: DisplayMode): void {
+    this.libRNOHApp?.setSurfaceDisplayMode(instanceId, surfaceTag, displayMode);
   }
 
   callRNFunction(instanceId: number, moduleName: string, functionName: string, args: unknown[]): void {

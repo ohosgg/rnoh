@@ -51,10 +51,12 @@ class RNInstance {
     void start();
     void loadScriptFromString(std::string const &&bundle, std::string const sourceURL);
     void createSurface(facebook::react::Tag surfaceId, std::string const &moduleName);
-    void updateSurfaceConstraints(facebook::react::Tag surfaceId, std::string const &moduleName, float width, float height, float viewportOffsetX, float viewportOffsetY);
-    void startSurface(facebook::react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY, std::string const &moduleName, folly::dynamic &&initialProps);
+    void updateSurfaceConstraints(facebook::react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY);
+    void startSurface(facebook::react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY, folly::dynamic &&initialProps);
+    void setSurfaceProps(facebook::react::Tag surfaceId, folly::dynamic &&props);
     void stopSurface(facebook::react::Tag surfaceId);
     void destroySurface(facebook::react::Tag surfaceId);
+    void setSurfaceDisplayMode(facebook::react::Tag surfaceId, facebook::react::DisplayMode displayMode);
     void callFunction(std::string &&module, std::string &&method, folly::dynamic &&params);
     void emitComponentEvent(napi_env env, facebook::react::Tag tag, std::string eventName, napi_value payload);
     void onMemoryLevel(size_t memoryLevel);

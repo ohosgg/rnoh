@@ -1,4 +1,4 @@
-import { AnyJSBundleProvider, MetroJSBundleProvider, ResourceJSBundleProvider, RNAbility} from 'rnoh/ts';
+import { AnyJSBundleProvider, MetroJSBundleProvider, ResourceJSBundleProvider, RNAbility, SurfaceHandle} from 'rnoh/ts';
 import { createRNPackages } from '../RNPackagesFactory';
 
 export default class EntryAbility extends RNAbility {
@@ -7,7 +7,10 @@ export default class EntryAbility extends RNAbility {
 
     const rnInstance = this.createAndRegisterRNInstance({createRNPackages});
     rnInstance.runJSBundle(new AnyJSBundleProvider([new MetroJSBundleProvider(), new ResourceJSBundleProvider(this.context.resourceManager, 'bundle.harmony.js')]))
-    AppStorage.setOrCreate("ReactInstance", rnInstance);
+    AppStorage.setOrCreate("AppRNInstance", rnInstance);
+
+    const surfaceByAppKey = {};
+    AppStorage.setOrCreate("ReactSurfaceByAppKey", surfaceByAppKey);
   }
 
   getPagePath() {

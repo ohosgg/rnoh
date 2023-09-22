@@ -7,9 +7,9 @@ import type { RNPackage, RNPackageContext } from "./RNPackage"
 import type { TurboModule } from "./TurboModule"
 import type { JSBundleProvider } from "./JSBundleProvider"
 import { ComponentManagerRegistry } from './ComponentManagerRegistry'
+import { SurfaceHandle } from './SurfaceHandle'
 
 export type SurfaceContext = {
-  appKey: string
   width: number
   height: number
   surfaceOffsetX: number
@@ -55,15 +55,7 @@ export interface RNInstance {
 
   getTurboModule<T extends TurboModule>(name: string): T;
 
-  createSurface(moduleName: string): Tag;
-
-  startSurface(tag: Tag, surfaceContext: SurfaceContext, initialProps: Record<string, any>): void;
-
-  updateSurfaceConstraints(tag: Tag, surfaceContext: SurfaceContext): void;
-
-  stopSurface(tag: Tag): void;
-
-  destroySurface(tag: Tag): void;
+  createSurface(appKey: string): SurfaceHandle;
 
   updateState(componentName: string, tag: Tag, state: unknown): void;
 

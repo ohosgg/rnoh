@@ -1,4 +1,4 @@
-import { ComponentBuilderContext, RNAbility, RNInstance, RNOHContext, RNSurface } from 'rnoh'
+import { ComponentBuilderContext, RNAbility, RNInstance, RNSurface, SurfaceHandle} from 'rnoh'
 import { SAMPLE_VIEW_TYPE, SampleView, PropsDisplayer } from 'rnoh-sample-package'
 import router from '@ohos.router'
 
@@ -6,8 +6,10 @@ import router from '@ohos.router'
 @Component
 struct ReactPage {
   @State appKey: string = router.getParams()["appKey"]
+  @State surfaceHandle: SurfaceHandle | undefined = undefined;
+  @State showSurface: boolean = false;
   @StorageLink('RNAbility') private rnAbility: RNAbility = undefined
-  @StorageLink('ReactInstance') rnInstance: RNInstance = undefined
+  @StorageLink('AppRNInstance') rnInstance: RNInstance = undefined
 
   @Builder
   buildCustomComponent(ctx: ComponentBuilderContext) {
@@ -29,6 +31,32 @@ struct ReactPage {
     return this.rnAbility?.onBackPress();
   }
 
+  getOrCreateSurface() {
+    const surfacesMap: Record<string, SurfaceHandle> = AppStorage.get("ReactSurfaceByAppKey");
+
+    if (surfacesMap[this.appKey]) {
+      return surfacesMap[this.appKey];
+    }
+
+    const surfaceHandle = this.rnInstance.createSurface(this.appKey);
+    surfaceHandle.start(
+      {
+        width: 384,
+        height: 715,
+        surfaceOffsetX: 0,
+        surfaceOffsetY: 0,
+      },
+      {});
+    surfacesMap[this.appKey] = surfaceHandle;
+    return surfaceHandle;
+  }
+
+  aboutToAppear() {
+    this.surfaceHandle = this.getOrCreateSurface();
+  }
+
+  aboutToDisappear() {}
+
   build() {
     Column() {
       Row() {
@@ -40,13 +68,20 @@ struct ReactPage {
         }
       }.height("5%")
 
-      if (this.rnInstance !== undefined) {
+
+      if (!this.showSurface) {
+        Row() {
+          Button("Show Surface")
+            .onClick(() => this.showSurface = !this.showSurface)
+        }
+        .height("5%")
+        .enabled(this.surfaceHandle !== undefined)
+      } else {
         Row() {
           RNSurface({
-            appKey: this.appKey,
             ctx: this.rnAbility.createRNOHContext({ rnInstance: this.rnInstance }),
-            initialProps: {},
             buildCustomComponent: this.buildCustomComponent.bind(this),
+            surfaceConfig: { surfaceHandle: this.surfaceHandle },
           })
         }
         .height("95%")

@@ -3,7 +3,7 @@ import { CommandDispatcher, DescriptorRegistry, RNInstance } from '.';
 import { RNOHCorePackage } from '../RNOHCorePackage/Package';
 import { Tag } from './DescriptorBase';
 import { NapiBridge } from './NapiBridge';
-import { LifecycleState, LifecycleEventListenerByName, SurfaceContext, BundleExecutionStatus } from './RNInstance';
+import { LifecycleState, LifecycleEventListenerByName, BundleExecutionStatus } from './RNInstance';
 import { RNOHContext } from './RNOHContext';
 import { RNOHLogger } from './RNOHLogger';
 import { RNPackage, RNPackageContext } from './RNPackage';
@@ -11,6 +11,7 @@ import { TurboModule } from './TurboModule';
 import { TurboModuleProvider } from './TurboModuleProvider';
 import { JSBundleProvider, JSBundleProviderError } from "./JSBundleProvider"
 import { ComponentManagerRegistry } from './ComponentManagerRegistry';
+import { SurfaceHandle } from './SurfaceHandle';
 
 const rootDescriptor = {
   isDynamicBinder: false,
@@ -101,7 +102,6 @@ class RNInstanceManagerImpl implements RNInstance {
   public commandDispatcher: CommandDispatcher;
   public componentManagerRegistry: ComponentManagerRegistry;
 
-
   constructor(
     private id: number,
     private logger: RNOHLogger,
@@ -119,7 +119,7 @@ class RNInstanceManagerImpl implements RNInstance {
     this.componentManagerRegistry = new ComponentManagerRegistry();
   }
 
-  getId(): number {
+  public getId(): number {
     return this.id;
   }
 
@@ -188,56 +188,9 @@ class RNInstanceManagerImpl implements RNInstance {
     return this.turboModuleProvider.getModule(name);
   }
 
-  public startSurface(tag: Tag, ctx: SurfaceContext, initialProps: Record<string, any>) {
-    const props = {...this.defaultProps, ...initialProps};
-    this.napiBridge.startSurface(
-      this.id,
-      tag,
-      ctx.width,
-      ctx.height,
-      ctx.surfaceOffsetX,
-      ctx.surfaceOffsetY,
-      ctx.appKey,
-      props)
-    this.lifecycleState = LifecycleState.READY
-  }
-
-  public updateSurfaceConstraints(
-    tag: Tag,
-    {
-      appKey,
-      width,
-      height,
-      surfaceOffsetX,
-      surfaceOffsetY
-    }: SurfaceContext
-  ) {
-    this.napiBridge.updateSurfaceConstraints(
-      this.id,
-      tag,
-      appKey,
-      width,
-      height,
-      surfaceOffsetX,
-      surfaceOffsetY
-    );
-  }
-
-  public createSurface(moduleName: string) {
+  public createSurface(appKey: string): SurfaceHandle {
     const tag = this.getNextSurfaceTag();
-    this.descriptorRegistry.createRootDescriptor(tag);
-    this.napiBridge.createSurface(this.id, tag, moduleName);
-    return tag;
-  }
-
-  public stopSurface(tag: number): void {
-    this.napiBridge.stopSurface(this.id, tag);
-  }
-
-  public destroySurface(tag: number): void {
-    this.napiBridge.destroySurface(this.id, tag);
-    // TODO: fix crashes with descriptor registry caused by this:
-    // this.descriptorRegistry.deleteRootDescriptor(tag);
+    return new SurfaceHandle(this, tag, appKey, this.defaultProps, this.napiBridge);
   }
 
   public updateState(componentName: string, tag: Tag, state: unknown): void {

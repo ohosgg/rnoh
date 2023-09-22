@@ -72,11 +72,10 @@ static napi_value updateSurfaceConstraints(napi_env env, napi_callback_info info
     size_t instanceId = arkJs.getDouble(args[0]);
     auto &rnInstance = rnInstanceById.at(instanceId);
     rnInstance->updateSurfaceConstraints(arkJs.getDouble(args[1]),
-                                         arkJs.getString(args[2]),
+                                         arkJs.getDouble(args[2]),
                                          arkJs.getDouble(args[3]),
                                          arkJs.getDouble(args[4]),
-                                         arkJs.getDouble(args[5]),
-                                         arkJs.getDouble(args[6]));
+                                         arkJs.getDouble(args[5]));
     return arkJs.getUndefined();
 }
 
@@ -101,8 +100,16 @@ static napi_value startSurface(napi_env env, napi_callback_info info) {
                              arkJs.getDouble(args[3]),
                              arkJs.getDouble(args[4]),
                              arkJs.getDouble(args[5]),
-                             arkJs.getString(args[6]),
-                             arkJs.getDynamic(args[7]));
+                             arkJs.getDynamic(args[6]));
+    return arkJs.getUndefined();
+}
+
+static napi_value setSurfaceProps(napi_env env, napi_callback_info info) {
+    ArkJS arkJs(env);
+    auto args = arkJs.getCallbackArgs(info, 3);
+    size_t instanceId = arkJs.getDouble(args[0]);
+    auto &rnInstance = rnInstanceById.at(instanceId);
+    rnInstance->setSurfaceProps(arkJs.getDouble(args[1]), arkJs.getDynamic(args[2]));
     return arkJs.getUndefined();
 }
 
@@ -121,6 +128,15 @@ static napi_value destroySurface(napi_env env, napi_callback_info info) {
     size_t instanceId = arkJs.getDouble(args[0]);
     auto &rnInstance = rnInstanceById.at(instanceId);
     rnInstance->destroySurface(arkJs.getDouble(args[1]));
+    return arkJs.getUndefined();
+}
+
+static napi_value setSurfaceDisplayMode(napi_env env, napi_callback_info info) {
+    ArkJS arkJs(env);
+    auto args = arkJs.getCallbackArgs(info, 3);
+    size_t instanceId = arkJs.getDouble(args[0]);
+    auto &rnInstance = rnInstanceById.at(instanceId);
+    rnInstance->setSurfaceDisplayMode(arkJs.getDouble(args[1]), static_cast<facebook::react::DisplayMode>(arkJs.getDouble(args[2])));
     return arkJs.getUndefined();
 }
 
@@ -185,6 +201,7 @@ static napi_value Init(napi_env env, napi_value exports) {
         {"destroySurface", nullptr, destroySurface, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"createSurface", nullptr, createSurface, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"updateSurfaceConstraints", nullptr, updateSurfaceConstraints, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"setSurfaceDisplayMode", nullptr, setSurfaceDisplayMode, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"emitComponentEvent", nullptr, emitComponentEvent, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"callRNFunction", nullptr, callRNFunction, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"onMemoryLevel", nullptr, onMemoryLevel, nullptr, nullptr, nullptr, napi_default, nullptr},

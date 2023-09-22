@@ -1,42 +1,64 @@
 import { RNComponentFactory, ComponentBuilderContext } from './RNComponentFactory'
-import { RNOHContext, Tag } from "./RNOH"
+import { DisplayMode, RNOHContext } from "./RNOH"
 import { Descriptor } from './RNOH'
 import { ViewBaseProps } from './RNOHCorePackage/components/RNViewBase'
 import { convertColorSegmentsToString } from './RNOH'
 import { TouchDispatcher } from './RNOH/TouchDispatcher'
+import { SurfaceHandle, SurfaceProps } from './RNOH/SurfaceHandle'
 
 export type RootDescriptor = Descriptor<"RootView", ViewBaseProps>
 
+type SurfaceConfig = {
+  surfaceHandle: SurfaceHandle
+} | {
+  appKey: string,
+  initialProps: SurfaceProps,
+}
+
 @Component
 export struct RNSurface {
-  ctx: RNOHContext
-  appKey: string
-  initialProps: Record<string, any>
-  @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
-  surfaceWidth: number = 0
-  surfaceHeight: number = 0
-  surfaceOffsetX: number = 0
-  surfaceOffsetY: number = 0
-  @State descriptor: RootDescriptor = {} as RootDescriptor
-  @State hasStartedSurface: boolean = false
-  private tag: Tag
-  private cleanup?: () => void = undefined
-  private touchDispatcher: TouchDispatcher
+  ctx: RNOHContext;
+  surfaceConfig: SurfaceConfig;
+  @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void;
+  surfaceWidth: number = 0;
+  surfaceHeight: number = 0;
+  surfaceOffsetX: number = 0;
+  surfaceOffsetY: number = 0;
+  @State descriptor: RootDescriptor = {} as RootDescriptor;
+  @State private shouldStartSurface: boolean = false;
+  private surfaceHandle: SurfaceHandle;
+  private cleanup?: () => void = undefined;
+  private touchDispatcher: TouchDispatcher;
+  private shouldStopSurface: boolean = false;
+  private initialProps: SurfaceProps;
 
   aboutToAppear() {
-    this.tag = this.ctx.rnInstanceManager.createSurface(this.appKey);
-    this.descriptor = this.ctx.rnInstanceManager.descriptorRegistry.getDescriptor(this.tag)
-    this.touchDispatcher = new TouchDispatcher(this.tag, this.ctx.rnInstance, this.ctx.logger)
+    if ("surfaceHandle" in this.surfaceConfig){
+      this.surfaceHandle = this.surfaceConfig.surfaceHandle;
+      this.surfaceHandle.setDisplayMode(DisplayMode.Visible);
+    } else {
+      this.surfaceHandle = this.ctx.rnInstance.createSurface(this.surfaceConfig.appKey);
+      this.initialProps = this.surfaceConfig.initialProps;
+      this.shouldStartSurface = true;
+      this.shouldStopSurface = true;
+    }
+    const tag = this.surfaceHandle.getTag();
+    this.descriptor = this.ctx.rnInstance.descriptorRegistry.getDescriptor(tag)
+    this.touchDispatcher = new TouchDispatcher(tag, this.ctx.rnInstance, this.ctx.logger)
     this.cleanup = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
-      this.tag,
+      tag,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
     )
   }
 
   aboutToDisappear() {
     this.cleanup?.();
-    this.ctx.rnInstanceManager.stopSurface(this.tag);
-    this.ctx.rnInstanceManager.destroySurface(this.tag);
+    if (this.shouldStopSurface) {
+      this.surfaceHandle.stop();
+      this.surfaceHandle.destroy();
+    } else if (this.surfaceHandle.getDisplayMode() === DisplayMode.Visible) {
+      this.surfaceHandle.setDisplayMode(DisplayMode.Suspended);
+    }
   }
 
   onUpdateComponent(newDescriptor: Descriptor) {
@@ -52,21 +74,19 @@ export struct RNSurface {
   }
 
   updateSurfaceConstraints() {
-    if (!this.hasStartedSurface) {
-      this.ctx.rnInstanceManager.startSurface(
-        this.tag,
+    if (this.shouldStartSurface) {
+      this.surfaceHandle.start(
         {
-          appKey: this.appKey,
           width: this.surfaceWidth,
           height: this.surfaceHeight,
           surfaceOffsetX: this.surfaceOffsetX,
           surfaceOffsetY: this.surfaceOffsetY,
         },
         this.initialProps)
-      this.hasStartedSurface = true
+      this.shouldStartSurface = false
+      this.surfaceHandle.setDisplayMode(DisplayMode.Visible);
     } else {
-      this.ctx.rnInstanceManager.updateSurfaceConstraints(this.tag, {
-        appKey: this.appKey,
+      this.surfaceHandle.updateConstraints({
         width: this.surfaceWidth,
         height: this.surfaceHeight,
         surfaceOffsetX: this.surfaceOffsetX,
@@ -81,11 +101,9 @@ export struct RNSurface {
 
   build() {
     Stack() {
-      if (this.hasStartedSurface) {
-        ForEach(this.descriptor.childrenTags, (childrenTag) => {
-          RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
-        }, childrenTag => childrenTag)
-      }
+      ForEach(this.descriptor.childrenTags, (childrenTag) => {
+        RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
+      }, childrenTag => childrenTag)
     }
     .width("100%")
     .height("100%")

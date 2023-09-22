@@ -103,86 +103,100 @@ void RNInstance::loadScriptFromString(std::string const &&bundle, std::string co
 }
 
 void rnoh::RNInstance::createSurface(react::Tag surfaceId, std::string const &appKey) {
-    this->taskExecutor->runTask(TaskThread::JS, [this, surfaceId, appKey] {
-        if (surfaceHandlers.count(surfaceId)) {
-            LOG(ERROR) << "createSurface: Surface with surface id " << surfaceId << " already exists.";
-            return;
-        }
-        auto surfaceHandler = std::make_shared<react::SurfaceHandler>(appKey, surfaceId);
-        scheduler->registerSurface(*surfaceHandler);
-        surfaceHandlers.insert({surfaceId, std::move(surfaceHandler)});
-    });
+    if (surfaceHandlers.count(surfaceId)) {
+        LOG(ERROR) << "createSurface: Surface with surface id " << surfaceId << " already exists.";
+        return;
+    }
+    auto surfaceHandler = std::make_shared<react::SurfaceHandler>(appKey, surfaceId);
+    scheduler->registerSurface(*surfaceHandler);
+    surfaceHandlers.insert({surfaceId, std::move(surfaceHandler)});
 }
 
-void RNInstance::startSurface(react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY, std::string const &appKey, folly::dynamic &&initialProps) {
-    this->taskExecutor->runTask(TaskThread::JS, [this, surfaceId, width, height, viewportOffsetX, viewportOffsetY, appKey, initialProps = std::move(initialProps)]() {
-        try {
-            auto it = surfaceHandlers.find(surfaceId);
-            if (it == surfaceHandlers.end()) {
-                LOG(ERROR) << "startSurface: No surface with id " << surfaceId;
-                return;
-            }
+void RNInstance::startSurface(react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY, folly::dynamic &&initialProps) {
+    try {
+        auto it = surfaceHandlers.find(surfaceId);
+        if (it == surfaceHandlers.end()) {
+            LOG(ERROR) << "startSurface: No surface with id " << surfaceId;
+            return;
+        }
 
-            auto surfaceHandler = it->second;
-            surfaceHandler->setProps(std::move(initialProps));
-            auto layoutConstraints = surfaceHandler->getLayoutConstraints();
-            layoutConstraints.layoutDirection = react::LayoutDirection::LeftToRight;
-            layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
-                .width = width,
-                .height = height};
-            auto layoutContext = surfaceHandler->getLayoutContext();
-            layoutContext.viewportOffset = {viewportOffsetX, viewportOffsetY};
-            surfaceHandler->constraintLayout(layoutConstraints, layoutContext);
-            surfaceHandler->start();
-        } catch (const std::exception &e) {
-            LOG(ERROR) << "startSurface: " << e.what() << "\n";
-            throw e;
-        };
-    });
+        auto surfaceHandler = it->second;
+        surfaceHandler->setProps(std::move(initialProps));
+        auto layoutConstraints = surfaceHandler->getLayoutConstraints();
+        layoutConstraints.layoutDirection = react::LayoutDirection::LeftToRight;
+        layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
+            .width = width,
+            .height = height};
+        auto layoutContext = surfaceHandler->getLayoutContext();
+        surfaceHandler->setDisplayMode(react::DisplayMode::Suspended);
+        layoutContext.viewportOffset = {viewportOffsetX, viewportOffsetY};
+        surfaceHandler->constraintLayout(layoutConstraints, layoutContext);
+        surfaceHandler->start();
+    } catch (const std::exception &e) {
+        LOG(ERROR) << "startSurface: " << e.what() << "\n";
+        throw e;
+    };
+}
+
+void rnoh::RNInstance::setSurfaceProps(facebook::react::Tag surfaceId, folly::dynamic &&props) {
+    auto it = surfaceHandlers.find(surfaceId);
+    if (it == surfaceHandlers.end()) {
+        LOG(ERROR) << "setSurfaceProps: No surface with id " << surfaceId;
+        return;
+    }
+    it->second->setProps(std::move(props));
 }
 
 void rnoh::RNInstance::stopSurface(react::Tag surfaceId) {
-    this->taskExecutor->runTask(TaskThread::JS, [this, surfaceId] {
-        auto it = surfaceHandlers.find(surfaceId);
-        if (it == surfaceHandlers.end()) {
-            LOG(ERROR) << "stopSurface: No surface with id " << surfaceId;
-            return;
-        }
-        it->second->stop();
-    });
+    auto it = surfaceHandlers.find(surfaceId);
+    if (it == surfaceHandlers.end()) {
+        LOG(ERROR) << "stopSurface: No surface with id " << surfaceId;
+        return;
+    }
+    it->second->stop();
 }
 
 void rnoh::RNInstance::destroySurface(react::Tag surfaceId) {
-    this->taskExecutor->runTask(TaskThread::JS, [this, surfaceId] {
-        auto it = surfaceHandlers.find(surfaceId);
-        if (it == surfaceHandlers.end()) {
-            LOG(ERROR) << "destroySurface: No surface with id " << surfaceId;
-            return;
-        }
-        scheduler->unregisterSurface(*it->second);
-        surfaceHandlers.erase(it);
-    });
+    auto it = surfaceHandlers.find(surfaceId);
+    if (it == surfaceHandlers.end()) {
+        LOG(ERROR) << "destroySurface: No surface with id " << surfaceId;
+        return;
+    }
+    scheduler->unregisterSurface(*it->second);
+    surfaceHandlers.erase(it);
 }
 
-void RNInstance::updateSurfaceConstraints(react::Tag surfaceId, std::string const &appKey, float width, float height, float viewportOffsetX, float viewportOffsetY) {
-    this->taskExecutor->runTask(TaskThread::JS, [this, surfaceId, width, height, viewportOffsetX, viewportOffsetY, appKey]() {
-        try {
-            if (surfaceHandlers.count(surfaceId) == 0) {
-            LOG(ERROR) << "updateSurfaceConstraints: No surface with id " << surfaceId;
-                return;
-            }
-            auto layoutConstraints = surfaceHandlers[surfaceId]->getLayoutConstraints();
-            layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
-                .width = width,
-                .height = height};
-            auto layoutContext = surfaceHandlers[surfaceId]->getLayoutContext();
-            layoutContext.viewportOffset = {viewportOffsetX, viewportOffsetY};
-            surfaceHandlers[surfaceId]->constraintLayout(layoutConstraints, layoutContext);
-        } catch (const std::exception &e) {
-            LOG(ERROR) << "updateSurfaceConstraints: " << e.what() << "\n";
-            throw e;
-        };
-    });
+void rnoh::RNInstance::setSurfaceDisplayMode(facebook::react::Tag surfaceId, facebook::react::DisplayMode displayMode) {
+    try {
+        auto surfaceIt = surfaceHandlers.find(surfaceId);
+        if (surfaceIt == surfaceHandlers.end()) {
+            LOG(ERROR) << "setSurfaceDisplayMode: No surface with id " << surfaceId;
+            return;
+        }
+        surfaceIt->second->setDisplayMode(displayMode);
+    } catch (const std::exception &e) {
+        LOG(ERROR) << "setSurfaceDisplayMode: " << e.what() << "\n";
+        throw e;
+    }
+}
+
+void RNInstance::updateSurfaceConstraints(react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY) {
+    try {
+        if (surfaceHandlers.count(surfaceId) == 0) {
+        LOG(ERROR) << "updateSurfaceConstraints: No surface with id " << surfaceId;
+            return;
+        }
+        auto layoutConstraints = surfaceHandlers[surfaceId]->getLayoutConstraints();
+        layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
+            .width = width,
+            .height = height};
+        auto layoutContext = surfaceHandlers[surfaceId]->getLayoutContext();
+        layoutContext.viewportOffset = {viewportOffsetX, viewportOffsetY};
+        surfaceHandlers[surfaceId]->constraintLayout(layoutConstraints, layoutContext);
+    } catch (const std::exception &e) {
+        LOG(ERROR) << "updateSurfaceConstraints: " << e.what() << "\n";
+        throw e;
+    };
 }
 
 void rnoh::RNInstance::emitComponentEvent(napi_env env, react::Tag tag, std::string eventName, napi_value payload) {
