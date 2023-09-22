@@ -14,6 +14,7 @@ import {
   TimingTurboModule,
   WebSocketTurboModule,
 } from './turboModules';
+import { LinkingManagerTurboModule } from './turboModules/LinkingManagerTurboModule';
 
 export class RNOHCorePackage extends RNPackage {
   createTurboModulesFactory(ctx: TurboModuleContext): TurboModulesFactory {
@@ -28,6 +29,7 @@ const TURBO_MODULE_CLASS_BY_NAME: Record<string, typeof TurboModule> = {
   [ExceptionsManagerTurboModule.NAME]: ExceptionsManagerTurboModule,
   [ImageLoaderTurboModule.NAME]: ImageLoaderTurboModule,
   [NativeAnimatedTurboModule.NAME]: NativeAnimatedTurboModule,
+  [LinkingManagerTurboModule.NAME]: LinkingManagerTurboModule,
   [NetworkingTurboModule.NAME]: NetworkingTurboModule,
   [PlatformConstantsTurboModule.NAME]: PlatformConstantsTurboModule,
   [SourceCodeTurboModule.NAME]: SourceCodeTurboModule,

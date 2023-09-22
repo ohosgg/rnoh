@@ -51,7 +51,7 @@ module.exports = {
     return require('react-native/Libraries/LayoutAnimation/LayoutAnimation');
   },
   get Linking() {
-    return require('./Libraries/Linking/Linking');
+    return require('react-native/Libraries/Linking/Linking');
   },
   get Modal() {
     return require('react-native/Libraries/Modal/Modal');
