@@ -6,7 +6,8 @@ import { RNViewBase, ViewBaseProps } from './RNViewBase'
 export type ImageProps = ViewBaseProps & {
   uri: string,
   resizeMode: number,
-  tintColor?: ColorSegments
+  tintColor?: ColorSegments,
+  blurRadius: number
 }
 
 export type ImageDescriptor = Descriptor<"Image", ImageProps>
@@ -107,6 +108,7 @@ export struct RNImage {
         .objectRepeat(this.descriptor.props.resizeMode === 4 ?
         ImageRepeat.XY : ImageRepeat.NoRepeat )
         .colorFilter(this.getColorFilter())
+        .blur(this.descriptor.props.blurRadius)
     }
   }
 }

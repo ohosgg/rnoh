@@ -7,6 +7,7 @@ class ImageComponentJSIBinder : public ViewComponentJSIBinder {
         auto object = ViewComponentJSIBinder::createNativeProps(rt);
         object.setProperty(rt, "source", "array");
         object.setProperty(rt, "resizeMode", "string");
+        object.setProperty(rt, "blurRadius", "number");
         return object;
     }
     facebook::jsi::Object createDirectEventTypes(facebook::jsi::Runtime &rt) override {

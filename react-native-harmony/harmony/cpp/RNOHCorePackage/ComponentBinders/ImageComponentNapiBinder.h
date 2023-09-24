@@ -17,6 +17,7 @@ class ImageComponentNapiBinder : public ViewComponentNapiBinder {
                     .addProperty("uri", imageSource.uri)
                     .addProperty("resizeMode", static_cast<int>(props->resizeMode))
                     .addProperty("tintColor", props->tintColor)
+                    .addProperty("blurRadius", props->blurRadius)
                     .build();
             }
         }

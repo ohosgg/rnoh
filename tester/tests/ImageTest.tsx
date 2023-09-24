@@ -117,6 +117,20 @@ export const ImageTest = () => {
             />
           </TestCase>
         </TestSuite>
+        <TestSuite
+          name="blurRadius"
+        >
+        <TestCase itShould="blur images with various blur radius">
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+            <Image style={{width: 64, height: 64, margin: 4}} source={LOCAL_IMAGE_ASSET_ID} blurRadius={0} />
+            <Image style={{width: 64, height: 64, margin: 4}} source={LOCAL_IMAGE_ASSET_ID} blurRadius={5} />
+            <Image style={{width: 64, height: 64, margin: 4}} source={LOCAL_IMAGE_ASSET_ID} blurRadius={10} />
+            <Image style={{width: 64, height: 64, margin: 4}} source={LOCAL_IMAGE_ASSET_ID} blurRadius={15} />
+            <Image style={{width: 64, height: 64, margin: 4}} source={LOCAL_IMAGE_ASSET_ID} blurRadius={20} />
+            <Image style={{width: 64, height: 64, margin: 4}} source={LOCAL_IMAGE_ASSET_ID} blurRadius={25} />
+          </View>
+        </TestCase>
+      </TestSuite>
         <TestCase itShould="replace opaque pixels with the green color (tintColor)">
           <View
             style={{
