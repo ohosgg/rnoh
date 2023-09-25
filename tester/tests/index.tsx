@@ -39,5 +39,5 @@ export * from './TouchablesTest';
 export * from './TurboModuleTest';
 export * from './UseWindowDimensionsTest';
 export * from './UIManagerTest';
-export * from './ViewTest';
 export * from './VirtualizedListTest';
+export * from './ViewTest';

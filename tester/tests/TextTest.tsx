@@ -362,13 +362,11 @@ export function TextTest() {
         <TestCase itShould="show 2 lines of text">
           <Text numberOfLines={2}>{SAMPLE_PARAGRAPH_TEXT}</Text>
         </TestCase>
-        <TestCase
-          skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/284
-          itShould="show text without a space below or above (fragments)">
+        <TestCase itShould="show text without a space below or above (fragments)">
           <Text>
             <Text>
-              Nostrud irure ex sunt dolor cillum irure laboris ex ut adipisicing
-              magna reprehenderit Lorem.
+              Nostrud irure ex sunt dolor [\n]{'\n'}cillum irure laboris ex ut
+              adipisicing magna reprehenderit Lorem.
             </Text>
             <Text style={{fontSize: 24}}>
               Do ullamco excepteur quis labore Lorem mollit tempor ex minim.

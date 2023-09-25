@@ -1,4 +1,4 @@
-import { ColorSegments, Descriptor, convertColorSegmentsToString, RNOHContext } from '../../RNOH'
+import { ColorSegments, Descriptor, convertColorSegmentsToString, RNOHContext, DEFAULT_LINE_SPACING  } from '../../RNOH'
 import { ViewBaseProps, RNViewBase } from './RNViewBase'
 
 export type AttributedFragment = {
@@ -142,7 +142,7 @@ export struct RNText {
             .fontSize(fragment.fontSize)
             .fontStyle(stringToFontStyle(fragment.fontStyle))
             .decoration({type: getTextDecorationLine(fragment), color: convertColorSegmentsToString(fragment.textDecorationColor)})
-            .lineHeight(fragment.lineHeight)
+            .lineHeight(fragment.lineHeight ?? (fragment.fontSize ?? 16) * DEFAULT_LINE_SPACING)
             .backgroundColor(convertColorSegmentsToString(fragment.backgroundColor)) // not supported
             .letterSpacing(getLetterSpacing(fragment.letterSpacing))
         })

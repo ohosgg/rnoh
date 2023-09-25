@@ -4,32 +4,44 @@
 using namespace facebook;
 using namespace rnoh;
 
-react::Size TextMeasurer::measure(
-    std::string textContent,
-    float fontSize,
-    float lineHeight,
-    int fontWeight,
-    float maxWidth,
-    int numberOfLines,
-    float letterSpacing) {
+react::Size TextMeasurer::measure(react::AttributedString attributedString,
+                                  react::ParagraphAttributes paragraphAttributes,
+                                  react::LayoutConstraints layoutConstraints) {
     react::Size result = {};
-    m_taskExecutor->runSyncTask(TaskThread::MAIN, [&result, measureTextRef = m_measureTextFnRef, env = m_env, &textContent, fontSize, lineHeight, fontWeight, maxWidth, numberOfLines, letterSpacing]() {
+    m_taskExecutor->runSyncTask(TaskThread::MAIN, [&result, measureTextRef = m_measureTextFnRef, env = m_env, &attributedString, &paragraphAttributes, &layoutConstraints]() {
         ArkJS arkJs(env);
-        auto measureTextNapiValue = arkJs.getReferenceValue(measureTextRef);
-        auto objectBuilder = arkJs.createObjectBuilder();
-        objectBuilder
-            .addProperty("textContent", textContent)
-            .addProperty("fontSize", fontSize)
-            .addProperty("lineHeight", lineHeight)
-            .addProperty("maxWidth", maxWidth)
-            .addProperty("numberOfLines", numberOfLines);
-        if (fontWeight != 0) {
-            objectBuilder.addProperty("fontWeight", fontWeight);
+        auto napiMeasureText = arkJs.getReferenceValue(measureTextRef);
+
+        auto napiAttributedStringBuilder = arkJs.createObjectBuilder();
+        napiAttributedStringBuilder.addProperty("string", attributedString.getString());
+        std::vector<napi_value> napiFragments = {};
+        for (auto fragment : attributedString.getFragments()) {
+            auto textAttributesBuilder = arkJs.createObjectBuilder();
+            textAttributesBuilder.addProperty("fontSize", fragment.textAttributes.fontSize);
+            textAttributesBuilder.addProperty("lineHeight", fragment.textAttributes.lineHeight);
+            textAttributesBuilder.addProperty("letterSpacing", fragment.textAttributes.letterSpacing);
+            if (fragment.textAttributes.fontWeight.has_value()) {
+                textAttributesBuilder.addProperty("fontWeight", int(fragment.textAttributes.fontWeight.value()));
+            }
+
+            auto napiFragmentBuilder = arkJs.createObjectBuilder();
+            napiFragmentBuilder.addProperty("string", fragment.string);
+            napiFragmentBuilder.addProperty("textAttributes", textAttributesBuilder.build());
+            napiFragments.push_back(napiFragmentBuilder.build());
         }
-        if (!isnan(letterSpacing)) {
-            objectBuilder.addProperty("letterSpacing", letterSpacing);
-        }
-        auto resultNapiValue = arkJs.call(measureTextNapiValue, {objectBuilder.build()});
+        napiAttributedStringBuilder.addProperty("fragments", arkJs.createArray(napiFragments));
+
+        auto napiParagraphAttributesBuilder = arkJs.createObjectBuilder();
+        napiParagraphAttributesBuilder.addProperty("maximumNumberOfLines", paragraphAttributes.maximumNumberOfLines);
+
+        auto napiLayoutConstraintsBuilder = arkJs.createObjectBuilder();
+        napiLayoutConstraintsBuilder.addProperty("maximumSize", arkJs.createObjectBuilder()
+                                                                    .addProperty("width", layoutConstraints.maximumSize.width)
+                                                                    .addProperty("height", layoutConstraints.maximumSize.height)
+                                                                    .build());
+
+        auto resultNapiValue = arkJs.call(napiMeasureText, {napiAttributedStringBuilder.build(), napiParagraphAttributesBuilder.build(), napiLayoutConstraintsBuilder.build()});
+
         result.width = arkJs.getDouble(arkJs.getObjectProperty(resultNapiValue, "width"));
         result.height = arkJs.getDouble(arkJs.getObjectProperty(resultNapiValue, "height"));
     });
