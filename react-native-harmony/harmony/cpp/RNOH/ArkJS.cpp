@@ -230,6 +230,14 @@ uint32_t ArkJS::getArrayLength(napi_value array) {
     return length;
 }
 
+std::vector<uint8_t> ArkJS::getArrayBuffer(napi_value array) {
+    void* data;
+    size_t length;
+    auto status = napi_get_arraybuffer_info(m_env, array, &data, &length);
+    this->maybeThrowFromStatus(status, "Failed to read array buffer");
+    return std::vector<uint8_t>(static_cast<uint8_t*>(data), static_cast<uint8_t*>(data) + length);
+}
+
 std::vector<std::pair<napi_value, napi_value>> ArkJS::getObjectProperties(napi_value object) {
     napi_value propertyNames;
     auto status = napi_get_property_names(m_env, object, &propertyNames);

@@ -6,7 +6,7 @@ import util from '@ohos.util';
 export interface JSBundleProvider {
   getURL(): string
 
-  getBundle(): Promise<string>
+  getBundle(): Promise<ArrayBuffer>
 }
 
 
@@ -28,7 +28,7 @@ export class ResourceJSBundleProvider implements JSBundleProvider {
   async getBundle() {
     try {
       const bundleFileContent = await this.resourceManager.getRawFileContent(this.path);
-      const bundle = util.TextDecoder.create("utf-8").decodeWithStream(bundleFileContent);
+      const bundle = bundleFileContent.buffer;
       return bundle;
     } catch (err) {
       throw new JSBundleProviderError(`Couldn't load JSBundle from ${this.path}`, err)
@@ -56,7 +56,9 @@ export class MetroJSBundleProvider implements JSBundleProvider {
           },
         }
       );
-      return data.result as string;
+      const encoder = new util.TextEncoder();
+      const result = encoder.encodeInto(data.result as string);
+      return result.buffer;
     } catch (err) {
       throw new JSBundleProviderError(`Couldn't load JSBundle from ${this.bundleUrl}`, err)
     } finally {

@@ -49,7 +49,7 @@ class RNInstance {
         MutationsListener&&,
         MountingManager::CommandDispatcher&&);
     void start();
-    void loadScriptFromString(std::string const &&bundle, std::string const sourceURL);
+    void loadScript(std::vector<uint8_t> const &&bundle, std::string const sourceURL);
     void createSurface(facebook::react::Tag surfaceId, std::string const &moduleName);
     void updateSurfaceConstraints(facebook::react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY);
     void startSurface(facebook::react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY, folly::dynamic &&initialProps);

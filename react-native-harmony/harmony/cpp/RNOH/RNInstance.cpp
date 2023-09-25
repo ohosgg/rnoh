@@ -1,5 +1,6 @@
 #include <react/renderer/scheduler/Scheduler.h>
 #include <react/renderer/componentregistry/ComponentDescriptorRegistry.h>
+#include <cxxreact/JSBundleType.h>
 #include "RNOH/MessageQueueThread.h"
 #include "RNOH/RNInstance.h"
 #include "RNOH/EventBeat.h"
@@ -94,10 +95,20 @@ void RNInstance::initializeScheduler() {
     this->scheduler = std::make_unique<react::Scheduler>(schedulerToolbox, nullptr, schedulerDelegate.get());
 }
 
-void RNInstance::loadScriptFromString(std::string const &&bundle, std::string const sourceURL) {
+void RNInstance::loadScript(std::vector<uint8_t> const &&bundle, std::string const sourceURL) {
     this->taskExecutor->runTask(TaskThread::JS, [this, bundle = std::move(bundle), sourceURL]() {
-        std::unique_ptr<react::JSBigStdString> jsBundle;
-        jsBundle = std::make_unique<react::JSBigStdString>(std::move(bundle));
+        std::unique_ptr<react::JSBigBufferString> jsBundle;
+        jsBundle = std::make_unique<react::JSBigBufferString>(bundle.size());
+        memcpy(jsBundle->data(), bundle.data(), bundle.size());
+
+        react::BundleHeader header;
+        memcpy(&header, bundle.data(), sizeof(react::BundleHeader));
+        react::ScriptTag scriptTag = react::parseTypeFromHeader(header);
+        // NOTE: Hermes bytecode bundles are treated as String bundles,
+        // and don't throw an error here.
+        if (scriptTag != react::ScriptTag::String) {
+            throw new std::runtime_error("RAM bundles are not yet supported");
+        }
         this->instance->loadScriptFromString(std::move(jsBundle), sourceURL, true);
     });
 }

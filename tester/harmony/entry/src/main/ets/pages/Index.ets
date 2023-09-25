@@ -44,7 +44,10 @@ struct Index {
         initialProps: { foo: "bar" },
         appKey: "app_name",
         buildCustomComponent: this.buildCustomComponent.bind(this),
-        jsBundleProvider: new AnyJSBundleProvider([new MetroJSBundleProvider(), new ResourceJSBundleProvider(this.rnAbility.context.resourceManager)]),
+        jsBundleProvider: new AnyJSBundleProvider([
+          new MetroJSBundleProvider(),
+          new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'hermes_bundle.hbc'),
+          new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'bundle.harmony.js')]),
       })
     }
     .height('100%')

@@ -90,6 +90,8 @@ class ArkJS {
 
     uint32_t getArrayLength(napi_value array);
 
+    std::vector<uint8_t> getArrayBuffer(napi_value array);
+
     std::vector<std::pair<napi_value, napi_value>> getObjectProperties(napi_value object);
 
     std::string getString(napi_value value);

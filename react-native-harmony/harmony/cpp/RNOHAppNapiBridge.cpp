@@ -55,13 +55,13 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
     return arkJs.getUndefined();
 }
 
-static napi_value loadScriptFromString(napi_env env, napi_callback_info info) {
+static napi_value loadScript(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 3);
     size_t instanceId = arkJs.getDouble(args[0]);
     auto &rnInstance = rnInstanceById.at(instanceId);
-    rnInstance->loadScriptFromString(
-        arkJs.getString(args[1]),
+    rnInstance->loadScript(
+        arkJs.getArrayBuffer(args[1]),
         arkJs.getString(args[2]));
     return arkJs.getUndefined();
 }
@@ -195,7 +195,7 @@ static napi_value Init(napi_env env, napi_value exports) {
     napi_property_descriptor desc[] = {
         {"subscribeToShadowTreeChanges", nullptr, subscribeToShadowTreeChanges, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"initializeReactNative", nullptr, initializeReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
-        {"loadScriptFromString", nullptr, loadScriptFromString, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"loadScript", nullptr, loadScript, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"startSurface", nullptr, startSurface, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"stopSurface", nullptr, stopSurface, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"destroySurface", nullptr, destroySurface, nullptr, nullptr, nullptr, napi_default, nullptr},

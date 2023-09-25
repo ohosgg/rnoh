@@ -173,7 +173,7 @@ class RNInstanceManagerImpl implements RNInstance {
     const bundleURL = jsBundleProvider.getURL()
     try {
       this.bundleExecutionStatusByBundleURL.set(bundleURL, "RUNNING")
-      this.napiBridge.loadScriptFromString(this.id, await jsBundleProvider.getBundle(), bundleURL)
+      this.napiBridge.loadScript(this.id, await jsBundleProvider.getBundle(), bundleURL)
       this.bundleExecutionStatusByBundleURL.set(bundleURL, "DONE")
     } catch (err) {
       this.bundleExecutionStatusByBundleURL.delete(bundleURL)
