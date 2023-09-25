@@ -3,6 +3,7 @@ export * from "./DeviceInfoTurboModule";
 export * from "./DeviceEventManagerTurboModule";
 export * from "./ExceptionsManagerTurboModule";
 export * from "./ImageLoaderTurboModule";
+export * from "./KeyboardObserverTurboModule";
 export * from "./NativeAnimatedTurboModule"
 export * from "./NetworkingTurboModule";
 export * from "./PlatformConstantsTurboModule";

@@ -8,6 +8,7 @@ type StatusBarConstants = {
   HEIGHT: number,
 }
 
+declare function px2vp(px: number): number;
 
 export class StatusBarTurboModule extends TurboModule {
   public static readonly NAME = 'StatusBarManager';
@@ -26,7 +27,6 @@ export class StatusBarTurboModule extends TurboModule {
       // we get this value in this way because other methods didn't work. I tried using window.getWindowAvoidArea but it
       // always returned 0. I didn't use display.getCutoutInfo, as not every device has cutouts.
 
-      // @ts-ignore because px2vp isn't recognized
       const scaledStatusBarHeight = px2vp(windowRect.top);
       this.constants = {
         DEFAULT_BACKGROUND_COLOR: '#0x66000000',

@@ -9,6 +9,7 @@
 #include <react/renderer/components/rncore/ComponentDescriptors.h>
 #include <react/renderer/components/modal/ModalHostViewComponentDescriptor.h>
 #include "RNOH/Package.h"
+#include "RNOH/ArkTSTurboModule.h"
 #include "RNOHCorePackage/TurboModules/AppStateTurboModule.h"
 #include "RNOHCorePackage/TurboModules/DeviceEventManagerTurboModule.h"
 #include "RNOHCorePackage/TurboModules/DeviceInfoTurboModule.h"
@@ -61,6 +62,8 @@ class RNOHCoreTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
             return std::make_shared<ExceptionsManagerTurboModule>(ctx, name);
         } else if (name == "ImageLoader") {
             return std::make_shared<ImageLoaderTurboModule>(ctx, name);
+        } else if (name == "KeyboardObserver") {
+            return std::make_shared<ArkTSTurboModule>(ctx, name);
         } else if (name == "LinkingManager") {
             return std::make_shared<LinkingManagerTurboModule>(ctx, name);
         } else if (name == "NativeAnimatedTurboModule") {
@@ -117,8 +120,7 @@ class RNOHCorePackage : public Package {
             {"RCTModalHostView", std::make_shared<ModalHostViewJSIBinder>()},
             {"RCTSwitch", std::make_shared<SwitchComponentJSIBinder>()},
             {"RCTRefreshControl", std::make_shared<PullToRefreshViewJSIBinder>()},
-            {"RCTActivityIndicatorView", std::make_shared<ActivityIndicatorComponentJSIBinder>()}
-            };
+            {"RCTActivityIndicatorView", std::make_shared<ActivityIndicatorComponentJSIBinder>()}};
     };
 
     ComponentNapiBinderByString createComponentNapiBinderByName() override {
@@ -132,8 +134,7 @@ class RNOHCorePackage : public Package {
             {"ModalHostView", std::make_shared<ModalHostViewNapiBinder>()},
             {"Switch", std::make_shared<SwitchComponentNapiBinder>()},
             {"PullToRefreshView", std::make_shared<PullToRefreshViewNapiBinder>()},
-            {"ActivityIndicatorView", std::make_shared<ActivityIndicatorComponentNapiBinder>()}
-            };
+            {"ActivityIndicatorView", std::make_shared<ActivityIndicatorComponentNapiBinder>()}};
     };
 
     EventEmitRequestHandlers createEventEmitRequestHandlers() override {
@@ -143,8 +144,7 @@ class RNOHCorePackage : public Package {
                 std::make_shared<ModalEventEmitRequestHandler>(),
                 std::make_shared<SwitchEventEmitRequestHandler>(),
                 std::make_shared<PullToRefreshViewEventEmitRequestHandler>(),
-                std::make_shared<ImageEventEmitRequestHandler>()
-                };
+                std::make_shared<ImageEventEmitRequestHandler>()};
     }
 };
 
