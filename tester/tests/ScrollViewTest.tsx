@@ -15,7 +15,6 @@ const commonProps = {
   style: {
     borderWidth: 3,
     borderColor: 'firebrick',
-    overflow: 'hidden' as 'hidden',
   },
   contentContainerStyle: {
     alignItems: 'center' as 'center',
@@ -540,13 +539,10 @@ export function ScrollViewTest() {
         </TestCase>
         <TestCase
           modal
-          skip
-          itShould="the left scrollview should allow for overscroll(the view 'stretches' when you are scrolled to the top and want to scroll it even more) (overScrollMode/bounces)"
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/303
-        >
-          <View style={[styles.wrapperView, { flexDirection: 'row' }]}>
-            <ScrollView {...commonProps} overScrollMode="always" />
-            <ScrollView {...commonProps} overScrollMode="never" />
+          itShould="the left scrollview should bounce (briefly scroll beyond the content to show the view below and then come back to top/bottom accordingly)">
+          <View style={[styles.wrapperView, {flexDirection: 'row'}]}>
+            <ScrollView {...commonProps} />
+            <ScrollView {...commonProps} bounces={false} />
           </View>
         </TestCase>
         <TestCase
