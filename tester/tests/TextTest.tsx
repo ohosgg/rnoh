@@ -99,11 +99,20 @@ export function TextTest() {
           </View>
         </TestCase>
         <TestCase itShould="show text with different alignments">
-          <View style={styles.container}>
-            <Text style={styles.text}>Left</Text>
-            <Text style={{...styles.text, textAlign: 'center'}}>Center</Text>
-            <Text style={{...styles.text, textAlign: 'right'}}>Right</Text>
-          </View>
+          <Text style={{textAlign: 'left'}}>Left:</Text>
+          <Text style={{fontSize: 8}}>{SAMPLE_PARAGRAPH_TEXT}</Text>
+          <Text style={{textAlign: 'center'}}>Center:</Text>
+          <Text style={{fontSize: 8, textAlign: 'center'}}>
+            {SAMPLE_PARAGRAPH_TEXT}
+          </Text>
+          <Text style={{textAlign: 'right'}}>Right:</Text>
+          <Text style={{fontSize: 8, textAlign: 'right'}}>
+            {SAMPLE_PARAGRAPH_TEXT}
+          </Text>
+          <Text style={{textAlign: 'justify'}}>Justify:</Text>
+          <Text style={{fontSize: 8, textAlign: 'justify'}}>
+            {SAMPLE_PARAGRAPH_TEXT}
+          </Text>
         </TestCase>
         <TestCase itShould="show text with different vertical alignments (textAlignVertical)">
           <View style={styles.smallContainerRow}>
@@ -468,7 +477,6 @@ const styles = StyleSheet.create({
   },
   text: {
     width: '100%',
-    height: '33%',
     color: 'white',
   },
   smallText: {

@@ -45,13 +45,17 @@ export enum EllipsizeMode {
   Middle,
 }
 
-export function stringToAlignment(alignment: string) {
-  if (alignment === 'center')
-    return TextAlign.Center
-  else if (alignment === 'right')
-    return TextAlign.End
-  else
-    return TextAlign.Start
+function stringToAlignment(alignment: string) {
+  switch(alignment) {
+    case "center":
+      return TextAlign.Center
+    case "right":
+      return TextAlign.End
+    case "justified":
+      return TextAlign.JUSTIFY
+    default:
+      return TextAlign.Start
+  }
 }
 
 export function stringToVerticalAlign(textAlignVertical: string) {
