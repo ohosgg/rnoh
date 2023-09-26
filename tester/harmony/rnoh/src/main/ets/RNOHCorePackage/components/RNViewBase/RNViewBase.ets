@@ -128,6 +128,10 @@ export struct RNViewBase {
     }
   }
 
+  getClip(): boolean {
+    return this.descriptor.props.overflow !== OverflowMode.VISIBLE
+  }
+
   build() {
     Stack() {
       this.renderChildren()
@@ -148,7 +152,7 @@ export struct RNViewBase {
     .borderStyle(this.getBorderStyle())
     .opacity(this.descriptor.props.opacity)
     .transform(this.descriptor.props.transform != undefined ? convertMatrixArrayToMatrix4(this.descriptor.props.transform) : undefined)
-    .clip(this.descriptor.props.overflow === OverflowMode.HIDDEN ? true : false)
+    .clip(this.getClip())
     .hitTestBehavior(this.getHitTestMode())
     .shadow(this.getShadow())
   }
