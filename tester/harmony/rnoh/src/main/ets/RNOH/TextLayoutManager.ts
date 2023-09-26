@@ -1,4 +1,4 @@
-import TextMeasurer, { MeasureOptions } from '@ohos.measure';
+import TextMeasurer, {MeasureOptions} from '@ohos.measure';
 import {
   ParagraphMeasurer,
   UnhyphenatedWordWrapStrategy,
@@ -50,12 +50,12 @@ interface TextLayoutManager {
 /**
  * 15% of font size
  */
-export const DEFAULT_LINE_SPACING = 0.15
+export const DEFAULT_LINE_SPACING = 0.15;
 
 export function measureParagraph(
-    attributedString: AttributedString,
-    paragraphAttributes: ParagraphAttributes,
-    layoutConstraints: LayoutConstrains,
+  attributedString: AttributedString,
+  paragraphAttributes: ParagraphAttributes,
+  layoutConstraints: LayoutConstrains,
 ): Size {
   return createTextLayoutManager(attributedString.fragments).measureParagraph(
     attributedString,
@@ -81,7 +81,7 @@ class SimpleTextLayoutManager implements TextLayoutManager {
     layoutConstraints: LayoutConstrains,
   ): Size {
     if (attributedString.fragments.length === 0) {
-      return { width: 0, height: 0 };
+      return {width: 0, height: 0};
     }
     if (attributedString.fragments.length > 1) {
       throw new Error('SimpleTextLayoutManager supports only one fragment');
@@ -90,13 +90,15 @@ class SimpleTextLayoutManager implements TextLayoutManager {
     const measureOptions: MeasureOptions = {
       textContent: fragment.string,
       fontSize: fragment.textAttributes.fontSize,
-      lineHeight: fragment.textAttributes.lineHeight || fragment.textAttributes.fontSize * (1 + DEFAULT_LINE_SPACING),
+      lineHeight:
+        fragment.textAttributes.lineHeight ||
+        fragment.textAttributes.fontSize * (1 + DEFAULT_LINE_SPACING),
       fontWeight: fragment.textAttributes.fontWeight,
       maxLines: paragraphAttributes.maximumNumberOfLines || undefined,
       letterSpacing: fragment.textAttributes.letterSpacing || undefined,
-    }
+    };
     let textSize = TextMeasurer.measureTextSize(measureOptions) as Size;
-    textSize = { width: px2vp(textSize.width), height: px2vp(textSize.height) };
+    textSize = {width: px2vp(textSize.width), height: px2vp(textSize.height)};
     if (textSize.width < layoutConstraints.maximumSize.width) {
       return textSize;
     }
@@ -108,7 +110,7 @@ class SimpleTextLayoutManager implements TextLayoutManager {
       ...measureOptions,
       constraintWidth: layoutConstraints.maximumSize.width,
     }) as Size;
-    textSize = { width: px2vp(textSize.width), height: px2vp(textSize.height) };
+    textSize = {width: px2vp(textSize.width), height: px2vp(textSize.height)};
     return textSize;
   }
 }
@@ -116,9 +118,8 @@ class SimpleTextLayoutManager implements TextLayoutManager {
 class AdvancedTextLayoutManager implements TextLayoutManager {
   constructor(
     private paragraphMeasurer: ParagraphMeasurer,
-    private textFragmentMeasurer: TextFragmentMeasurer,
-  ) {
-  }
+    private textFragmentMeasurer: TextFragmentMeasurer<OHOSMeasurerTextFragmentExtraData>,
+  ) {}
 
   public measureParagraph(
     attributedString: AttributedString,
@@ -129,12 +130,12 @@ class AdvancedTextLayoutManager implements TextLayoutManager {
       attributedString.fragments,
     );
     const measuredParagraph = this.paragraphMeasurer.measureParagraph(
-      { fragments },
+      {fragments},
       {
         wordWrapStrategy: new UnhyphenatedWordWrapStrategy(
           this.textFragmentMeasurer,
         ),
-        containerConfig: { width: layoutConstraints.maximumSize.width },
+        containerConfig: {width: layoutConstraints.maximumSize.width},
       },
     );
     return measuredParagraph.size;
@@ -142,29 +143,42 @@ class AdvancedTextLayoutManager implements TextLayoutManager {
 
   private mapRNFragmentsToParagraphMeasurerFragments(
     fragments: Fragment[],
-  ): ParagraphMeasurerFragment[] {
+  ): ParagraphMeasurerFragment<OHOSMeasurerTextFragmentExtraData>[] {
     return fragments.map(fragment => {
       return {
         type: 'text',
         content: fragment.string,
-        fontSize: fragment.textAttributes.fontSize,
-        lineHeight: fragment.textAttributes.lineHeight || fragment.textAttributes.fontSize * (1 + DEFAULT_LINE_SPACING),
-        fontWeight: fragment.textAttributes.fontWeight,
-        letterSpacing: fragment.textAttributes.letterSpacing || undefined,
+        extraData: {
+          fontSize: fragment.textAttributes.fontSize,
+          lineHeight:
+            fragment.textAttributes.lineHeight ||
+            fragment.textAttributes.fontSize * (1 + DEFAULT_LINE_SPACING),
+          fontWeight: fragment.textAttributes.fontWeight,
+          letterSpacing: fragment.textAttributes.letterSpacing || undefined,
+        },
       };
     });
   }
 }
 
-class OHOSTextFragmentMeasurer implements TextFragmentMeasurer {
-  public measureTextFragment(textFragment: TextFragment): Size {
+export type OHOSMeasurerTextFragmentExtraData = {
+  fontSize: number;
+  letterSpacing?: number;
+  fontWeight?: number;
+  lineHeight?: number;
+};
+
+export class OHOSTextFragmentMeasurer
+  implements TextFragmentMeasurer<OHOSMeasurerTextFragmentExtraData>
+{
+  public measureTextFragment(textFragment: TextFragment<OHOSMeasurerTextFragmentExtraData>): Size {
     const size = TextMeasurer.measureTextSize({
       textContent: textFragment.content,
-      fontSize: textFragment.fontSize,
-      lineHeight: textFragment.lineHeight,
-      fontWeight: textFragment.fontWeight,
-      letterSpacing: textFragment.letterSpacing
+      fontSize: textFragment.extraData.fontSize,
+      lineHeight: textFragment.extraData.lineHeight,
+      fontWeight: textFragment.extraData.fontWeight,
+      letterSpacing: textFragment.extraData.letterSpacing,
     }) as Size;
-    return { width: px2vp(size.width), height: px2vp(size.height) };
+    return {width: px2vp(size.width), height: px2vp(size.height)};
   }
 }

@@ -1,5 +1,11 @@
-import { ColorSegments, Descriptor, convertColorSegmentsToString, RNOHContext, DEFAULT_LINE_SPACING  } from '../../RNOH'
-import { ViewBaseProps, RNViewBase } from './RNViewBase'
+import {
+  ColorSegments,
+  Descriptor,
+  convertColorSegmentsToString,
+  RNOHContext,
+  DEFAULT_LINE_SPACING
+} from '../../../RNOH'
+import { ViewBaseProps, RNViewBase } from '../RNViewBase'
 
 export type AttributedFragment = {
   text?: string
@@ -32,14 +38,14 @@ type PaddingProps = {
   left: number
 }
 
-enum EllipsizeMode {
+export enum EllipsizeMode {
   Clip,
   Head,
   Tail,
   Middle,
 }
 
-function stringToAlignment(alignment: string) {
+export function stringToAlignment(alignment: string) {
   if (alignment === 'center')
     return TextAlign.Center
   else if (alignment === 'right')
@@ -48,7 +54,7 @@ function stringToAlignment(alignment: string) {
     return TextAlign.Start
 }
 
-function stringToVerticalAlign(textAlignVertical: string) {
+export function stringToVerticalAlign(textAlignVertical: string) {
   switch (textAlignVertical) {
     case "top":
       return Alignment.TopStart
@@ -61,15 +67,15 @@ function stringToVerticalAlign(textAlignVertical: string) {
   }
 }
 
-function stringToFontStyle(style: string | undefined): FontStyle {
+export function stringToFontStyle(style: string | undefined): FontStyle {
   if (style === 'italic') {
     return FontStyle.Italic;
   }
   return FontStyle.Normal;
 }
 
-function getLetterSpacing(letterSpacing: number) {
-  if(isNaN(letterSpacing)) {
+export function getLetterSpacing(letterSpacing: number) {
+  if (isNaN(letterSpacing)) {
     return undefined
   }
   return letterSpacing
@@ -84,13 +90,13 @@ function getLetterSpacing(letterSpacing: number) {
   * }
   *The 'underline line-through' attribute is not implemented on ArkTS, so it is not implemented here yet.
    */
-function getTextDecorationLine(fragment: AttributedFragment | undefined) {
-  switch(fragment.textDecorationLine) {
+export function getTextDecorationLine(fragment: AttributedFragment | undefined) {
+  switch (fragment.textDecorationLine) {
     case 1:
       return TextDecorationType.Underline;
     case 2:
       return TextDecorationType.LineThrough;
-    default :
+    default:
       return TextDecorationType.None;
   }
 }
@@ -98,7 +104,7 @@ function getTextDecorationLine(fragment: AttributedFragment | undefined) {
 export type TextDescriptor = Descriptor<"Paragraph", TextProps>
 
 @Component
-export struct RNText {
+export struct RNSimpleText {
   ctx: RNOHContext
   tag: number
   @State descriptor: TextDescriptor = {} as TextDescriptor
@@ -141,16 +147,19 @@ export struct RNText {
             .fontWeight(fragment.fontWeight)
             .fontSize(fragment.fontSize)
             .fontStyle(stringToFontStyle(fragment.fontStyle))
-            .decoration({type: getTextDecorationLine(fragment), color: convertColorSegmentsToString(fragment.textDecorationColor)})
+            .decoration({
+              type: getTextDecorationLine(fragment),
+              color: convertColorSegmentsToString(fragment.textDecorationColor)
+            })
             .lineHeight(fragment.lineHeight ?? (fragment.fontSize ?? 16) * DEFAULT_LINE_SPACING)
-            .backgroundColor(convertColorSegmentsToString(fragment.backgroundColor)) // not supported
+            .backgroundColor(convertColorSegmentsToString(fragment.backgroundColor))// not supported
             .letterSpacing(getLetterSpacing(fragment.letterSpacing))
         })
       }
       .width("100%")
       .height("100%")
       .maxLines(this.getMaxLines())
-      .textOverflow({overflow: this.getTextOverflow()})
+      .textOverflow({ overflow: this.getTextOverflow() })
       .textAlign(stringToAlignment(this.descriptor.props.textAlign))
       .align(stringToVerticalAlign(this.descriptor.props.textAlignVertical))
       .padding(this.descriptor.props.padding)

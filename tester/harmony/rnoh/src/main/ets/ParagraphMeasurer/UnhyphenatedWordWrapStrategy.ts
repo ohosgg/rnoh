@@ -15,13 +15,20 @@ import {
  */
 type MeasuredToken = MeasuredFragment & {_type: 'MeasuredToken'};
 
-export class UnhyphenatedWordWrapStrategy implements WordWrapStrategy {
-  public constructor(private textFragmentMeasurer: TextFragmentMeasurer) {}
+export class UnhyphenatedWordWrapStrategy<
+  TAttributesMap extends Record<string, any> = any,
+> implements WordWrapStrategy
+{
+  public constructor(
+    private textFragmentMeasurer: TextFragmentMeasurer<TAttributesMap>,
+  ) {}
 
-  public convertFragmentsIntoLines(
-    fragments: Fragment[],
+  public convertFragmentsIntoLines<
+    TTextExtraData extends Record<string, any> = any,
+  >(
+    fragments: Fragment<TTextExtraData>[],
     containerConfig: ContainerConfig,
-  ): MeasuredLine[] {
+  ): MeasuredLine<TTextExtraData>[] {
     const measuredTokens: MeasuredToken[] = this.tokenize(fragments).map(
       this.measureToken.bind(this),
     );
@@ -108,8 +115,11 @@ export class UnhyphenatedWordWrapStrategy implements WordWrapStrategy {
   ): boolean {
     if (lhs.fragment.type !== 'text' || rhs.fragment.type !== 'text')
       return false;
-    if (lhs.fragment.fontSize !== rhs.fragment.fontSize) return false;
-    if (lhs.fragment.lineHeight !== rhs.fragment.lineHeight) return false;
+    for (const key of Object.keys(lhs.fragment.extraData)) {
+      if (lhs.fragment.extraData[key] !== rhs.fragment.extraData[key]) {
+        return false;
+      }
+    }
     return true;
   }
 

@@ -7,11 +7,19 @@ import {
   UnhyphenatedWordWrapStrategy,
 } from '../harmony/rnoh/src/main/ets/ParagraphMeasurer';
 
-class FakeTextFragmentMeasurer implements TextFragmentMeasurer {
-  measureTextFragment(textFragment: TextFragment): Size {
+type ExtraData = {
+  fontSize?: number;
+  lineHeight?: number;
+};
+
+class FakeTextFragmentMeasurer implements TextFragmentMeasurer<ExtraData> {
+  measureTextFragment(textFragment: TextFragment<ExtraData>): Size {
     return {
       width: textFragment.content.length,
-      height: 1,
+      height:
+        textFragment.extraData.lineHeight ??
+        textFragment.extraData.fontSize ??
+        1,
     };
   }
 }
@@ -40,10 +48,7 @@ describe('ParagraphMeasurer', () => {
     const textFragment: TextFragment = {
       type: 'text',
       content: textContent,
-      fontSize: 1,
-      lineHeight: 16,
-      fontWeight: undefined,
-      letterSpacing: undefined,
+      extraData: {},
     };
 
     const result = paragraphMeasurer.measureParagraph(
@@ -57,7 +62,7 @@ describe('ParagraphMeasurer', () => {
     );
 
     expect(result.size.width).toBe(containerWidth);
-    expectLineSplitting(result.measuredLines, [
+    expectLineSplitting(result.positionedLines, [
       ['Aute'],
       ['reprehenderit'],
       ['amet deserunt'],
@@ -97,10 +102,7 @@ describe('UnhyphenatedWordWrapStrategy', () => {
         {
           type: 'text',
           content: TEXT,
-          fontSize: 0,
-          lineHeight: LINE_HEIGHT,
-          fontWeight: undefined,
-          letterSpacing: undefined,
+          extraData: {},
         },
       ],
       {width: undefined},
@@ -124,10 +126,9 @@ describe('UnhyphenatedWordWrapStrategy', () => {
         {
           type: 'text',
           content: TEXT,
-          fontSize: 0,
-          lineHeight: LINE_HEIGHT,
-          fontWeight: undefined,
-          letterSpacing: undefined,
+          extraData: {
+            lineHeight: LINE_HEIGHT,
+          },
         },
       ],
       {width: undefined},
@@ -143,7 +144,6 @@ describe('UnhyphenatedWordWrapStrategy', () => {
     const strategy = new UnhyphenatedWordWrapStrategy(
       new FakeTextFragmentMeasurer(),
     );
-    const LINE_HEIGHT = 1;
     const TEXT = 'foo bar';
 
     result = strategy.convertFragmentsIntoLines(
@@ -151,10 +151,7 @@ describe('UnhyphenatedWordWrapStrategy', () => {
         {
           type: 'text',
           content: TEXT,
-          fontSize: 0,
-          lineHeight: LINE_HEIGHT,
-          fontWeight: undefined,
-          letterSpacing: undefined,
+          extraData: {},
         },
       ],
       {width: 4},
@@ -171,7 +168,6 @@ describe('UnhyphenatedWordWrapStrategy', () => {
     const strategy = new UnhyphenatedWordWrapStrategy(
       new FakeTextFragmentMeasurer(),
     );
-    const LINE_HEIGHT = 1;
     const TEXT = 'foo\nbar\\nbaz';
 
     result = strategy.convertFragmentsIntoLines(
@@ -179,10 +175,7 @@ describe('UnhyphenatedWordWrapStrategy', () => {
         {
           type: 'text',
           content: TEXT,
-          fontSize: 0,
-          lineHeight: LINE_HEIGHT,
-          fontWeight: undefined,
-          letterSpacing: undefined,
+          extraData: {},
         },
       ],
       {width: undefined},
@@ -201,7 +194,6 @@ describe('UnhyphenatedWordWrapStrategy', () => {
     const strategy = new UnhyphenatedWordWrapStrategy(
       new FakeTextFragmentMeasurer(),
     );
-    const LINE_HEIGHT = 1;
     const TEXT = ' foo bar ';
 
     result = strategy.convertFragmentsIntoLines(
@@ -209,10 +201,7 @@ describe('UnhyphenatedWordWrapStrategy', () => {
         {
           type: 'text',
           content: TEXT,
-          fontSize: 0,
-          lineHeight: LINE_HEIGHT,
-          fontWeight: undefined,
-          letterSpacing: undefined,
+          extraData: {},
         },
       ],
       {width: 4},

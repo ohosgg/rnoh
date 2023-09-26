@@ -56,9 +56,6 @@
     "typescript": "4.8.4",
     "yargs": "^17.7.2"
   },
-  "jest": {
-    "preset": "react-native"
-  },
   "overrides": {
     "@react-native-community/cli": "11.3.6"
   },

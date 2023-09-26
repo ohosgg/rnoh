@@ -8,13 +8,10 @@ export type Position = {
   y: number;
 };
 
-export type TextFragment = {
+export type TextFragment<TExtraData extends Record<string, any> = any> = {
   type: 'text';
   content: string;
-  fontSize: number;
-  lineHeight: number | undefined;
-  fontWeight: number | undefined;
-  letterSpacing: number | undefined
+  extraData: TExtraData;
 };
 
 export type PlaceholderFragment = {
@@ -23,19 +20,26 @@ export type PlaceholderFragment = {
   height: number;
 };
 
-export type Fragment = TextFragment | PlaceholderFragment;
+export type Fragment<TTextExtraData extends Record<string, any> = any> =
+  | TextFragment<TTextExtraData>
+  | PlaceholderFragment;
 
-export type MeasuredFragment<TFragment extends Fragment = Fragment> = {
+export type MeasuredFragment<
+  TTextExtraData extends Record<string, any> = any,
+  TFragment extends Fragment<TTextExtraData> = Fragment<TTextExtraData>,
+> = {
   fragment: TFragment;
   size: Size;
 };
 
-export type PositionedFragment = MeasuredFragment & {
+export type PositionedFragment<
+  TTextExtraData extends Record<string, any> = any,
+> = MeasuredFragment<TTextExtraData> & {
   positionRelativeToLine: Position;
 };
 
-export type MeasuredLine = {
-  positionedFragments: PositionedFragment[];
+export type MeasuredLine<TTextExtraData extends Record<string, any> = any> = {
+  positionedFragments: PositionedFragment<TTextExtraData>[];
   size: Size;
 };
 
@@ -44,10 +48,10 @@ export type ContainerConfig = {
 };
 
 export interface WordWrapStrategy {
-  convertFragmentsIntoLines(
-    fragments: Fragment[],
-    containerConfig: ContainerConfig
-  ): MeasuredLine[];
+  convertFragmentsIntoLines<TTextExtraData extends Record<string, any> = any>(
+    fragments: Fragment<any>[],
+    containerConfig: ContainerConfig,
+  ): MeasuredLine<TTextExtraData>[];
 }
 
 export type ParagraphConfig = {
@@ -55,15 +59,24 @@ export type ParagraphConfig = {
   wordWrapStrategy: WordWrapStrategy;
 };
 
-export type Paragraph = {
-  fragments: Fragment[];
+export type Paragraph<TTextExtraData extends Record<string, any> = any> = {
+  fragments: Fragment<TTextExtraData>[];
 };
 
-export type MeasuredParagraph = {
-  measuredLines: MeasuredLine[];
+export type PositionedLine<TTextExtraData extends Record<string, any> = any> =
+  MeasuredLine<TTextExtraData> & {
+    positionRelativeToParagraph: Position;
+  };
+
+export type MeasuredParagraph<
+  TTextExtraData extends Record<string, any> = any,
+> = {
+  positionedLines: PositionedLine<TTextExtraData>[];
   size: Size;
 };
 
-export interface TextFragmentMeasurer {
-  measureTextFragment(textFragment: TextFragment): Size;
+export interface TextFragmentMeasurer<
+  TTextExtraData extends Record<string, any>,
+> {
+  measureTextFragment(textFragment: TextFragment<TTextExtraData>): Size;
 }
