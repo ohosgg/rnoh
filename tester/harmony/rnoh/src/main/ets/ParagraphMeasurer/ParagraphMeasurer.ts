@@ -26,7 +26,7 @@ export class ParagraphMeasurer {
     return {
       positionedLines: this.mapMeasuredLinesToPositionedLines(lines),
       size: {
-        width: containerConfig.width ?? maxLineWidth,
+        width: maxLineWidth,
         height: lineHeightsSum,
       },
     };

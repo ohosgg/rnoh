@@ -159,7 +159,6 @@ export class UnhyphenatedWordWrapStrategy<
     for (const measuredFragment of measuredFragments) {
       positionedFragments.push({
         ...measuredFragment,
-        // TODO: support vertical alignment within a line
         positionRelativeToLine: {x: offsetX, y: offsetY},
       });
       offsetX += measuredFragment.size.width;

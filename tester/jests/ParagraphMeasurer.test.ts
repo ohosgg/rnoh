@@ -61,7 +61,7 @@ describe('ParagraphMeasurer', () => {
       },
     );
 
-    expect(result.size.width).toBe(containerWidth);
+    expect(result.size.width).toBe('enim laborum ad'.length);
     expectLineSplitting(result.positionedLines, [
       ['Aute'],
       ['reprehenderit'],

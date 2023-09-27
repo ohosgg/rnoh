@@ -64,7 +64,8 @@ export struct RNParagraph {
   }
 
   onDescriptorChange(newDescriptor: TextDescriptor) {
-    this.positionedLines = calculateFragmentsLayout(newDescriptor)
+    const positionedLines = calculateFragmentsLayout(newDescriptor)
+    this.positionedLines = positionedLines
     this.descriptor = newDescriptor
   }
 
@@ -91,7 +92,8 @@ export struct RNParagraph {
             Text(fragment.content)
               .fontColor(fragment.extraData.fontColor)
               .fontWeight(fragment.extraData.fontWeight)
-              .fontSize(fragment.extraData.fontSize)// .fontStyle(stringToFontStyle(fragment.fontStyle))
+              .fontSize(fragment.extraData.fontSize)
+                // .fontStyle(stringToFontStyle(fragment.fontStyle))
                 // .decoration({
                 //   type: getTextDecorationLine(fragment),
                 //   color: convertColorSegmentsToString(fragment.textDecorationColor)

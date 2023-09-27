@@ -98,7 +98,7 @@ export function TextTest() {
             </Text>
           </View>
         </TestCase>
-        <TestCase itShould="show text with different alignments">
+        <TestCase itShould="show text with different horizontal alignments">
           <Text style={{textAlign: 'left'}}>Left:</Text>
           <Text style={{fontSize: 8}}>{SAMPLE_PARAGRAPH_TEXT}</Text>
           <Text style={{textAlign: 'center'}}>Center:</Text>
@@ -387,6 +387,8 @@ export function TextTest() {
             </Text>
           </Text>
         </TestCase>
+      </TestSuite>
+      <TestSuite name="nested texts">
         <TestCase itShould="show INNER and OUTER texts on the same height (various lineHeights)">
           <View
             style={{
@@ -412,6 +414,62 @@ export function TextTest() {
               OUTER
             </Text>
           </View>
+        </TestCase>
+        <TestCase
+          skip
+          itShould="show text with different vertical alignments (verticalAlign)">
+          <View style={{...styles.smallContainerRow}}>
+            <Text style={{verticalAlign: 'auto'}}>
+              -<Text style={styles.blueShortText}>Auto</Text>-
+            </Text>
+            <Text style={{verticalAlign: 'top'}}>
+              -<Text style={styles.blueShortText}>Top</Text>-
+            </Text>
+            <Text style={{verticalAlign: 'middle'}}>
+              -<Text style={styles.blueShortText}>Middle</Text>-
+            </Text>
+            <Text style={{verticalAlign: 'bottom'}}>
+              -<Text style={styles.blueShortText}>Bottom</Text>-
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase
+          skip
+          itShould="show text with different vertical alignments (textAlignVertical)">
+          <View style={{...styles.smallContainerRow}}>
+            <Text style={{textAlignVertical: 'auto'}}>
+              -<Text style={styles.blueShortText}>Auto</Text>-
+            </Text>
+            <Text style={{textAlignVertical: 'top'}}>
+              -<Text style={styles.blueShortText}>Top</Text>-
+            </Text>
+            <Text style={{textAlignVertical: 'center'}}>
+              -<Text style={styles.blueShortText}>Center</Text>-
+            </Text>
+            <Text style={{textAlignVertical: 'bottom'}}>
+              -<Text style={styles.blueShortText}>Bottom</Text>-
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase
+          skip
+          itShould="show text with different horizontal alignments">
+          <Text style={{textAlign: 'left'}}>
+            <Text>Left: </Text>
+            <Text style={{fontSize: 8}}>{SAMPLE_PARAGRAPH_TEXT}</Text>
+          </Text>
+          <Text style={{textAlign: 'center'}}>
+            <Text>Center: </Text>
+            <Text style={{fontSize: 8}}>{SAMPLE_PARAGRAPH_TEXT}</Text>
+          </Text>
+          <Text style={{textAlign: 'right'}}>
+            <Text>Right: </Text>
+            <Text style={{fontSize: 8}}>{SAMPLE_PARAGRAPH_TEXT}</Text>
+          </Text>
+          <Text style={{textAlign: 'justify'}}>
+            <Text>Justify: </Text>
+            <Text style={{fontSize: 8}}>{SAMPLE_PARAGRAPH_TEXT}</Text>
+          </Text>
         </TestCase>
       </TestSuite>
     </TestSuite>
