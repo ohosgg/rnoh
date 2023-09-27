@@ -471,6 +471,12 @@ export function TextTest() {
             <Text style={{fontSize: 8}}>{SAMPLE_PARAGRAPH_TEXT}</Text>
           </Text>
         </TestCase>
+        <TestCase skip itShould="display 2 lines of text">
+          <Text style={{textAlign: 'left'}} numberOfLines={2}>
+            <Text style={{fontSize: 32, backgroundColor: 'cyan'}}>{'>'}</Text>
+            <Text style={{fontSize: 8}}>{SAMPLE_PARAGRAPH_TEXT}</Text>
+          </Text>
+        </TestCase>
       </TestSuite>
     </TestSuite>
   );

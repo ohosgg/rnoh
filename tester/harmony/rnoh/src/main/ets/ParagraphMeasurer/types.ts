@@ -48,6 +48,7 @@ export type HorizontalAlignment = 'start' | 'center' | 'end';
 export type ContainerConfig = {
   width?: number;
   horizontalAlignment?: HorizontalAlignment;
+  maxNumberOfLines?: number;
 };
 
 export interface WordWrapStrategy {

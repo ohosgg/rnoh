@@ -72,6 +72,32 @@ describe('ParagraphMeasurer', () => {
     ]);
   });
 
+  it('should return 2 lines', () => {
+    const paragraphMeasurer = createParagraphMeasurer();
+
+    const result = paragraphMeasurer.measureParagraph(
+      {
+        fragments: [
+          {
+            type: 'text',
+            content:
+              'Aute reprehenderit amet deserunt enim laborum ad excepteur cillum.',
+            extraData: {},
+          },
+        ],
+      },
+      {
+        wordWrapStrategy: new UnhyphenatedWordWrapStrategy(
+          new FakeTextFragmentMeasurer(),
+        ),
+        containerConfig: {width: 16, maxNumberOfLines: 2},
+      },
+    );
+
+    expect(result.positionedLines.length).toBe(2);
+    expectLineSplitting(result.positionedLines, [['Aute'], ['reprehenderit']]);
+  });
+
   describe('horizontalAlignment', () => {
     it('should center the text', () => {
       const paragraphMeasurer = createParagraphMeasurer();

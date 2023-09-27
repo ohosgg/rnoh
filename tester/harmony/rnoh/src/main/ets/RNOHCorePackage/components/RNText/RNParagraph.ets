@@ -26,7 +26,12 @@ function createLayout(textDescriptor: TextDescriptor) {
   return paragraphMeasurer.measureParagraph({ fragments }, {
     containerConfig: {
       width: textDescriptor.layoutMetrics.frame.size.width,
-      horizontalAlignment: ({left: 'start', center: 'center', right: 'end'} as const)[textDescriptor.props.textAlign ?? "left"]
+      horizontalAlignment: ({
+        left: 'start',
+        center: 'center',
+        right: 'end'
+      } as const)[textDescriptor.props.textAlign ?? "left"],
+      maxNumberOfLines: textDescriptor.props.maximumNumberOfLines || undefined
     },
     wordWrapStrategy: new UnhyphenatedWordWrapStrategy(new OHOSTextFragmentMeasurer())
   })
@@ -44,8 +49,7 @@ function mapAttributedFragmentsToMeasurerFragments(attributedFragments: Attribut
         fontWeight: attributedFragment.fontWeight,
         lineHeight: attributedFragment.lineHeight || undefined,
         fontColor: convertColorSegmentsToString(attributedFragment.fontColor),
-        backgroundColor: convertColorSegmentsToString(attributedFragment.backgroundColor)
-
+        backgroundColor: convertColorSegmentsToString(attributedFragment.backgroundColor),
       }
     }
   })
