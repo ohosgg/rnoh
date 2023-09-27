@@ -8,8 +8,8 @@ import {
   BorderMetrics,
   resolveBorderMetrics,
   LayoutDirectionRN,
+  RNViewManager,
 } from '../../../RNOH'
-
 import { ViewBaseProps, ViewDynamicProps } from './types'
 
 export type ViewBaseDescriptor = Descriptor<string, ViewBaseProps>
@@ -62,11 +62,17 @@ export struct RNViewBase {
   ctx: RNOHContext
   tag: number
   @BuilderParam renderChildren: () => void
+  public componentManager: RNViewManager = undefined;
   @State private descriptor: ViewBaseDescriptor = {} as ViewBaseDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined
+  private unregisterComponentManager?: () => void = undefined
 
   aboutToAppear() {
     let descriptor = this.ctx.descriptorRegistry.getDescriptor<ViewBaseDescriptor | ViewDynamicDescriptor>(this.tag)
+    if (!this.componentManager) {
+      this.componentManager = new RNViewManager(this.tag, this.ctx)
+    }
+    this.unregisterComponentManager = this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager)
     this.setDescriptor(descriptor)
     this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
@@ -77,10 +83,12 @@ export struct RNViewBase {
 
   private setDescriptor(descriptor: ViewBaseDescriptor | ViewDynamicDescriptor) {
     this.descriptor = convertViewDynamicDescriptor(descriptor)
+    this.componentManager.updateBoundingBox();
   }
 
   aboutToDisappear() {
     this.unregisterDescriptorChangesListener?.()
+    this.unregisterComponentManager?.()
   }
 
   getHitTestMode() {

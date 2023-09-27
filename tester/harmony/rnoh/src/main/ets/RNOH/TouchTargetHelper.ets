@@ -1,9 +1,8 @@
-import { RNScrollViewManager } from '../RNOHCorePackage/componentManagers/RNScrollViewManager';
 import { ComponentManagerRegistry } from './ComponentManagerRegistry';
+import { RNViewManager } from './RNViewManager';
 import { Tag, OverflowMode } from './DescriptorBase';
 import { DescriptorRegistry } from './DescriptorRegistry';
 import { RNOHLogger } from './RNOHLogger';
-import matrix4 from '@ohos.matrix4';
 
 export type TouchTarget = {
   tag: Tag,
@@ -33,47 +32,20 @@ export class TouchTargetHelper {
    * @param tag - tag of the view
    * @returns whether the touch is within the view
    */
-  public isPointInView({x, y}: Point, tag: Tag): boolean {
-    const descriptor = this.descriptorRegistry.getDescriptor(tag);
-    const size = descriptor.layoutMetrics.frame.size;
-    // TODO: add hitslops
-    const withinX = x >= 0 && x <= size.width;
-    const withinY = y >= 0 && y <= size.height;
-    return withinX && withinY;
+  private isPointInView({x, y}: Point, tag: Tag): boolean {
+    const componentManager = this.componentManagerRegistry.getComponentManager(tag);
+    if (componentManager instanceof RNViewManager) {
+      return componentManager.isPointInView({ x, y });
+    }
+    return false;
   }
 
-  public isPointInBoundingBox({x, y}: Point, tag: Tag): boolean {
-    const {left, right, top, bottom} = this.descriptorRegistry.getBoundingBox(tag);
-    const withinX = x >= left && x <= right;
-    const withinY = y >= top && y <= bottom;
-    return withinX && withinY;
-  }
-
-  public getRelativePoint({x, y}: Point, tag: Tag): Point {
-    const descriptor = this.descriptorRegistry.getDescriptor(tag);
-    const offset = descriptor.layoutMetrics.frame.origin;
-    let localX = x - offset.x;
-    let localY = y - offset.y;
-
-    const parentComponentManager = this.componentManagerRegistry.getComponentManager(descriptor.parentTag)
-    if (parentComponentManager instanceof RNScrollViewManager) {
-      const scrollManager = parentComponentManager as RNScrollViewManager;
-      const scroller = scrollManager.getScroller();
-      const { xOffset, yOffset } = scroller.currentOffset();
-      localX += xOffset;
-      localY += yOffset;
+  private isPointInBoundingBox({x, y}: Point, tag: Tag): boolean {
+    const componentManager = this.componentManagerRegistry.getComponentManager(tag);
+    if (componentManager instanceof RNViewManager) {
+      return componentManager.isPointInBoundingBox({ x, y });
     }
-
-    if ("transform" in descriptor.props) {
-      const transformArray = (descriptor.props["transform"] as any)
-      const transform = matrix4.init(transformArray);
-      const inverse = transform.invert()
-      const transformedLocal = inverse.transformPoint([localX, localY])
-      localX = transformedLocal[0];
-      localY = transformedLocal[1];
-    }
-
-    return { x: localX, y: localY }
+    return false;
   }
 
   public findTouchTarget(
@@ -81,6 +53,10 @@ export class TouchTargetHelper {
     parentPoint: Point,
     tag: Tag,
   ): TouchTarget | null {
+    const componentManager = this.componentManagerRegistry.getComponentManager(tag);
+    if (!(componentManager instanceof RNViewManager)) {
+      return null;
+    }
     const descriptor = this.descriptorRegistry.getDescriptor(tag);
     if (!descriptor) {
       return null;
@@ -109,7 +85,7 @@ export class TouchTargetHelper {
       // check children tags in reverse order,
       // since the last child is the one on top
       for (const childTag of descriptor.childrenTags.slice().reverse()) {
-        const childPoint = this.getRelativePoint(viewPoint, childTag);
+        const childPoint = componentManager.getRelativePoint(viewPoint, childTag);
         const childTarget = this.findTouchTarget(childPoint, viewPoint, childTag);
         if (childTarget !== null) {
           return childTarget;
@@ -139,7 +115,14 @@ export class TouchTargetHelper {
     }
 
     const viewPoint = path.reduceRight(
-      (point, tag) => this.getRelativePoint(point, tag),
+      (point, tag) => {
+        const componentManager = this.componentManagerRegistry.getComponentManager(currentTag);
+        currentTag = tag;
+        if (componentManager instanceof RNViewManager) {
+          return componentManager.getRelativePoint(point, tag)
+        }
+        return point;
+      },
       point,
     );
 

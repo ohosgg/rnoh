@@ -1,5 +1,4 @@
-import matrix4 from '@ohos.matrix4';
-import { Tag, Descriptor, OverflowMode } from './DescriptorBase';
+import { Tag, Descriptor } from './DescriptorBase';
 import { MutationType, Mutation } from './Mutation';
 
 type RootDescriptor = Descriptor<"RootView", any>
@@ -7,20 +6,15 @@ type RootDescriptor = Descriptor<"RootView", any>
 type SubtreeListener = () => void;
 type SetNativeStateFn = (componentName: string, tag: Tag, state: unknown) => void
 
-type ComponentBoundingBox = {
-  left: number,
-  right: number,
-  top: number,
-  bottom: number,
-}
-
 export class DescriptorRegistry {
   private descriptorByTag: Map<Tag, Descriptor> = new Map();
   private descriptorListenersSetByTag: Map<Tag, Set<(descriptor: Descriptor) => void>> = new Map();
   private subtreeListenersSetByTag: Map<Tag, Set<SubtreeListener>> = new Map();
-  private componentBoundingBoxByTag: Map<Tag, ComponentBoundingBox> = new Map();
 
-  constructor(descriptorByTag: Record<Tag, Descriptor>, private setNativeStateFn: SetNativeStateFn) {
+  constructor(
+    descriptorByTag: Record<Tag, Descriptor>,
+    private setNativeStateFn: SetNativeStateFn,
+  ) {
     for (const tag in descriptorByTag) {
       this.descriptorByTag.set(parseInt(tag), descriptorByTag[tag])
     }
@@ -28,10 +22,6 @@ export class DescriptorRegistry {
 
   public getDescriptor<TDescriptor extends Descriptor>(tag: Tag): TDescriptor {
     return this.descriptorByTag.get(tag) as TDescriptor;
-  }
-
-  public getBoundingBox(tag: Tag): ComponentBoundingBox {
-    return this.componentBoundingBoxByTag.get(tag) || { left: 0, right: 0, top: 0, bottom: 0 };
   }
 
   /**
@@ -58,7 +48,6 @@ export class DescriptorRegistry {
     descriptor.props = { ...descriptor.props, ...props };
     const updatedDescriptor = { ...descriptor };
     this.descriptorByTag.set(tag, updatedDescriptor);
-    this.updateBoundingBoxes(tag);
 
     this.descriptorListenersSetByTag.get(tag)?.forEach(cb => cb(updatedDescriptor));
     this.callSubtreeListeners([tag]);
@@ -158,7 +147,6 @@ export class DescriptorRegistry {
   private applyMutation(mutation: Mutation): Tag[] {
     if (mutation.type === MutationType.CREATE) {
       this.descriptorByTag.set(mutation.descriptor.tag, mutation.descriptor);
-      this.componentBoundingBoxByTag.set(mutation.descriptor.tag, this.calculateBoundingBox(mutation.descriptor.tag));
       return [];
     } else if (mutation.type === MutationType.INSERT) {
       const childDescriptor = this.descriptorByTag.get(mutation.childTag)!;
@@ -168,7 +156,6 @@ export class DescriptorRegistry {
         0,
         mutation.childTag,
       );
-      this.updateBoundingBoxes(mutation.parentTag);
       return [mutation.childTag, mutation.parentTag];
     } else if (mutation.type === MutationType.UPDATE) {
       const currentDescriptor = this.descriptorByTag.get(mutation.descriptor.tag);
@@ -180,7 +167,6 @@ export class DescriptorRegistry {
         childrenTags: children,
       };
       this.descriptorByTag.set(mutation.descriptor.tag, newDescriptor);
-      this.updateBoundingBoxes(mutation.descriptor.tag);
       return [mutation.descriptor.tag];
     } else if (mutation.type === MutationType.REMOVE) {
       const parentDescriptor = this.descriptorByTag.get(mutation.parentTag)!;
@@ -189,86 +175,15 @@ export class DescriptorRegistry {
       if (idx != -1) {
         parentDescriptor.childrenTags.splice(idx, 1);
       }
-      this.updateBoundingBoxes(mutation.parentTag);
       childDescriptor.parentTag = undefined;
       return [mutation.parentTag];
     } else if (mutation.type === MutationType.DELETE) {
       this.descriptorByTag.delete(mutation.tag);
-      this.componentBoundingBoxByTag.delete(mutation.tag);
       return [];
     } else if (mutation.type === MutationType.REMOVE_DELETE_TREE) {
       return [];
     }
     return [];
-  }
-
-  private updateBoundingBoxes(tag: Tag) {
-    let descriptor = this.getDescriptor(tag);
-    while (descriptor) {
-      const previousBoundingBox = this.componentBoundingBoxByTag.get(tag);
-      const newBoundingBox = this.calculateBoundingBox(tag);
-      const boundingBoxChanged = !previousBoundingBox 
-        || previousBoundingBox.left !== newBoundingBox.left 
-        || previousBoundingBox.right !== newBoundingBox.right 
-        || previousBoundingBox.top !== newBoundingBox.top 
-        || previousBoundingBox.bottom !== newBoundingBox.bottom
-      if (!boundingBoxChanged) {
-        // no need to update the views above
-        break;
-      }
-      this.componentBoundingBoxByTag.set(tag, newBoundingBox);
-      if (descriptor.type === "ModalHostView") {
-        break;
-      }
-      const parentTag = descriptor.parentTag;
-      if (!parentTag) {
-        break;
-      }
-      const parentDescriptor = this.getDescriptor(parentTag);
-      descriptor = parentDescriptor;
-      tag = parentTag;
-    }
-  }
-
-  private calculateBoundingBox(tag: Tag): ComponentBoundingBox {
-    const descriptor = this.getDescriptor(tag);
-    if (!descriptor) {
-      return { left: 0, right: 0, top: 0, bottom: 0 };
-    }
-    const {origin, size} = descriptor.layoutMetrics.frame;
-    let boundingBox = { left: origin.x, right: origin.x+size.width, top: origin.y, bottom: origin.y+size.height };
-
-    // if the view has overflow, take children into account:
-    if ('overflow' in descriptor.props && descriptor.props['overflow'] === OverflowMode.VISIBLE) {
-      for (const childTag of descriptor.childrenTags) {
-        const childDescriptor = this.getDescriptor(childTag);
-        const childBoundingBox = this.componentBoundingBoxByTag.get(childTag);
-        // since modals aren't rendered inside the view, we ignore them
-        // when calculating the bounding box
-        if (!childBoundingBox || !childDescriptor || childDescriptor.type === "ModalHostView") {
-          continue;
-        }
-        boundingBox.left = Math.min(boundingBox.left, childBoundingBox.left + origin.x);
-        boundingBox.right = Math.max(boundingBox.right, childBoundingBox.right + origin.x);
-        boundingBox.top = Math.min(boundingBox.top, childBoundingBox.top + origin.y);
-        boundingBox.bottom = Math.max(boundingBox.bottom, childBoundingBox.bottom + origin.y);
-      }
-    }
-
-    // apply the transform to the view's bounding box
-    if ('transform' in descriptor.props) {
-      const transformMatrix = matrix4.init(descriptor.props['transform'] as any);
-      const [left, top] = transformMatrix.transformPoint([boundingBox.left, boundingBox.top]);
-      const [right, bottom] = transformMatrix.transformPoint([boundingBox.right, boundingBox.bottom]);
-      boundingBox = {
-        left: Math.min(left, right),
-        right: Math.max(left, right),
-        top: Math.min(top, bottom),
-        bottom: Math.max(top, bottom),
-      }
-    }
-
-    return boundingBox;
   }
 
   public createRootDescriptor(tag: Tag) {

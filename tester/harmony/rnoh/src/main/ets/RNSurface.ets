@@ -5,6 +5,7 @@ import { ViewBaseProps } from './RNOHCorePackage/components/RNViewBase'
 import { convertColorSegmentsToString } from './RNOH'
 import { TouchDispatcher } from './RNOH/TouchDispatcher'
 import { SurfaceHandle, SurfaceProps } from './RNOH/SurfaceHandle'
+import { RNSurfaceManager } from './RNOHCorePackage/componentManagers/RNSurfaceManager'
 
 export type RootDescriptor = Descriptor<"RootView", ViewBaseProps>
 
@@ -31,6 +32,7 @@ export struct RNSurface {
   private touchDispatcher: TouchDispatcher;
   private shouldStopSurface: boolean = false;
   private initialProps: SurfaceProps;
+  private componentManager: RNSurfaceManager = undefined;
 
   aboutToAppear() {
     if ("surfaceHandle" in this.surfaceConfig){
@@ -43,8 +45,10 @@ export struct RNSurface {
       this.shouldStopSurface = true;
     }
     const tag = this.surfaceHandle.getTag();
+    this.componentManager = new RNSurfaceManager(tag, this.ctx);
     this.descriptor = this.ctx.rnInstance.descriptorRegistry.getDescriptor(tag)
     this.touchDispatcher = new TouchDispatcher(tag, this.ctx.rnInstance, this.ctx.logger)
+    this.ctx.componentManagerRegistry.registerComponentManager(tag, this.componentManager);
     this.cleanup = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
       tag,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)

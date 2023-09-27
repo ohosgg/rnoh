@@ -109,6 +109,7 @@ class RNInstanceManagerImpl implements RNInstance {
     public abilityContext: common.UIAbilityContext,
     private napiBridge: NapiBridge,
     private defaultProps: Record<string, any>) {
+    this.componentManagerRegistry = new ComponentManagerRegistry();
     this.descriptorRegistry = new DescriptorRegistry(
       {
         '1': { ...rootDescriptor },
@@ -116,7 +117,6 @@ class RNInstanceManagerImpl implements RNInstance {
       this.updateState.bind(this));
     this.commandDispatcher = new CommandDispatcher();
     this.turboModuleProvider = this.processPackages(packages).turboModuleProvider
-    this.componentManagerRegistry = new ComponentManagerRegistry();
   }
 
   public getId(): number {

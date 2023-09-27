@@ -1,4 +1,4 @@
-import { ComponentManager } from '../RNOHCorePackage/componentManagers/ComponentManager';
+import { ComponentManager } from './ComponentManager';
 import { Tag } from './DescriptorBase';
 
 export class ComponentManagerRegistry {

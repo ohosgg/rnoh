@@ -1,9 +1,9 @@
 import display from '@ohos.display';
 import { Descriptor, Tag } from '../../RNOH/DescriptorBase'
 import { RNOHContext } from '../../RNOH/RNOHContext'
-import { RNViewBase, ViewBaseProps } from './RNViewBase'
-import { RNComponentFactory } from '../../RNComponentFactory'
+import { ViewBaseProps } from './RNViewBase'
 import { TouchDispatcher } from '../../RNOH/TouchDispatcher'
+import { RNModalHostViewManager } from '../componentManagers/RNModalHostViewManager';
 
 type ModalHostViewProps = ViewBaseProps & {
   transparent: boolean;
@@ -31,6 +31,7 @@ struct ModalHostViewDialog {
   @State showContent: boolean = false
   unsubscribeFromDescriptorChanges: () => void | undefined
   touchDispatcher: TouchDispatcher;
+  componentManager: RNModalHostViewManager = undefined;
 
   emitComponentEvent(eventName: string) {
     this.ctx.rnInstanceManager.emitComponentEvent(this.tag, eventName, {});
@@ -38,6 +39,8 @@ struct ModalHostViewDialog {
 
   aboutToAppear() {
     this.emitComponentEvent("onShow")
+    this.componentManager = new RNModalHostViewManager(this.tag, this.ctx);
+    this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager);
     this.unsubscribeFromDescriptorChanges = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag, (descriptor: ModalHostViewDescriptor) => {
       // NOTE: this should ensure we only update the Stack's dimensions
       // after React rerenders the contents,

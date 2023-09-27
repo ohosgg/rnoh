@@ -50,6 +50,7 @@ export struct RNScrollView {
   private unregisterDescriptorChangesListener?: () => void = undefined
   private unregisterComponentManager?: () => void = undefined
   private scrollState: ScrollState = ScrollState.Idle
+  private componentManager: RNScrollViewManager = undefined
 
   aboutToAppear() {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag)
@@ -65,8 +66,10 @@ export struct RNScrollView {
           this.scrollTo(args[0], args[1], args[2]);
         }
       });
-    this.unregisterComponentManager = this.ctx.rnInstanceManager.componentManagerRegistry
-      .registerComponentManager(this.tag, new RNScrollViewManager(this.scroller))
+    this.componentManager = new RNScrollViewManager(this.tag, this.ctx, this.scroller)
+    if (this.shouldWrapWithPullToRefresh()) {
+      this.unregisterComponentManager = this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager);
+    }
   }
 
   onDescriptorUpdate(newDescriptor: ScrollViewDescriptor) {
@@ -276,7 +279,7 @@ export struct RNScrollView {
         }
       }
     } else {
-      RNViewBase({ ctx: this.ctx, tag: this.tag }) {
+      RNViewBase({ ctx: this.ctx, tag: this.tag, componentManager: this.componentManager }) {
         this.buildScrollCore()
       }
     }
