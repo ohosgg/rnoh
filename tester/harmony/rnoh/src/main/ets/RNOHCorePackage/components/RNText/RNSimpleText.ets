@@ -15,6 +15,7 @@ export type AttributedFragment = {
   fontStyle?: string
   textDecorationLine?: number
   textDecorationColor?: ColorSegments
+  textTransform?: string
   lineHeight?: number
   backgroundColor?: ColorSegments
   letterSpacing?: number
@@ -78,6 +79,17 @@ export function stringToFontStyle(style: string | undefined): FontStyle {
   return FontStyle.Normal;
 }
 
+function stringToTextTransform(textTransform: string) {
+  switch (textTransform) {
+    case "uppercase":
+      return TextCase.UpperCase
+    case "lowercase":
+      return TextCase.LowerCase
+    default:
+      return TextCase.Normal
+  }
+}
+
 export function getLetterSpacing(letterSpacing: number) {
   if (isNaN(letterSpacing)) {
     return undefined
@@ -103,6 +115,21 @@ export function getTextDecorationLine(fragment: AttributedFragment | undefined) 
     default:
       return TextDecorationType.None;
   }
+}
+
+function capitalizeTextIfNecessary(fragment: AttributedFragment): string {
+  if (fragment.textTransform != 'capitalize') {
+    return fragment.text
+  }
+  let words = fragment.text.split(' ');
+  let transformedWords = words.map(word => {
+    if (word && isNaN(Number(word[0]))) {
+      return word[0].toUpperCase() + word.slice(1).toLowerCase();
+    }
+    return word.toLowerCase();
+  });
+
+  return transformedWords.join(' ');
 }
 
 export type TextDescriptor = Descriptor<"Paragraph", TextProps>
@@ -146,7 +173,7 @@ export struct RNSimpleText {
     }) {
       Text() {
         ForEach(this.descriptor.props.fragments, (fragment: AttributedFragment) => {
-          Span(fragment.text)
+          Span(capitalizeTextIfNecessary(fragment))
             .fontColor(convertColorSegmentsToString(fragment.fontColor))
             .fontWeight(fragment.fontWeight)
             .fontSize(fragment.fontSize)
@@ -158,6 +185,7 @@ export struct RNSimpleText {
             .lineHeight(fragment.lineHeight ?? (fragment.fontSize ?? 16) * DEFAULT_LINE_SPACING)
             .backgroundColor(convertColorSegmentsToString(fragment.backgroundColor))// not supported
             .letterSpacing(getLetterSpacing(fragment.letterSpacing))
+            .textCase(stringToTextTransform(fragment.textTransform))
         })
       }
       .width("100%")

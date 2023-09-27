@@ -29,7 +29,7 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                 propsObjBuilder
                     .addProperty("maximumNumberOfLines", props->paragraphAttributes.maximumNumberOfLines)
                     .addProperty("ellipsizeMode", static_cast<int>(props->paragraphAttributes.ellipsizeMode));
-                
+
                 auto rawProps = props->rawProps;
                 std::string textAlignVertical = "auto";
                 if (rawProps.count("textAlignVertical") > 0) {
@@ -54,6 +54,9 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                 auto fragmentObjBuilder = arkJs.createObjectBuilder();
                 auto textAttributes = fragment.textAttributes;
 
+                if (textAttributes.textTransform.has_value()) {
+                    fragmentObjBuilder.addProperty("textTransform", textTransformToString(textAttributes.textTransform.value()));
+                }
                 fragmentObjBuilder
                     .addProperty("text", fragment.string)
                     .addProperty("fontColor", textAttributes.foregroundColor)
@@ -75,7 +78,7 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                 auto textDecorationLine = textAttributes.textDecorationLineType;
                 if (textDecorationLine.has_value()) {
                     fragmentObjBuilder.addProperty("textDecorationLine", static_cast<int>(textDecorationLine.value()));
-                }            
+                }
                 fragmentsPayload.push_back(fragmentObjBuilder.build());
             }
             auto fragmentsArray = arkJs.createArray(fragmentsPayload);
@@ -99,6 +102,18 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
             return "center";
         case facebook::react::TextAlignment::Justified:
             return "justified";
+        }
+    };
+    std::string textTransformToString(facebook::react::TextTransform textTransform) {
+        switch (textTransform) {
+        case facebook::react::TextTransform::Uppercase:
+            return "uppercase";
+        case facebook::react::TextTransform::Lowercase:
+            return "lowercase";
+        case facebook::react::TextTransform::Capitalize:
+            return "capitalize";
+        default:
+            return "none";
         }
     };
 
