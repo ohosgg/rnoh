@@ -29,10 +29,10 @@ export struct RNText {
   }
 
   build() {
-    // if (this.descriptor.props.fragments.length <= 1) {
-    RNSimpleText({ ctx: this.ctx, tag: this.tag })
-    // } else {
-    //   RNParagraph({ ctx: this.ctx, tag: this.tag })
-    // }
+    if (this.descriptor.props.fragments.length <= 1) {
+      RNSimpleText({ ctx: this.ctx, tag: this.tag })
+    } else {
+      RNParagraph({ ctx: this.ctx, tag: this.tag })
+    }
   }
 }

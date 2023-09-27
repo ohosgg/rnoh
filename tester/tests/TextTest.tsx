@@ -402,9 +402,7 @@ export function TextTest() {
             </Text>
           </View>
         </TestCase>
-        <TestCase
-          skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/230
-          itShould="use green background color for INNER (backgroundColor in text fragments)">
+        <TestCase itShould="use green background color for INNER (backgroundColor in text fragments)">
           <View
             style={{
               flexDirection: 'row',
@@ -415,9 +413,7 @@ export function TextTest() {
             </Text>
           </View>
         </TestCase>
-        <TestCase
-          skip
-          itShould="show text with different vertical alignments (verticalAlign)">
+        <TestCase itShould="show text with different vertical alignments (verticalAlign)">
           <View style={{...styles.smallContainerRow}}>
             <Text style={{verticalAlign: 'auto'}}>
               -<Text style={styles.blueShortText}>Auto</Text>-
@@ -433,9 +429,7 @@ export function TextTest() {
             </Text>
           </View>
         </TestCase>
-        <TestCase
-          skip
-          itShould="show text with different vertical alignments (textAlignVertical)">
+        <TestCase itShould="show text with different vertical alignments (textAlignVertical)">
           <View style={{...styles.smallContainerRow}}>
             <Text style={{textAlignVertical: 'auto'}}>
               -<Text style={styles.blueShortText}>Auto</Text>-
