@@ -71,6 +71,46 @@ describe('ParagraphMeasurer', () => {
       ['cillum.'],
     ]);
   });
+
+  describe('horizontalAlignment', () => {
+    it('should center the text', () => {
+      const paragraphMeasurer = createParagraphMeasurer();
+
+      const result = paragraphMeasurer.measureParagraph(
+        {fragments: [{type: 'text', content: 'foo', extraData: {}}]},
+        {
+          wordWrapStrategy: new UnhyphenatedWordWrapStrategy(
+            new FakeTextFragmentMeasurer(),
+          ),
+          containerConfig: {width: 5, horizontalAlignment: 'center'},
+        },
+      );
+
+      expect(
+        result.positionedLines[0].positionedFragments[0].positionRelativeToLine
+          .x,
+      ).toBe(1);
+    });
+
+    it('should align the text to the end', () => {
+      const paragraphMeasurer = createParagraphMeasurer();
+
+      const result = paragraphMeasurer.measureParagraph(
+        {fragments: [{type: 'text', content: 'foo', extraData: {}}]},
+        {
+          wordWrapStrategy: new UnhyphenatedWordWrapStrategy(
+            new FakeTextFragmentMeasurer(),
+          ),
+          containerConfig: {width: 5, horizontalAlignment: 'end'},
+        },
+      );
+
+      expect(
+        result.positionedLines[0].positionedFragments[0].positionRelativeToLine
+          .x,
+      ).toBe(2);
+    });
+  });
 });
 
 function expectLineSplitting(

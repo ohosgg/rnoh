@@ -5,6 +5,7 @@ import {
   ContainerConfig,
   MeasuredLine,
   PositionedLine,
+  HorizontalAlignment,
 } from './types';
 
 export class ParagraphMeasurer {
@@ -15,7 +16,8 @@ export class ParagraphMeasurer {
       containerConfig,
     }: {wordWrapStrategy: WordWrapStrategy; containerConfig: ContainerConfig},
   ): MeasuredParagraph<TTextExtraData> {
-    const lines = wordWrapStrategy.convertFragmentsIntoLines(
+    const horizontalAlignment = containerConfig.horizontalAlignment ?? 'start';
+    let lines = wordWrapStrategy.convertFragmentsIntoLines(
       paragraph.fragments,
       containerConfig,
     );
@@ -23,6 +25,11 @@ export class ParagraphMeasurer {
     const lineHeightsSum = lines
       .map(line => line.size.height)
       .reduce((sum, height) => sum + height, 0);
+    lines = this.alignFragmentsHorizontallyIfNecessary(
+      containerConfig,
+      horizontalAlignment,
+      lines,
+    );
     return {
       positionedLines: this.mapMeasuredLinesToPositionedLines(lines),
       size: {
@@ -30,6 +37,57 @@ export class ParagraphMeasurer {
         height: lineHeightsSum,
       },
     };
+  }
+
+  private alignFragmentsHorizontallyIfNecessary(
+    containerConfig: ContainerConfig,
+    horizontalAlignment: HorizontalAlignment,
+    lines: MeasuredLine<any>[],
+  ) {
+    if (
+      containerConfig.width !== undefined &&
+      horizontalAlignment &&
+      horizontalAlignment !== 'start'
+    ) {
+      return this.alignFragmentsHorizontally(
+        lines,
+        horizontalAlignment,
+        containerConfig.width,
+      );
+    }
+    return lines;
+  }
+
+  private alignFragmentsHorizontally(
+    lines: MeasuredLine[],
+    horizontalAlignment: HorizontalAlignment,
+    containerWidth: number,
+  ): MeasuredLine[] {
+    return lines.map(line => {
+      let offsetX = 0;
+      switch (horizontalAlignment) {
+        case 'center':
+          offsetX = (containerWidth - line.size.width) / 2;
+          break;
+        case 'end':
+          offsetX = containerWidth - line.size.width;
+          break;
+      }
+      return {
+        ...line,
+        positionedFragments: line.positionedFragments.map(
+          positionedFragment => {
+            return {
+              ...positionedFragment,
+              positionRelativeToLine: {
+                ...positionedFragment.positionRelativeToLine,
+                x: positionedFragment.positionRelativeToLine.x + offsetX,
+              },
+            };
+          },
+        ),
+      };
+    });
   }
 
   private mapMeasuredLinesToPositionedLines(

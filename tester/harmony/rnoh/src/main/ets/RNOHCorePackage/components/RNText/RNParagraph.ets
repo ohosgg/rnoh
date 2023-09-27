@@ -1,13 +1,18 @@
-import { RNOHContext, convertColorSegmentsToString } from '../../../RNOH'
+import {
+  RNOHContext,
+  convertColorSegmentsToString,
+  OHOSTextFragmentMeasurer,
+  OHOSMeasurerTextFragmentExtraData
+} from '../../../RNOH'
 import { RNViewBase } from '../RNViewBase'
-import { getLetterSpacing, AttributedFragment, TextDescriptor, EllipsizeMode } from './RNSimpleText'
-import { OHOSTextFragmentMeasurer, OHOSMeasurerTextFragmentExtraData } from '../../../RNOH'
+import { getLetterSpacing, AttributedFragment, TextDescriptor, EllipsizeMode, } from './RNSimpleText'
 import {
   ParagraphMeasurer,
   Fragment as MeasurerFragment,
   UnhyphenatedWordWrapStrategy,
   PositionedFragment,
-  PositionedLine
+  PositionedLine,
+  Size
 } from '../../../ParagraphMeasurer'
 
 type TextFragmentExtraData = OHOSMeasurerTextFragmentExtraData & {
@@ -15,17 +20,21 @@ type TextFragmentExtraData = OHOSMeasurerTextFragmentExtraData & {
   backgroundColor?: string
 }
 
-function calculateFragmentsLayout(textDescriptor: TextDescriptor): PositionedLine<TextFragmentExtraData>[] {
+function createLayout(textDescriptor: TextDescriptor) {
   const paragraphMeasurer = new ParagraphMeasurer()
   const fragments = mapAttributedFragmentsToMeasurerFragments(textDescriptor.props.fragments)
   return paragraphMeasurer.measureParagraph({ fragments }, {
-    containerConfig: { width: textDescriptor.layoutMetrics.frame.size.width },
+    containerConfig: {
+      width: textDescriptor.layoutMetrics.frame.size.width,
+      horizontalAlignment: ({left: 'start', center: 'center', right: 'end'} as const)[textDescriptor.props.textAlign ?? "left"]
+    },
     wordWrapStrategy: new UnhyphenatedWordWrapStrategy(new OHOSTextFragmentMeasurer())
-  }).positionedLines
+  })
 }
 
 function mapAttributedFragmentsToMeasurerFragments(attributedFragments: AttributedFragment[]): MeasurerFragment<TextFragmentExtraData>[] {
   return attributedFragments.map(attributedFragment => {
+
     return {
       type: "text",
       content: attributedFragment.text,
@@ -36,6 +45,7 @@ function mapAttributedFragmentsToMeasurerFragments(attributedFragments: Attribut
         lineHeight: attributedFragment.lineHeight || undefined,
         fontColor: convertColorSegmentsToString(attributedFragment.fontColor),
         backgroundColor: convertColorSegmentsToString(attributedFragment.backgroundColor)
+
       }
     }
   })
@@ -48,6 +58,7 @@ export struct RNParagraph {
   //--------------------------------------------------------------------------------------------------------------------
   @State descriptor: TextDescriptor = {} as TextDescriptor
   @State positionedLines: PositionedLine<TextFragmentExtraData>[] = []
+  @State paragraphSize: Size = { width: 0, height: 0 }
   private unregisterDescriptorChangesListener?: () => void = undefined
 
   aboutToAppear() {
@@ -64,8 +75,9 @@ export struct RNParagraph {
   }
 
   onDescriptorChange(newDescriptor: TextDescriptor) {
-    const positionedLines = calculateFragmentsLayout(newDescriptor)
-    this.positionedLines = positionedLines
+    const layout = createLayout(newDescriptor)
+    this.positionedLines = layout.positionedLines
+    this.paragraphSize = layout.size
     this.descriptor = newDescriptor
   }
 
@@ -81,6 +93,18 @@ export struct RNParagraph {
     return TextOverflow.Ellipsis
   }
 
+  getVerticalOffset() {
+    const maxOffset = Math.max(this.descriptor.layoutMetrics.frame.size.height - this.paragraphSize.height, 0)
+    switch (this.descriptor.props.textAlignVertical) {
+      case "bottom":
+        return maxOffset
+      case "center":
+        return maxOffset / 2
+      default:
+        return 0
+    }
+  }
+
   build() {
     RNViewBase({
       ctx: this.ctx,
@@ -92,8 +116,7 @@ export struct RNParagraph {
             Text(fragment.content)
               .fontColor(fragment.extraData.fontColor)
               .fontWeight(fragment.extraData.fontWeight)
-              .fontSize(fragment.extraData.fontSize)
-                // .fontStyle(stringToFontStyle(fragment.fontStyle))
+              .fontSize(fragment.extraData.fontSize)// .fontStyle(stringToFontStyle(fragment.fontStyle))
                 // .decoration({
                 //   type: getTextDecorationLine(fragment),
                 //   color: convertColorSegmentsToString(fragment.textDecorationColor)
@@ -103,7 +126,7 @@ export struct RNParagraph {
               .lineHeight(lineSize.height)
               .position({
                 x: positionRelativeToParagraph.x + positionRelativeToLine.x,
-                y: positionRelativeToParagraph.y + positionRelativeToLine.y
+                y: positionRelativeToParagraph.y + positionRelativeToLine.y + this.getVerticalOffset()
               })
               .width(size.width)
               .height(lineSize.height)

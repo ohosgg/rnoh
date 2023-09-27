@@ -452,7 +452,7 @@ export function TextTest() {
           </View>
         </TestCase>
         <TestCase
-          skip
+          skip // justify: https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/388
           itShould="show text with different horizontal alignments">
           <Text style={{textAlign: 'left'}}>
             <Text>Left: </Text>
