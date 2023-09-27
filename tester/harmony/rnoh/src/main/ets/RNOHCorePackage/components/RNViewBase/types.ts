@@ -8,6 +8,8 @@ import {
 
 export type PointerEvents = "auto" | "none" | "box-none" | "box-only"
 
+export type BackfaceVisibility = "visible" | "hidden"
+
 export type ViewBaseProps = LayoutProps & {
   backgroundColor?: ColorSegments
   borderWidth?: BorderWidths
@@ -25,6 +27,7 @@ export type ViewBaseProps = LayoutProps & {
   shadowOpacity?: number,
   shadowRadius?: number,
   overflow?: OverflowMode,
+  backfaceVisibility?: BackfaceVisibility,
 }
 
 export type ViewDynamicProps = BorderMetrics & {

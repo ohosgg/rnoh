@@ -195,8 +195,7 @@ export function ScrollViewTest() {
         </TestCase>
       </TestSuite>
       <TestSuite name="scroll indicators / scrollbar">
-        <TestCase modal itShould="have persistent scrollbar"
-        >
+        <TestCase modal itShould="have persistent scrollbar">
           <View style={styles.wrapperView}>
             <ScrollView persistentScrollbar={true} {...commonProps} />
           </View>

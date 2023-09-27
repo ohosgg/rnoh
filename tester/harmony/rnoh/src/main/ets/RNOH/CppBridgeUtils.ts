@@ -167,3 +167,13 @@ export function resolveBorderEdgeProps(props: BorderMetrics, type: BorderEdgePro
 
   return resolvedProps;
 }
+
+export function getTransformedVector(transformMatrix: TransformMatrix, vector: Array<number>): Array<number>{
+  const resultVector = [0, 0, 0, 0]
+  for (let i = 0; i < 4; ++i) {
+    for (let j = 0; j < 4; ++j) {
+      resultVector[i] += transformMatrix[i*4+j] * vector[j]
+    }
+  }
+  return resultVector
+}

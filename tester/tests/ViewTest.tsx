@@ -385,12 +385,8 @@ export function ViewTest() {
           </View>
         </View>
       </TestCase>
-      <TestCase
-        itShould="not show view rotated by 180deg(backfaceVisibility: hidden)"
-        skip
-      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/259
-      >
-        <View style={{ width: '100%', height: 20 }}>
+      <TestCase itShould="not show view rotated by 180deg(backfaceVisibility: hidden)">
+        <View style={{width: '100%', height: 20}}>
           <View
             style={{
               width: 100,

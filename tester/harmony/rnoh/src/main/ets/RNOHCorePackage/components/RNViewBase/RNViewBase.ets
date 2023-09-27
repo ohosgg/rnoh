@@ -8,6 +8,7 @@ import {
   BorderMetrics,
   resolveBorderMetrics,
   LayoutDirectionRN,
+  getTransformedVector,
   RNViewManager,
 } from '../../../RNOH'
 import { ViewBaseProps, ViewDynamicProps } from './types'
@@ -139,6 +140,32 @@ export struct RNViewBase {
   getClip(): boolean {
     return this.descriptor.props.overflow !== OverflowMode.VISIBLE
   }
+  
+  getOpacity(): number {
+    /**
+     * When backfaceVisibility is set to 'hidden' we need to determine whether the
+     * front face or the back face of the view is shown - and make it invisible in
+     * the latter case by setting opacity to 0. We determine it by transforming
+     * an unit vector with z coordinate equal to 1 (using the transform matrix
+     * provided in props) and checking whether such transformation makes it point
+     * in the opposite direction. Since it is not possible to set scale on the
+     * z coordinate in RN then the sign of the z coordinate is determined directly
+     * by the component's rotation and as such provides the necessary information.
+     * */
+    const backfaceVisibility = this.descriptor.props.backfaceVisibility;
+    const matrix = this.descriptor.props.transform
+
+    if (backfaceVisibility !== "hidden" || !matrix) {
+      return this.descriptor.props.opacity;
+    }
+    const unitVector = [0, 0, 1, 0]
+    const resultVector = getTransformedVector(matrix, unitVector)
+    if (resultVector[2] < 0) {
+      return 0;
+    }
+
+    return this.descriptor.props.opacity;
+  }
 
   build() {
     Stack() {
@@ -158,7 +185,7 @@ export struct RNViewBase {
     )
     .borderRadius(this.descriptor.props.borderRadius)
     .borderStyle(this.getBorderStyle())
-    .opacity(this.descriptor.props.opacity)
+    .opacity(this.getOpacity())
     .transform(this.descriptor.props.transform != undefined ? convertMatrixArrayToMatrix4(this.descriptor.props.transform) : undefined)
     .clip(this.getClip())
     .hitTestBehavior(this.getHitTestMode())

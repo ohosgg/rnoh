@@ -44,6 +44,7 @@ class ViewComponentNapiBinder : public BaseComponentNapiBinder {
                 .addProperty("shadowOpacity", props->shadowOpacity)
                 .addProperty("shadowRadius", props->shadowRadius)
                 .addProperty("overflow", props->yogaStyle.overflow())
+                .addProperty("backfaceVisibility", this->stringifyBackfaceVisibility(props->backfaceVisibility))
                 .build();
         }
         return napiBaseProps;
@@ -70,6 +71,16 @@ class ViewComponentNapiBinder : public BaseComponentNapiBinder {
             return "dashed";
         case facebook::react::BorderStyle::Dotted:
             return "dotted";
+        }
+    }
+    std::string stringifyBackfaceVisibility(facebook::react::BackfaceVisibility backfaceVisibility) {
+        switch(backfaceVisibility) {
+        case facebook::react::BackfaceVisibility::Auto:
+            return "auto";
+        case facebook::react::BackfaceVisibility::Visible:
+            return "visible";
+        case facebook::react::BackfaceVisibility::Hidden:
+            return "hidden";
         }
     }
 };
