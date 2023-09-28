@@ -56,20 +56,20 @@ void rnoh::MutationsToNapiConverter::updateState(napi_env env, std::string const
 
 napi_value MutationsToNapiConverter::convertShadowView(napi_env env, react::ShadowView const shadowView) {
     ArkJS arkJs(env);
-    auto napiShadowViewBuilder = arkJs.createObjectBuilder();
+    auto descriptorBuilder = arkJs.createObjectBuilder();
     if (m_componentNapiBinderByName.count(shadowView.componentName) > 0) {
         auto componentNapiBinder = m_componentNapiBinderByName.at(shadowView.componentName);
-        napiShadowViewBuilder
+        descriptorBuilder
             .addProperty("isDynamicBinder", arkJs.createBoolean(false))
             .addProperty("props", componentNapiBinder->createProps(env, shadowView))
             .addProperty("state", componentNapiBinder->createState(env, shadowView));
     } else {
-        napiShadowViewBuilder
+        descriptorBuilder
             .addProperty("isDynamicBinder", arkJs.createBoolean(true))
             .addProperty("props", arkJs.createFromDynamic(shadowView.props->rawProps))
             .addProperty("state", arkJs.createObjectBuilder().build());
     }
-    napiShadowViewBuilder
+    descriptorBuilder
         .addProperty("layoutMetrics",
                      arkJs.createObjectBuilder()
                          .addProperty("frame",
@@ -86,9 +86,10 @@ napi_value MutationsToNapiConverter::convertShadowView(napi_env env, react::Shad
                                                            .build())
                                           .build())
                          .build());
-    return napiShadowViewBuilder
+    return descriptorBuilder
         .addProperty("tag", shadowView.tag)
         .addProperty("type", shadowView.componentName)
         .addProperty("childrenTags", arkJs.createArray())
+        .addProperty("rawProps", arkJs.createFromDynamic(shadowView.props->rawProps))
         .build();
 }

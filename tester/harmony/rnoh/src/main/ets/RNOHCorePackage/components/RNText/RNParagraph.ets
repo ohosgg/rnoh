@@ -2,7 +2,8 @@ import {
   RNOHContext,
   convertColorSegmentsToString,
   OHOSTextFragmentMeasurer,
-  OHOSMeasurerTextFragmentExtraData
+  OHOSMeasurerTextFragmentExtraData,
+  PLACEHOLDER_SYMBOL
 } from '../../../RNOH'
 import { RNViewBase } from '../RNViewBase'
 import { getLetterSpacing, AttributedFragment, TextDescriptor, EllipsizeMode, } from './RNSimpleText'
@@ -12,13 +13,15 @@ import {
   UnhyphenatedWordWrapStrategy,
   PositionedFragment,
   PositionedLine,
-  Size
+  Size,
+  PlaceholderFragment
 } from '../../../ParagraphMeasurer'
 
 type TextFragmentExtraData = OHOSMeasurerTextFragmentExtraData & {
   fontColor?: string
   backgroundColor?: string
 }
+
 
 function createLayout(textDescriptor: TextDescriptor) {
   const paragraphMeasurer = new ParagraphMeasurer()
@@ -39,7 +42,17 @@ function createLayout(textDescriptor: TextDescriptor) {
 
 function mapAttributedFragmentsToMeasurerFragments(attributedFragments: AttributedFragment[]): MeasurerFragment<TextFragmentExtraData>[] {
   return attributedFragments.map(attributedFragment => {
-
+    if (attributedFragment.text === PLACEHOLDER_SYMBOL) {
+      const placeholder: PlaceholderFragment = {
+        type: "placeholder",
+        width: attributedFragment.parentShadowView.layoutMetrics.frame.size.width,
+        height: attributedFragment.parentShadowView.layoutMetrics.frame.size.height,
+        extraData: {
+          tag: attributedFragment.parentShadowView.tag
+        }
+      }
+      return placeholder
+    }
     return {
       type: "text",
       content: attributedFragment.text,
@@ -59,6 +72,7 @@ function mapAttributedFragmentsToMeasurerFragments(attributedFragments: Attribut
 export struct RNParagraph {
   public ctx: RNOHContext
   public tag: number
+  @BuilderParam buildChildren: () => void
   //--------------------------------------------------------------------------------------------------------------------
   @State descriptor: TextDescriptor = {} as TextDescriptor
   @State positionedLines: PositionedLine<TextFragmentExtraData>[] = []
@@ -98,6 +112,10 @@ export struct RNParagraph {
   }
 
   getVerticalOffset() {
+    /**
+     * TODO: Move handling vertical alignment to ParagraphMeasurer, to fix the position of attachments.
+     * https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/392
+     */
     const maxOffset = Math.max(this.descriptor.layoutMetrics.frame.size.height - this.paragraphSize.height, 0)
     switch (this.descriptor.props.textAlignVertical) {
       case "bottom":
@@ -136,6 +154,7 @@ export struct RNParagraph {
               .height(lineSize.height)
           }
         })
+        this.buildChildren()
       })
     }
   }

@@ -22,14 +22,7 @@ TextMeasurement TextLayoutManager::measure(
     return m_measureCache.get(
         {attributedString, paragraphAttributes, layoutConstraints},
         [&](TextMeasureCacheKey const & /*key*/) {
-            auto attachments = TextMeasurement::Attachments{};
-            auto measurement = m_textLayoutManagerDelegate->measure(attributedString, paragraphAttributes, layoutConstraints);
-            for (auto const &fragment : attributedStringBox.getValue().getFragments()) {
-                if (fragment.isAttachment()) {
-                    attachments.push_back(TextMeasurement::Attachment{{{0, 0}, {0, 0}}, false});
-                }
-            }
-            return TextMeasurement{measurement, attachments};
+            return m_textLayoutManagerDelegate->measure(attributedString, paragraphAttributes, layoutConstraints);
         });
 }
 

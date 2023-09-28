@@ -24,12 +24,11 @@ class TextLayoutManager;
 
 using SharedTextLayoutManager = std::shared_ptr<const TextLayoutManager>;
 
-
 class TextLayoutManagerDelegate {
   public:
-   virtual facebook::react::Size measure(AttributedString attributedString,
-    ParagraphAttributes paragraphAttributes,
-    LayoutConstraints layoutConstraints) = 0;
+    virtual TextMeasurement measure(AttributedString attributedString,
+                                    ParagraphAttributes paragraphAttributes,
+                                    LayoutConstraints layoutConstraints) = 0;
 };
 
 /*

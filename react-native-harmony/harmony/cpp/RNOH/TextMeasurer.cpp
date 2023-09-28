@@ -4,14 +4,13 @@
 using namespace facebook;
 using namespace rnoh;
 
-react::Size TextMeasurer::measure(react::AttributedString attributedString,
-                                  react::ParagraphAttributes paragraphAttributes,
-                                  react::LayoutConstraints layoutConstraints) {
-    react::Size result = {};
+react::TextMeasurement TextMeasurer::measure(react::AttributedString attributedString,
+                                             react::ParagraphAttributes paragraphAttributes,
+                                             react::LayoutConstraints layoutConstraints) {
+    react::TextMeasurement result = {{0, 0}, {}};
     m_taskExecutor->runSyncTask(TaskThread::MAIN, [&result, measureTextRef = m_measureTextFnRef, env = m_env, &attributedString, &paragraphAttributes, &layoutConstraints]() {
         ArkJS arkJs(env);
         auto napiMeasureText = arkJs.getReferenceValue(measureTextRef);
-
         auto napiAttributedStringBuilder = arkJs.createObjectBuilder();
         napiAttributedStringBuilder.addProperty("string", attributedString.getString());
         std::vector<napi_value> napiFragments = {};
@@ -25,8 +24,22 @@ react::Size TextMeasurer::measure(react::AttributedString attributedString,
             }
 
             auto napiFragmentBuilder = arkJs.createObjectBuilder();
-            napiFragmentBuilder.addProperty("string", fragment.string);
-            napiFragmentBuilder.addProperty("textAttributes", textAttributesBuilder.build());
+            napiFragmentBuilder
+                .addProperty("string", fragment.string)
+                .addProperty("textAttributes", textAttributesBuilder.build());
+            if (fragment.isAttachment())
+                napiFragmentBuilder.addProperty("parentShadowView", arkJs.createObjectBuilder()
+                                                                        .addProperty("tag", fragment.parentShadowView.tag)
+                                                                        .addProperty("layoutMetrics", arkJs.createObjectBuilder()
+                                                                                                          .addProperty("frame", arkJs.createObjectBuilder()
+                                                                                                                                    .addProperty("size", arkJs.createObjectBuilder()
+                                                                                                                                                             .addProperty("width", fragment.parentShadowView.layoutMetrics.frame.size.width)
+                                                                                                                                                             .addProperty("height", fragment.parentShadowView.layoutMetrics.frame.size.height)
+                                                                                                                                                             .build())
+                                                                                                                                    .build())
+                                                                                                          .build())
+                                                                        .build());
+
             napiFragments.push_back(napiFragmentBuilder.build());
         }
         napiAttributedStringBuilder.addProperty("fragments", arkJs.createArray(napiFragments));
@@ -42,8 +55,20 @@ react::Size TextMeasurer::measure(react::AttributedString attributedString,
 
         auto resultNapiValue = arkJs.call(napiMeasureText, {napiAttributedStringBuilder.build(), napiParagraphAttributesBuilder.build(), napiLayoutConstraintsBuilder.build()});
 
-        result.width = arkJs.getDouble(arkJs.getObjectProperty(resultNapiValue, "width"));
-        result.height = arkJs.getDouble(arkJs.getObjectProperty(resultNapiValue, "height"));
+        result.size.width = arkJs.getDouble(arkJs.getObjectProperty(arkJs.getObjectProperty(resultNapiValue, "size"), "width"));
+        result.size.height = arkJs.getDouble(arkJs.getObjectProperty(arkJs.getObjectProperty(resultNapiValue, "size"), "height"));
+        auto napiAttachments = arkJs.getObjectProperty(resultNapiValue, "attachmentLayouts");
+        for (auto i = 0; i < arkJs.getArrayLength(napiAttachments); i++) {
+            auto napiAttachment = arkJs.getArrayElement(napiAttachments, i);
+            auto napiPositionRelativeToContainer = arkJs.getObjectProperty(napiAttachment, "positionRelativeToContainer");
+            auto napiSize = arkJs.getObjectProperty(napiAttachment, "size");
+            react::TextMeasurement::Attachment attachment;
+            attachment.frame.origin.x = arkJs.getDouble(arkJs.getObjectProperty(napiPositionRelativeToContainer, "x"));
+            attachment.frame.origin.y = arkJs.getDouble(arkJs.getObjectProperty(napiPositionRelativeToContainer, "y"));
+            attachment.frame.size.width = arkJs.getDouble(arkJs.getObjectProperty(napiSize, "width"));
+            attachment.frame.size.height = arkJs.getDouble(arkJs.getObjectProperty(napiSize, "height"));
+            result.attachments.push_back(std::move(attachment));
+        }
     });
     return result;
 }

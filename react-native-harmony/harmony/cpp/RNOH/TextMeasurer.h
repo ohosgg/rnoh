@@ -14,9 +14,9 @@ class TextMeasurer : public facebook::react::TextLayoutManagerDelegate {
           m_measureTextFnRef(measureTextFnRef),
           m_taskExecutor(taskExecutor) {}
 
-    facebook::react::Size measure(facebook::react::AttributedString attributedString,
-                                  facebook::react::ParagraphAttributes paragraphAttributes,
-                                  facebook::react::LayoutConstraints layoutConstraints);
+    facebook::react::TextMeasurement measure(facebook::react::AttributedString attributedString,
+                                   facebook::react::ParagraphAttributes paragraphAttributes,
+                                   facebook::react::LayoutConstraints layoutConstraints);
 
   private:
     napi_env m_env;

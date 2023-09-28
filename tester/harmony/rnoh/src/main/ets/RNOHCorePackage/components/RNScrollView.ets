@@ -43,6 +43,7 @@ export struct RNScrollView {
   @State props: ScrollViewProps = {} as ScrollViewProps
   @State contentSize: Size = {} as Size
   @State childrenTags: Tag[] = []
+  @State descriptor: ScrollViewDescriptor = {} as ScrollViewDescriptor
   state: ScrollViewState = {} as ScrollViewState
   private parentTag: Tag | undefined = undefined
   private scroller = new Scroller()
@@ -75,6 +76,7 @@ export struct RNScrollView {
   onDescriptorUpdate(newDescriptor: ScrollViewDescriptor) {
     const oldProps = this.props
     this.props = newDescriptor.props
+    this.descriptor = newDescriptor
     const {contentSizeHeight, contentSizeWidth} = newDescriptor.state
     this.contentSize = {
       width: contentSizeWidth,
@@ -142,8 +144,8 @@ export struct RNScrollView {
         y: yOffset,
       },
       containerSize: {
-        width: this.props.width,
-        height: this.props.height,
+        width: this.descriptor.layoutMetrics.frame.size.width,
+        height: this.descriptor.layoutMetrics.frame.size.height,
       },
       zoomScale: 1,
     }

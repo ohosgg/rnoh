@@ -18,6 +18,7 @@ export type PlaceholderFragment = {
   type: 'placeholder';
   width: number;
   height: number;
+  extraData: Record<string, any>;
 };
 
 export type Fragment<TTextExtraData extends Record<string, any> = any> =

@@ -3,7 +3,8 @@ import {
   Descriptor,
   convertColorSegmentsToString,
   RNOHContext,
-  DEFAULT_LINE_SPACING
+  DEFAULT_LINE_SPACING,
+  Tag
 } from '../../../RNOH'
 import { ViewBaseProps, RNViewBase } from '../RNViewBase'
 
@@ -19,6 +20,17 @@ export type AttributedFragment = {
   lineHeight?: number
   backgroundColor?: ColorSegments
   letterSpacing?: number
+  parentShadowView?: {
+    tag: Tag,
+    layoutMetrics: {
+      frame: {
+        size: {
+          width: number,
+          height: number
+        }
+      }
+    }
+  }
 }
 
 export type TextProps = ViewBaseProps & {
@@ -47,7 +59,7 @@ export enum EllipsizeMode {
 }
 
 function stringToAlignment(alignment: string) {
-  switch(alignment) {
+  switch (alignment) {
     case "center":
       return TextAlign.Center
     case "right":

@@ -18,6 +18,7 @@ const rootDescriptor = {
   type: 'RootView',
   tag: 1,
   childrenTags: [],
+  rawProps: {},
   props: { top: 0, left: 0, width: 0, height: 0 },
   state: {},
   layoutMetrics: {

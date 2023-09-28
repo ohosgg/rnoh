@@ -48,12 +48,13 @@ export enum OverflowMode {
 
 export type Descriptor<TType = string,
 TProps extends Object = Object,
-TState = {}> = {
+TState = {}, TRawProps extends Object = {}> = {
   type: TType;
   tag: Tag;
   parentTag?: Tag;
   props: TProps;
   state: TState;
+  rawProps: TRawProps;
   childrenTags: Tag[];
   layoutMetrics: LayoutMetrics;
   isDynamicBinder: boolean;

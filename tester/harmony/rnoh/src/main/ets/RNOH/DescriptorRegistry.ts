@@ -194,6 +194,7 @@ export class DescriptorRegistry {
       childrenTags: [],
       props: { top: 0, left: 0, width: 0, height: 0 },
       state: {},
+      rawProps: {},
       layoutMetrics: {
         frame: {
           origin: {

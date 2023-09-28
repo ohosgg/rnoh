@@ -79,6 +79,18 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                 if (textDecorationLine.has_value()) {
                     fragmentObjBuilder.addProperty("textDecorationLine", static_cast<int>(textDecorationLine.value()));
                 }
+                if (fragment.isAttachment())
+                    fragmentObjBuilder.addProperty("parentShadowView", arkJs.createObjectBuilder()
+                                                                           .addProperty("tag", fragment.parentShadowView.tag)
+                                                                           .addProperty("layoutMetrics", arkJs.createObjectBuilder()
+                                                                                                             .addProperty("frame", arkJs.createObjectBuilder()
+                                                                                                                                       .addProperty("size", arkJs.createObjectBuilder()
+                                                                                                                                                                .addProperty("width", fragment.parentShadowView.layoutMetrics.frame.size.width)
+                                                                                                                                                                .addProperty("height", fragment.parentShadowView.layoutMetrics.frame.size.height)
+                                                                                                                                                                .build())
+                                                                                                                                       .build())
+                                                                                                             .build())
+                                                                           .build());
                 fragmentsPayload.push_back(fragmentObjBuilder.build());
             }
             auto fragmentsArray = arkJs.createArray(fragmentsPayload);

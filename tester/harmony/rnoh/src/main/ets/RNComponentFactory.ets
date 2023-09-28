@@ -63,7 +63,7 @@ export struct RNComponentFactory {
     } else if (this.descriptorType === "TextInput") {
       RNTextInput({ ctx: this.ctx, tag: this.tag })
     } else if (this.descriptorType === "Paragraph") {
-      RNText({ ctx: this.ctx, tag: this.tag })
+      RNText({ ctx: this.ctx, tag: this.tag, buildChildren: this.renderDescriptors.bind(this) })
     } else if (this.descriptorType === "PullToRefreshView") {
       /**
        * RNScrollView displays Refresh component if PullToRefreshView is its direct parent.

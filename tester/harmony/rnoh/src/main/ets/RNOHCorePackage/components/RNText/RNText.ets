@@ -6,8 +6,8 @@ import { RNParagraph } from './RNParagraph'
 export struct RNText {
   public ctx: RNOHContext
   public tag: number
+  @BuilderParam public buildChildren: () => void
   // -------------------------------------------------------------------------------------------------------------------
-
   @State descriptor: TextDescriptor = {} as TextDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined
 
@@ -32,7 +32,7 @@ export struct RNText {
     if (this.descriptor.props.fragments.length <= 1) {
       RNSimpleText({ ctx: this.ctx, tag: this.tag })
     } else {
-      RNParagraph({ ctx: this.ctx, tag: this.tag })
+      RNParagraph({ ctx: this.ctx, tag: this.tag, buildChildren: this.buildChildren.bind(this) })
     }
   }
 }

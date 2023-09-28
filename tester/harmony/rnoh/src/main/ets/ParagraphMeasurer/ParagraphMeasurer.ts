@@ -8,6 +8,8 @@ import {
   HorizontalAlignment,
 } from './types';
 
+export const PLACEHOLDER_SYMBOL = '￼' as const;
+
 export class ParagraphMeasurer {
   public measureParagraph<TTextExtraData extends Record<string, any> = any>(
     paragraph: Paragraph<TTextExtraData>,
