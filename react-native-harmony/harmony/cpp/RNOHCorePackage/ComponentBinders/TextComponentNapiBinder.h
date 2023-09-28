@@ -43,7 +43,6 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                 if (rawProps.count("disabled") > 0) {
                     disabled = rawProps["disabled"].asBool();
                 }
-
                 propsObjBuilder
                     .addProperty("textAlignVertical", textAlignVertical)
                     .addProperty("selectable", selectable)
@@ -57,6 +56,13 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                 if (textAttributes.textTransform.has_value()) {
                     fragmentObjBuilder.addProperty("textTransform", textTransformToString(textAttributes.textTransform.value()));
                 }
+                auto textShadowPropsBuilder = ArkJS(env).createObjectBuilder();
+                textShadowPropsBuilder
+                    .addProperty("textShadowColor", textAttributes.textShadowColor)
+                    .addProperty("textShadowOffset", ArkJS(env).createObjectBuilder().addProperty("width", textAttributes.textShadowOffset->width).addProperty("height", textAttributes.textShadowOffset->height).build())
+                    .addProperty("textShadowRadius", textAttributes.textShadowRadius);
+                fragmentObjBuilder.addProperty("textShadowProps", textShadowPropsBuilder.build());
+
                 fragmentObjBuilder
                     .addProperty("text", fragment.string)
                     .addProperty("fontColor", textAttributes.foregroundColor)

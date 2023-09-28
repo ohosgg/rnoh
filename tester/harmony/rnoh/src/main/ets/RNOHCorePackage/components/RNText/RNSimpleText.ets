@@ -20,6 +20,7 @@ export type AttributedFragment = {
   lineHeight?: number
   backgroundColor?: ColorSegments
   letterSpacing?: number
+  textShadowProps?: TextShadowProps
   parentShadowView?: {
     tag: Tag,
     layoutMetrics: {
@@ -31,6 +32,15 @@ export type AttributedFragment = {
       }
     }
   }
+}
+
+export type TextShadowProps={
+  textShadowColor?: ColorSegments,
+  textShadowOffset?: {
+    width: number,
+    height: number
+  },
+  textShadowRadius?: number,
 }
 
 export type TextProps = ViewBaseProps & {
@@ -129,6 +139,26 @@ export function getTextDecorationLine(fragment: AttributedFragment | undefined) 
   }
 }
 
+export function getTextShadow(textShadow: TextShadowProps): {
+  radius: number;
+  color?: string;
+  offsetX?: number;
+  offsetY?: number;
+} | undefined {
+  const shadowRadius = textShadow?.textShadowRadius
+
+  if (shadowRadius === undefined || shadowRadius === 0)
+    return undefined
+  const color = textShadow.textShadowColor;
+
+  return {
+    radius: shadowRadius,
+    color:  convertColorSegmentsToString(color),
+    offsetX: textShadow.textShadowOffset?.width,
+    offsetY: textShadow.textShadowOffset?.height,
+  }
+}
+
 function capitalizeTextIfNecessary(fragment: AttributedFragment): string {
   if (fragment.textTransform != 'capitalize') {
     return fragment.text
@@ -203,6 +233,7 @@ export struct RNSimpleText {
       .width("100%")
       .height("100%")
       .maxLines(this.getMaxLines())
+      .textShadow(getTextShadow(this.descriptor.props.fragments[0].textShadowProps))
       .textOverflow({ overflow: this.getTextOverflow() })
       .textAlign(stringToAlignment(this.descriptor.props.textAlign))
       .align(stringToVerticalAlign(this.descriptor.props.textAlignVertical))
