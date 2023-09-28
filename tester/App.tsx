@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {
   AnimationsExample,
   CheckerboardExample,
@@ -16,14 +16,33 @@ import {
 import {NavigationContainer, Page} from './components';
 import {Benchmarker, DeepTree, SierpinskiTriangle} from './benchmarks';
 import {PortalHost, PortalProvider} from '@gorhom/portal';
+import * as tests from './tests';
+import {Tester} from '@rnoh/testerino';
 
 function App() {
   return (
     <NavigationContainer>
       <PortalProvider>
-        <Page name="TESTS">
-          <TesterExample />
+        <Page name="TESTS: DEV">
+          <TesterExample filter={{tags: ['dev']}} />
         </Page>
+        <Page name="TESTS: AUTOMATED & MANUAL">
+          <TesterExample filter={{types: ['automated', 'manual']}} />
+        </Page>
+        {Object.keys(tests).map(testSuiteName => {
+          const TestSuite = tests[testSuiteName as keyof typeof tests];
+          return (
+            <Page
+              key={testSuiteName}
+              name={`TESTS: ${testSuiteName.replace('Test', '')}`}>
+              <Tester>
+                <ScrollView>
+                  <TestSuite key={testSuiteName} />
+                </ScrollView>
+              </Tester>
+            </Page>
+          );
+        })}
         <Page name="BENCHMARK: DEEP TREE">
           <Benchmarker
             samplesCount={0}

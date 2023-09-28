@@ -101,7 +101,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     width: '100%',
-    height: 64,
     fontWeight: 'bold',
     paddingHorizontal: 16,
     paddingVertical: 24,
