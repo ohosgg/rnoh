@@ -14,6 +14,7 @@ class ScrollViewComponentJSIBinder : public ViewComponentJSIBinder {
         object.setProperty(rt, "contentOffset", "Object");
         object.setProperty(rt, "indicatorStyle", "number");
         object.setProperty(rt, "bounces", "boolean");
+        object.setProperty(rt, "decelerationRate", "number");
         
         return object;
     }

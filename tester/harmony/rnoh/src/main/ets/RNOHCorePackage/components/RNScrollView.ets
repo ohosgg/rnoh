@@ -13,6 +13,7 @@ export type ScrollViewProps = ViewBaseProps & {
   showsHorizontalScrollIndicator: boolean
   showsVerticalScrollIndicator: boolean
   indicatorStyle?: IndicatorStyle
+  decelerationRate?: number
 }
 
 export type ScrollViewState = {
@@ -129,6 +130,19 @@ export struct RNScrollView {
       return Color.White;
     }
     return Color.Black;
+  }
+
+  friction() {
+    // default deceleration rate and friction values differ between ArkUI and RN
+    // so we need to adapt the decelerationRate got in props to resemble the behaviour
+    // on other platforms
+    const IOS_DEFAULT_DEC_RATE = 0.998;
+    const ARKUI_DEFAULT_FRICTION = 0.9;
+    let friction = 100;
+    if (this.props.decelerationRate > 0 && this.props.decelerationRate < 1) {
+      friction = (1 - this.props.decelerationRate) * ARKUI_DEFAULT_FRICTION / (1 - IOS_DEFAULT_DEC_RATE);
+    }
+    return friction
   }
 
   createScrollEvent() {
@@ -280,6 +294,7 @@ export struct RNScrollView {
     .onScrollStart(this.onScrollBegin.bind(this))
     .onScrollStop(this.onScrollEnd.bind(this))
     .onAppear(this.scrollToContentOffset.bind(this))
+    .friction(this.friction())
   }
 
   build() {

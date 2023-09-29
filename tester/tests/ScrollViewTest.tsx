@@ -489,9 +489,7 @@ export function ScrollViewTest() {
         </TestCase>
         <TestCase
           modal
-          skip
           itShould="the left scrollview should decelerate faster (stops earlier) than the right one (decelarationRate)"
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/306
         >
           <View style={[styles.wrapperView, { flexDirection: 'row' }]}>
             <ScrollView {...commonProps} decelerationRate={0.8} />

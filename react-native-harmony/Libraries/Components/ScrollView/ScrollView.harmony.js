@@ -42,7 +42,7 @@ import TextInputState from "react-native/Libraries/Components/TextInput/TextInpu
 import View from "react-native/Libraries/Components/View/View";
 import AndroidHorizontalScrollContentViewNativeComponent from "react-native/Libraries/Components/ScrollView/AndroidHorizontalScrollContentViewNativeComponent";
 import AndroidHorizontalScrollViewNativeComponent from "react-native/Libraries/Components/ScrollView/AndroidHorizontalScrollViewNativeComponent";
-import processDecelerationRate from "react-native/Libraries/Components/ScrollView/processDecelerationRate";
+import processDecelerationRate from "./processDecelerationRate";
 import ScrollContentViewNativeComponent from "react-native/Libraries/Components/ScrollView/ScrollContentViewNativeComponent";
 import Commands from "react-native/Libraries/Components/ScrollView/ScrollViewCommands";
 import ScrollViewContext, {
