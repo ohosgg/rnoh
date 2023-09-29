@@ -105,7 +105,7 @@ export struct RNScrollView {
   scrollTo(xOffset, yOffset, animated) {
     const animation = animated ? { duration: 1000, curve: Curve.Smooth } : undefined;
     this.scroller.scrollTo({ xOffset, yOffset, animation })
-    this.ctx.rnInstanceManager.emitComponentEvent(
+    this.ctx.rnInstance.emitComponentEvent(
       this.tag,
       "onScroll",
       this.createScrollEvent()
@@ -132,7 +132,12 @@ export struct RNScrollView {
   }
 
   createScrollEvent() {
-    const { xOffset, yOffset } = this.scroller.currentOffset();
+    const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag);
+
+    if (!descriptor) {
+      // the view was unmounted while scrolling - don't report the event in that case
+      return;
+    }
 
     return {
       contentSize: {
@@ -140,8 +145,8 @@ export struct RNScrollView {
         height: this.contentSize.height,
       },
       contentOffset: {
-        x: xOffset,
-        y: yOffset,
+        x: descriptor.state.contentOffsetX,
+        y: descriptor.state.contentOffsetY,
       },
       containerSize: {
         width: this.descriptor.layoutMetrics.frame.size.width,
@@ -151,18 +156,7 @@ export struct RNScrollView {
     }
   }
 
-  onScroll(offset: number, scrollState: ScrollState) {
-    const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag);
-
-    if (!descriptor) {
-      // the view was unmounted while scrolling - don't report the event in that case
-      return;
-    }
-
-    const currentOffset = this.scroller.currentOffset()
-    const yOffset = currentOffset.yOffset;
-    const xOffset = currentOffset.xOffset;
-
+  onScroll(_: number, scrollState: ScrollState) {
     const currentScrollState = this.scrollState;
 
     if (currentScrollState != scrollState) {
@@ -179,11 +173,20 @@ export struct RNScrollView {
       }
     }
     this.scrollState = scrollState
+  }
 
+  onScrollEvent(dx: number, dy: number) {
+    const {xOffset, yOffset} = this.scroller.currentOffset();
+    const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag);
+
+    if (!descriptor) {
+      // the view was unmounted while scrolling - don't report the event in that case
+      return;
+    }
     descriptor.state.contentOffsetX = xOffset;
     descriptor.state.contentOffsetY = yOffset;
 
-    this.ctx.rnInstanceManager.emitComponentEvent(
+    this.ctx.rnInstance.emitComponentEvent(
       this.tag,
       "onScroll",
       this.createScrollEvent()
@@ -191,7 +194,7 @@ export struct RNScrollView {
   }
 
   onDragBegin() {
-    this.ctx.rnInstanceManager.emitComponentEvent(
+    this.ctx.rnInstance.emitComponentEvent(
       this.tag,
       "onScrollBeginDrag",
       this.createScrollEvent()
@@ -199,7 +202,7 @@ export struct RNScrollView {
   }
 
   handleDragEnd() {
-    this.ctx.rnInstanceManager.emitComponentEvent(
+    this.ctx.rnInstance.emitComponentEvent(
       this.tag,
       "onScrollEndDrag",
       this.createScrollEvent()
@@ -207,7 +210,7 @@ export struct RNScrollView {
   }
 
   onMomentumBegin() {
-    this.ctx.rnInstanceManager.emitComponentEvent(
+    this.ctx.rnInstance.emitComponentEvent(
       this.tag,
       "onMomentumScrollBegin",
       this.createScrollEvent()
@@ -215,14 +218,19 @@ export struct RNScrollView {
   }
 
   onMomentumEnd() {
-    this.ctx.rnInstanceManager.emitComponentEvent(
+    this.ctx.rnInstance.emitComponentEvent(
       this.tag,
       "onMomentumScrollEnd",
       this.createScrollEvent()
     )
   }
 
+  onScrollBegin() {
+    this.componentManager.setScrolling(true);
+  }
+
   onScrollEnd() {
+    this.componentManager.setScrolling(false);
     if (this.scrollState === ScrollState.Fling) {
       this.onMomentumEnd();
     } else if (this.scrollState === ScrollState.Scroll) {
@@ -266,9 +274,10 @@ export struct RNScrollView {
     .scrollBar(this.scrollBarState())
     .scrollBarColor(this.scrollBarColor())
     .enableScrollInteraction(this.props.scrollEnabled)
-    // .scrollBarWidth(30)
     .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
     .onScrollFrameBegin(this.onScroll.bind(this))
+    .onScroll(this.onScrollEvent.bind(this))
+    .onScrollStart(this.onScrollBegin.bind(this))
     .onScrollStop(this.onScrollEnd.bind(this))
     .onAppear(this.scrollToContentOffset.bind(this))
   }

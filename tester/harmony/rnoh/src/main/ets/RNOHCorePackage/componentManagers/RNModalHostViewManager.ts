@@ -20,4 +20,8 @@ export class RNModalHostViewManager extends RNViewManager {
   public updateBoundingBox(): void {
     return;
   }
+
+  public isHandlingTouches() {
+    return true;
+  }
 }

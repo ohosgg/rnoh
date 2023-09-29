@@ -11,6 +11,8 @@ export class RNScrollViewManager extends RNViewManager {
     super(tag, ctx);
   }
 
+  private isScrolling: boolean = false;
+
   public getRelativePoint({x, y}: Point, childTag: Tag): Point {
     const {xOffset, yOffset} = this.scroller.currentOffset();
     return super.getRelativePoint({x: x+xOffset, y: y+yOffset}, childTag);
@@ -18,5 +20,13 @@ export class RNScrollViewManager extends RNViewManager {
 
   public getScroller() {
     return this.scroller;
+  }
+
+  public setScrolling(value: boolean) {
+    this.isScrolling = value;
+  }
+
+  public isHandlingTouches() {
+    return this.isScrolling;
   }
 }

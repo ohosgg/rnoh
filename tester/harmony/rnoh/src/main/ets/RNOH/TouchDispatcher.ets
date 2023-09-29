@@ -2,11 +2,15 @@ import { RNOHEventEmitRequestHandlerName } from '../RNOHCorePackage/RNOHEventEmi
 import { Tag } from './DescriptorBase';
 import { RNInstance } from './RNInstance';
 import { RNOHLogger } from './RNOHLogger';
+import { RNViewManager } from './RNViewManager';
 import { TouchTarget, TouchTargetHelper } from './TouchTargetHelper';
 
 export class TouchDispatcher {
   private touchTargetHelper: TouchTargetHelper
   private targetTagByTouchId: Map<number, Tag> = new Map();
+
+  // last reported touch event
+  private previousEvent: TouchEvent = undefined;
 
   constructor(private surfaceTag: Tag, private rnInstance: RNInstance, private logger: RNOHLogger) {
     this.touchTargetHelper = new TouchTargetHelper(surfaceTag, rnInstance.descriptorRegistry, rnInstance.componentManagerRegistry, logger);
@@ -23,6 +27,8 @@ export class TouchDispatcher {
 
     this.recordNewTouchTargets(touchEvent);
 
+    this.cancelHandledTouches(touchEvent.timestamp);
+
     // only report touches RN we have calculated targets for
     touchEvent.touches = touchEvent.touches.filter(touch => this.targetTagByTouchId.has(touch.id));
 
@@ -30,6 +36,12 @@ export class TouchDispatcher {
     touchEvent.changedTouches = touchEvent.touches.filter(touch => changedIds.includes(touch.id));
 
     this.removeEndedTouches(touchEvent, changedIds);
+
+    if (touchEvent.changedTouches.length === 0) {
+      return;
+    }
+
+    this.previousEvent = touchEvent;
 
     // NOTE: emitting individual component events is done on CPP side,
     // by emitting to each target of a changed touch.
@@ -83,5 +95,51 @@ export class TouchDispatcher {
       // clear tags for ended touches
       changedIds.forEach(id => this.targetTagByTouchId.delete(id));
     }
+  }
+
+  private cancelHandledTouches(timestamp: number) {
+    const cancelledTouchIds = [...this.targetTagByTouchId.entries()]
+      .filter(([touchId, targetTag]) => this.shouldCancelTouchesForTag(targetTag))
+      .map(([touchId, targetTag]) => touchId);
+
+    cancelledTouchIds.forEach(touchId => this.targetTagByTouchId.delete(touchId));
+
+    const touchEvent = this.previousEvent;
+    this.previousEvent = undefined;
+
+    if (touchEvent === undefined) {
+      return;
+    }
+
+    const cancelledTouches = touchEvent.touches.filter(touch => cancelledTouchIds.includes(touch.id));
+
+    if (cancelledTouches.length === 0) {
+      return;
+    }
+
+    touchEvent.changedTouches = cancelledTouches;
+    touchEvent.touches = touchEvent.touches.filter(touch => !cancelledTouches.includes(touch));
+
+    touchEvent.type = TouchType.Cancel;
+    touchEvent.timestamp = timestamp;
+    this.rnInstance.emitComponentEvent(-1, RNOHEventEmitRequestHandlerName.Touch, touchEvent);
+  }
+
+  private shouldCancelTouchesForTag(targetTag: Tag): boolean {
+    const { descriptorRegistry, componentManagerRegistry} = this.rnInstance;
+    let currentTag = targetTag;
+    while (currentTag !== undefined && currentTag !== this.surfaceTag) {
+      const componentManager = componentManagerRegistry.getComponentManager(currentTag);
+      const descriptor = descriptorRegistry.getDescriptor(currentTag);
+      if (!componentManager || !(componentManager instanceof RNViewManager) || componentManager.isHandlingTouches()) {
+        return true;
+      }
+      currentTag = descriptor.parentTag;
+    }
+
+    // if we didn't reach the surface,
+    // this view is either unmounted or no longer handled
+    // by this dispatcher -- cancel the touch
+    return currentTag === undefined;
   }
 }

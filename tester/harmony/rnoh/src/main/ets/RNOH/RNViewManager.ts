@@ -133,6 +133,10 @@ export class RNViewManager extends ComponentManager {
     return this.boundingBox;
   }
 
+  public isHandlingTouches(): boolean {
+    return false;
+  }
+
   protected getDescriptor(): Descriptor {
     return this.descriptorRegistry.getDescriptor(this.tag);
   }

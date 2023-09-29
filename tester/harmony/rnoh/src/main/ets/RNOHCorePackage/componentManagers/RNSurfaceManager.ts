@@ -8,4 +8,8 @@ export class RNSurfaceManager extends RNViewManager {
   public updateBoundingBox(): void {
     return;
   }
+
+  public isHandlingTouches() {
+    return true;
+  }
 }
