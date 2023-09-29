@@ -10,16 +10,16 @@ export class AppStateTurboModule extends TurboModule {
   }
 
   private subscribeListeners() {
-    this.ctx.rnInstanceManager.subscribeToLifecycleEvents("FOREGROUND", () => {
-      this.ctx.rnInstanceManager.emitDeviceEvent("appStateDidChange", { app_state: this.getAppState() });
+    this.ctx.rnInstance.subscribeToLifecycleEvents("FOREGROUND", () => {
+      this.ctx.rnInstance.emitDeviceEvent("appStateDidChange", { app_state: this.getAppState() });
     })
-    this.ctx.rnInstanceManager.subscribeToLifecycleEvents("BACKGROUND", () => {
-      this.ctx.rnInstanceManager.emitDeviceEvent("appStateDidChange", { app_state: this.getAppState() });
+    this.ctx.rnInstance.subscribeToLifecycleEvents("BACKGROUND", () => {
+      this.ctx.rnInstance.emitDeviceEvent("appStateDidChange", { app_state: this.getAppState() });
     })
   }
 
   private getAppState() {
-    return this.ctx.rnInstanceManager.getLifecycleState() === LifecycleState.READY
+    return this.ctx.rnInstance.getLifecycleState() === LifecycleState.READY
       ? "active" : "background"
   }
 

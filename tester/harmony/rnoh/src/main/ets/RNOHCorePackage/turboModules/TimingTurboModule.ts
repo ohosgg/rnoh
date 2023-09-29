@@ -1,4 +1,4 @@
-import { TurboModule } from "../../RNOH/TurboModule";
+import { TurboModule, LifecycleState } from "../../RNOH";
 
 export class TimingTurboModule extends TurboModule {
   public static readonly NAME = 'Timing';
@@ -15,9 +15,11 @@ export class TimingTurboModule extends TurboModule {
     repeats: boolean
   ): void {
     const triggerTimer = () => {
-      this.ctx.rnInstanceManager.callRNFunction("JSTimers", "callTimers", [[id]]);
-      if (!repeats) {
-        this.deleteTimer(id);
+      if (this.ctx.rnInstance.getLifecycleState() === LifecycleState.READY) {
+        this.ctx.rnInstance.callRNFunction("JSTimers", "callTimers", [[id]]);
+        if (!repeats) {
+          this.deleteTimer(id);
+        }
       }
     };
 

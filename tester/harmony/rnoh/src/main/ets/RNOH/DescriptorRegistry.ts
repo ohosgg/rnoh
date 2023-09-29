@@ -1,5 +1,6 @@
 import { Tag, Descriptor } from './DescriptorBase';
 import { MutationType, Mutation } from './Mutation';
+import type { RNInstanceManagerImpl } from './RNInstanceRegistry'
 
 type RootDescriptor = Descriptor<"RootView", any>
 
@@ -10,14 +11,25 @@ export class DescriptorRegistry {
   private descriptorByTag: Map<Tag, Descriptor> = new Map();
   private descriptorListenersSetByTag: Map<Tag, Set<(descriptor: Descriptor) => void>> = new Map();
   private subtreeListenersSetByTag: Map<Tag, Set<SubtreeListener>> = new Map();
+  private updatedUnnotifiedTags = new Set<Tag>()
+  private cleanUpCallbacks: (() => void)[] = []
 
   constructor(
     descriptorByTag: Record<Tag, Descriptor>,
     private setNativeStateFn: SetNativeStateFn,
+    private rnInstance: RNInstanceManagerImpl,
   ) {
     for (const tag in descriptorByTag) {
       this.descriptorByTag.set(parseInt(tag), descriptorByTag[tag])
     }
+    this.cleanUpCallbacks.push(this.rnInstance.subscribeToLifecycleEvents("FOREGROUND", () => {
+      this.callListeners(this.updatedUnnotifiedTags)
+      this.updatedUnnotifiedTags.clear()
+    }))
+  }
+
+  public destroy() {
+    this.cleanUpCallbacks.forEach(cb => cb())
   }
 
   public getDescriptor<TDescriptor extends Descriptor>(tag: Tag): TDescriptor {
@@ -28,13 +40,13 @@ export class DescriptorRegistry {
    * @returns [...ancestors, descriptor]
    */
   public getDescriptorLineage(tag: Tag): Descriptor[] {
-    const results: Descriptor[]  = []
+    const results: Descriptor[] = []
     let currentTag: Tag | undefined = tag
     do {
       let descriptor = this.getDescriptor(currentTag)
       currentTag = descriptor.parentTag
       results.push(descriptor)
-    } while(currentTag !== undefined);
+    } while (currentTag !== undefined);
     return results.reverse();
   }
 
@@ -50,7 +62,7 @@ export class DescriptorRegistry {
     this.descriptorByTag.set(tag, updatedDescriptor);
 
     this.descriptorListenersSetByTag.get(tag)?.forEach(cb => cb(updatedDescriptor));
-    this.callSubtreeListeners([tag]);
+    this.callSubtreeListeners(new Set([tag]));
   }
 
   public setState<TState extends Object>(tag: Tag, state: TState): void {
@@ -65,21 +77,28 @@ export class DescriptorRegistry {
   }
 
   public applyMutations(mutations: Mutation[]) {
-    const updatedComponents = mutations.flatMap(mutation =>
-    this.applyMutation(mutation),
-    );
-    const uniqueUpdated = [...new Set(updatedComponents)];
-    uniqueUpdated.forEach(tag => {
+    const updatedDescriptorTags = new Set(mutations.flatMap(mutation =>
+    this.applyMutation(mutation)
+    ));
+    if (!this.rnInstance.shouldUIBeUpdated()) {
+      updatedDescriptorTags.forEach(tag => this.updatedUnnotifiedTags.add(tag))
+      return;
+    }
+    this.callListeners(updatedDescriptorTags)
+  }
+
+  private callListeners(tags: Set<Tag>): void {
+    tags.forEach(tag => {
       const updatedDescriptor = this.getDescriptor(tag);
       if (!updatedDescriptor) return;
       this.descriptorListenersSetByTag.get(tag)?.forEach(cb => {
         cb(updatedDescriptor)
       });
     });
-    this.callSubtreeListeners(uniqueUpdated);
+    this.callSubtreeListeners(tags);
   }
 
-  private callSubtreeListeners(updatedDescriptorTags: Tag[]) {
+  private callSubtreeListeners(updatedDescriptorTags: Set<Tag>) {
     const setOfSubtreeListenersToCall = new Set<SubtreeListener>();
     for (const tag of updatedDescriptorTags) {
       let descriptor = this.descriptorByTag.get(tag);

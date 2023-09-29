@@ -1,5 +1,6 @@
 import {TestCase, TestSuite} from '@rnoh/testerino';
-import React from 'react';
+import React, {useEffect} from 'react';
+import {AppState, AppStateStatus, Text} from 'react-native';
 
 async function wait(ms: number) {
   return new Promise(resolve => {
@@ -15,7 +16,7 @@ export function TimerTest() {
       <TestCase
         itShould="take three seconds to finish this test (setTimeout)"
         fn={async ({expect}) => {
-          await wait(1000);
+          await wait(3000);
           const waitTimeInMs = 3000;
           const time1 = new Date().getTime();
           await wait(waitTimeInMs);
@@ -31,7 +32,7 @@ export function TimerTest() {
       <TestCase
         itShould="trigger fn every second twice (setInterval)"
         fn={async ({expect}) => {
-          await wait(1000);
+          await wait(3000);
           let i = 0;
           const time1 = new Date().getTime();
 
@@ -48,6 +49,63 @@ export function TimerTest() {
           );
         }}
       />
+      <TestCase<{date: Date; appStateStatus: AppStateStatus}[]>
+        itShould="not trigger updates when the application is in background"
+        initialState={[]}
+        arrange={({state, setState}) => {
+          return (
+            <Effect
+              onEffect={() => {
+                const interval = setInterval(() => {
+                  setState(prev => [
+                    ...prev,
+                    {
+                      date: new Date(),
+                      appStateStatus: AppState.currentState,
+                    },
+                  ]);
+                }, 1000);
+                return () => clearInterval(interval);
+              }}>
+              <Text>
+                {JSON.stringify(
+                  state.reduce(
+                    (acc, tick) => {
+                      return {
+                        ...acc,
+                        [tick.appStateStatus]: acc[tick.appStateStatus] + 1,
+                      };
+                    },
+                    {
+                      active: 0,
+                      background: 0,
+                      extension: 0,
+                      inactive: 0,
+                      unknown: 0,
+                    } as Record<AppStateStatus, number>,
+                  ),
+                )}
+              </Text>
+            </Effect>
+          );
+        }}
+        assert={({expect, state}) => {
+          expect(
+            state.filter(tick => tick.appStateStatus !== 'active').length,
+          ).to.be.eq(0);
+        }}
+      />
     </TestSuite>
   );
+}
+
+function Effect({
+  onEffect,
+  children,
+}: {
+  onEffect: () => void | (() => void);
+  children: any;
+}) {
+  useEffect(onEffect, []);
+  return children;
 }

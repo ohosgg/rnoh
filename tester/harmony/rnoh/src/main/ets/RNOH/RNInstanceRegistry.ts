@@ -1,5 +1,6 @@
 import common from '@ohos.app.ability.common';
-import { CommandDispatcher, DescriptorRegistry, RNInstance } from '.';
+import { CommandDispatcher, RNInstance } from '.';
+import { DescriptorRegistry } from './DescriptorRegistry'
 import { RNOHCorePackage } from '../RNOHCorePackage/Package';
 import { Tag } from './DescriptorBase';
 import { NapiBridge } from './NapiBridge';
@@ -94,7 +95,7 @@ export class RNInstanceRegistry {
   }
 }
 
-class RNInstanceManagerImpl implements RNInstance {
+export class RNInstanceManagerImpl implements RNInstance {
   private turboModuleProvider: TurboModuleProvider
   private surfaceCounter = 0;
   private lifecycleState: LifecycleState = LifecycleState.BEFORE_CREATE
@@ -115,7 +116,9 @@ class RNInstanceManagerImpl implements RNInstance {
       {
         '1': { ...rootDescriptor },
       },
-      this.updateState.bind(this));
+      this.updateState.bind(this),
+      this
+    );
     this.commandDispatcher = new CommandDispatcher();
     this.turboModuleProvider = this.processPackages(packages).turboModuleProvider
   }
@@ -175,6 +178,7 @@ class RNInstanceManagerImpl implements RNInstance {
     try {
       this.bundleExecutionStatusByBundleURL.set(bundleURL, "RUNNING")
       this.napiBridge.loadScript(this.id, await jsBundleProvider.getBundle(), bundleURL)
+      this.lifecycleState = LifecycleState.READY
       this.bundleExecutionStatusByBundleURL.set(bundleURL, "DONE")
     } catch (err) {
       this.bundleExecutionStatusByBundleURL.delete(bundleURL)
@@ -214,5 +218,9 @@ class RNInstanceManagerImpl implements RNInstance {
     // NOTE: this is done to mirror the iOS implementation.
     // For details, see `RCTAllocateRootViewTag` in iOS implementation.
     return (this.surfaceCounter++ * 10) + 1;
+  }
+
+  public shouldUIBeUpdated(): boolean {
+    return this.lifecycleState === LifecycleState.READY
   }
 }
