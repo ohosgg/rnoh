@@ -1,10 +1,11 @@
 import common from '@ohos.app.ability.common';
+import UIAbility from '@ohos.app.ability.UIAbility'
 import { CommandDispatcher, RNInstance } from '.';
 import { DescriptorRegistry } from './DescriptorRegistry'
 import { RNOHCorePackage } from '../RNOHCorePackage/Package';
 import { Tag } from './DescriptorBase';
 import { NapiBridge } from './NapiBridge';
-import { LifecycleState, LifecycleEventListenerByName, BundleExecutionStatus } from './RNInstance';
+import { LifecycleState, LifecycleEventArgsByEventName, BundleExecutionStatus } from './RNInstance';
 import { RNOHContext } from './RNOHContext';
 import { RNOHLogger } from './RNOHLogger';
 import { RNPackage, RNPackageContext } from './RNPackage';
@@ -13,6 +14,7 @@ import { TurboModuleProvider } from './TurboModuleProvider';
 import { JSBundleProvider, JSBundleProviderError } from "./JSBundleProvider"
 import { ComponentManagerRegistry } from './ComponentManagerRegistry';
 import { SurfaceHandle } from './SurfaceHandle';
+import { EventEmitter } from './EventEmitter'
 
 const rootDescriptor = {
   isDynamicBinder: false,
@@ -78,16 +80,8 @@ export class RNInstanceRegistry {
     return false;
   }
 
-  public onBackPress() {
-    this.instanceMap.forEach((instanceManager) => instanceManager.onBackPress())
-  }
-
-  public onForeground() {
-    this.instanceMap.forEach((instanceManager) => instanceManager.onForeground())
-  }
-
-  public onBackground() {
-    this.instanceMap.forEach((instanceManager) => instanceManager.onBackground())
+  public forEach(cb: (rnInstance: RNInstanceManagerImpl) => void) {
+    this.instanceMap.forEach(cb)
   }
 
   private getDefaultProps(): Record<string, any> {
@@ -103,6 +97,7 @@ export class RNInstanceManagerImpl implements RNInstance {
   public descriptorRegistry: DescriptorRegistry;
   public commandDispatcher: CommandDispatcher;
   public componentManagerRegistry: ComponentManagerRegistry;
+  private lifecycleEventEmitter = new EventEmitter<LifecycleEventArgsByEventName>()
 
   constructor(
     private id: number,
@@ -146,15 +141,8 @@ export class RNInstanceManagerImpl implements RNInstance {
     }
   }
 
-  public subscribeToLifecycleEvents<TEventName extends keyof LifecycleEventListenerByName>(type: TEventName, listener: LifecycleEventListenerByName[TEventName]) {
-    this.abilityContext.eventHub.on(type, listener);
-    return () => {
-      this.abilityContext.eventHub.off(type, listener)
-    }
-  }
-
-  private emitLifecycleEvent<TEventName extends keyof LifecycleEventListenerByName>(type: TEventName, ...args: Parameters<LifecycleEventListenerByName[TEventName]>) {
-    this.abilityContext.eventHub.emit(type, ...args)
+  public subscribeToLifecycleEvents<TEventName extends keyof LifecycleEventArgsByEventName>(type: TEventName, listener: (...args: LifecycleEventArgsByEventName[TEventName]) => void) {
+    return this.lifecycleEventEmitter.subscribe(type, listener)
   }
 
   public getLifecycleState(): LifecycleState {
@@ -184,7 +172,7 @@ export class RNInstanceManagerImpl implements RNInstance {
       await this.napiBridge.loadScript(this.id, await jsBundleProvider.getBundle(), bundleURL)
       this.lifecycleState = LifecycleState.READY
       this.bundleExecutionStatusByBundleURL.set(bundleURL, "DONE")
-      this.emitLifecycleEvent("JS_BUNDLE_EXECUTION_FINISH", {
+      this.lifecycleEventEmitter.emit("JS_BUNDLE_EXECUTION_FINISH", {
         jsBundleUrl: bundleURL,
         appKeys: jsBundleProvider.getAppKeys()
       })
@@ -198,7 +186,6 @@ export class RNInstanceManagerImpl implements RNInstance {
       throw err
     }
   }
-
 
   public getTurboModule<T extends TurboModule>(name: string): T {
     return this.turboModuleProvider.getModule(name);
@@ -219,10 +206,17 @@ export class RNInstanceManagerImpl implements RNInstance {
 
   public onForeground() {
     this.lifecycleState = LifecycleState.READY
+    this.lifecycleEventEmitter.emit("FOREGROUND")
   }
 
   public onBackground() {
     this.lifecycleState = LifecycleState.PAUSED
+    this.lifecycleEventEmitter.emit("BACKGROUND")
+
+  }
+
+  public onConfigurationUpdate(...args: Parameters<UIAbility["onConfigurationUpdate"]>) {
+    this.lifecycleEventEmitter.emit("CONFIGURATION_UPDATE", ...args)
   }
 
   private getNextSurfaceTag(): Tag {

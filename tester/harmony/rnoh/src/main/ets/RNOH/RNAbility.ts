@@ -6,7 +6,7 @@ import hilog from '@ohos.hilog';
 import { TurboModuleProvider } from "./TurboModuleProvider"
 import libRNOHApp from 'librnoh_app.so'
 import { RNInstanceRegistry } from './RNInstanceRegistry';
-import { LifecycleEventListenerByName, RNInstance, RNInstanceOptions } from './RNInstance';
+import { RNInstance, RNInstanceOptions } from './RNInstance';
 import { RNOHContext } from "./RNOHContext"
 
 export abstract class RNAbility extends UIAbility {
@@ -57,26 +57,20 @@ export abstract class RNAbility extends UIAbility {
     this.napiBridge.onMemoryLevel(level)
   }
 
-  private emitLifecycleEvent<TEventName extends keyof LifecycleEventListenerByName>(type: TEventName, ...data: Parameters<LifecycleEventListenerByName[TEventName]>) {
-    this.context.eventHub.emit(type, ...data)
-  }
-
   onConfigurationUpdate(config) {
-    this.emitLifecycleEvent("CONFIGURATION_UPDATE", config);
+    this.rnInstanceRegistry.forEach((rnInstance) => rnInstance.onConfigurationUpdate(config))
   }
 
   onForeground() {
-    this.rnInstanceRegistry.onForeground();
-    this.emitLifecycleEvent("FOREGROUND");
+    this.rnInstanceRegistry.forEach((rnInstance) => rnInstance.onForeground())
   }
 
   onBackground() {
-    this.rnInstanceRegistry.onBackground();
-    this.emitLifecycleEvent("BACKGROUND");
+    this.rnInstanceRegistry.forEach((rnInstance) => rnInstance.onBackground())
   }
 
   onBackPress() {
-    this.rnInstanceRegistry.onBackPress()
+    this.rnInstanceRegistry.forEach((rnInstance) => rnInstance.onBackPress())
     return true;
   }
 

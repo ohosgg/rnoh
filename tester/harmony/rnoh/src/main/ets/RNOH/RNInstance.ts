@@ -22,11 +22,11 @@ export enum LifecycleState {
   READY,
 }
 
-export interface LifecycleEventListenerByName {
-  CONFIGURATION_UPDATE: (...args: Parameters<UIAbility["onConfigurationUpdate"]>) => void;
-  FOREGROUND: () => void;
-  BACKGROUND: () => void;
-  JS_BUNDLE_EXECUTION_FINISH: (args: { jsBundleUrl: string, appKeys: string[] }) => void;
+export type LifecycleEventArgsByEventName = {
+  CONFIGURATION_UPDATE: Parameters<UIAbility["onConfigurationUpdate"]>
+  FOREGROUND: [];
+  BACKGROUND: [];
+  JS_BUNDLE_EXECUTION_FINISH: [{ jsBundleUrl: string, appKeys: string[] }];
 }
 
 export type BundleExecutionStatus = "RUNNING" | "DONE"
@@ -39,9 +39,9 @@ export interface RNInstance {
 
   getLifecycleState(): LifecycleState;
 
-  subscribeToLifecycleEvents: <TEventName extends keyof LifecycleEventListenerByName>(
+  subscribeToLifecycleEvents: <TEventName extends keyof LifecycleEventArgsByEventName>(
     eventName: TEventName,
-    listener: LifecycleEventListenerByName[TEventName]
+    listener: (...args: LifecycleEventArgsByEventName[TEventName]) => void
   ) => () => void;
 
   callRNFunction(moduleName: string, functionName: string, args: unknown[]): void;
