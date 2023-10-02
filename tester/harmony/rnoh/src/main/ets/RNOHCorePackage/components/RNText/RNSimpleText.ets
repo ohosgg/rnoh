@@ -139,12 +139,13 @@ export function getTextDecorationLine(fragment: AttributedFragment | undefined) 
   }
 }
 
-export function getTextShadow(textShadow: TextShadowProps): {
+export function getTextShadow(fragment: AttributedFragment | undefined): {
   radius: number;
   color?: string;
   offsetX?: number;
   offsetY?: number;
 } | undefined {
+  const textShadow = fragment?.textShadowProps
   const shadowRadius = textShadow?.textShadowRadius
 
   if (shadowRadius === undefined || shadowRadius === 0)
@@ -233,7 +234,7 @@ export struct RNSimpleText {
       .width("100%")
       .height("100%")
       .maxLines(this.getMaxLines())
-      .textShadow(getTextShadow(this.descriptor.props.fragments[0].textShadowProps))
+      .textShadow(getTextShadow(this.descriptor.props.fragments[0]))
       .textOverflow({ overflow: this.getTextOverflow() })
       .textAlign(stringToAlignment(this.descriptor.props.textAlign))
       .align(stringToVerticalAlign(this.descriptor.props.textAlignVertical))
