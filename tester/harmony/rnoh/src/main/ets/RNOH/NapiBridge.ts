@@ -29,8 +29,12 @@ export class NapiBridge {
     this.libRNOHApp?.subscribeToShadowTreeChanges(instanceId, mutationsListener, dispatchedCommandsListener);
   }
 
-  loadScript(instanceId: number, bundle: ArrayBuffer, sourceURL = "bundle.harmony.js") {
-    this.libRNOHApp?.loadScript(instanceId, bundle, sourceURL);
+  loadScript(instanceId: number, bundle: ArrayBuffer, sourceURL: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.libRNOHApp?.loadScript(instanceId, bundle, sourceURL, (errorMsg: string) => {
+        errorMsg ? reject(new Error(errorMsg)) : resolve()
+      });
+    })
   }
 
   startSurface(

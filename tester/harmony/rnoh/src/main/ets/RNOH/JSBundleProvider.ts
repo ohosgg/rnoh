@@ -7,6 +7,8 @@ export interface JSBundleProvider {
   getURL(): string
 
   getBundle(): Promise<ArrayBuffer>
+
+  getAppKeys(): string[]
 }
 
 
@@ -18,11 +20,15 @@ export class JSBundleProviderError extends Error {
 
 
 export class ResourceJSBundleProvider implements JSBundleProvider {
-  constructor(private resourceManager: resmgr.ResourceManager, private path: string = "bundle.harmony.js") {
+  constructor(private resourceManager: resmgr.ResourceManager, private path: string = "bundle.harmony.js", private appKeys: string[] = []) {
   }
 
   getURL() {
     return this.path
+  }
+
+  getAppKeys() {
+    return this.appKeys
   }
 
   async getBundle() {
@@ -38,7 +44,11 @@ export class ResourceJSBundleProvider implements JSBundleProvider {
 
 
 export class MetroJSBundleProvider implements JSBundleProvider {
-  constructor(private bundleUrl: string = "http://localhost:8081/index.bundle?platform=harmony&dev=false&minify=false") {
+  constructor(private bundleUrl: string = "http://localhost:8081/index.bundle?platform=harmony&dev=false&minify=false", private appKeys: string[] = []) {
+  }
+
+  getAppKeys() {
+    return this.appKeys
   }
 
   getURL() {
@@ -79,6 +89,13 @@ export class AnyJSBundleProvider implements JSBundleProvider {
   getURL() {
     const jsBundleProvider = this.pickedJSBundleProvider ?? this.jsBundleProviders[0]
     return jsBundleProvider?.getURL() ?? "?"
+  }
+
+  getAppKeys() {
+    if (!this.pickedJSBundleProvider) {
+      return []
+    }
+    return this.pickedJSBundleProvider.getAppKeys()
   }
 
   async getBundle() {

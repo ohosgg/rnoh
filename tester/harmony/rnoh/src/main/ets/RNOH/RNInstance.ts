@@ -26,6 +26,7 @@ export interface LifecycleEventListenerByName {
   CONFIGURATION_UPDATE: (...args: Parameters<UIAbility["onConfigurationUpdate"]>) => void;
   FOREGROUND: () => void;
   BACKGROUND: () => void;
+  JS_BUNDLE_EXECUTION_FINISH: (args: { jsBundleUrl: string, appKeys: string[] }) => void;
 }
 
 export type BundleExecutionStatus = "RUNNING" | "DONE"

@@ -21,19 +21,19 @@ export class StandardRNOHLogger implements RNOHLogger {
   }
 
   public warn(format: string, ...args: any[]): void {
-    hilog.warn(this.domain, this.tag, format, ...args);
+    hilog.warn(this.domain, this.tag, "[RNOH] " + format, ...args);
   }
 
   public error(format: string, ...args: any[]): void {
-    hilog.error(this.domain, this.tag, format, ...args);
+    hilog.error(this.domain, this.tag, "[RNOH] " + format, ...args);
   }
 
   public fatal(format: string, ...args: any[]): void {
-    hilog.fatal(this.domain, this.tag, format, ...args);
+    hilog.fatal(this.domain, this.tag, "[RNOH] " + format, ...args);
   }
 
   public debug(format: string, ...args: any[]): void {
-    hilog.debug(this.domain, this.tag, format, ...args);
+    hilog.debug(this.domain, this.tag, "[RNOH] " + format, ...args);
   }
 }
 

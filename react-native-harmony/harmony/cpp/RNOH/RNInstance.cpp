@@ -95,8 +95,8 @@ void RNInstance::initializeScheduler() {
     this->scheduler = std::make_unique<react::Scheduler>(schedulerToolbox, nullptr, schedulerDelegate.get());
 }
 
-void RNInstance::loadScript(std::vector<uint8_t> const &&bundle, std::string const sourceURL) {
-    this->taskExecutor->runTask(TaskThread::JS, [this, bundle = std::move(bundle), sourceURL]() {
+void RNInstance::loadScript(std::vector<uint8_t> &&bundle, std::string const sourceURL, std::function<void(const std::string)> &&onFinish) {
+    this->taskExecutor->runTask(TaskThread::JS, [this, bundle = std::move(bundle), sourceURL, onFinish = std::move(onFinish)]() mutable {
         std::unique_ptr<react::JSBigBufferString> jsBundle;
         jsBundle = std::make_unique<react::JSBigBufferString>(bundle.size());
         memcpy(jsBundle->data(), bundle.data(), bundle.size());
@@ -109,7 +109,17 @@ void RNInstance::loadScript(std::vector<uint8_t> const &&bundle, std::string con
         if (scriptTag != react::ScriptTag::String) {
             throw new std::runtime_error("RAM bundles are not yet supported");
         }
-        this->instance->loadScriptFromString(std::move(jsBundle), sourceURL, true);
+        try {
+            this->instance->loadScriptFromString(std::move(jsBundle), sourceURL, true);
+            onFinish("");
+        } catch (std::exception const &e) {
+            try {
+                std::rethrow_if_nested(e);
+                onFinish(e.what());
+            } catch (const std::exception &nested) {
+                onFinish(e.what() + std::string("\n") + nested.what());
+            }
+        }
     });
 }
 
@@ -194,7 +204,7 @@ void rnoh::RNInstance::setSurfaceDisplayMode(facebook::react::Tag surfaceId, fac
 void RNInstance::updateSurfaceConstraints(react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY) {
     try {
         if (surfaceHandlers.count(surfaceId) == 0) {
-        LOG(ERROR) << "updateSurfaceConstraints: No surface with id " << surfaceId;
+            LOG(ERROR) << "updateSurfaceConstraints: No surface with id " << surfaceId;
             return;
         }
         auto layoutConstraints = surfaceHandlers[surfaceId]->getLayoutConstraints();

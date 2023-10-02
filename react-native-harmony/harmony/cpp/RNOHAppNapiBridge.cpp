@@ -57,12 +57,21 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
 
 static napi_value loadScript(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 3);
+    auto args = arkJs.getCallbackArgs(info, 4);
     size_t instanceId = arkJs.getDouble(args[0]);
     auto &rnInstance = rnInstanceById.at(instanceId);
+    auto onFinishRef = arkJs.createReference(args[3]);
     rnInstance->loadScript(
         arkJs.getArrayBuffer(args[1]),
-        arkJs.getString(args[2]));
+        arkJs.getString(args[2]),
+        [taskExecutor = rnInstance->taskExecutor, env, onFinishRef](const std::string errorMsg) {
+            taskExecutor->runTask(TaskThread::MAIN, [env, onFinishRef, errorMsg = std::move(errorMsg)]() {
+                ArkJS arkJs(env);
+                auto listener = arkJs.getReferenceValue(onFinishRef);
+                arkJs.call<1>(listener, {arkJs.createString(errorMsg)});
+                arkJs.deleteReference(onFinishRef);
+            });
+        });
     return arkJs.getUndefined();
 }
 

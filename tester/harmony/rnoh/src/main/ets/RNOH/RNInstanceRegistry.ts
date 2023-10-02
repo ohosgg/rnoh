@@ -153,6 +153,10 @@ export class RNInstanceManagerImpl implements RNInstance {
     }
   }
 
+  private emitLifecycleEvent<TEventName extends keyof LifecycleEventListenerByName>(type: TEventName, ...args: Parameters<LifecycleEventListenerByName[TEventName]>) {
+    this.abilityContext.eventHub.emit(type, ...args)
+  }
+
   public getLifecycleState(): LifecycleState {
     return this.lifecycleState
   }
@@ -177,17 +181,24 @@ export class RNInstanceManagerImpl implements RNInstance {
     const bundleURL = jsBundleProvider.getURL()
     try {
       this.bundleExecutionStatusByBundleURL.set(bundleURL, "RUNNING")
-      this.napiBridge.loadScript(this.id, await jsBundleProvider.getBundle(), bundleURL)
+      await this.napiBridge.loadScript(this.id, await jsBundleProvider.getBundle(), bundleURL)
       this.lifecycleState = LifecycleState.READY
       this.bundleExecutionStatusByBundleURL.set(bundleURL, "DONE")
+      this.emitLifecycleEvent("JS_BUNDLE_EXECUTION_FINISH", {
+        jsBundleUrl: bundleURL,
+        appKeys: jsBundleProvider.getAppKeys()
+      })
     } catch (err) {
       this.bundleExecutionStatusByBundleURL.delete(bundleURL)
       if (err instanceof JSBundleProviderError) {
+        this.logger.error(err.message)
+      } else if (err instanceof Error) {
         this.logger.error(err.message)
       }
       throw err
     }
   }
+
 
   public getTurboModule<T extends TurboModule>(name: string): T {
     return this.turboModuleProvider.getModule(name);

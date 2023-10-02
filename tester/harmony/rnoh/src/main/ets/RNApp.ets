@@ -3,7 +3,7 @@ import { RNInstance, JSBundleProvider, RNInstanceOptions, RNAbility } from './RN
 import { RNSurface } from "./RNSurface"
 
 export type RNInstanceConfig = {
-  rnInstance : RNInstance
+  rnInstance: RNInstance
 } | RNInstanceOptions;
 
 @Component
@@ -35,13 +35,23 @@ export struct RNApp {
   private rnInstance: RNInstance
   @State private shouldShow: boolean = false
   private shouldDestroyRNInstance: boolean = false
+  private cleanUpCallbacks: (() => void)[] = []
 
   aboutToAppear() {
     this.rnInstance = this.getOrCreateRNInstance()
-    if (this.jsBundleProvider && this.rnInstance.getBundleExecutionStatus(this.jsBundleProvider.getURL()) === undefined) {
+    const jsBundleExecutionStatus = this.rnInstance.getBundleExecutionStatus(this.jsBundleProvider.getURL())
+    if (this.jsBundleProvider && jsBundleExecutionStatus === undefined) {
       this.rnInstance.runJSBundle(this.jsBundleProvider).then(() => {
         this.shouldShow = true
       })
+      return;
+    }
+    if (jsBundleExecutionStatus !== "DONE") {
+      this.cleanUpCallbacks.push(this.rnInstance.subscribeToLifecycleEvents("JS_BUNDLE_EXECUTION_FINISH", ({ appKeys }) => {
+        if (appKeys.includes(this.appKey)) {
+          this.shouldShow = true
+        }
+      }))
     } else {
       this.shouldShow = true
     }
@@ -50,6 +60,7 @@ export struct RNApp {
   aboutToDisappear() {
     if (this.shouldDestroyRNInstance)
       this.rnAbility.destroyAndUnregisterRNInstance(this.rnInstance)
+    this.cleanUpCallbacks.forEach(cleanUp => cleanUp())
   }
 
   private getOrCreateRNInstance(): RNInstance {
