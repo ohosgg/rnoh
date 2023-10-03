@@ -5,8 +5,10 @@
 #include <react/renderer/core/EventListener.h>
 #include <RNOH/ArkTSTurboModule.h>
 #include <folly/dynamic.h>
+#include <native_vsync/native_vsync.h>
 
 #include "AnimatedNodesManager.h"
+#include "NativeVsyncHandle.h"
 #include "RNOH/EventEmitRequestHandler.h"
 
 namespace rnoh {
@@ -69,7 +71,7 @@ public:
 
     void removeListeners(double count);
 
-    void scheduleUpdate();
+    void runUpdates();
 
     void setNativeProps(facebook::react::Tag tag, folly::dynamic const &props);
 
@@ -88,6 +90,7 @@ private:
     // until the first animated event is registered.
     void initializeEventListener();
     
+    NativeVsyncHandle m_vsyncHandle;
     AnimatedNodesManager m_animatedNodesManager;
     std::mutex m_nodesManagerLock;
     bool m_initializedEventListener = false;

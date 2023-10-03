@@ -234,11 +234,17 @@ jsi::Value removeAnimatedEventFromView(
     return facebook::jsi::Value::undefined();
 }
 
+static void scheduleUpdate(long long timestamp, void *data) {
+    auto self = static_cast<NativeAnimatedTurboModule *>(data);
+    self->runUpdates();
+}
+
 NativeAnimatedTurboModule::NativeAnimatedTurboModule(const ArkTSTurboModule::Context ctx, const std::string name)
     : rnoh::ArkTSTurboModule(ctx, name),
+      m_vsyncHandle("AnimatedTurboModule"),
       m_animatedNodesManager(
           [this] {
-              m_ctx.taskExecutor->runTask(TaskThread::MAIN, [this] { this->scheduleUpdate(); });
+              m_ctx.taskExecutor->runTask(TaskThread::MAIN, [this] { m_vsyncHandle.requestFrame(rnoh::scheduleUpdate, this); });
           },
           [this](auto tag, auto props) { m_ctx.taskExecutor->runTask(TaskThread::MAIN, [this, tag, props] {this->setNativeProps(tag, props);}); }) {
     methodMap_ = {
@@ -391,21 +397,17 @@ void NativeAnimatedTurboModule::addListener(const std::string &eventName) {
 void NativeAnimatedTurboModule::removeListeners(double count) {
 }
 
-void NativeAnimatedTurboModule::scheduleUpdate() {
+void NativeAnimatedTurboModule::runUpdates() {
     ArkJS arkJs(m_ctx.env);
-    auto callback = arkJs.createSingleUseCallback([this](auto _args) {
-        auto lock = this->acquireLock();
-        try {
-            auto now = std::chrono::high_resolution_clock::now();
-            auto frameTime = std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch());
-            this->m_animatedNodesManager.runUpdates(frameTime.count());
-        } catch (std::exception &e) {
-            LOG(ERROR) << "Error in animation update: " << e.what();
-            this->scheduleUpdate();
-        }
-    });
-    auto napiTurboModuleObject = arkJs.getObject(m_ctx.arkTsTurboModuleInstanceRef);
-    napiTurboModuleObject.call("scheduleNextFrame", {callback});
+    auto lock = this->acquireLock();
+    try {
+        auto now = std::chrono::high_resolution_clock::now();
+        auto frameTime = std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch());
+        this->m_animatedNodesManager.runUpdates(frameTime.count());
+    } catch (std::exception &e) {
+        LOG(ERROR) << "Error in animation update: " << e.what();
+        m_vsyncHandle.requestFrame(rnoh::scheduleUpdate, this);
+    }
 }
 
 void NativeAnimatedTurboModule::setNativeProps(facebook::react::Tag tag, folly::dynamic const &props) {

@@ -426,6 +426,7 @@ target_include_directories(rnoh PUBLIC
 target_link_libraries(rnoh PUBLIC
     libace_napi.z.so
     libhilog_ndk.z.so
+    libnative_vsync.so
     uv
     Boost::context
     reactnative
