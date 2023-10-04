@@ -24,21 +24,36 @@ const safeAreaTurboModule = TurboModuleRegistry.get<Spec>(
 
 export default React.forwardRef<View, ViewProps>(
   ({ children, ...otherProps }, ref) => {
-    const [insets, setInsets] = useState<SafeAreaInsets>(
-      safeAreaTurboModule.getInitialInsets()
+    const [topInset, setTopInset] = useState(
+      safeAreaTurboModule.getInitialInsets().top
+    );
+    const [leftInset, setLeftInset] = useState(
+      safeAreaTurboModule.getInitialInsets().left
+    );
+    const [rightInset, setRightInset] = useState(
+      safeAreaTurboModule.getInitialInsets().right
+    );
+    const [bottomInset, setBottomInset] = useState(
+      safeAreaTurboModule.getInitialInsets().bottom
     );
 
-    useEffect(function subscribeToInsetsChanges() {
-      const subscription = (RCTDeviceEventEmitter as any).addListener(
-        'SAFE_AREA_INSETS_CHANGE',
-        (insets: SafeAreaInsets) => {
-          setInsets(insets);
-        }
-      );
-      return () => {
-        subscription.remove();
-      };
-    }, []);
+    useEffect(
+      function subscribeToSafeAreaChanges() {
+        const subscription = (RCTDeviceEventEmitter as any).addListener(
+          'SAFE_AREA_INSETS_CHANGE',
+          (insets: SafeAreaInsets) => {
+            setTopInset(insets.top);
+            setBottomInset(insets.bottom);
+            setLeftInset(insets.left);
+            setRightInset(insets.right);
+          }
+        );
+        return () => {
+          subscription.remove();
+        };
+      },
+      [setTopInset, setLeftInset, setRightInset, setBottomInset]
+    );
 
     return (
       <View ref={ref} {...otherProps}>
@@ -46,10 +61,10 @@ export default React.forwardRef<View, ViewProps>(
           style={{
             width: '100%',
             height: '100%',
-            paddingTop: insets.top,
-            paddingLeft: insets.left,
-            paddingRight: insets.right,
-            paddingBottom: insets.bottom,
+            paddingTop: topInset,
+            paddingLeft: leftInset,
+            paddingRight: rightInset,
+            paddingBottom: bottomInset,
           }}
         >
           {children}

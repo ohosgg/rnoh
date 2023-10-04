@@ -42,7 +42,7 @@ export class DeviceInfoTurboModule extends TurboModule {
   constructor(protected ctx: TurboModuleContext) {
     super(ctx);
     this.setInitialParameters()
-    this.ctx.rnInstanceManager.subscribeToLifecycleEvents("CONFIGURATION_UPDATE", () => {
+    this.ctx.rnInstance.subscribeToLifecycleEvents("CONFIGURATION_UPDATE", () => {
       this.updateDeviceMetrics();
     });
   }

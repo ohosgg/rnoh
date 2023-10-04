@@ -52,17 +52,22 @@ export abstract class RNAbility extends UIAbility {
     return this.logger
   }
 
+  public async onWindowSetup(win: window.Window) {
+    await win.setWindowLayoutFullScreen(true)
+  }
+
   onWindowStageCreate(windowStage: window.WindowStage) {
-    const win = windowStage.getMainWindowSync();
-    win.setWindowLayoutFullScreen(true)
-    // win.setPreferredOrientation(window.Orientation.AUTO_ROTATION) // changing orientation freezes the app
-    windowStage.loadContent(this.getPagePath(), this.storage, (err, data) => {
-      if (err.code) {
-        hilog.error(0x0000, 'RNOH', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
-        return;
-      }
-      hilog.info(0x0000, 'RNOH', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
-    });
+    this.onWindowSetup(windowStage.getMainWindowSync()).then(() => {
+      windowStage.loadContent(this.getPagePath(), this.storage, (err, data) => {
+        if (err.code) {
+          hilog.error(0x0000, 'RNOH', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
+          return;
+        }
+        hilog.info(0x0000, 'RNOH', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
+      });
+    }).catch((reason) => {
+      hilog.error(0x0000, 'RNOH', 'Failed to setup window. Cause: %{public}s', JSON.stringify(reason) ?? '');
+    })
   }
 
   onMemoryLevel(level) {

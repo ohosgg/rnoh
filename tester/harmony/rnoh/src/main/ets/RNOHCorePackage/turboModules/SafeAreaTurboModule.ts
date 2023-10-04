@@ -1,4 +1,4 @@
-import window from '@ohos.window';
+import WindowUtils from '@ohos.window';
 import display from '@ohos.display';
 import { TurboModule, TurboModuleContext } from "../../RNOH";
 import { StatusBarTurboModule } from "./StatusBarTurboModule"
@@ -10,17 +10,18 @@ export class SafeAreaTurboModule extends TurboModule {
 
   static async create(ctx: TurboModuleContext, statusBarTurboModule: StatusBarTurboModule) {
     const initialInsets = await this.createInsets(ctx, statusBarTurboModule)
-    return new SafeAreaTurboModule(ctx, initialInsets, statusBarTurboModule)
+    const window = await WindowUtils.getLastWindow(ctx.uiAbilityContext)
+    return new SafeAreaTurboModule(ctx, initialInsets, window, statusBarTurboModule)
   }
 
   private static async createInsets(ctx: TurboModuleContext, statusBarTurboModule: StatusBarTurboModule): Promise<SafeAreaInsets> {
-    const win = await window.getLastWindow(ctx.uiAbilityContext)
+    const win = await WindowUtils.getLastWindow(ctx.uiAbilityContext)
     const [displayCutoutInfo, systemAvoidArea, cutoutAvoidArea] = await Promise.all([
     display.getDefaultDisplaySync().getCutoutInfo(),
-    win.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM),
-    win.getWindowAvoidArea(window.AvoidAreaType.TYPE_CUTOUT),
+    win.getWindowAvoidArea(WindowUtils.AvoidAreaType.TYPE_SYSTEM),
+    win.getWindowAvoidArea(WindowUtils.AvoidAreaType.TYPE_CUTOUT),
     ])
-    const waterfallAvoidArea: window.AvoidArea = {
+    const waterfallAvoidArea: WindowUtils.AvoidArea = {
       visible: true,
       leftRect: displayCutoutInfo.waterfallDisplayAreaRects.left,
       rightRect: displayCutoutInfo.waterfallDisplayAreaRects.right,
@@ -35,13 +36,14 @@ export class SafeAreaTurboModule extends TurboModule {
     return mapProps(insets, (val) => px2vp(val))
   }
 
-  constructor(ctx: TurboModuleContext, private initialInsets: SafeAreaInsets, private statusBarTurboModule: StatusBarTurboModule) {
+  constructor(ctx: TurboModuleContext, private initialInsets: SafeAreaInsets, private window: WindowUtils.Window, statusBarTurboModule: StatusBarTurboModule) {
     super(ctx)
-    this.statusBarTurboModule.subscribe("SYSTEM_BAR_VISIBILITY_CHANGE", this.onSystemBarVisibilityChange.bind(this))
-    this.ctx.rnInstance.subscribeToLifecycleEvents("CONFIGURATION_UPDATE", this.onSystemBarVisibilityChange.bind(this));
+    window.on("avoidAreaChange", this.onSafeAreaChange.bind(this))
+    // Hiding/Showing StatusBar is reflected immediately in SafeAreaView
+    statusBarTurboModule.subscribe("SYSTEM_BAR_VISIBILITY_CHANGE", this.onSafeAreaChange.bind(this))
   }
 
-  private onSystemBarVisibilityChange() {
+  private onSafeAreaChange() {
     SafeAreaTurboModule.createInsets(this.ctx, this.ctx.rnInstance.getTurboModule(StatusBarTurboModule.NAME)).then((insets) => {
       this.ctx.rnInstance.emitDeviceEvent("SAFE_AREA_INSETS_CHANGE", insets);
     })
@@ -59,7 +61,7 @@ type SafeAreaInsets = {
   bottom: number
 }
 
-function getSafeAreaInsetsFromAvoidAreas(avoidAreas: window.AvoidArea[], windowSize: {
+function getSafeAreaInsetsFromAvoidAreas(avoidAreas: WindowUtils.AvoidArea[], windowSize: {
   width: number,
   height: number
 }): SafeAreaInsets {
