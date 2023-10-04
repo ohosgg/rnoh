@@ -45,7 +45,9 @@ export class RNInstanceRegistry {
   constructor(
     private logger: RNOHLogger,
     private napiBridge: NapiBridge,
-    private abilityContext: common.UIAbilityContext) {
+    private abilityContext: common.UIAbilityContext,
+    private createRNOHContext: (rnInstance: RNInstance) => RNOHContext
+  ) {
   }
 
   public createInstance(
@@ -61,7 +63,8 @@ export class RNInstanceRegistry {
       options.createRNPackages({}),
       this.abilityContext,
       this.napiBridge,
-      this.getDefaultProps()
+      this.getDefaultProps(),
+      this.createRNOHContext
     )
     instance.initialize()
     this.instanceMap.set(id, instance)
@@ -105,7 +108,9 @@ export class RNInstanceManagerImpl implements RNInstance {
     packages: RNPackage[],
     public abilityContext: common.UIAbilityContext,
     private napiBridge: NapiBridge,
-    private defaultProps: Record<string, any>) {
+    private defaultProps: Record<string, any>,
+    private createRNOHContext: (rnInstance: RNInstance) => RNOHContext
+  ) {
     this.componentManagerRegistry = new ComponentManagerRegistry();
     this.descriptorRegistry = new DescriptorRegistry(
       {
@@ -133,7 +138,7 @@ export class RNInstanceManagerImpl implements RNInstance {
 
   private processPackages(packages: RNPackage[]) {
     packages.unshift(new RNOHCorePackage({}));
-    const turboModuleContext = new RNOHContext("0.0.0", this, this.logger)
+    const turboModuleContext = this.createRNOHContext(this)
     return {
       turboModuleProvider: new TurboModuleProvider(packages.map((pkg) => {
         return pkg.createTurboModulesFactory(turboModuleContext);

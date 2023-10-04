@@ -22,6 +22,8 @@
 #include "RNOHCorePackage/TurboModules/StatusBarTurboModule.h"
 #include "RNOHCorePackage/TurboModules/TimingTurboModule.h"
 #include "RNOHCorePackage/TurboModules/WebSocketTurboModule.h"
+#include "RNOHCorePackage/TurboModules/SafeAreaTurboModule.h"
+#include "RNOHCorePackage/TurboModules/Animated/NativeAnimatedTurboModule.h"
 #include "RNOHCorePackage/ComponentBinders/ViewComponentJSIBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ViewComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ImageComponentJSIBinder.h"
@@ -45,7 +47,6 @@
 #include "RNOHCorePackage/EventEmitRequestHandlers/ModalEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/SwitchEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/ImageEventEmitRequestHandler.h"
-#include "RNOHCorePackage/TurboModules/Animated/NativeAnimatedTurboModule.h"
 
 namespace rnoh {
 
@@ -80,6 +81,8 @@ class RNOHCoreTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
             return std::make_shared<TimingTurboModule>(ctx, name);
         } else if (name == "WebSocketModule") {
             return std::make_shared<WebSocketTurboModule>(ctx, name);
+        } else if (name == "SafeAreaTurboModule") {
+            return std::make_shared<SafeAreaTurboModule>(ctx, name);
         }
         return nullptr;
     };

@@ -13,30 +13,30 @@
 
 #define ARK_METHOD_CALLER(name)                                                           \
     [](                                                                                   \
-        jsi::Runtime &rt,                                                                 \
-        react::TurboModule &turboModule,                                                  \
-        const jsi::Value *args,                                                           \
+        facebook::jsi::Runtime &rt,                                                       \
+        facebook::react::TurboModule &turboModule,                                        \
+        const facebook::jsi::Value *args,                                                 \
         size_t count) {                                                                   \
         return static_cast<ArkTSTurboModule &>(turboModule).call(rt, #name, args, count); \
     }
 
 #define ARK_ASYNC_METHOD_CALLER(name)                                                          \
     [](                                                                                        \
-        jsi::Runtime &rt,                                                                      \
-        react::TurboModule &turboModule,                                                       \
-        const jsi::Value *args,                                                                \
+        facebook::jsi::Runtime &rt,                                                            \
+        facebook::react::TurboModule &turboModule,                                             \
+        const facebook::jsi::Value *args,                                                      \
         size_t count) {                                                                        \
         return static_cast<ArkTSTurboModule &>(turboModule).callAsync(rt, #name, args, count); \
     }
 
 #define ARK_METHOD_METADATA(name, argc)          \
     {                                            \
-#name, { argc, ARK_METHOD_CALLER(name) } \
+        #name, { argc, ARK_METHOD_CALLER(name) } \
     }
 
 #define ARK_ASYNC_METHOD_METADATA(name, argc)          \
     {                                                  \
-#name, { argc, ARK_ASYNC_METHOD_CALLER(name) } \
+        #name, { argc, ARK_ASYNC_METHOD_CALLER(name) } \
     }
 
 namespace rnoh {
@@ -58,9 +58,9 @@ class ArkTSTurboModule : public TurboModule {
                               size_t argsCount);
 
     void scheduleCall(facebook::jsi::Runtime &runtime,
-                              const std::string &methodName,
-                              const facebook::jsi::Value *args,
-                              size_t argsCount);
+                      const std::string &methodName,
+                      const facebook::jsi::Value *args,
+                      size_t argsCount);
 
     facebook::jsi::Value callAsync(facebook::jsi::Runtime &runtime,
                                    const std::string &methodName,

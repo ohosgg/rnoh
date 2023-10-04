@@ -1,7 +1,8 @@
 import { TurboModule, TurboModuleContext } from "../../RNOH/TurboModule";
 import window from '@ohos.window';
-import display from '@ohos.display';
-import { convertColorValueToHex } from '../../RNOH';
+
+import { convertColorValueToHex, EventEmitter } from '../../RNOH';
+
 
 type StatusBarConstants = {
   DEFAULT_BACKGROUND_COLOR: string,
@@ -10,10 +11,16 @@ type StatusBarConstants = {
 
 declare function px2vp(px: number): number;
 
+type StatusBarEventNameByListenerArgs = {
+  SYSTEM_BAR_VISIBILITY_CHANGE: [{ hidden: boolean }]
+}
+
 export class StatusBarTurboModule extends TurboModule {
   public static readonly NAME = 'StatusBarManager';
 
   private constants?: StatusBarConstants = null;
+  private eventEmitter = new EventEmitter<StatusBarEventNameByListenerArgs>()
+  private _isStatusBarHidden = false
 
   constructor(protected ctx: TurboModuleContext) {
     super(ctx);
@@ -46,13 +53,7 @@ export class StatusBarTurboModule extends TurboModule {
   }
 
   async setTranslucent(translucent: boolean) {
-    try {
-      const windowInstance = await window.getLastWindow(this.ctx.uiAbilityContext);
-      await windowInstance.setWindowLayoutFullScreen(translucent);
-      this.ctx.logger.info('Succeeded in setting the window layout to full-screen mode.');
-    } catch (exception) {
-      this.ctx.logger.error('Failed to set the window layout to full-screen mode. Cause:' + JSON.stringify(exception));
-    }
+    this.ctx.logger.error('Not supported. StatusBar is translucent by default. Use SafeAreaView.');
   }
 
   async setStyle(style: string) {
@@ -96,9 +97,20 @@ export class StatusBarTurboModule extends TurboModule {
     try {
       const windowInstance = await window.getLastWindow(this.ctx.uiAbilityContext);
       await windowInstance.setWindowSystemBarEnable(names);
+      this._isStatusBarHidden = hidden
+      this.eventEmitter.emit("SYSTEM_BAR_VISIBILITY_CHANGE", { hidden })
       this.ctx.logger.info('Succeeded in setting the system bar to be hidden.');
     } catch (exception) {
       this.ctx.logger.error('Failed to set the status bar to be hidden. Cause:' + JSON.stringify(exception));
     }
+  }
+
+  public subscribe<TEventType extends keyof StatusBarEventNameByListenerArgs>(eventType: TEventType, listener: (...args: StatusBarEventNameByListenerArgs[TEventType]) => void,
+  ) {
+    return this.eventEmitter.subscribe(eventType, listener)
+  }
+
+  public isStatusBarHidden() {
+    return this._isStatusBarHidden
   }
 }

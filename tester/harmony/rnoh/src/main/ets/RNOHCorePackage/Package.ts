@@ -14,6 +14,7 @@ import {
   StatusBarTurboModule,
   TimingTurboModule,
   WebSocketTurboModule,
+  SafeAreaTurboModule,
 } from './turboModules';
 import { LinkingManagerTurboModule } from './turboModules/LinkingManagerTurboModule';
 
@@ -38,6 +39,7 @@ const TURBO_MODULE_CLASS_BY_NAME: Record<string, typeof TurboModule> = {
   [StatusBarTurboModule.NAME]: StatusBarTurboModule,
   [TimingTurboModule.NAME]: TimingTurboModule,
   [WebSocketTurboModule.NAME]: WebSocketTurboModule,
+  [SafeAreaTurboModule.NAME]: SafeAreaTurboModule,
 };
 
 class CoreTurboModulesFactory extends TurboModulesFactory {

@@ -15,11 +15,21 @@ export abstract class RNAbility extends UIAbility {
   protected turboModuleProvider: TurboModuleProvider
   protected logger: RNOHLogger
   protected rnInstanceRegistry: RNInstanceRegistry
+  protected window: window.Window | undefined
 
-  onCreate(want, param) {
+  async onCreate(want, param) {
     this.logger = this.createLogger()
     this.napiBridge = new NapiBridge(libRNOHApp)
-    this.rnInstanceRegistry = new RNInstanceRegistry(this.logger, this.napiBridge, this.context)
+    this.rnInstanceRegistry = new RNInstanceRegistry(
+      this.logger,
+      this.napiBridge,
+      this.context,
+      (rnInstance) => this.createRNOHContext({
+        rnInstance
+      }))
+    this.window = await window.getLastWindow(this.context);
+    await this.window.setWindowLayoutFullScreen(true)
+    await this.window.setPreferredOrientation(window.Orientation.AUTO_ROTATION)
     AppStorage.setOrCreate('RNOHLogger', this.logger)
     AppStorage.setOrCreate('RNInstanceFactory', this.rnInstanceRegistry)
     AppStorage.setOrCreate('RNAbility', this)
@@ -34,7 +44,7 @@ export abstract class RNAbility extends UIAbility {
   }
 
   public createRNOHContext({rnInstance}: Pick<RNOHContext, "rnInstance">) {
-    return new RNOHContext("0.0.0", rnInstance, this.logger)
+    return new RNOHContext("0.0.0", rnInstance, this.logger, this.window)
   }
 
   protected createLogger(): RNOHLogger {

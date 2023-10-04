@@ -1,8 +1,9 @@
+import common from '@ohos.app.ability.common';
+import window from '@ohos.window'
 import { DescriptorRegistry } from './DescriptorRegistry';
 import { CommandDispatcher } from './CommandDispatcher';
 import { RNOHLogger } from "./RNOHLogger";
-import common from '@ohos.app.ability.common';
-import { RNInstance } from '.';
+import { RNInstance } from './RNInstance';
 import { ComponentManagerRegistry } from './ComponentManagerRegistry';
 
 export class RNOHContext {
@@ -28,5 +29,7 @@ export class RNOHContext {
 
   constructor(public reactNativeVersion: string,
               public rnInstance: RNInstance,
-              public logger: RNOHLogger) {}
+              public logger: RNOHLogger,
+              public window: window.Window
+  ) {}
 }

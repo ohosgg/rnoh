@@ -17,3 +17,4 @@ export * from "./TextLayoutManager"
 export * from "./SurfaceHandle"
 export * from "./RNViewManager"
 export * from "./ComponentManager"
+export * from './EventEmitter'

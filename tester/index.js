@@ -1,19 +1,29 @@
 // @ts-check
-/**
- * @format
- */
 
-import {AppRegistry, View, Text} from 'react-native';
+import {AppRegistry, View, Text, SafeAreaView} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
 import {InitialParamsContext} from './contexts';
-import { AnimationsExample, CheckerboardExample, ChessboardExample, CursorExample, FlatListVsScrollViewExample, ImageGalleryExample, LargeImageScrollExample, StickyHeadersExample, TesterExample, TextScrollExample, TogglingComponentExample } from './examples';
+// @ts-expect-error
 import ReactNativeFeatureFlags from 'react-native/Libraries/ReactNative/ReactNativeFeatureFlags';
+import {
+  AnimationsExample,
+  CheckerboardExample,
+  ChessboardExample,
+  CursorExample,
+  FlatListVsScrollViewExample,
+  ImageGalleryExample,
+  LargeImageScrollExample,
+  StickyHeadersExample,
+  TesterExample,
+  TextScrollExample,
+  TogglingComponentExample,
+} from './examples';
 
 AppRegistry.setWrapperComponentProvider(appParams => {
   return ({children, ...otherProps}) => (
     <InitialParamsContext.Provider value={otherProps.initialProps}>
-      <View
+      <SafeAreaView
         style={{width: '100%', height: '100%', backgroundColor: '#EEE'}}
         {...otherProps}>
         <View style={{width: '100%', height: 24, backgroundColor: '#333'}}>
@@ -28,7 +38,7 @@ AppRegistry.setWrapperComponentProvider(appParams => {
           </Text>
         </View>
         {children}
-      </View>
+      </SafeAreaView>
     </InitialParamsContext.Provider>
   );
 });

@@ -1,6 +1,6 @@
 module.exports = {
   get ActivityIndicator() {
-    return require("react-native/Libraries/Components/ActivityIndicator/ActivityIndicator")
+    return require('react-native/Libraries/Components/ActivityIndicator/ActivityIndicator')
       .default;
   },
   get Animated() {
@@ -42,7 +42,7 @@ module.exports = {
     return require('react-native/Libraries/Image/Image');
   },
   get ImageBackground() {
-    return require("react-native/Libraries/Image/ImageBackground");
+    return require('react-native/Libraries/Image/ImageBackground');
   },
   get I18nManager() {
     return require('react-native/Libraries/ReactNative/I18nManager');
@@ -78,6 +78,9 @@ module.exports = {
   },
   get RefreshControl() {
     return require('./Libraries/Components/RefreshControl/RefreshControl');
+  },
+  get SafeAreaView() {
+    return require('./Libraries/Components/SafeAreaView/SafeAreaView').default;
   },
   get ScrollView() {
     return require('./Libraries/Components/ScrollView/ScrollView');

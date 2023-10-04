@@ -1,21 +1,15 @@
 const Settings = {
   get(key: string): mixed {
-    console.warn('Settings is not supported');
     return null;
   },
 
-  set(settings: Object) {
-    console.warn('Settings is not supported');
-  },
+  set(settings: Object) {},
 
   watchKeys(keys: string | Array<string>, callback: Function): number {
-    console.warn('Settings is not supported');
     return -1;
   },
 
-  clearWatch(watchId: number) {
-    console.warn('Settings is not supported');
-  },
+  clearWatch(watchId: number) {},
 };
 
 module.exports = Settings;
