@@ -39,16 +39,18 @@ struct Index {
 
   build() {
     Column() {
-      RNApp({
-        rnInstanceConfig: {createRNPackages},
-        initialProps: { foo: "bar" },
-        appKey: "app_name",
-        buildCustomComponent: this.buildCustomComponent.bind(this),
-        jsBundleProvider: new AnyJSBundleProvider([
-          new MetroJSBundleProvider(),
-          new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'hermes_bundle.hbc'),
-          new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'bundle.harmony.js')]),
-      })
+      if (this.rnAbility) {
+        RNApp({
+          rnInstanceConfig: {createRNPackages},
+          initialProps: { foo: "bar" },
+          appKey: "app_name",
+          buildCustomComponent: this.buildCustomComponent.bind(this),
+          jsBundleProvider: new AnyJSBundleProvider([
+            new MetroJSBundleProvider(),
+            new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'hermes_bundle.hbc'),
+            new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'bundle.harmony.js')]),
+        })
+      }
     }
     .height('100%')
     .width('100%')

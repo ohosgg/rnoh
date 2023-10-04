@@ -60,8 +60,6 @@ export interface RNInstance {
 
   updateState(componentName: string, tag: Tag, state: unknown): void;
 
-  initialize(): void;
-
   getId(): number;
 }
 

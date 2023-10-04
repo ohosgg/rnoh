@@ -24,15 +24,14 @@ AppRegistry.setWrapperComponentProvider(appParams => {
   return ({children, ...otherProps}) => (
     <InitialParamsContext.Provider value={otherProps.initialProps}>
       <SafeAreaView
-        style={{width: '100%', height: '100%', backgroundColor: '#EEE'}}
+        style={{width: '100%', height: '100%', backgroundColor: '#CCC'}}
         {...otherProps}>
-        <View style={{width: '100%', height: 24, backgroundColor: '#333'}}>
+        <View style={{width: '100%', height: 24, borderBottomWidth: 1}}>
           <Text
             style={{
               width: '100%',
               height: '100%',
               fontSize: 10,
-              color: 'white',
             }}>
             {JSON.stringify(appParams)}
           </Text>

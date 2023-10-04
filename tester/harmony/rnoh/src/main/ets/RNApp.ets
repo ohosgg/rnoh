@@ -38,23 +38,33 @@ export struct RNApp {
   private cleanUpCallbacks: (() => void)[] = []
 
   aboutToAppear() {
-    this.rnInstance = this.getOrCreateRNInstance()
-    const jsBundleExecutionStatus = this.rnInstance.getBundleExecutionStatus(this.jsBundleProvider.getURL())
-    if (this.jsBundleProvider && jsBundleExecutionStatus === undefined) {
-      this.rnInstance.runJSBundle(this.jsBundleProvider).then(() => {
-        this.shouldShow = true
-      })
-      return;
-    }
-    if (jsBundleExecutionStatus !== "DONE") {
-      this.cleanUpCallbacks.push(this.rnInstance.subscribeToLifecycleEvents("JS_BUNDLE_EXECUTION_FINISH", ({ appKeys }) => {
-        if (appKeys.includes(this.appKey)) {
+    this.getOrCreateRNInstance().then(rnInstance => {
+      this.rnInstance = rnInstance
+      const jsBundleExecutionStatus = this.rnInstance.getBundleExecutionStatus(this.jsBundleProvider.getURL())
+      if (this.jsBundleProvider && jsBundleExecutionStatus === undefined) {
+        this.rnInstance.runJSBundle(this.jsBundleProvider).then(() => {
           this.shouldShow = true
-        }
-      }))
-    } else {
-      this.shouldShow = true
-    }
+        })
+        return;
+      }
+      if (jsBundleExecutionStatus !== "DONE") {
+        this.cleanUpCallbacks.push(this.rnInstance.subscribeToLifecycleEvents("JS_BUNDLE_EXECUTION_FINISH", ({ appKeys }) => {
+          if (appKeys.includes(this.appKey)) {
+            this.shouldShow = true
+          }
+        }))
+      } else {
+        this.shouldShow = true
+      }
+    }).catch(reason => {
+      if (typeof reason === "string")
+        this.rnAbility.getLogger().error(reason)
+      else if (reason instanceof Error) {
+        this.rnAbility.getLogger().error(reason.message)
+      } else {
+        this.rnAbility.getLogger().error("Fatal exception")
+      }
+    })
   }
 
   aboutToDisappear() {
@@ -63,9 +73,9 @@ export struct RNApp {
     this.cleanUpCallbacks.forEach(cleanUp => cleanUp())
   }
 
-  private getOrCreateRNInstance(): RNInstance {
+  private getOrCreateRNInstance(): Promise<RNInstance> {
     if ("rnInstance" in this.rnInstanceConfig) {
-      return this.rnInstanceConfig.rnInstance
+      return Promise.resolve(this.rnInstanceConfig.rnInstance)
     } else {
       const options = this.rnInstanceConfig
       this.shouldDestroyRNInstance = true

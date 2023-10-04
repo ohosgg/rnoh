@@ -7,28 +7,19 @@ declare function px2vp(arg: number): number
 
 export class SafeAreaTurboModule extends TurboModule {
   public static readonly NAME = 'SafeAreaTurboModule';
-  private statusBarTurboModule: StatusBarTurboModule
 
-  constructor(ctx: TurboModuleContext) {
-    super(ctx)
-    this.statusBarTurboModule = ctx.rnInstance.getTurboModule<StatusBarTurboModule>(StatusBarTurboModule.NAME)
-    this.statusBarTurboModule.subscribe("SYSTEM_BAR_VISIBILITY_CHANGE", this.onSystemBarVisibilityChange.bind(this))
-    this.ctx.rnInstance.subscribeToLifecycleEvents("CONFIGURATION_UPDATE", this.onSystemBarVisibilityChange.bind(this));
+  static async create(ctx: TurboModuleContext, statusBarTurboModule: StatusBarTurboModule) {
+    const initialInsets = await this.createInsets(ctx, statusBarTurboModule)
+    return new SafeAreaTurboModule(ctx, initialInsets, statusBarTurboModule)
   }
 
-  private onSystemBarVisibilityChange() {
-    this.getInsets().then((insets) => {
-      this.ctx.rnInstance.emitDeviceEvent("SAFE_AREA_INSETS_CHANGE", insets);
-    })
-  }
-
-  public async getInsets(): Promise<SafeAreaInsets> {
+  private static async createInsets(ctx: TurboModuleContext, statusBarTurboModule: StatusBarTurboModule): Promise<SafeAreaInsets> {
+    const win = await window.getLastWindow(ctx.uiAbilityContext)
     const [displayCutoutInfo, systemAvoidArea, cutoutAvoidArea] = await Promise.all([
     display.getDefaultDisplaySync().getCutoutInfo(),
-    this.ctx.window.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM),
-    this.ctx.window.getWindowAvoidArea(window.AvoidAreaType.TYPE_CUTOUT),
+    win.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM),
+    win.getWindowAvoidArea(window.AvoidAreaType.TYPE_CUTOUT),
     ])
-    display.getDefaultDisplaySync().orientation
     const waterfallAvoidArea: window.AvoidArea = {
       visible: true,
       leftRect: displayCutoutInfo.waterfallDisplayAreaRects.left,
@@ -37,11 +28,27 @@ export class SafeAreaTurboModule extends TurboModule {
       bottomRect: displayCutoutInfo.waterfallDisplayAreaRects.bottom
     }
     const avoidAreas = [cutoutAvoidArea, waterfallAvoidArea]
-    if (!this.statusBarTurboModule.isStatusBarHidden()) {
+    if (!statusBarTurboModule.isStatusBarHidden()) {
       avoidAreas.push(systemAvoidArea)
     }
-    const insets = getSafeAreaInsetsFromAvoidAreas(avoidAreas, this.ctx.window.getWindowProperties().windowRect)
+    const insets = getSafeAreaInsetsFromAvoidAreas(avoidAreas, win.getWindowProperties().windowRect)
     return mapProps(insets, (val) => px2vp(val))
+  }
+
+  constructor(ctx: TurboModuleContext, private initialInsets: SafeAreaInsets, private statusBarTurboModule: StatusBarTurboModule) {
+    super(ctx)
+    this.statusBarTurboModule.subscribe("SYSTEM_BAR_VISIBILITY_CHANGE", this.onSystemBarVisibilityChange.bind(this))
+    this.ctx.rnInstance.subscribeToLifecycleEvents("CONFIGURATION_UPDATE", this.onSystemBarVisibilityChange.bind(this));
+  }
+
+  private onSystemBarVisibilityChange() {
+    SafeAreaTurboModule.createInsets(this.ctx, this.ctx.rnInstance.getTurboModule(StatusBarTurboModule.NAME)).then((insets) => {
+      this.ctx.rnInstance.emitDeviceEvent("SAFE_AREA_INSETS_CHANGE", insets);
+    })
+  }
+
+  public getInitialInsets(): SafeAreaInsets {
+    return this.initialInsets
   }
 }
 

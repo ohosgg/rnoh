@@ -36,14 +36,30 @@ const TURBO_MODULE_CLASS_BY_NAME: Record<string, typeof TurboModule> = {
   [NetworkingTurboModule.NAME]: NetworkingTurboModule,
   [PlatformConstantsTurboModule.NAME]: PlatformConstantsTurboModule,
   [SourceCodeTurboModule.NAME]: SourceCodeTurboModule,
-  [StatusBarTurboModule.NAME]: StatusBarTurboModule,
   [TimingTurboModule.NAME]: TimingTurboModule,
   [WebSocketTurboModule.NAME]: WebSocketTurboModule,
-  [SafeAreaTurboModule.NAME]: SafeAreaTurboModule,
 };
 
+const EAGER_TURBO_MODULE_CLASS_BY_NAME = {
+  [StatusBarTurboModule.NAME]: StatusBarTurboModule,
+  [SafeAreaTurboModule.NAME]: SafeAreaTurboModule,
+} as const
+
 class CoreTurboModulesFactory extends TurboModulesFactory {
+  private eagerTurboModuleByName: Partial<Record<keyof typeof EAGER_TURBO_MODULE_CLASS_BY_NAME, TurboModule>> = {}
+
+  async prepareEagerTurboModules() {
+    const statusBarTurboModule = new StatusBarTurboModule(this.ctx)
+    this.eagerTurboModuleByName = {
+      "SafeAreaTurboModule": await SafeAreaTurboModule.create(this.ctx, statusBarTurboModule),
+      "StatusBarManager": statusBarTurboModule,
+    }
+  }
+
   createTurboModule(name: string): TurboModule {
+    if (this.eagerTurboModuleByName[name]) {
+      return this.eagerTurboModuleByName[name]
+    }
     if (this.hasTurboModule(name)) {
       return new TURBO_MODULE_CLASS_BY_NAME[name](this.ctx);
     }
@@ -51,6 +67,6 @@ class CoreTurboModulesFactory extends TurboModulesFactory {
   }
 
   hasTurboModule(name: string): boolean {
-    return name in TURBO_MODULE_CLASS_BY_NAME;
+    return (name in TURBO_MODULE_CLASS_BY_NAME) || (name in this.eagerTurboModuleByName);
   }
 }

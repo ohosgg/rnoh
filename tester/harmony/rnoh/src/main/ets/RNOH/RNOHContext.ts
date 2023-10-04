@@ -29,7 +29,6 @@ export class RNOHContext {
 
   constructor(public reactNativeVersion: string,
               public rnInstance: RNInstance,
-              public logger: RNOHLogger,
-              public window: window.Window
+              public logger: RNOHLogger
   ) {}
 }

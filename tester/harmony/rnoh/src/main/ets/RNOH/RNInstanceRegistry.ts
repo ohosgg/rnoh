@@ -50,23 +50,21 @@ export class RNInstanceRegistry {
   ) {
   }
 
-  public createInstance(
+  public async createInstance(
     options: {
       createRNPackages: (ctx: RNPackageContext) => RNPackage[]
     }
-  ): RNInstance {
+  ): Promise<RNInstance> {
     const id = this.nextInstanceId++;
-
     const instance = new RNInstanceManagerImpl(
       id,
       this.logger,
-      options.createRNPackages({}),
       this.abilityContext,
       this.napiBridge,
       this.getDefaultProps(),
       this.createRNOHContext
     )
-    instance.initialize()
+    await instance.initialize(options.createRNPackages({}))
     this.instanceMap.set(id, instance)
     return instance;
   }
@@ -105,7 +103,6 @@ export class RNInstanceManagerImpl implements RNInstance {
   constructor(
     private id: number,
     private logger: RNOHLogger,
-    packages: RNPackage[],
     public abilityContext: common.UIAbilityContext,
     private napiBridge: NapiBridge,
     private defaultProps: Record<string, any>,
@@ -120,14 +117,14 @@ export class RNInstanceManagerImpl implements RNInstance {
       this
     );
     this.commandDispatcher = new CommandDispatcher();
-    this.turboModuleProvider = this.processPackages(packages).turboModuleProvider
   }
 
   public getId(): number {
     return this.id;
   }
 
-  public initialize() {
+  public async initialize(packages: RNPackage[]) {
+    this.turboModuleProvider = (await this.processPackages(packages)).turboModuleProvider
     this.napiBridge.initializeReactNative(this.id, this.turboModuleProvider)
     this.napiBridge.subscribeToShadowTreeChanges(this.id, (mutations) => {
       this.descriptorRegistry.applyMutations(mutations)
@@ -136,13 +133,17 @@ export class RNInstanceManagerImpl implements RNInstance {
     })
   }
 
-  private processPackages(packages: RNPackage[]) {
+  private async processPackages(packages: RNPackage[]) {
     packages.unshift(new RNOHCorePackage({}));
     const turboModuleContext = this.createRNOHContext(this)
     return {
-      turboModuleProvider: new TurboModuleProvider(packages.map((pkg) => {
-        return pkg.createTurboModulesFactory(turboModuleContext);
-      }))
+      turboModuleProvider: new TurboModuleProvider(
+        await Promise.all(packages.map(async (pkg) => {
+          const turboModuleFactory = pkg.createTurboModulesFactory(turboModuleContext);
+          await turboModuleFactory.prepareEagerTurboModules()
+          return turboModuleFactory
+        }))
+      )
     }
   }
 

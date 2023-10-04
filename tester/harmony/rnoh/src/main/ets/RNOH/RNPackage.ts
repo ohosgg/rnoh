@@ -6,6 +6,10 @@ export abstract class TurboModulesFactory {
 
   abstract createTurboModule(name: string): TurboModule | null;
 
+  prepareEagerTurboModules(): Promise<void> {
+    return Promise.resolve()
+  }
+
   abstract hasTurboModule(name: string): boolean;
 }
 
