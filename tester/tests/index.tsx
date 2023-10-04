@@ -1,4 +1,5 @@
 export * from './ActivityIndicatorTest';
+export * from './AlertTest';
 export * from './AnimatedEasingTest';
 export * from './AnimatedTest';
 export * from './AnimatedValueTest';
