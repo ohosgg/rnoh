@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2023-08-18T16:41:19.800Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.5 Chrome/114.0.5735.243 Electron/25.3.1 Safari/537.36" etag="7NB1DE0508wXl0pLDrGK" version="21.6.5" type="device" pages="2">
+<mxfile host="Electron" modified="2023-10-05T13:52:26.674Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.0.2 Chrome/114.0.5735.289 Electron/25.8.4 Safari/537.36" etag="zwObOMSG2_0OM4Dx6CF2" version="22.0.2" type="device" pages="3">
   <diagram name="c2" id="NWGSykLGNc-9xcUgOitu">
-    <mxGraphModel dx="2924" dy="2296" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2924" dy="2314" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -481,6 +481,714 @@
               <mxPoint y="320" />
               <mxPoint y="160" />
             </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="pM6nR9XsIOCn5KzKmc5E" name="c3">
+    <mxGraphModel dx="4598" dy="3376" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object placeholders="1" c4Name="RNOH [TS/eTS]" c4Type="ContainerScopeBoundary" c4Application="Core" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="4XODbEiYpU760qwrxu2L-8">
+          <mxCell style="rounded=1;fontSize=11;whiteSpace=wrap;html=1;arcSize=20;fillColor=default;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;metaEdit=1;rotatable=1;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=1;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];strokeWidth=6;glass=0;movable=1;resizable=1;deletable=1;locked=0;" parent="1" vertex="1">
+            <mxGeometry x="-400" y="-380" width="1360" height="810" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="4XODbEiYpU760qwrxu2L-151" value="&amp;lt;ConcreteNapiBinder&amp;gt;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1390" y="1060" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-150" value="&amp;lt;ConcreteJSIBinder&amp;gt;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1390" y="1140" width="140" height="50" as="geometry" />
+        </mxCell>
+        <object placeholders="1" c4Name="RNOH [CPP]" c4Type="ContainerScopeBoundary" c4Application="Core" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="4XODbEiYpU760qwrxu2L-9">
+          <mxCell style="rounded=1;fontSize=11;whiteSpace=wrap;html=1;arcSize=20;fillColor=default;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];strokeWidth=6;glass=0;" parent="1" vertex="1">
+            <mxGeometry x="-400" y="670" width="1480" height="1050" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="RNOHCorePackage [TS/eTS]" c4Type="ContainerScopeBoundary" c4Application="Standard Library" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="4XODbEiYpU760qwrxu2L-10">
+          <mxCell style="rounded=1;fontSize=11;whiteSpace=wrap;html=1;arcSize=20;fillColor=default;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];strokeWidth=6;glass=0;" parent="1" vertex="1">
+            <mxGeometry x="1090" y="-220" width="910" height="590" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="RNOHCorePackage [CPP]" c4Type="ContainerScopeBoundary" c4Application="Standard Library" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="4XODbEiYpU760qwrxu2L-11">
+          <mxCell style="rounded=1;fontSize=11;whiteSpace=wrap;html=1;arcSize=20;fillColor=default;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];strokeWidth=6;glass=0;" parent="1" vertex="1">
+            <mxGeometry x="1190" y="910" width="810" height="610" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="4XODbEiYpU760qwrxu2L-59" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-16" target="4XODbEiYpU760qwrxu2L-40" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-16" value="&lt;b&gt;RNAbility&lt;br&gt;&lt;/b&gt;Coordinator&lt;br&gt;Extends ArkUI&#39;s UIAbility. Provides interface for creating and destroying RNInstances. Relays lifecycle events, and UIAbility dependencies." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="480" y="-350" width="110" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4XODbEiYpU760qwrxu2L-18" target="4XODbEiYpU760qwrxu2L-19" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-18" target="Fx6AdrjlseRzBFX4FAPQ-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="60" y="-665" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-18" value="&lt;b&gt;RNApp [eTS]&lt;br&gt;&lt;/b&gt;Interfacer&lt;br&gt;ArkUI component. Represents React Native application instance. It should be used if the RN application has only one surface (which is usually the case). Reduces the amount of code on the application side.&amp;nbsp;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="130" y="-760" width="120" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-66" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4XODbEiYpU760qwrxu2L-19" target="4XODbEiYpU760qwrxu2L-16" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-19" target="4XODbEiYpU760qwrxu2L-23" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="185" y="-290" />
+              <mxPoint x="185" y="-290" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-69" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-19" target="4XODbEiYpU760qwrxu2L-22" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-71" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4XODbEiYpU760qwrxu2L-19" target="4XODbEiYpU760qwrxu2L-21" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1240" y="-500" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-164" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-19" target="4XODbEiYpU760qwrxu2L-51" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-300" y="-510" />
+              <mxPoint x="-300" y="240" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-19" target="Fx6AdrjlseRzBFX4FAPQ-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="60" y="-480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-19" target="Fx6AdrjlseRzBFX4FAPQ-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-19" value="&lt;b&gt;RNSurface [eTS]&lt;/b&gt;&lt;br&gt;Interfacer&lt;br&gt;ArkUI component. It should be used if the RN application consists of multiple surfaces." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="135" y="-530" width="110" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-81" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4XODbEiYpU760qwrxu2L-20" target="4XODbEiYpU760qwrxu2L-80" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-101" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4XODbEiYpU760qwrxu2L-20" target="4XODbEiYpU760qwrxu2L-100" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-20" value="&lt;b&gt;NapiBridge&lt;/b&gt;&lt;br&gt;Interfacer&lt;br&gt;Communicates with Cpp side. It could be renamed to BridgeToCpp." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="245" y="290" width="140" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-21" target="4XODbEiYpU760qwrxu2L-26" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1350" y="-120" />
+              <mxPoint x="1350" y="-120" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-21" value="&lt;b&gt;RNComponentFactory [eTS]&lt;br&gt;&lt;/b&gt;Service Provider&lt;br&gt;Creates standard library RNComponents like View, Text etc. It accepts a builder function, to which delegates creating components from third-party libraries." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1145" y="-185" width="190" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-22" target="4XODbEiYpU760qwrxu2L-46" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="610" y="90" />
+              <mxPoint x="190" y="90" />
+              <mxPoint x="190" y="185" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-56" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-22" target="4XODbEiYpU760qwrxu2L-55" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-22" target="4XODbEiYpU760qwrxu2L-47">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="610" y="68" />
+              <mxPoint x="333" y="68" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-22" value="&lt;b&gt;RNOHContext&lt;br&gt;&lt;/b&gt;Information Holder&lt;br&gt;Container with dependencies used in concrete RNComponents. It allows&amp;nbsp; RNComponents to have the same interface. Passing context to RNComponent is faster than using ArkUI&#39;s @Provide/@Consume.&amp;nbsp; &amp;nbsp;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="525" y="-120" width="160" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-23" target="4XODbEiYpU760qwrxu2L-20" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="200" y="335" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-23" target="4XODbEiYpU760qwrxu2L-47" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="180" y="55" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-23" target="4XODbEiYpU760qwrxu2L-46" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="180" y="185" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-57" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-23" target="4XODbEiYpU760qwrxu2L-55" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-58" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4XODbEiYpU760qwrxu2L-23" target="4XODbEiYpU760qwrxu2L-51" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-61" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.01;entryY=0.837;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-51" target="4XODbEiYpU760qwrxu2L-24" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="370" y="217" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-23" target="Fx6AdrjlseRzBFX4FAPQ-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-23" target="4XODbEiYpU760qwrxu2L-32">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-340" y="-5" />
+              <mxPoint x="-340" y="-550" />
+              <mxPoint x="1685" y="-550" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-23" value="&lt;b&gt;RNInstance&lt;br&gt;&lt;/b&gt;Coordinator" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="130" y="-30" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-63" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-24" target="4XODbEiYpU760qwrxu2L-76" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-24" value="&lt;b&gt;RNPackage&lt;/b&gt;&lt;br&gt;Service Provider&lt;br&gt;Abstract factory. Currently it only provides TurboModuleFactories. Ideally it should also provide RNComponents, but that&#39;s not possible due to ArkUI restrictions.&amp;nbsp;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="492.5" y="100" width="170" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-28" value="&amp;lt;ConcreteComponent&amp;gt;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1460" y="-135" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-26" value="&lt;b&gt;&amp;lt;RNComponent&amp;gt; [eTS]&lt;br&gt;&lt;/b&gt;Interfacer" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1450" y="-145" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-32" value="&lt;b&gt;RNOHCorePackage&lt;/b&gt;&lt;br&gt;Service Provider&lt;br&gt;Standard Library package. Provides a TurboModuleFactory that creates TurboModules requested from RN on JS side." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1610" y="-20" width="150" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4XODbEiYpU760qwrxu2L-33" target="4XODbEiYpU760qwrxu2L-37" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-77" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-33" target="4XODbEiYpU760qwrxu2L-76" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-33" value="&lt;b&gt;(RNOH)CoreTurboModulesFactory&lt;br&gt;&lt;/b&gt;Service Provider" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1250" y="240" width="210" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-32" target="4XODbEiYpU760qwrxu2L-33" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1235" y="-90" as="sourcePoint" />
+            <mxPoint x="1235" y="-30" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-73" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-37" target="4XODbEiYpU760qwrxu2L-62" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-40" target="4XODbEiYpU760qwrxu2L-23" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-40" value="&lt;b&gt;RNInstanceRegistry&lt;/b&gt;&lt;br&gt;Structurer&lt;br&gt;Keeps RNInstances." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="284" y="-285" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-46" target="Fx6AdrjlseRzBFX4FAPQ-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-46" value="&lt;b&gt;(Component)DescriptorRegistry&lt;/b&gt;&lt;br&gt;Structurer" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="-50" y="160" width="190" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-47" target="Fx6AdrjlseRzBFX4FAPQ-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-47" value="&lt;b&gt;ComponentManagerRegistry&lt;/b&gt;&lt;br&gt;Structurer" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="-50" y="30" width="190" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-55" value="&lt;b&gt;CommandDispatcher&lt;/b&gt;&lt;br&gt;Structurer&lt;br&gt;RNComponents subscribe for commands send from JS side. For example: RNScrollView subscribes for command &quot;scrollTo&quot;. This class may be removed/renamed in the future.&amp;nbsp;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="280" y="-145" width="190" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4XODbEiYpU760qwrxu2L-62" target="4XODbEiYpU760qwrxu2L-64" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-62" value="&lt;b&gt;TurboModule&lt;/b&gt;&lt;br&gt;Interfacer/Service Provider&lt;br&gt;Abstract class extended by concrete Turbo Modules." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="740" y="30" width="160" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-75" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-64" target="4XODbEiYpU760qwrxu2L-22" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-64" value="&lt;b&gt;TurboModuleContext&lt;/b&gt;&lt;br&gt;Information Holder&lt;br&gt;Currently an alias for RNOHContext. It allows providing different context to TurboModules and different to RNComponents." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="740" y="-120" width="160" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-165" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" target="4XODbEiYpU760qwrxu2L-62" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="820" y="190" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-108" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4XODbEiYpU760qwrxu2L-78" target="4XODbEiYpU760qwrxu2L-105" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="120" y="1195" />
+              <mxPoint x="120" y="1225" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-118" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-78" target="4XODbEiYpU760qwrxu2L-91" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="1315" />
+              <mxPoint x="435" y="1315" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-121" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-78" target="4XODbEiYpU760qwrxu2L-93" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="120" y="1195" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-125" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-78" target="4XODbEiYpU760qwrxu2L-98" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="120" y="1195" />
+              <mxPoint x="120" y="1130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-138" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-78" target="4XODbEiYpU760qwrxu2L-136" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-140" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4XODbEiYpU760qwrxu2L-78" target="4XODbEiYpU760qwrxu2L-97" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="1400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-167" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-78" target="4XODbEiYpU760qwrxu2L-166" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-78" target="4XODbEiYpU760qwrxu2L-94">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="1567" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-78" value="&lt;b&gt;RNInstance&lt;/b&gt;&lt;br&gt;Coordinator" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="250" y="1170" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-79" value="&lt;b&gt;ArkJS&lt;/b&gt;&lt;br&gt;Interfacer&lt;br&gt;Provides convenient methods to create, read ArkJS objects or call functions living in ArkJS. It could be renamed to Napi since it&#39;s basically a wrapper around napi methods." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="620" y="735" width="150" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-83" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-80" target="4XODbEiYpU760qwrxu2L-82" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="295" y="910" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="215" y="870" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-80" target="4XODbEiYpU760qwrxu2L-95">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-80" target="4XODbEiYpU760qwrxu2L-78">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="215" y="960" />
+              <mxPoint x="278" y="960" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-80" value="&lt;b&gt;RNOHAppNapiBridge&lt;/b&gt;&lt;br&gt;Interfacer/Structurer&lt;br&gt;Handles calls from TS side. Keeps references to RNInstances." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="145" y="560" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-84" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-82" target="4XODbEiYpU760qwrxu2L-78" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="333" y="1030" />
+              <mxPoint x="332" y="1030" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-119" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4XODbEiYpU760qwrxu2L-82" target="4XODbEiYpU760qwrxu2L-96" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-163" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4XODbEiYpU760qwrxu2L-82" target="4XODbEiYpU760qwrxu2L-149" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="360" y="730" />
+              <mxPoint x="1770" y="730" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-82" value="&lt;b&gt;RNInstanceFactory&lt;/b&gt;&lt;br&gt;Service Provider" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="270" y="840" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-85" value="&lt;b&gt;ComponentNapiBinder&lt;/b&gt;&lt;br&gt;Interfacer&lt;br&gt;Translates facebook::react::ShadowView to Descriptor object on TS side. If not provided, props will be translated automatically." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="840" y="850" width="180" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-86" value="&lt;b&gt;ComponentJSIBinder&lt;/b&gt;&lt;br&gt;Interfacer&lt;br&gt;Specifies RN&#39;s ViewConfigs, which specify props that should be passed to Cpp. This can be done here, or on JS side." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="840" y="1020" width="155" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-111" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-87" target="4XODbEiYpU760qwrxu2L-130" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="680" y="1105" />
+              <mxPoint x="680" y="1195" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-112" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.01;entryY=0.656;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="4XODbEiYpU760qwrxu2L-87" target="4XODbEiYpU760qwrxu2L-86" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="1100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-113" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-87" target="4XODbEiYpU760qwrxu2L-85" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="1000" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="680" y="1105" />
+              <mxPoint x="680" y="920" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-114" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.106;entryY=0.005;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="4XODbEiYpU760qwrxu2L-87" target="4XODbEiYpU760qwrxu2L-92" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-87" value="&lt;b&gt;Package&lt;/b&gt;&lt;br&gt;Service Provider&lt;br&gt;Abstract Factory" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="450" y="1080" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-88" value="&lt;b&gt;TurboModule&lt;/b&gt;&lt;br&gt;Service Provider&lt;br&gt;Base TurboModule class. Concrete CPP Turbo Modules extend this class.&amp;nbsp;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="847.5" y="1240" width="140" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-134" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-89" target="4XODbEiYpU760qwrxu2L-88" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="918" y="1340" />
+              <mxPoint x="918" y="1340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-89" value="&lt;b&gt;ArkTSTurboModule&lt;/b&gt;&lt;br&gt;Interfacer&lt;br&gt;Converts data from JS side to native TS side and vice versa." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="845" y="1360" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-120" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-104" target="4XODbEiYpU760qwrxu2L-92" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-91" value="&lt;b&gt;EventDispatcher&lt;/b&gt;&lt;br&gt;Structurer&lt;br&gt;It could be renamed to&amp;nbsp;&lt;span style=&quot;border-color: var(--border-color);&quot;&gt;EventEmitRequestHandlerRegistry. Delegates event to each&amp;nbsp;&lt;/span&gt;EventEmitRequestHandler." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="327.5" y="1410" width="215" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-92" value="&lt;b&gt;EventEmitRequestHandler&lt;/b&gt;&lt;br&gt;Interfacer&lt;br&gt;Transforms data from native TS side and relays it to ShadowView::eventEmitter." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="790" y="1455" width="205" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-93" target="4XODbEiYpU760qwrxu2L-105">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-93" value="&lt;b&gt;facebook::react::MessageQueueThread&lt;br&gt;&lt;/b&gt;Service Provider&lt;br&gt;Executes tasks on JS thread." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="30" y="1290" width="230" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-94" target="4XODbEiYpU760qwrxu2L-98">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-270" y="1495" />
+              <mxPoint x="-270" y="1124" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-94" value="&lt;b&gt;MountingManager&lt;/b&gt;&lt;br&gt;Coordinator&lt;br&gt;Updates ShadowViewRegistry. Triggers the listener that updates DescriptorRegistry on native TS side." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="20" y="1470" width="140" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-126" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-95" target="4XODbEiYpU760qwrxu2L-85" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-160" y="975" />
+              <mxPoint x="-340" y="975" />
+              <mxPoint x="-340" y="1680" />
+              <mxPoint x="1070" y="1680" />
+              <mxPoint x="1070" y="920" />
+            </Array>
+            <mxPoint x="1020" y="1000" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-95" value="&lt;b&gt;MutationsToNapiConverter&lt;/b&gt;&lt;br&gt;Interfacer&lt;br&gt;Creates a representation of RN mutations on native TS side." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="-250" y="680" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-128" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4XODbEiYpU760qwrxu2L-96" target="4XODbEiYpU760qwrxu2L-87" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-52" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-97" target="4XODbEiYpU760qwrxu2L-94">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="90" y="1450" />
+              <mxPoint x="90" y="1450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-97" value="&lt;b&gt;facebook::react::SchedulerDelegate&lt;/b&gt;&lt;br&gt;Coordinator&lt;br&gt;Delegates ShadowTree updates to Mounting Manager. This class and MountingManager could be merged." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="-35" y="1360" width="245" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-98" value="&lt;b&gt;ShadowViewRegistry&lt;/b&gt;&lt;br&gt;Structurer&lt;br&gt;Provides a ShadowView by tag. Each ShadowView has unique tag." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="-125" y="1079" width="140" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-99" target="4XODbEiYpU760qwrxu2L-79">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-99" value="&lt;b&gt;TextMeasurer&lt;/b&gt;&lt;br&gt;Interfacer&lt;br&gt;Translates communication between TS and CPP TextLayoutManager." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="-50" y="750" width="190" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-100" value="&lt;b&gt;TextLayoutManager&lt;/b&gt;&lt;br&gt;Calculates text container dimensions. Named after RN&#39;s TextLayoutManager." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="482.5" y="300" width="190" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-142" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-104" target="4XODbEiYpU760qwrxu2L-86" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1060" y="1555" />
+              <mxPoint x="1060" y="1085" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-104" target="4XODbEiYpU760qwrxu2L-88">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="760" y="1530" />
+              <mxPoint x="760" y="1308" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-107" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-105" target="4XODbEiYpU760qwrxu2L-106" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-170" y="1225" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-105" value="&lt;b&gt;TaskExecutor&lt;/b&gt;&lt;br&gt;Interfacer&lt;br&gt;Executes task on a specified task runner." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="-125" y="1190" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-106" value="&lt;b&gt;AbstractTaskRunner&lt;/b&gt;&lt;br&gt;Service Provider&lt;br&gt;Concrete implementations execute tasks." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="-240" y="1360" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-133" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-130" target="4XODbEiYpU760qwrxu2L-88" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-130" value="&lt;b&gt;TurboModuleFactoryDelegate&lt;/b&gt;&lt;br&gt;Service Provider&lt;br&gt;Creates Turbo Modules." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="830" y="1170" width="175" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-141" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4XODbEiYpU760qwrxu2L-135" target="4XODbEiYpU760qwrxu2L-104" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-135" target="4XODbEiYpU760qwrxu2L-130">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="680" y="1195" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-135" value="&lt;b&gt;TurboModuleFactory&lt;/b&gt;&lt;br&gt;Service Provider&lt;br&gt;Prepares ArkTSTurboModule::Context Creates UIManagerModule, delegates creating TurboModules to TurboModuleFactoryDelegate if necessary.&amp;nbsp;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="560" y="1310" width="175" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-137" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-136" target="4XODbEiYpU760qwrxu2L-135" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-136" value="&lt;b&gt;TurboModuleProvider&lt;/b&gt;&lt;br&gt;Structurer&lt;br&gt;Provides TurboModule. Keeps TurboModules alive after creation." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="445" y="1155" width="175" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-146" target="4XODbEiYpU760qwrxu2L-85">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-146" value="&lt;b&gt;&amp;lt;ConcreteNapiBinder&amp;gt;&lt;/b&gt;&lt;br&gt;Interfacer" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1380" y="1050" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-147" target="4XODbEiYpU760qwrxu2L-86">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-147" value="&lt;b&gt;&amp;lt;ConcreteJSIBinder&amp;gt;&lt;/b&gt;&lt;br&gt;Interfacer" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1380" y="1130" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-148" target="4XODbEiYpU760qwrxu2L-130">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-148" value="&lt;div style=&quot;color: rgb(59, 59, 59); background-color: rgb(255, 255, 255); line-height: 18px;&quot;&gt;&lt;b style=&quot;&quot;&gt;RNOHCoreTurboModuleFactoryDelegate&lt;/b&gt;&lt;br&gt;Service Provider&lt;/div&gt;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1380" y="1210" width="270" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-156" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-149" target="4XODbEiYpU760qwrxu2L-148" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1670" y="1275" />
+              <mxPoint x="1670" y="1235" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-157" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-149" target="4XODbEiYpU760qwrxu2L-147" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1700" y="1155" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-158" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-149" target="4XODbEiYpU760qwrxu2L-146" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1720" y="1075" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-149" value="&lt;b&gt;RNOHCorePackage&lt;/b&gt;&lt;br&gt;Service Provider" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1690" y="1250" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-154" value="&lt;div style=&quot;color: rgb(59, 59, 59); background-color: rgb(255, 255, 255); font-family: Menlo, Monaco, &amp;quot;Courier New&amp;quot;, monospace; line-height: 18px;&quot;&gt;&amp;lt;ConcreteTurboModule&amp;gt;&lt;/div&gt;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1490" y="1290" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-153" target="4XODbEiYpU760qwrxu2L-89">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1230" y="1305" />
+              <mxPoint x="1230" y="1400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-153" target="4XODbEiYpU760qwrxu2L-88">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1230" y="1305" />
+              <mxPoint x="1230" y="1285" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-153" value="&lt;div style=&quot;color: rgb(59, 59, 59); background-color: rgb(255, 255, 255); line-height: 18px;&quot;&gt;&lt;b&gt;&amp;lt;ConcreteTurboModule&amp;gt;&lt;/b&gt;&lt;br&gt;Interfacer/Service Provider&lt;/div&gt;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1480" y="1280" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-160" value="&lt;div style=&quot;color: rgb(59, 59, 59); background-color: rgb(255, 255, 255); font-family: Menlo, Monaco, &amp;quot;Courier New&amp;quot;, monospace; line-height: 18px;&quot;&gt;&amp;lt;ConcreteEventEmitRequestHandler&amp;gt;&lt;/div&gt;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1400" y="1370" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-159" target="4XODbEiYpU760qwrxu2L-92">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1250" y="1385" />
+              <mxPoint x="1250" y="1430" />
+              <mxPoint x="1130" y="1430" />
+              <mxPoint x="1130" y="1495" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-159" value="&lt;div style=&quot;color: rgb(59, 59, 59); background-color: rgb(255, 255, 255); line-height: 18px;&quot;&gt;&amp;lt;&lt;b style=&quot;&quot;&gt;ConcreteEventEmitRequestHandler&amp;gt;&lt;/b&gt;&lt;br&gt;Interfacer&lt;/div&gt;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1390" y="1360" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-168" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="4XODbEiYpU760qwrxu2L-166" target="4XODbEiYpU760qwrxu2L-99" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-166" value="&lt;b&gt;facebook::react::ContextContainer&lt;/b&gt;&lt;br&gt;Information Holder&lt;br&gt;Dependency container." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="20" y="1010" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-3" value="&lt;b&gt;JSBundleProvider&lt;br&gt;&lt;/b&gt;Interfacer&lt;br&gt;Interface. Implementations of this interface load JS bundle from various sources." style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="-35" y="-285" width="190" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-7" value="&lt;b&gt;ComponentManager&lt;/b&gt;&lt;br&gt;Information Holder/Interfacer Provides data/objects specific to RN implementation on RNOH.&amp;nbsp;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="-260" y="20" width="190" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-9" value="&lt;b&gt;(Component)Descriptor&lt;/b&gt;&lt;br&gt;Information Holder&lt;br&gt;Platform agnostic data received from React Native." style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="-260" y="150" width="190" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Fx6AdrjlseRzBFX4FAPQ-11" target="4XODbEiYpU760qwrxu2L-47">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="10" y="70" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-11" value="&lt;b&gt;TouchDispatcher&lt;/b&gt;&lt;br&gt;Service Provider&lt;br&gt;Figures out in the name of which component touch event should be sent and prepares such touch event.&lt;br&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="-270" y="-240" width="190" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.548;entryY=1.005;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-85" target="4XODbEiYpU760qwrxu2L-79">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-17" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.062;entryY=0.014;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;dashPattern=1 2;endArrow=none;endFill=0;opacity=50;" edge="1" parent="1" source="Fx6AdrjlseRzBFX4FAPQ-9" target="4XODbEiYpU760qwrxu2L-85">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-28" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-91" target="4XODbEiYpU760qwrxu2L-104">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="435" y="1520" as="sourcePoint" />
+            <mxPoint x="910" y="1535" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-104" value="&lt;b&gt;UIManager(Turbo)Module&lt;/b&gt;&lt;br&gt;Interfacer&lt;br&gt;Creates UIManager:: getConstantsForViewManager on JS side. Those constants are used to decide what can be passed to Cpp from JS side." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="562.5" y="1515" width="170" height="145" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-39" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-99" target="4XODbEiYpU760qwrxu2L-96">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="60" y="750" as="sourcePoint" />
+            <mxPoint x="505" y="380" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-96" value="&lt;b&gt;PackageProvider&lt;br&gt;&lt;/b&gt;Service Provider&lt;br&gt;Provides third-party packages. This class is implemented on the app developer side." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="430" y="620" width="150" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-45" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-32" target="4XODbEiYpU760qwrxu2L-24">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1685" y="65" as="sourcePoint" />
+            <mxPoint x="560" y="280" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1685" y="410" />
+              <mxPoint x="710" y="410" />
+              <mxPoint x="710" y="280" />
+              <mxPoint x="578" y="280" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-76" value="&lt;b&gt;TurboModuleFactory&lt;br&gt;&lt;/b&gt;Service Provider&lt;br&gt;Creates TurboModules. TurboModules are created when JS side requests them, that&#39;s why RNOH library developer needs to provide this class instead of TurboModules in RNPackage.&amp;nbsp;" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="730" y="190" width="170" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-48" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-51" target="4XODbEiYpU760qwrxu2L-20">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="315" y="299.9999999999998" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-51" value="&lt;b&gt;RNSurfaceHandle&lt;/b&gt;&lt;br&gt;Interfacer. Represents surface object on the CPP side." style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="260" y="180" width="110" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-49" value="&lt;b&gt;&amp;lt;ConcreteTurboModule&amp;gt;&lt;/b&gt;&lt;br&gt;Interfacer/Service Provider" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="1290" y="70" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-37" value="&lt;b&gt;&amp;lt;ConcreteTurboModule&amp;gt;&lt;/b&gt;&lt;br&gt;Interfacer/Service Provider" style="html=1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="1280" y="60" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.224;entryY=-0.007;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-148" target="4XODbEiYpU760qwrxu2L-153">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4XODbEiYpU760qwrxu2L-161" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4XODbEiYpU760qwrxu2L-149" target="4XODbEiYpU760qwrxu2L-159" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1720" y="1385" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-55" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.25;entryDx=0;entryDy=0;dashed=1;dashPattern=1 2;endArrow=none;endFill=0;opacity=50;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="4XODbEiYpU760qwrxu2L-100" target="4XODbEiYpU760qwrxu2L-99">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="65" y="210" as="sourcePoint" />
+            <mxPoint x="1122" y="842" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fx6AdrjlseRzBFX4FAPQ-59" value="" style="endArrow=none;html=1;rounded=0;shape=link;strokeWidth=6;fillColor=#f8cecc;strokeColor=#b85450;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-400" y="530" as="sourcePoint" />
+            <mxPoint x="2000" y="529" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
