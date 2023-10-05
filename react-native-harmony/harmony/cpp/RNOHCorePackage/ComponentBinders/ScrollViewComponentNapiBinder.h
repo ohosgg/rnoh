@@ -31,6 +31,7 @@ class ScrollViewComponentNapiBinder : public ViewComponentNapiBinder {
                 .addProperty("persistentScrollbar", persistentScrollbar)
                 .addProperty("indicatorStyle", static_cast<int>(props->indicatorStyle))
                 .addProperty("decelerationRate", props->decelerationRate)
+                .addProperty("scrollEventThrottle", props->scrollEventThrottle)
                 .build();
         }
         return napiViewProps;

@@ -426,10 +426,7 @@ export function ScrollViewTest() {
         </TestCase>
         <TestCase
           modal
-          skip
-          itShould="toggle backface visibility on button press (the component should become invisible)"
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/259
-        >
+          itShould="toggle backface visibility on button press (the component should become invisible)">
           <BackfaceVisibilityTestCase />
         </TestCase>
         <TestCase
@@ -469,10 +466,7 @@ export function ScrollViewTest() {
         </TestCase>
         <TestCase
           modal
-          skip
-          itShould="display onScroll native event throttled every second"
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/314
-        >
+          itShould="display onScroll native event throttled every second">
           <ObjectDisplayer
             renderContent={setObject => {
               return (

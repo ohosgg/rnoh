@@ -14,6 +14,7 @@ export type ScrollViewProps = ViewBaseProps & {
   showsVerticalScrollIndicator: boolean
   indicatorStyle?: IndicatorStyle
   decelerationRate?: number
+  scrollEventThrottle?: number
 }
 
 export type ScrollViewState = {
@@ -53,6 +54,8 @@ export struct RNScrollView {
   private unregisterComponentManager?: () => void = undefined
   private scrollState: ScrollState = ScrollState.Idle
   private componentManager: RNScrollViewManager = undefined
+  private lastScrollDispatchTime: number = 0
+  private allowNextScrollEvent: boolean = false
 
   aboutToAppear() {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag)
@@ -189,7 +192,7 @@ export struct RNScrollView {
     this.scrollState = scrollState
   }
 
-  onScrollEvent(dx: number, dy: number) {
+  onScrollEvent(dx?: number, dy?: number) {
     const {xOffset, yOffset} = this.scroller.currentOffset();
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag);
 
@@ -199,12 +202,16 @@ export struct RNScrollView {
     }
     descriptor.state.contentOffsetX = xOffset;
     descriptor.state.contentOffsetY = yOffset;
-
-    this.ctx.rnInstance.emitComponentEvent(
-      this.tag,
-      "onScroll",
-      this.createScrollEvent()
-    )
+    
+    const now = Date.now();
+    if(this.allowNextScrollEvent || descriptor.props.scrollEventThrottle < now - this.lastScrollDispatchTime) {
+      this.lastScrollDispatchTime = now
+      this.ctx.rnInstance.emitComponentEvent(
+        this.tag,
+        "onScroll",
+        this.createScrollEvent()
+      )
+    }
   }
 
   onDragBegin() {
@@ -241,10 +248,17 @@ export struct RNScrollView {
 
   onScrollBegin() {
     this.componentManager.setScrolling(true);
+    this.allowNextScrollEvent = false;
   }
 
   onScrollEnd() {
     this.componentManager.setScrolling(false);
+
+    // fire an additional event after the scrolling has ended
+    // ignoring throttle
+    this.allowNextScrollEvent = true;
+    this.onScrollEvent();
+
     if (this.scrollState === ScrollState.Fling) {
       this.onMomentumEnd();
     } else if (this.scrollState === ScrollState.Scroll) {

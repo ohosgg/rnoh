@@ -15,6 +15,7 @@ class ScrollViewComponentJSIBinder : public ViewComponentJSIBinder {
         object.setProperty(rt, "indicatorStyle", "number");
         object.setProperty(rt, "bounces", "boolean");
         object.setProperty(rt, "decelerationRate", "number");
+        object.setProperty(rt, "scrollEventThrottle", "number");
         
         return object;
     }
