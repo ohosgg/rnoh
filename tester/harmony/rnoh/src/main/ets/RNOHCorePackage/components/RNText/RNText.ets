@@ -1,6 +1,7 @@
 import { RNOHContext } from '../../../RNOH'
-import { TextDescriptor, RNSimpleText } from './RNSimpleText'
+import { RNSimpleText } from './RNSimpleText'
 import { RNParagraph } from './RNParagraph'
+import { TextDescriptor } from './types'
 
 @Component
 export struct RNText {
