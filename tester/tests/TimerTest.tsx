@@ -1,6 +1,7 @@
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import React, {useEffect} from 'react';
 import {AppState, AppStateStatus, Text} from 'react-native';
+import {Button} from '../components';
 
 async function wait(ms: number) {
   return new Promise(resolve => {
@@ -15,8 +16,18 @@ export function TimerTest() {
     <TestSuite name="Timer">
       <TestCase
         itShould="take three seconds to finish this test (setTimeout)"
-        fn={async ({expect}) => {
-          await wait(3000);
+        initialState={0}
+        arrange={({setState}) => {
+          return (
+            <Button
+              label="Start Timeout"
+              onPress={() => {
+                setState(prev => prev + 1);
+              }}
+            />
+          );
+        }}
+        assert={async ({expect}) => {
           const waitTimeInMs = 3000;
           const time1 = new Date().getTime();
           await wait(waitTimeInMs);
@@ -30,8 +41,19 @@ export function TimerTest() {
         }}
       />
       <TestCase
-        itShould="trigger fn every second twice (setInterval)"
-        fn={async ({expect}) => {
+        itShould="take three seconds to finish this test (setInterval)"
+        initialState={0}
+        arrange={({setState}) => {
+          return (
+            <Button
+              label="Start Interval"
+              onPress={() => {
+                setState(prev => prev + 1);
+              }}
+            />
+          );
+        }}
+        assert={async ({expect}) => {
           await wait(3000);
           let i = 0;
           const time1 = new Date().getTime();

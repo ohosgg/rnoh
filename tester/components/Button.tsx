@@ -1,19 +1,21 @@
-import {View, Text} from 'react-native';
+import {Text, TouchableHighlight} from 'react-native';
 
 export function Button({label, onPress}: {onPress: () => void; label: string}) {
   return (
-    <View
+    <TouchableHighlight
+      underlayColor="hsl(210, 80%, 35%)"
       style={{
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: 24,
+        paddingVertical: 6,
+        paddingHorizontal: 12,
         alignSelf: 'flex-start',
-        backgroundColor: 'hsl(190, 80%, 70%)',
+        backgroundColor: 'hsl(210, 80%, 50%)',
         borderWidth: 2,
-        borderColor: 'hsl(190, 50%, 50%)',
+        borderColor: 'hsl(210, 50%, 35%)',
       }}
-      onTouchEnd={onPress}>
-      <Text style={{height: 16}}>{label}</Text>
-    </View>
+      onPress={onPress}>
+      <Text style={{color: 'white', fontWeight: 'bold', fontSize: 12}}>
+        {label}
+      </Text>
+    </TouchableHighlight>
   );
 }

@@ -10,6 +10,9 @@ export class AppStateTurboModule extends TurboModule {
   }
 
   private subscribeListeners() {
+    this.ctx.rnInstance.subscribeToLifecycleEvents("JS_BUNDLE_EXECUTION_FINISH", () => {
+      this.ctx.rnInstance.emitDeviceEvent("appStateDidChange", { app_state: this.getAppState() });
+    })
     this.ctx.rnInstance.subscribeToLifecycleEvents("FOREGROUND", () => {
       this.ctx.rnInstance.emitDeviceEvent("appStateDidChange", { app_state: this.getAppState() });
     })
