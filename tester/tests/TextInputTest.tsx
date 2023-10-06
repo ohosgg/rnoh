@@ -18,12 +18,7 @@ export function TextInputTest() {
         itShould="render textinput and change the text component based on the values inputted">
         <TextInputWithText style={styles.textInput} />
       </TestCase>
-      <TestCase
-        modal
-        itShould="render non-editable textInput"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/401
-      >
+      <TestCase modal itShould="render non-editable textInput">
         <TextInputWithText style={styles.textInput} editable={false} />
       </TestCase>
       <TestCase

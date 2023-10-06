@@ -36,6 +36,7 @@
 #include "RNOHCorePackage/ComponentBinders/SwitchComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/TextComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/TextInputComponentNapiBinder.h"
+#include "RNOHCorePackage/ComponentBinders/TextInputComponentJSIBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ModalHostViewJSIBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ModalHostViewNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ActivityIndicatorComponentJSIBinder.h"
@@ -117,7 +118,7 @@ class RNOHCorePackage : public Package {
             {"RCTView", std::make_shared<ViewComponentJSIBinder>()},
             {"RCTImageView", std::make_shared<ImageComponentJSIBinder>()},
             {"RCTVirtualText", std::make_shared<ViewComponentJSIBinder>()},
-            {"RCTSinglelineTextInputView", std::make_shared<ViewComponentJSIBinder>()},
+            {"RCTSinglelineTextInputView", std::make_shared<TextInputComponentJSIBinder>()},
             {"RCTScrollView", std::make_shared<ScrollViewComponentJSIBinder>()},
             {"RCTScrollContentView", std::make_shared<ViewComponentJSIBinder>()},
             {"RCTModalHostView", std::make_shared<ModalHostViewJSIBinder>()},

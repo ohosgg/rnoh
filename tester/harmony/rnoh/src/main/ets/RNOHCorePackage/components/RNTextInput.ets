@@ -1,11 +1,12 @@
-import { ColorSegments, Descriptor, convertColorSegmentsToString, RNOHContext } from '../../RNOH'
+import { ColorSegments, convertColorSegmentsToString, Descriptor, RNOHContext } from '../../RNOH'
 import { RNViewBase, ViewBaseProps } from './RNViewBase'
-import { RNOHEventEmitRequestHandlerName } from "./../RNOHEventEmitRequestHandler"
+import { RNOHEventEmitRequestHandlerName } from './../RNOHEventEmitRequestHandler'
 
 export type TextInputProps = ViewBaseProps & {
   fontColor?: ColorSegments
   fontSize?: number
   text?: string
+  editable?: boolean
 }
 
 export type TextInputDescriptor = Descriptor<"TextInput", TextInputProps>
@@ -52,6 +53,7 @@ export struct RNTextInput {
         .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
         .fontSize(this.descriptor.props.fontSize)
         .onChange((event) => this.handleChangeEvent(event))
+        .enabled(this.descriptor.props.editable)
     }
   }
 }
