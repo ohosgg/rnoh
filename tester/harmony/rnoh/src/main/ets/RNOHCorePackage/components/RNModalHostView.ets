@@ -83,6 +83,7 @@ export struct RNModalHostView {
         tag: this.tag,
         renderDescriptors: this.renderDescriptors
       }),
+      alignment: DialogAlignment.TopStart,
       customStyle: true,
       maskColor: Color.Transparent
     })
