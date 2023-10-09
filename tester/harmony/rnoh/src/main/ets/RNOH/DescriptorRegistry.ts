@@ -1,6 +1,6 @@
 import { Tag, Descriptor } from './DescriptorBase';
 import { MutationType, Mutation } from './Mutation';
-import type { RNInstanceManagerImpl } from './RNInstanceRegistry'
+import type { RNInstanceImpl } from './RNInstance'
 
 type RootDescriptor = Descriptor<"RootView", any>
 
@@ -17,7 +17,7 @@ export class DescriptorRegistry {
   constructor(
     descriptorByTag: Record<Tag, Descriptor>,
     private setNativeStateFn: SetNativeStateFn,
-    private rnInstance: RNInstanceManagerImpl,
+    private rnInstance: RNInstanceImpl,
   ) {
     for (const tag in descriptorByTag) {
       this.descriptorByTag.set(parseInt(tag), descriptorByTag[tag])
