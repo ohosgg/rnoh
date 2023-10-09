@@ -166,8 +166,6 @@ export function TextInputTest() {
       <TestCase
         modal
         itShould="render secure text input (text obscured)"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/415
       >
         <TextInputWithText style={styles.textInput} secureTextEntry />
       </TestCase>

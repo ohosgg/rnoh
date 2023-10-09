@@ -19,6 +19,7 @@ class TextInputComponentNapiBinder : public ViewComponentNapiBinder {
                 .addProperty("fontSize", props->textAttributes.fontSize)
                 .addProperty("editable", props->traits.editable)
                 .addProperty("caretHidden", props->traits.caretHidden)
+                .addProperty("secureTextEntry", props->traits.secureTextEntry)
                 .build();
         }
         return napiViewProps;

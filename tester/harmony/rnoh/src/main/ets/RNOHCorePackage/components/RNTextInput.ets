@@ -8,6 +8,7 @@ export type TextInputProps = ViewBaseProps & {
   text?: string
   editable?: boolean
   caretHidden?: boolean
+  secureTextEntry?: boolean
 }
 
 function getCaretStyle(caretHidden: boolean): CaretStyle {
@@ -60,6 +61,8 @@ export struct RNTextInput {
         .onChange((event) => this.handleChangeEvent(event))
         .enabled(this.descriptor.props.editable)
         .caretStyle(getCaretStyle(this.descriptor.props.caretHidden))
+        .type(this.descriptor.props.secureTextEntry ? InputType.Password : undefined)
+        .showPasswordIcon(false)
     }
   }
 }
