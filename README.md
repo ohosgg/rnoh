@@ -61,7 +61,7 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 
 ### Apis
 
-- [ ] Alert
+- [x] Alert
 - [x] Animated
 - [ ] Appearance
 - [x] AppRegistry

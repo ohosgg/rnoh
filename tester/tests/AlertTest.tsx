@@ -1,6 +1,6 @@
 import {TestSuite, TestCase} from '@rnoh/testerino';
 import {Button} from '../components';
-import {Alert, Text} from 'react-native';
+import {Alert, Text, View} from 'react-native';
 import {useState} from 'react';
 
 export function AlertTest() {
@@ -10,15 +10,17 @@ export function AlertTest() {
         itShould="show simple alert on click"
         initialState={false}
         arrange={({setState, reset}) => (
-          <Button
-            label="show alert"
-            onPress={() => {
-              reset();
-              Alert.alert('Test Alert', 'Message', [
-                {text: 'OK', onPress: () => setState(true)},
-              ]);
-            }}
-          />
+          <View style={{flexDirection: 'row'}}>
+            <Button
+              label="show alert"
+              onPress={() => {
+                Alert.alert('Test Alert', 'Message', [
+                  {text: 'OK', onPress: () => setState(true)},
+                ]);
+              }}
+            />
+            <Button label="reset" onPress={reset} />
+          </View>
         )}
         assert={({state, expect}) => {
           expect(state).to.be.true;
@@ -38,21 +40,18 @@ export function AlertTest() {
         itShould="cancel alert on press outside its window"
         initialState={false}
         arrange={({setState, reset}) => (
-          <Button
-            label="show alert"
-            onPress={() => {
-              reset();
-              Alert.alert(
-                'Test Alert',
-                'Press outside to dismiss',
-                [{text: 'OK', onPress: () => setState(false)}],
-                {
+          <View style={{flexDirection: 'row'}}>
+            <Button
+              label="show alert"
+              onPress={() => {
+                Alert.alert('Test Alert', 'Press outside to dismiss', [], {
                   cancelable: true,
                   onDismiss: () => setState(true),
-                },
-              );
-            }}
-          />
+                });
+              }}
+            />
+            <Button label="reset" onPress={reset} />
+          </View>
         )}
         assert={({state, expect}) => {
           expect(state).to.be.true;
@@ -67,10 +66,6 @@ const AlertView = (props: {
   reset: () => void;
 }) => {
   const [text, setText] = useState('');
-  const laterOnPress = () => {
-    props.setState(true);
-    setText('Later');
-  };
   const cancelOnPress = () => {
     props.setState(true);
     setText('Cancel');
@@ -82,20 +77,18 @@ const AlertView = (props: {
   return (
     <>
       <Text>{text}</Text>
-      <Button
-        label="show alert"
-        onPress={() => {
-          props.reset();
-          Alert.alert('Test Alert', 'Message', [
-            {
-              text: 'Later',
-              onPress: laterOnPress,
-            },
-            {text: 'Cancel', onPress: cancelOnPress},
-            {text: 'OK', onPress: okOnPress},
-          ]);
-        }}
-      />
+      <View style={{flexDirection: 'row'}}>
+        <Button
+          label="show alert"
+          onPress={() => {
+            Alert.alert('Test Alert', 'Message', [
+              {text: 'Cancel', onPress: cancelOnPress},
+              {text: 'OK', onPress: okOnPress},
+            ]);
+          }}
+        />
+        <Button label="reset" onPress={props.reset} />
+      </View>
     </>
   );
 };

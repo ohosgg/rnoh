@@ -12,3 +12,4 @@ export * from "./StatusBarTurboModule";
 export * from "./TimingTurboModule";
 export * from "./WebSocketTurboModule";
 export * from './SafeAreaTurboModule'
+export * from "./AlertManagerTurboModule";

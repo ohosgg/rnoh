@@ -1,6 +1,7 @@
 import { RNPackage, TurboModulesFactory } from '../RNOH/RNPackage';
 import type { TurboModule, TurboModuleContext } from '../RNOH/TurboModule';
 import {
+  AlertManagerTurboModule,
   AppStateTurboModule,
   DeviceEventManagerTurboModule,
   DeviceInfoTurboModule,
@@ -16,7 +17,7 @@ import {
   WebSocketTurboModule,
   SafeAreaTurboModule,
 } from './turboModules';
-import { LinkingManagerTurboModule } from './turboModules/LinkingManagerTurboModule';
+import {LinkingManagerTurboModule} from './turboModules/LinkingManagerTurboModule';
 
 export class RNOHCorePackage extends RNPackage {
   createTurboModulesFactory(ctx: TurboModuleContext): TurboModulesFactory {
@@ -25,6 +26,7 @@ export class RNOHCorePackage extends RNPackage {
 }
 
 const TURBO_MODULE_CLASS_BY_NAME: Record<string, typeof TurboModule> = {
+  [AlertManagerTurboModule.NAME]: AlertManagerTurboModule,
   [AppStateTurboModule.NAME]: AppStateTurboModule,
   [DeviceEventManagerTurboModule.NAME]: DeviceEventManagerTurboModule,
   [DeviceInfoTurboModule.NAME]: DeviceInfoTurboModule,

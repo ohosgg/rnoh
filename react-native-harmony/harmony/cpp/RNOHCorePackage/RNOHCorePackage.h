@@ -10,6 +10,7 @@
 #include <react/renderer/components/modal/ModalHostViewComponentDescriptor.h>
 #include "RNOH/Package.h"
 #include "RNOH/ArkTSTurboModule.h"
+#include "RNOHCorePackage/TurboModules/AlertManagerTurboModule.h"
 #include "RNOHCorePackage/TurboModules/AppStateTurboModule.h"
 #include "RNOHCorePackage/TurboModules/DeviceEventManagerTurboModule.h"
 #include "RNOHCorePackage/TurboModules/DeviceInfoTurboModule.h"
@@ -54,7 +55,9 @@ namespace rnoh {
 class RNOHCoreTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
   public:
     SharedTurboModule createTurboModule(Context ctx, const std::string &name) const override {
-        if (name == "AppState") {
+        if (name == "AlertManager") {
+            return std::make_shared<AlertManagerTurboModule>(ctx, name);
+        } else if (name == "AppState") {
             return std::make_shared<AppStateTurboModule>(ctx, name);
         } else if (name == "DeviceEventManager") {
             return std::make_shared<DeviceEventManagerTurboModule>(ctx, name);

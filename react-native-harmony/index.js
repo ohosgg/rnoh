@@ -3,6 +3,9 @@ module.exports = {
     return require('react-native/Libraries/Components/ActivityIndicator/ActivityIndicator')
       .default;
   },
+  get Alert() {
+    return require("./Libraries/Alert/Alert.harmony");
+  },
   get Animated() {
     return require('react-native/Libraries/Animated/Animated').default;
   },
