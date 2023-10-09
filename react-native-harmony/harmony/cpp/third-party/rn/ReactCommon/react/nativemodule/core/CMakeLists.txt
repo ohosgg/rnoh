@@ -18,6 +18,7 @@ add_compile_options(
 
 file(GLOB react_nativemodule_core_SRC CONFIGURE_DEPENDS
         ReactCommon/*.cpp
+        # platform/android/ReactCommon/*.cpp # RNOH: patch
         )
 add_library(react_nativemodule_core
         SHARED
@@ -26,6 +27,7 @@ add_library(react_nativemodule_core
 target_include_directories(react_nativemodule_core
         PUBLIC
           ${CMAKE_CURRENT_SOURCE_DIR}
+          # ${CMAKE_CURRENT_SOURCE_DIR}/platform/android/ # RNOH: patch
         )
 
 target_link_libraries(react_nativemodule_core

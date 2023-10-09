@@ -9,7 +9,7 @@
 
 #include <jsi/jsi.h>
 #include "LongLivedObject.h"
-#include "ReactCommon/CallInvoker.h"
+#include <ReactCommon/CallInvoker.h> // RNOH: patch
 
 #include <memory>
 

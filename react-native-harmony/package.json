@@ -6,12 +6,13 @@
     "install:dev-cli": "cd ../react-native-harmony-cli && npm pack && cd ../react-native-harmony && npm i ../react-native-harmony-cli/rnoh-react-native-harmony-cli-0.0.15.tgz && cd ../react-native-harmony",
     "pack:harmony": "react-native pack-harmony --oh-module-path ../tester/harmony/rnoh --harmony-dir-path ./harmony --package-json-path ./package.json",
     "pack:prod": "npm run pack:harmony && npm pack",
-    "prepublishOnly": "npm run pack:harmony"
+    "prepublishOnly": "npm run pack:harmony",
+    "hermes:build": "sh ./scripts/build-hermes.sh"
   },
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "react-native": "0.72.0"
+    "react-native": "0.72.5"
   },
   "types": "types",
   "devDependencies": {
