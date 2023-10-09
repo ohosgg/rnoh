@@ -106,8 +106,6 @@ export function TextInputTest() {
       <TestCase
         modal
         itShould="render text input with maximally 10 characters"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/410
       >
         <TextInputWithText style={styles.textInput} maxLength={10} />
       </TestCase>

@@ -12,11 +12,15 @@ export type TextInputProps = ViewBaseProps & {
   secureTextEntry?: boolean
 }
 
+export type TextInputRawProps = {
+  maxLength?: number
+}
+
 function getCaretStyle(caretHidden: boolean): CaretStyle {
   return caretHidden ? { width: 0 } : undefined;
 }
 
-export type TextInputDescriptor = Descriptor<"TextInput", TextInputProps>
+export type TextInputDescriptor = Descriptor<"TextInput", TextInputProps, {}, TextInputRawProps>
 
 @Component
 export struct RNTextInput {
@@ -63,6 +67,7 @@ export struct RNTextInput {
         .enabled(this.descriptor.props.editable)
         .caretStyle(getCaretStyle(this.descriptor.props.caretHidden))
         .type(this.descriptor.props.secureTextEntry ? InputType.Password : undefined)
+        .maxLength(this.descriptor.rawProps.maxLength)
         .selectedBackgroundColor(convertColorSegmentsToString(this.descriptor.props.selectionColor))
         .showPasswordIcon(false)
     }

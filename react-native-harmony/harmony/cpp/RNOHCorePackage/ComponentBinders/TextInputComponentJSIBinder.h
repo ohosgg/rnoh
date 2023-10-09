@@ -9,6 +9,7 @@ class TextInputComponentJSIBinder : public ViewComponentJSIBinder {
         nativeProps.setProperty(rt, "editable", "boolean");
         nativeProps.setProperty(rt, "caretHidden", "boolean");
         nativeProps.setProperty(rt, "secureTextEntry", "boolean");
+        nativeProps.setProperty(rt, "maxLength", "number");
         nativeProps.setProperty(rt, "selectionColor", "Color");
 
         return nativeProps;
