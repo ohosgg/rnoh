@@ -92,8 +92,6 @@ export function TextInputTest() {
       <TestCase
         modal
         itShould="render textinput with green selection color"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/407
       >
         <TextInputWithText style={styles.textInput} selectionColor="green" />
       </TestCase>

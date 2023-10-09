@@ -8,6 +8,7 @@ export type TextInputProps = ViewBaseProps & {
   text?: string
   editable?: boolean
   caretHidden?: boolean
+  selectionColor?: ColorSegments
   secureTextEntry?: boolean
 }
 
@@ -62,6 +63,7 @@ export struct RNTextInput {
         .enabled(this.descriptor.props.editable)
         .caretStyle(getCaretStyle(this.descriptor.props.caretHidden))
         .type(this.descriptor.props.secureTextEntry ? InputType.Password : undefined)
+        .selectedBackgroundColor(convertColorSegmentsToString(this.descriptor.props.selectionColor))
         .showPasswordIcon(false)
     }
   }
