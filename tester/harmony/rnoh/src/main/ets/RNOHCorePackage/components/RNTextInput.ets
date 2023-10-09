@@ -7,6 +7,11 @@ export type TextInputProps = ViewBaseProps & {
   fontSize?: number
   text?: string
   editable?: boolean
+  caretHidden?: boolean
+}
+
+function getCaretStyle(caretHidden: boolean): CaretStyle {
+  return caretHidden ? { width: 0 } : undefined;
 }
 
 export type TextInputDescriptor = Descriptor<"TextInput", TextInputProps>
@@ -54,6 +59,7 @@ export struct RNTextInput {
         .fontSize(this.descriptor.props.fontSize)
         .onChange((event) => this.handleChangeEvent(event))
         .enabled(this.descriptor.props.editable)
+        .caretStyle(getCaretStyle(this.descriptor.props.caretHidden))
     }
   }
 }

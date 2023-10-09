@@ -21,12 +21,7 @@ export function TextInputTest() {
       <TestCase modal itShould="render non-editable textInput">
         <TextInputWithText style={styles.textInput} editable={false} />
       </TestCase>
-      <TestCase
-        modal
-        itShould="render textInput with caret hidden"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/402
-      >
+      <TestCase modal itShould="render textInput with caret hidden">
         <TextInputWithText style={styles.textInput} caretHidden />
       </TestCase>
       <TestCase

@@ -18,6 +18,7 @@ class TextInputComponentNapiBinder : public ViewComponentNapiBinder {
                 .addProperty("fontColor", props->textAttributes.foregroundColor)
                 .addProperty("fontSize", props->textAttributes.fontSize)
                 .addProperty("editable", props->traits.editable)
+                .addProperty("caretHidden", props->traits.caretHidden)
                 .build();
         }
         return napiViewProps;

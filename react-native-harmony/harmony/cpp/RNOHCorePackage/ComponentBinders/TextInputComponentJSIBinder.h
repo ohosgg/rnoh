@@ -8,6 +8,7 @@ class TextInputComponentJSIBinder : public ViewComponentJSIBinder {
         auto nativeProps = ViewComponentJSIBinder::createNativeProps(rt);
         
         nativeProps.setProperty(rt, "editable", "boolean");
+        nativeProps.setProperty(rt, "caretHidden", "boolean");
         
         return nativeProps;
     };   
