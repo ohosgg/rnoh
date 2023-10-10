@@ -65,6 +65,13 @@ export class RNViewManager extends ComponentManager {
     return { x: localX, y: localY };
   }
 
+  public getActiveChildrenTags(): Tag[] {
+    const descriptor = this.descriptorRegistry.getDescriptor(this.tag);
+    // check children tags in reverse order,
+    // since the last child is the one on top
+    return descriptor.childrenTags.slice().reverse();
+  }
+
   /**
    * should calculate a new bounding box for the view,
    * and call this method on its parent view if the bounding box changed.

@@ -82,9 +82,9 @@ export class TouchTargetHelper {
     }
 
     if (canChildrenHandleTouch) {
-      // check children tags in reverse order,
-      // since the last child is the one on top
-      for (const childTag of descriptor.childrenTags.slice().reverse()) {
+      // Let the component decide which child node responds to the event first.
+      const activeChildrenTags = componentManager.getActiveChildrenTags();
+      for (const childTag of activeChildrenTags) {
         const childPoint = componentManager.getRelativePoint(viewPoint, childTag);
         const childTarget = this.findTouchTarget(childPoint, viewPoint, childTag);
         if (childTarget !== null) {
