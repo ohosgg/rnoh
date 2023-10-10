@@ -1,5 +1,5 @@
 import { Descriptor, RNOHContext, Tag } from '../../RNOH'
-import { RNScrollViewManager } from '../componentManagers/RNScrollViewManager'
+import { _RNScrollViewManager } from '../componentManagers/RNScrollViewManager'
 import { ViewBaseProps, RNViewBase } from './RNViewBase'
 import { RNPullToRefreshView, RN_PULL_TO_REFRESH_VIEW_NAME } from './RNPullToRefreshView'
 
@@ -46,14 +46,13 @@ export struct RNScrollView {
   @State contentSize: Size = {} as Size
   @State childrenTags: Tag[] = []
   @State descriptor: ScrollViewDescriptor = {} as ScrollViewDescriptor
+  @State shouldPreventScrolling: boolean = false
   state: ScrollViewState = {} as ScrollViewState
   private parentTag: Tag | undefined = undefined
   private scroller = new Scroller()
-  private cleanupCommandCallback?: () => void = undefined
-  private unregisterDescriptorChangesListener?: () => void = undefined
-  private unregisterComponentManager?: () => void = undefined
+  private cleanUpCallbacks: (() => void)[] = []
   private scrollState: ScrollState = ScrollState.Idle
-  private componentManager: RNScrollViewManager = undefined
+  private componentManager: _RNScrollViewManager = undefined
   private lastScrollDispatchTime: number = 0
   private allowNextScrollEvent: boolean = false
 
@@ -61,20 +60,28 @@ export struct RNScrollView {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag)
     this.onDescriptorUpdate(descriptor)
     this.state = descriptor.state
-    this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
+    this.cleanUpCallbacks.push(this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       this.onDescriptorUpdate.bind(this)
-    )
-    this.cleanupCommandCallback = this.ctx.commandDispatcher.registerCommandCallback(
+    ))
+    this.cleanUpCallbacks.push(this.ctx.commandDispatcher.registerCommandCallback(
       this.tag,
       (command, args) => {
         if (command === 'scrollTo') {
           this.scrollTo(args[0], args[1], args[2]);
         }
-      });
-    this.componentManager = new RNScrollViewManager(this.tag, this.ctx, this.scroller)
-    if (this.shouldWrapWithPullToRefresh()) {
-      this.unregisterComponentManager = this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager);
-    }
+      }));
+    this.componentManager = new _RNScrollViewManager(this.tag, this.ctx, this.scroller)
+    this.cleanUpCallbacks.push(this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager));
+    this.cleanUpCallbacks.push(this.componentManager.subscribe("LOCK_SCROLLING", () => {
+      this.shouldPreventScrolling = true
+    }))
+    this.cleanUpCallbacks.push(this.componentManager.subscribe("UNLOCK_SCROLLING", () => {
+      this.shouldPreventScrolling = false
+    }))
+  }
+
+  aboutToDisappear() {
+    this.cleanUpCallbacks.forEach(cleanUp => cleanUp())
   }
 
   onDescriptorUpdate(newDescriptor: ScrollViewDescriptor) {
@@ -100,12 +107,6 @@ export struct RNScrollView {
     this.scroller.scrollTo({ xOffset, yOffset });
   }
 
-  aboutToDisappear() {
-    this.cleanupCommandCallback?.();
-    this.unregisterDescriptorChangesListener?.()
-    this.unregisterComponentManager?.();
-  }
-
   scrollTo(xOffset, yOffset, animated) {
     const animation = animated ? { duration: 1000, curve: Curve.Smooth } : undefined;
     this.scroller.scrollTo({ xOffset, yOffset, animation })
@@ -117,6 +118,7 @@ export struct RNScrollView {
   }
 
   scrollDirection(): ScrollDirection {
+    if (this.shouldPreventScrolling) return ScrollDirection.None
     return this.props.flexDirection === 2 ? ScrollDirection.Horizontal : ScrollDirection.Vertical;
   }
 
