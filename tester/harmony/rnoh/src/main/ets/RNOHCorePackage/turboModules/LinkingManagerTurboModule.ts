@@ -22,7 +22,7 @@ export class LinkingManagerTurboModule extends TurboModule {
     return this.initialUrl;
   }
 
-  canOpenURL(urlString: string): boolean {
+  async canOpenURL(urlString: string): Promise<boolean> {
     // TODO: check if there is an application which can handle the url.
     // This use case doesn't seem to be supported in OHOS yet?
     // You can `startAbility` to handle a `want`, but you can't
