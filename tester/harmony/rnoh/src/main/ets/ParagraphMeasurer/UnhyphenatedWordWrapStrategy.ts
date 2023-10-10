@@ -190,6 +190,7 @@ export class UnhyphenatedWordWrapStrategy<
     containerWidth: number,
   ): {nextLine: MeasuredToken[]; remainingTokens: MeasuredToken[]} {
     let lastSpaceInCurrentLineTokenIdx: number | undefined = undefined;
+    let lastPlaceholderInCurrentLineTokenIdx: number | undefined = undefined;
     let currentLineWidth = 0;
     let currentLineTokens: MeasuredToken[] = [];
 
@@ -249,9 +250,17 @@ export class UnhyphenatedWordWrapStrategy<
             currentLineWidth += currentToken.size.width;
             continue;
           } else if (lastSpaceInCurrentLineTokenIdx === undefined) {
-            currentLineTokens.push(currentToken);
-            currentLineWidth += currentToken.size.width;
-            continue;
+            if (lastPlaceholderInCurrentLineTokenIdx === undefined) {
+              currentLineTokens.push(currentToken);
+              currentLineWidth += currentToken.size.width;
+              continue;
+            } else {
+              return this.prepareNewLine({
+                measuredTokens,
+                lineEndIdx: lastPlaceholderInCurrentLineTokenIdx + 1,
+                remainingTokenIdx: lastPlaceholderInCurrentLineTokenIdx + 1,
+              });
+            }
           } else {
             return this.prepareNewLine({
               measuredTokens,
@@ -264,9 +273,11 @@ export class UnhyphenatedWordWrapStrategy<
         if (currentLineWidth + currentToken.size.width <= containerWidth) {
           currentLineTokens.push(currentToken);
           currentLineWidth += currentToken.size.width;
+          lastPlaceholderInCurrentLineTokenIdx = measuredTokenIdx;
         } else if (lastSpaceInCurrentLineTokenIdx === undefined) {
           currentLineTokens.push(currentToken);
           currentLineWidth += currentToken.size.width;
+          lastPlaceholderInCurrentLineTokenIdx = measuredTokenIdx;
         } else {
           return this.prepareNewLine({
             measuredTokens,

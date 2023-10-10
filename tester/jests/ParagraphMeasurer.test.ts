@@ -280,4 +280,24 @@ describe('UnhyphenatedWordWrapStrategy', () => {
     expect(lines[1].positionedFragments.length).toBe(1);
     expect(lines[1].positionedFragments[0].size.width).toBe('bar '.length);
   });
+
+  it('should wrap text with a placeholder', () => {
+    const strategy = new UnhyphenatedWordWrapStrategy(
+      new FakeTextFragmentMeasurer(),
+    );
+
+    const lines = strategy.convertFragmentsIntoLines(
+      [
+        {type: 'placeholder', width: 4, height: 4, extraData: {}},
+        {type: 'text', content: '12345678', extraData: {}},
+      ],
+      {width: 10},
+    );
+    result = lines;
+
+    expect(lines.length).toBe(2);
+    expect(lines[0].positionedFragments[0].fragment.type).toBe('placeholder');
+    expect(lines[0].size.width).toBe(4);
+    expect(lines[1].size.width).toBe(8);
+  });
 });
