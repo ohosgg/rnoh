@@ -77,12 +77,7 @@ export function TextInputTest() {
           expect(state).to.be.true;
         }}
       />
-      <TestCase
-        modal
-        itShould="render textinput with red placeholder"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/406
-      >
+      <TestCase modal itShould="render textinput with red placeholder">
         <TextInputWithText
           style={styles.textInput}
           placeholder="Placeholder"
@@ -159,10 +154,7 @@ export function TextInputTest() {
       >
         <ReturnKeyTypeView />
       </TestCase>
-      <TestCase
-        modal
-        itShould="render secure text input (text obscured)"
-      >
+      <TestCase modal itShould="render secure text input (text obscured)">
         <TextInputWithText style={styles.textInput} secureTextEntry />
       </TestCase>
       <TestCase

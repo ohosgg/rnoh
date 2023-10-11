@@ -20,6 +20,8 @@ class TextInputComponentNapiBinder : public ViewComponentNapiBinder {
                 .addProperty("editable", props->traits.editable)
                 .addProperty("caretHidden", props->traits.caretHidden)
                 .addProperty("secureTextEntry", props->traits.secureTextEntry)
+                .addProperty("placeholder", props->placeholder)
+                .addProperty("placeholderTextColor", props->placeholderTextColor)
                 .addProperty("selectionColor", props->selectionColor)
                 .build();
         }

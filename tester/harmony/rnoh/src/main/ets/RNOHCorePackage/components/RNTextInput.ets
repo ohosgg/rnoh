@@ -10,6 +10,8 @@ export type TextInputProps = ViewBaseProps & {
   caretHidden?: boolean
   selectionColor?: ColorSegments
   secureTextEntry?: boolean
+  placeholder?: string
+  placeholderTextColor?: ColorSegments
 }
 
 export type TextInputRawProps = {
@@ -58,7 +60,7 @@ export struct RNTextInput {
 
   build() {
     RNViewBase({ ctx: this.ctx, tag: this.tag }) {
-      TextInput({ controller: this.controller })
+      TextInput({ controller: this.controller, placeholder: this.descriptor.props.placeholder })
         .width("100%")
         .height("100%")
         .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
@@ -70,6 +72,7 @@ export struct RNTextInput {
         .maxLength(this.descriptor.rawProps.maxLength)
         .selectedBackgroundColor(convertColorSegmentsToString(this.descriptor.props.selectionColor))
         .showPasswordIcon(false)
+        .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
     }
   }
 }
