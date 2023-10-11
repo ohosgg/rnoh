@@ -4,11 +4,11 @@ import {
   RNAbility,
   AnyJSBundleProvider,
   MetroJSBundleProvider,
-  ResourceJSBundleProvider,
-  TouchDisplayer
+  ResourceJSBundleProvider
 } from 'rnoh'
 import { SampleView, SAMPLE_VIEW_TYPE, PropsDisplayer } from "rnoh-sample-package"
 import { createRNPackages } from '../RNPackagesFactory'
+import { TouchDisplayer } from './TouchDisplayer'
 
 @Entry
 @Component
