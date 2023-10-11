@@ -19,7 +19,7 @@ export class LinkingManagerTurboModule extends TurboModule {
     this.initialUrl = rnAbility.launchWant.uri;
   }
 
-  getInitialURL(): string | undefined {
+  async getInitialURL(): Promise<string | undefined> {
     return this.initialUrl;
   }
 
