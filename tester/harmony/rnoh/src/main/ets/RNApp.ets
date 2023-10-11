@@ -1,5 +1,6 @@
-import { ComponentBuilderContext } from './RNComponentFactory'
-import { RNInstance, JSBundleProvider, RNInstanceOptions, RNAbility } from './RNOH'
+import type { ComponentBuilderContext } from './RNComponentFactory'
+import type { RNInstanceOptions} from './RNOH';
+import { RNInstance, JSBundleProvider, RNAbility } from './RNOH'
 import { RNSurface } from "./RNSurface"
 
 export type RNInstanceConfig = {

@@ -1,5 +1,7 @@
-import { ColorSegments, Descriptor, convertColorSegmentsToString, RNOHContext } from '../../RNOH'
-import { ViewBaseProps, RNViewBase } from './RNViewBase'
+import type { ColorSegments, Descriptor} from '../../RNOH';
+import { convertColorSegmentsToString, RNOHContext } from '../../RNOH'
+import type { ViewBaseProps} from './RNViewBase';
+import { RNViewBase } from './RNViewBase'
 
 export type SwitchProps = ViewBaseProps & {
   trackColor?: ColorSegments

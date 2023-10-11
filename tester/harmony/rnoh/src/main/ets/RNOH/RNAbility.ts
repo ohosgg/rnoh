@@ -1,12 +1,13 @@
 import UIAbility from '@ohos.app.ability.UIAbility';
 import { NapiBridge } from "./NapiBridge"
-import { StandardRNOHLogger, RNOHLogger } from "./RNOHLogger"
-import window from '@ohos.window';
+import type { RNOHLogger } from "./RNOHLogger";
+import { StandardRNOHLogger } from "./RNOHLogger"
+import type window from '@ohos.window';
 import hilog from '@ohos.hilog';
-import { TurboModuleProvider } from "./TurboModuleProvider"
+import type { TurboModuleProvider } from "./TurboModuleProvider"
 import libRNOHApp from 'librnoh_app.so'
 import { RNInstanceRegistry } from './RNInstanceRegistry';
-import { RNInstance, RNInstanceOptions } from './RNInstance';
+import type { RNInstance, RNInstanceOptions } from './RNInstance';
 import { RNOHContext } from "./RNOHContext"
 
 export abstract class RNAbility extends UIAbility {

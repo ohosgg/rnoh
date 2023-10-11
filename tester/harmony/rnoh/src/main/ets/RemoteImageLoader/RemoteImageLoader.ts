@@ -1,10 +1,10 @@
 import http from '@ohos.net.http'
 import image from '@ohos.multimedia.image'
-import { RemoteImageMemoryCache } from "./RemoteImageCache"
+import type { RemoteImageMemoryCache } from "./RemoteImageCache"
 import { RemoteImageLoaderError } from "./RemoteImageLoaderError"
 import request from '@ohos.request'
-import common from '@ohos.app.ability.common'
-import { RemoteImageDiskCache } from './RemoteImageDiskCache'
+import type common from '@ohos.app.ability.common'
+import type { RemoteImageDiskCache } from './RemoteImageDiskCache'
 import fs from '@ohos.file.fs';
 
 export class RemoteImageLoader {

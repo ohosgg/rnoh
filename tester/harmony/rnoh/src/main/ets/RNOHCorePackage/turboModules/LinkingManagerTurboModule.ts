@@ -1,9 +1,10 @@
 import uri from '@ohos.uri';
 import call from '@ohos.telephony.call';
-import { TurboModule, TurboModuleContext } from "../../RNOH/TurboModule";
-import { RNAbility } from '../../RNOH/RNAbility';
+import type { TurboModuleContext } from "../../RNOH/TurboModule";
+import { TurboModule } from "../../RNOH/TurboModule";
+import type { RNAbility } from '../../RNOH/RNAbility';
 import bundleManager from '@ohos.bundle.bundleManager';
-import Want from '@ohos.app.ability.Want';
+import type Want from '@ohos.app.ability.Want';
 
 export class LinkingManagerTurboModule extends TurboModule {
   public static readonly NAME = 'LinkingManager' as const;

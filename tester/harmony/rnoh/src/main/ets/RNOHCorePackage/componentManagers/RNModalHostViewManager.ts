@@ -1,4 +1,4 @@
-import { BoundingBox, Point } from '../../RNOH';
+import type { BoundingBox, Point } from '../../RNOH';
 import { RNViewManager } from './RNViewManager'
 
 export class RNModalHostViewManager extends RNViewManager {

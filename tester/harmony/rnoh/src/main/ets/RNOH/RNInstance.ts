@@ -1,14 +1,14 @@
-import UIAbility from '@ohos.app.ability.UIAbility'
-import common from '@ohos.app.ability.common'
+import type UIAbility from '@ohos.app.ability.UIAbility'
+import type common from '@ohos.app.ability.common'
 import { CommandDispatcher } from "./CommandDispatcher"
 import { DescriptorRegistry } from "./DescriptorRegistry"
 import { ComponentManagerRegistry } from './ComponentManagerRegistry'
 import { SurfaceHandle } from './SurfaceHandle'
 import { TurboModuleProvider } from './TurboModuleProvider'
 import { EventEmitter } from './EventEmitter'
-import { RNOHLogger } from "./RNOHLogger"
-import { NapiBridge } from './NapiBridge'
-import { RNOHContext } from './RNOHContext'
+import type { RNOHLogger } from "./RNOHLogger"
+import type { NapiBridge } from './NapiBridge'
+import type { RNOHContext } from './RNOHContext'
 import { RNOHCorePackage } from '../RNOHCorePackage/ts'
 import { JSBundleProviderError } from './JSBundleProvider'
 import type { Tag } from './DescriptorBase'

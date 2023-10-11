@@ -1,4 +1,4 @@
-import image from '@ohos.multimedia.image';
+import type image from '@ohos.multimedia.image';
 
 export class RemoteImageCache<T> {
   protected data: Map<string, T>;

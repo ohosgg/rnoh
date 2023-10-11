@@ -12,7 +12,8 @@ import {
   getTextShadow,
   capitalizeTextIfNecessary
 } from './conversions'
-import { AttributedFragment, TextProps, EllipsizeMode, TextDescriptor } from './types'
+import type { AttributedFragment} from './types';
+import { TextProps, EllipsizeMode, TextDescriptor } from './types'
 
 @Component
 export struct RNSimpleText {

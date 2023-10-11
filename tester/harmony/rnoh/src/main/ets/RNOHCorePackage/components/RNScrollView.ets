@@ -1,6 +1,8 @@
-import { Descriptor, RNOHContext, Tag } from '../../RNOH'
+import type { Descriptor} from '../../RNOH';
+import { RNOHContext, Tag } from '../../RNOH'
 import { _RNScrollViewManager } from '../componentManagers/RNScrollViewManager'
-import { ViewBaseProps, RNViewBase } from './RNViewBase'
+import type { ViewBaseProps} from './RNViewBase';
+import { RNViewBase } from './RNViewBase'
 import { RNPullToRefreshView, RN_PULL_TO_REFRESH_VIEW_NAME } from './RNPullToRefreshView'
 
 export type ScrollViewProps = ViewBaseProps & {

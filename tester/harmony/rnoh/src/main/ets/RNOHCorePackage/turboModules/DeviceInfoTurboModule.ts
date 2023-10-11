@@ -1,6 +1,7 @@
 import display from '@ohos.display';
 import window from '@ohos.window';
-import { TurboModule, TurboModuleContext } from "../../RNOH/TurboModule";
+import type { TurboModuleContext } from "../../RNOH/TurboModule";
+import { TurboModule } from "../../RNOH/TurboModule";
 
 export type DisplayMetrics = {
   windowPhysicalPixels: PhysicalPixels,

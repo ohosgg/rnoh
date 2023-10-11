@@ -1,13 +1,15 @@
-import {
+import type {
   PlaceholderFragment,
-  Fragment as MeasurerFragment,
+  Fragment as MeasurerFragment} from '../../../ParagraphMeasurer';
+import {
   ParagraphMeasurer,
   UnhyphenatedWordWrapStrategy
 } from '../../../ParagraphMeasurer';
-import { convertColorSegmentsToString, OHOSTextFragmentMeasurer, PLACEHOLDER_SYMBOL, RNOHContext } from '../../../RNOH';
-import { Tag } from '../../../RNOH/DescriptorBase';
+import type { RNOHContext } from '../../../RNOH';
+import { convertColorSegmentsToString, OHOSTextFragmentMeasurer, PLACEHOLDER_SYMBOL } from '../../../RNOH';
+import type { Tag } from '../../../RNOH/DescriptorBase';
 import { RNViewManager } from '../../componentManagers/RNViewManager';
-import { AttributedFragment, TextDescriptor, TextFragmentExtraData } from './types';
+import type { AttributedFragment, TextDescriptor, TextFragmentExtraData } from './types';
 
 export class RNParagraphManager extends RNViewManager {
   constructor(

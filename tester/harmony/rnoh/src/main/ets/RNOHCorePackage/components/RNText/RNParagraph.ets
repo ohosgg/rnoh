@@ -1,6 +1,7 @@
 import { RNOHContext, OHOSTextFragmentMeasurer, convertColorSegmentsToString, } from '../../../RNOH'
 import { RNViewBase } from '../RNViewBase'
-import { PositionedFragment, PositionedLine, Size, } from '../../../ParagraphMeasurer'
+import type { PositionedFragment} from '../../../ParagraphMeasurer';
+import { PositionedLine, Size, } from '../../../ParagraphMeasurer'
 import { RNParagraphManager } from './RNParagraphManager'
 import { EllipsizeMode, TextDescriptor, TextFragmentExtraData } from './types'
 import {

@@ -1,15 +1,16 @@
 import matrix4 from '@ohos.matrix4';
-import {
+import type {
   RNOHContext,
   ComponentManagerRegistry,
   Descriptor,
-  OverflowMode,
   Tag,
   DescriptorRegistry,
-  ComponentManager,
   Point,
   BoundingBox,
-  TouchTargetHelperDelegate,
+  TouchTargetHelperDelegate} from '../../RNOH';
+import {
+  OverflowMode,
+  ComponentManager
 } from '../../RNOH';
 
 

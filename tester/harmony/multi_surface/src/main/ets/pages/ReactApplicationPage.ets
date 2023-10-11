@@ -1,6 +1,7 @@
+import type {
+  ComponentBuilderContext} from 'rnoh';
 import {
   RNApp,
-  ComponentBuilderContext,
   RNAbility,
   AnyJSBundleProvider,
   MetroJSBundleProvider,

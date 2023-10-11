@@ -1,5 +1,6 @@
 import { convertColorSegmentsToString } from '../../../RNOH/CppBridgeUtils'
-import { AttributedFragment, EllipsizeMode, TextShadowProps } from './types'
+import type { TextShadowProps } from './types';
+import { AttributedFragment, EllipsizeMode } from './types'
 
 export function stringToAlignment(alignment: string) {
   switch (alignment) {

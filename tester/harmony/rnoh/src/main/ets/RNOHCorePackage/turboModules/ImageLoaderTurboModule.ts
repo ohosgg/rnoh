@@ -1,4 +1,5 @@
-import { TurboModule, TurboModuleContext } from '../../RNOH/TurboModule';
+import type { TurboModuleContext } from '../../RNOH/TurboModule';
+import { TurboModule } from '../../RNOH/TurboModule';
 import { RemoteImageLoader, RemoteImageMemoryCache, RemoteImageDiskCache } from "../../RemoteImageLoader"
 
 export class ImageLoaderTurboModule extends TurboModule {

@@ -1,7 +1,7 @@
 import { DisplayMode } from './CppBridgeUtils';
-import { Tag } from './DescriptorBase';
-import { NapiBridge } from './NapiBridge';
-import { RNInstance, SurfaceContext } from './RNInstance';
+import type { Tag } from './DescriptorBase';
+import type { NapiBridge } from './NapiBridge';
+import type { RNInstance, SurfaceContext } from './RNInstance';
 
 export type SurfaceProps = Record<string, any>;
 

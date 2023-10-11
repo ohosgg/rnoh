@@ -3,7 +3,8 @@ import { RNImage } from "./RNOHCorePackage/components/RNImage"
 import { RNTextInput } from "./RNOHCorePackage/components/RNTextInput"
 import { RNText } from "./RNOHCorePackage/components/RNText"
 import { RNScrollView } from "./RNOHCorePackage/components/RNScrollView"
-import { Descriptor, Tag } from "./RNOH/DescriptorBase"
+import type { Descriptor} from "./RNOH/DescriptorBase";
+import { Tag } from "./RNOH/DescriptorBase"
 import { RNOHContext } from "./RNOH/RNOHContext"
 import { RNModalHostView } from './RNOHCorePackage/components/RNModalHostView'
 import { RNSwitch } from './RNOHCorePackage/components/RNSwitch'

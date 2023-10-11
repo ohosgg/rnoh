@@ -1,8 +1,8 @@
 import http from '@ohos.net.http';
 import util from '@ohos.util';
-import resmgr from "@ohos.resourceManager";
+import type resmgr from "@ohos.resourceManager";
 
-import { RNOHLogger } from './RNOHLogger'
+import type { RNOHLogger } from './RNOHLogger'
 
 export default class JavaScriptLoader {
   constructor(private resourceManager: resmgr.ResourceManager, private logger: RNOHLogger) {

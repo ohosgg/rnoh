@@ -1,7 +1,8 @@
 import display from '@ohos.display';
-import { Descriptor, Tag } from '../../RNOH/DescriptorBase'
+import type { Descriptor} from '../../RNOH/DescriptorBase';
+import { Tag } from '../../RNOH/DescriptorBase'
 import { RNOHContext } from '../../RNOH/RNOHContext'
-import { ViewBaseProps } from './RNViewBase'
+import type { ViewBaseProps } from './RNViewBase'
 import { TouchDispatcher } from '../../RNOH/TouchDispatcher'
 import { RNModalHostViewManager } from '../componentManagers/RNModalHostViewManager';
 

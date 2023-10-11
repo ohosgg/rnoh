@@ -1,5 +1,5 @@
-import { ComponentManager } from './ComponentManager';
-import { Tag } from './DescriptorBase';
+import type { ComponentManager } from './ComponentManager';
+import type { Tag } from './DescriptorBase';
 
 export class ComponentManagerRegistry {
   private componentManagerByTag: Map<Tag, ComponentManager>;

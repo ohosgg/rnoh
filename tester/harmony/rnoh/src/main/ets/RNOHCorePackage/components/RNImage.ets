@@ -1,7 +1,9 @@
 import image from '@ohos.multimedia.image'
-import { ColorSegments, Descriptor, getTintColorMatrix, RNOHContext } from '../../RNOH'
-import { ImageLoaderTurboModule } from '../turboModules/ImageLoaderTurboModule'
-import { RNViewBase, ViewBaseProps } from './RNViewBase'
+import type { ColorSegments, Descriptor} from '../../RNOH';
+import { getTintColorMatrix, RNOHContext } from '../../RNOH'
+import type { ImageLoaderTurboModule } from '../turboModules/ImageLoaderTurboModule'
+import type { ViewBaseProps } from './RNViewBase';
+import { RNViewBase } from './RNViewBase'
 
 export type ImageProps = ViewBaseProps & {
   uri: string,

@@ -1,6 +1,6 @@
-import { ColorSegments, Descriptor, Tag } from '../../../RNOH/DescriptorBase'
-import { OHOSMeasurerTextFragmentExtraData } from '../../../RNOH/TextLayoutManager'
-import { ViewBaseProps } from '../RNViewBase/types'
+import type { ColorSegments, Descriptor, Tag } from '../../../RNOH/DescriptorBase'
+import type { OHOSMeasurerTextFragmentExtraData } from '../../../RNOH/TextLayoutManager'
+import type { ViewBaseProps } from '../RNViewBase/types'
 
 export type AttributedFragment = {
   text?: string

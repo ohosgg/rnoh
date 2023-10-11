@@ -1,9 +1,10 @@
-import common from '@ohos.app.ability.common';
-import { RNInstance, RNInstanceImpl } from './RNInstance';
-import { NapiBridge } from './NapiBridge';
-import { RNOHContext } from './RNOHContext';
-import { RNOHLogger } from './RNOHLogger';
-import { RNPackage, RNPackageContext } from './RNPackage';
+import type common from '@ohos.app.ability.common';
+import type { RNInstance} from './RNInstance';
+import { RNInstanceImpl } from './RNInstance';
+import type { NapiBridge } from './NapiBridge';
+import type { RNOHContext } from './RNOHContext';
+import type { RNOHLogger } from './RNOHLogger';
+import type { RNPackage, RNPackageContext } from './RNPackage';
 
 
 export class RNInstanceRegistry {

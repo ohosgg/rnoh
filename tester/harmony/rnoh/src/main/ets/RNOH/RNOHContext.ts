@@ -1,10 +1,10 @@
-import common from '@ohos.app.ability.common';
+import type common from '@ohos.app.ability.common';
 import window from '@ohos.window'
-import { DescriptorRegistry } from './DescriptorRegistry';
-import { CommandDispatcher } from './CommandDispatcher';
-import { RNOHLogger } from "./RNOHLogger";
-import { RNInstance } from './RNInstance';
-import { ComponentManagerRegistry } from './ComponentManagerRegistry';
+import type { DescriptorRegistry } from './DescriptorRegistry';
+import type { CommandDispatcher } from './CommandDispatcher';
+import type { RNOHLogger } from "./RNOHLogger";
+import type { RNInstance } from './RNInstance';
+import type { ComponentManagerRegistry } from './ComponentManagerRegistry';
 
 export class RNOHContext {
   public get descriptorRegistry(): DescriptorRegistry {

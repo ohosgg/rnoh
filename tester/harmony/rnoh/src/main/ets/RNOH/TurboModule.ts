@@ -1,4 +1,4 @@
-import { RNOHContext } from './RNOHContext';
+import type { RNOHContext } from './RNOHContext';
 
 export type TurboModuleContext = RNOHContext;
 

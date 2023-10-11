@@ -1,5 +1,5 @@
 import type { TurboModule } from './TurboModule';
-import { TurboModulesFactory } from './RNPackage';
+import type { TurboModulesFactory } from './RNPackage';
 
 export class TurboModuleProvider {
   private cachedTurboModuleByName: Record<string, TurboModule> = {};

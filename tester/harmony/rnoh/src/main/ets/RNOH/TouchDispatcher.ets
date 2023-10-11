@@ -1,7 +1,7 @@
 import { RNOHEventEmitRequestHandlerName } from '../RNOHCorePackage/RNOHEventEmitRequestHandler';
-import { Tag } from './DescriptorBase';
-import { RNInstance } from './RNInstance';
-import { RNOHLogger } from './RNOHLogger';
+import type { Tag } from './DescriptorBase';
+import type { RNInstance } from './RNInstance';
+import type { RNOHLogger } from './RNOHLogger';
 import { TouchTargetHelper } from './TouchTargetHelper';
 
 

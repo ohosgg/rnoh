@@ -1,12 +1,14 @@
-import TextMeasurer, {MeasureOptions} from '@ohos.measure';
-import {Tag} from './DescriptorBase';
-import {
-  ParagraphMeasurer,
-  UnhyphenatedWordWrapStrategy,
+import type {MeasureOptions} from '@ohos.measure';
+import TextMeasurer from '@ohos.measure';
+import type {Tag} from './DescriptorBase';
+import type {
   Fragment as ParagraphMeasurerFragment,
   TextFragmentMeasurer,
   TextFragment,
-  PlaceholderFragment,
+  PlaceholderFragment} from '../ParagraphMeasurer';
+import {
+  ParagraphMeasurer,
+  UnhyphenatedWordWrapStrategy
 } from '../ParagraphMeasurer';
 
 export const PLACEHOLDER_SYMBOL = '￼' as const;

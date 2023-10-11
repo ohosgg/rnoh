@@ -1,4 +1,5 @@
-import { Descriptor, RNOHContext } from '../../RNOH'
+import type { Descriptor} from '../../RNOH';
+import { RNOHContext } from '../../RNOH'
 
 export type PullToRefreshProps = {
   refreshing?: boolean

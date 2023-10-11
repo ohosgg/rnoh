@@ -1,5 +1,6 @@
-import { Tag, Descriptor } from './DescriptorBase';
-import { MutationType, Mutation } from './Mutation';
+import type { Tag, Descriptor } from './DescriptorBase';
+import type { Mutation } from './Mutation';
+import { MutationType } from './Mutation';
 import type { RNInstanceImpl } from './RNInstance'
 
 type RootDescriptor = Descriptor<"RootView", any>

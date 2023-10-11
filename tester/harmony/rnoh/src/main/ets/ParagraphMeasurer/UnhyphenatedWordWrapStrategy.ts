@@ -1,5 +1,5 @@
 import {ParagraphMeasurerError} from './Error';
-import {
+import type {
   ContainerConfig,
   Fragment,
   MeasuredLine,

@@ -1,8 +1,9 @@
-import { TurboModuleProvider } from "./TurboModuleProvider";
-import { Mutation } from "./Mutation";
-import { Tag } from "./DescriptorBase";
-import { AttributedString, ParagraphAttributes, LayoutConstrains, measureParagraph } from "./TextLayoutManager"
-import { DisplayMode } from './CppBridgeUtils';
+import type { TurboModuleProvider } from "./TurboModuleProvider";
+import type { Mutation } from "./Mutation";
+import type { Tag } from "./DescriptorBase";
+import type { AttributedString, ParagraphAttributes, LayoutConstrains} from "./TextLayoutManager";
+import { measureParagraph } from "./TextLayoutManager"
+import type { DisplayMode } from './CppBridgeUtils';
 
 export class NapiBridge {
   constructor(private libRNOHApp: any) {

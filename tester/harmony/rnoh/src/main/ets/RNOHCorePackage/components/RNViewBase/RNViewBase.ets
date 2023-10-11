@@ -1,16 +1,17 @@
-import {
+import type {
   Descriptor,
+  BorderMetrics} from '../../../RNOH';
+import {
   RNOHContext,
   convertColorSegmentsToString,
   convertColorValueToColorSegments,
   convertMatrixArrayToMatrix4,
   OverflowMode,
-  BorderMetrics,
   resolveBorderMetrics,
   LayoutDirectionRN,
   getTransformedVector,
 } from '../../../RNOH'
-import { ViewBaseProps, ViewDynamicProps } from './types'
+import type { ViewBaseProps, ViewDynamicProps } from './types'
 import { RNViewManager } from '../../componentManagers'
 
 export type ViewBaseDescriptor = Descriptor<string, ViewBaseProps>

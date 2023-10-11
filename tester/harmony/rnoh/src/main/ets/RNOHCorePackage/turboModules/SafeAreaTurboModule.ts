@@ -1,6 +1,7 @@
 import WindowUtils from '@ohos.window';
 import display from '@ohos.display';
-import { TurboModule, TurboModuleContext } from "../../RNOH";
+import type { TurboModuleContext } from "../../RNOH";
+import { TurboModule } from "../../RNOH";
 import { StatusBarTurboModule } from "./StatusBarTurboModule"
 
 declare function px2vp(arg: number): number

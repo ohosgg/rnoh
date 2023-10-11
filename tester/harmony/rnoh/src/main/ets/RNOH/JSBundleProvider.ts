@@ -1,4 +1,4 @@
-import resmgr from "@ohos.resourceManager";
+import type resmgr from "@ohos.resourceManager";
 import http from '@ohos.net.http';
 import util from '@ohos.util';
 

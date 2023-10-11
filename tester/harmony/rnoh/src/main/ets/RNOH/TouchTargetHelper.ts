@@ -1,8 +1,8 @@
-import { ComponentManagerRegistry } from './ComponentManagerRegistry';
-import { Tag } from './DescriptorBase';
-import { DescriptorRegistry } from './DescriptorRegistry';
-import { RNOHLogger } from './RNOHLogger';
-import { Point } from './types'
+import type { ComponentManagerRegistry } from './ComponentManagerRegistry';
+import type { Tag } from './DescriptorBase';
+import type { DescriptorRegistry } from './DescriptorRegistry';
+import type { RNOHLogger } from './RNOHLogger';
+import type { Point } from './types'
 
 /*
  * M      A                   B      N

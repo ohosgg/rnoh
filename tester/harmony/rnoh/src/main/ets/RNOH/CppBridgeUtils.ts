@@ -1,5 +1,5 @@
 import matrix4 from '@ohos.matrix4'
-import { BorderMetrics, ColorSegments, ColorValue } from './DescriptorBase'
+import type { BorderMetrics, ColorSegments, ColorValue } from './DescriptorBase'
 
 // gets rid of DevEco warnings
 declare function vp2px(vp: number): number;

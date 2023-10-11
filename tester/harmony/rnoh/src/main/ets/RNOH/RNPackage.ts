@@ -1,4 +1,4 @@
-import { TurboModule, TurboModuleContext } from "./TurboModule";
+import type { TurboModule, TurboModuleContext } from "./TurboModule";
 
 export abstract class TurboModulesFactory {
   constructor(protected ctx: TurboModuleContext) {

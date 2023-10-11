@@ -1,5 +1,6 @@
 import { LifecycleState } from '../../RNOH';
-import { TurboModule, TurboModuleContext } from "../../RNOH/TurboModule";
+import type { TurboModuleContext } from "../../RNOH/TurboModule";
+import { TurboModule } from "../../RNOH/TurboModule";
 
 export class AppStateTurboModule extends TurboModule {
   public static readonly NAME = 'AppState';

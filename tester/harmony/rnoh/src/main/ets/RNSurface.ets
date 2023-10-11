@@ -1,7 +1,8 @@
-import { RNComponentFactory, ComponentBuilderContext } from './RNComponentFactory'
+import type { ComponentBuilderContext } from './RNComponentFactory';
+import { RNComponentFactory } from './RNComponentFactory'
 import { DisplayMode, RNOHContext } from "./RNOH"
-import { Descriptor } from './RNOH'
-import { ViewBaseProps } from './RNOHCorePackage/components/RNViewBase'
+import type { Descriptor } from './RNOH'
+import type { ViewBaseProps } from './RNOHCorePackage/components/RNViewBase'
 import { convertColorSegmentsToString } from './RNOH'
 import { TouchDispatcher } from './RNOH/TouchDispatcher'
 import { SurfaceHandle, SurfaceProps } from './RNOH/SurfaceHandle'

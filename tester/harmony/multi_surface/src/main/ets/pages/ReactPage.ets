@@ -1,4 +1,5 @@
-import { ComponentBuilderContext, RNAbility, RNInstance, RNSurface, SurfaceHandle} from 'rnoh'
+import type { ComponentBuilderContext} from 'rnoh';
+import { RNAbility, RNInstance, RNSurface, SurfaceHandle} from 'rnoh'
 import { SAMPLE_VIEW_TYPE, SampleView, PropsDisplayer } from 'rnoh-sample-package'
 import router from '@ohos.router'
 
