@@ -5,7 +5,7 @@ import {TestCase, TestSuite} from '@rnoh/testerino';
 export const ButtonTest = () => {
   return (
     <TestSuite name="Button">
-      <TestCase itShould="[FAILS] Render a button with a title ">
+      <TestCase itShould="render a button with a title ">
         <ButtonView />
       </TestCase>
     </TestSuite>

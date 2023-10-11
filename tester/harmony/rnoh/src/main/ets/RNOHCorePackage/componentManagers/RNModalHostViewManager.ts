@@ -1,4 +1,5 @@
-import { BoundingBox, Point, RNViewManager } from '../../RNOH';
+import { BoundingBox, Point } from '../../RNOH';
+import { RNViewManager } from './RNViewManager'
 
 export class RNModalHostViewManager extends RNViewManager {
   public isPointInBoundingBox(point: Point): boolean {

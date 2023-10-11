@@ -5,8 +5,7 @@ import {
   OverflowMode,
   BorderMetrics,
 } from '../../../RNOH'
-
-export type PointerEvents = "auto" | "none" | "box-none" | "box-only"
+import type { PointerEvents } from '../../componentManagers/RNViewManager'
 
 export type BackfaceVisibility = "visible" | "hidden"
 

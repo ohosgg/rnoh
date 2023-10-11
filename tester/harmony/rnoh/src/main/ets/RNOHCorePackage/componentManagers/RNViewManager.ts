@@ -1,11 +1,22 @@
 import matrix4 from '@ohos.matrix4';
-import { RNOHContext } from './RNOHContext';
-import { ComponentManagerRegistry } from './ComponentManagerRegistry';
-import { Descriptor, OverflowMode, Tag } from './DescriptorBase';
-import { DescriptorRegistry } from './DescriptorRegistry';
-import { BoundingBox, ComponentManager, Point } from './ComponentManager';
+import {
+  RNOHContext,
+  ComponentManagerRegistry,
+  Descriptor,
+  OverflowMode,
+  Tag,
+  DescriptorRegistry,
+  ComponentManager,
+  Point,
+  BoundingBox,
+  TouchTargetHelperDelegate,
+} from '../../RNOH';
 
-export class RNViewManager extends ComponentManager {
+
+export type PointerEvents = "auto" | "none" | "box-none" | "box-only"
+
+
+export class RNViewManager extends ComponentManager implements TouchTargetHelperDelegate {
   protected boundingBox: BoundingBox = {
     left: 0,
     right: 0,
@@ -28,7 +39,6 @@ export class RNViewManager extends ComponentManager {
    * Check if the touch is within a view
    * @param x - horizontal offset of the touch, relative to the view
    * @param y - vertical offset of the touch, relative to the view
-   * @param tag - tag of the view
    * @returns whether the touch is within the view
    */
   public isPointInView({x, y}: Point): boolean {
@@ -47,7 +57,7 @@ export class RNViewManager extends ComponentManager {
     return withinX && withinY;
   }
 
-  public getRelativePoint({x, y}: Point, childTag: Tag): Point {
+  public computeChildPoint({x, y}: Point, childTag: Tag): Point {
     const descriptor = this.descriptorRegistry.getDescriptor(childTag);
     const offset = descriptor.layoutMetrics.frame.origin;
     let localX = x - offset.x;
@@ -83,7 +93,12 @@ export class RNViewManager extends ComponentManager {
       return;
     }
     const {origin, size} = descriptor.layoutMetrics.frame;
-    let newBoundingBox = { left: origin.x, right: origin.x+size.width, top: origin.y, bottom: origin.y+size.height };
+    let newBoundingBox = {
+      left: origin.x,
+      right: origin.x + size.width,
+      top: origin.y,
+      bottom: origin.y + size.height
+    };
 
     // if the view has overflow, take children into account:
     if ('overflow' in descriptor.props && descriptor.props['overflow'] === OverflowMode.VISIBLE) {
@@ -118,10 +133,10 @@ export class RNViewManager extends ComponentManager {
     const oldBoundingBox = this.getBoundingBox();
 
     const boundingBoxChanged =
-            newBoundingBox.left !== oldBoundingBox.left
-            || newBoundingBox.top !== oldBoundingBox.top
-            || newBoundingBox.right !== oldBoundingBox.right
-            || newBoundingBox.bottom !== oldBoundingBox.bottom;
+      newBoundingBox.left !== oldBoundingBox.left
+        || newBoundingBox.top !== oldBoundingBox.top
+        || newBoundingBox.right !== oldBoundingBox.right
+        || newBoundingBox.bottom !== oldBoundingBox.bottom;
 
     this.boundingBox = newBoundingBox;
     if (boundingBoxChanged) {
@@ -145,6 +160,27 @@ export class RNViewManager extends ComponentManager {
   }
 
   protected getDescriptor(): Descriptor {
-    return this.descriptorRegistry.getDescriptor(this.tag);
+    const descriptor = this.descriptorRegistry.getDescriptor(this.tag);
+    if (descriptor === null) throw new Error("Descriptor is not available")
+    return descriptor
+  }
+
+  public canChildrenHandleTouch(): boolean {
+    const descriptor = this.getDescriptor()
+    const pointerEvents = descriptor.props["pointerEvents"] ?? "auto" as PointerEvents
+    return ["auto", "box-none"].includes(pointerEvents)
+  }
+
+  public canHandleTouch(): boolean {
+    const descriptor = this.getDescriptor()
+    const pointerEvents = descriptor.props["pointerEvents"] ?? "auto" as PointerEvents
+    return ["auto", "box-only"].includes(pointerEvents)
+  }
+
+  public isClippingChildren(): boolean {
+    const descriptor = this.getDescriptor()
+    const overflow = descriptor.props['overflow'];
+    return overflow === OverflowMode.HIDDEN ||
+      overflow === OverflowMode.SCROLL
   }
 }

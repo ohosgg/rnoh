@@ -1,3 +1,3 @@
-export * from './src/main/ets/RNOH';
-export * from './src/main/ets/RNOHCorePackage/componentManagers';
+export * from './src/main/ets/RNOH/ts';
+export * from './src/main/ets/RNOHCorePackage/ts';
 

@@ -2,13 +2,12 @@ import { RNOHEventEmitRequestHandlerName } from '../RNOHCorePackage/RNOHEventEmi
 import { Tag } from './DescriptorBase';
 import { RNInstance } from './RNInstance';
 import { RNOHLogger } from './RNOHLogger';
-import { RNViewManager } from './RNViewManager';
-import { TouchTarget, TouchTargetHelper } from './TouchTargetHelper';
+import { TouchTargetHelper } from './TouchTargetHelper';
+
 
 export class TouchDispatcher {
   private touchTargetHelper: TouchTargetHelper
   private targetTagByTouchId: Map<number, Tag> = new Map();
-
   // last reported touch event
   private previousEvent: TouchEvent = undefined;
 
@@ -51,9 +50,9 @@ export class TouchDispatcher {
     this.rnInstance.emitComponentEvent(-1, RNOHEventEmitRequestHandlerName.Touch, touchEvent);
   }
 
-  public findTargetForTouch(touch: TouchObject): TouchTarget {
+  public findTargetTagForTouch(touch: TouchObject): Tag {
     const {x, y} = touch;
-    return this.touchTargetHelper.findTouchTarget({x, y}, {x, y}, this.surfaceTag);
+    return this.touchTargetHelper.findTouchTargetTag({ x, y }, this.surfaceTag);
   }
 
   private convertTouchObject(touch: TouchObject): void {
@@ -64,7 +63,7 @@ export class TouchDispatcher {
     touch['pageY'] = y;
 
     const viewPoint =
-      this.touchTargetHelper.findViewCoordinates({x, y}, targetTag);
+    this.touchTargetHelper.findViewCoordinates({ x, y }, targetTag);
     touch.x = viewPoint.x;
     touch.y = viewPoint.y;
   }
@@ -72,15 +71,15 @@ export class TouchDispatcher {
   private recordNewTouchTargets(touchEvent: TouchEvent) {
     if (touchEvent.type === TouchType.Down) {
       for (const touch of touchEvent.changedTouches) {
-        const touchTarget = this.findTargetForTouch(touch);
-        this.targetTagByTouchId.set(touch.id, touchTarget.tag);
+        const touchTargetTag = this.findTargetTagForTouch(touch);
+        this.targetTagByTouchId.set(touch.id, touchTargetTag);
       }
     }
   }
 
   private maybeRemoveDeletedTargets() {
     const deletedTargetIds = [...this.targetTagByTouchId.entries()]
-      .filter(([touchId, targetTag]) => !this.rnInstance.descriptorRegistry.getDescriptor(targetTag))
+      .filter(([touchId, targetTag]) =>!this.rnInstance.descriptorRegistry.getDescriptor(targetTag))
       .map(([touchId, targetTag]) => touchId);
     deletedTargetIds.forEach(id => this.targetTagByTouchId.delete(id));
   }
@@ -118,7 +117,7 @@ export class TouchDispatcher {
     }
 
     touchEvent.changedTouches = cancelledTouches;
-    touchEvent.touches = touchEvent.touches.filter(touch => !cancelledTouches.includes(touch));
+    touchEvent.touches = touchEvent.touches.filter(touch =>!cancelledTouches.includes(touch));
 
     touchEvent.type = TouchType.Cancel;
     touchEvent.timestamp = timestamp;
@@ -131,7 +130,7 @@ export class TouchDispatcher {
     while (currentTag !== undefined && currentTag !== this.surfaceTag) {
       const componentManager = componentManagerRegistry.getComponentManager(currentTag);
       const descriptor = descriptorRegistry.getDescriptor(currentTag);
-      if (!componentManager || !(componentManager instanceof RNViewManager) || componentManager.isHandlingTouches()) {
+      if (!componentManager || !TouchTargetHelper.isTouchTargetHelperDelegate(componentManager) || componentManager.isHandlingTouches()) {
         return true;
       }
       currentTag = descriptor.parentTag;

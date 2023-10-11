@@ -6,7 +6,7 @@ import {
 } from '../../../ParagraphMeasurer';
 import { convertColorSegmentsToString, OHOSTextFragmentMeasurer, PLACEHOLDER_SYMBOL, RNOHContext } from '../../../RNOH';
 import { Tag } from '../../../RNOH/DescriptorBase';
-import { RNViewManager } from '../../../RNOH/RNViewManager';
+import { RNViewManager } from '../../componentManagers/RNViewManager';
 import { AttributedFragment, TextDescriptor, TextFragmentExtraData } from './types';
 
 export class RNParagraphManager extends RNViewManager {

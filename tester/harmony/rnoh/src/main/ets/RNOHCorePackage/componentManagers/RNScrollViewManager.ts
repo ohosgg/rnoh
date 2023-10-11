@@ -1,5 +1,5 @@
-import { Tag } from '../../RNOH/DescriptorBase';
-import { Point, RNOHContext, RNViewManager, EventEmitter } from '../../RNOH';
+import { Point, RNOHContext, EventEmitter, Tag } from '../../RNOH';
+import { RNViewManager } from './RNViewManager'
 
 export type RNScrollLocalEventArgsByName = {
   "LOCK_SCROLLING": [],
@@ -19,9 +19,9 @@ export class RNScrollViewManager extends RNViewManager {
     super(tag, ctx);
   }
 
-  public getRelativePoint({x, y}: Point, childTag: Tag): Point {
+  public computeChildPoint({x, y}: Point, childTag: Tag): Point {
     const {xOffset, yOffset} = this.scroller.currentOffset();
-    return super.getRelativePoint({ x: x + xOffset, y: y + yOffset }, childTag);
+    return super.computeChildPoint({ x: x + xOffset, y: y + yOffset }, childTag);
   }
 
   public getScroller() {
