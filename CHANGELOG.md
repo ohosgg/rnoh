@@ -1,5 +1,65 @@
 # Changelog
 
+## v0.72.7
+- added ScrollView::persistentScrollbar
+- added ActivityIndicator support
+- added Text props/styles support:
+  - vertical alignement
+  - letter spacing 
+  - selectable
+  - ellipsizeMode
+  - disabled
+  - textShadow
+- added View::borderStyle
+- added ScrollView::contentOffset prop support
+- added edge specific border width support
+- added overflow support
+- added ScrollView::scrollEnabled support
+- added ScrollView::indicatorStyle support
+- added ScrollView::decelerationRate support
+- added basic linking API support
+- added an option to blur images
+- added nested text support
+- added views inside text support
+- added hermes bytecode bundles support
+- added basic Keyboard module support
+- added SafeAreaView support
+- support TextInput props:
+  - editable
+  - caretHidden
+  - maxLength
+  - selectionColor
+  - secureTextEntry
+  - placeholder
+  - placeholderTextColor
+- fixed custom RefreshControl components
+- fixed timers not being paused when the app is in background
+- fixed awaiting JS Bundle execution
+- updated React Native to 0.72.5
+- changed approach to handling touches
+  
+## v0.72.6
+- added support for Switch:disabled
+- added support for Animated.Value listeners
+- added Image.getSize support
+- added Image::resizeMode prop support
+- added RefreshControl component support
+- added Text::textDecoration and Text::textDecorationColor support
+- added iOS View shadow props support
+- added support for multiple RN Instances and surfaces
+- added border edge specific colors
+- added interface JSBundleProvider
+- added Image::tintColor support
+- added ComponentManagers
+- added Image::prefetch support
+- added Text::padding support
+- added View::borderStyle support
+- fixed DrawerLayoutAndroid causing compilation errors
+- fixed flickering modal contents
+- fixed bundle-harmony arguments
+- changed assets directory
+- fixed deadlock caused by timing and animated turbo modules
+
 ## v0.72.5
 - added support for Switch component
 - reexported DeviceEventEmitter and findNodeHandle
