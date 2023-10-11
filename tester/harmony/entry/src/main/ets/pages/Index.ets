@@ -5,6 +5,7 @@ import {
   AnyJSBundleProvider,
   MetroJSBundleProvider,
   ResourceJSBundleProvider,
+  TouchDisplayer
 } from 'rnoh'
 import { SampleView, SAMPLE_VIEW_TYPE, PropsDisplayer } from "rnoh-sample-package"
 import { createRNPackages } from '../RNPackagesFactory'
@@ -40,16 +41,18 @@ struct Index {
   build() {
     Column() {
       if (this.rnAbility) {
-        RNApp({
-          rnInstanceConfig: {createRNPackages},
-          initialProps: { foo: "bar" },
-          appKey: "app_name",
-          buildCustomComponent: this.buildCustomComponent.bind(this),
-          jsBundleProvider: new AnyJSBundleProvider([
-            new MetroJSBundleProvider(),
-            new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'hermes_bundle.hbc'),
-            new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'bundle.harmony.js')]),
-        })
+        // TouchDisplayer() {
+          RNApp({
+            rnInstanceConfig: {createRNPackages},
+            initialProps: { foo: "bar" },
+            appKey: "app_name",
+            buildCustomComponent: this.buildCustomComponent.bind(this),
+            jsBundleProvider: new AnyJSBundleProvider([
+              new MetroJSBundleProvider(),
+              new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'hermes_bundle.hbc'),
+              new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'bundle.harmony.js')]),
+          })
+        // }
       }
     }
     .height('100%')
