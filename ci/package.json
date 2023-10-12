@@ -1,0 +1,24 @@
+{
+  "name": "ci",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "bun src/run.ts",
+    "install:hooks": "cd .. && husky install ci/.husky && cd ci && npx husky add .husky/pre-push \"cd ci && npm start\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cli-color": "^2.0.3",
+    "@types/cli-spinners": "^1.3.1",
+    "bun": "^1.0.5",
+    "bun-types": "^1.0.5-canary.20231009T140142",
+    "husky": "^8.0.3"
+  },
+  "dependencies": {
+    "cli-color": "^2.0.3",
+    "cli-spinners": "^2.9.1"
+  }
+}
