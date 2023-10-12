@@ -3,7 +3,7 @@ import { convertColorSegmentsToString, RNOHContext } from '../../RNOH'
 import type { ViewBaseProps} from './RNViewBase';
 import { RNViewBase } from './RNViewBase'
 
-export type ActivityIndicatorProps = ViewBaseProps & {
+export interface ActivityIndicatorProps extends ViewBaseProps {
   animating?: boolean,
   color?: ColorSegments,
 }

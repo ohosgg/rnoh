@@ -4,7 +4,7 @@ import type { ViewBaseProps } from './RNViewBase';
 import { RNViewBase } from './RNViewBase'
 import { RNOHEventEmitRequestHandlerName } from './../RNOHEventEmitRequestHandler'
 
-export type TextInputProps = ViewBaseProps & {
+export interface TextInputProps extends ViewBaseProps {
   fontColor?: ColorSegments
   fontSize?: number
   text?: string
@@ -16,15 +16,17 @@ export type TextInputProps = ViewBaseProps & {
   placeholderTextColor?: ColorSegments
 }
 
-export type TextInputRawProps = {
+export interface TextInputRawProps {
   maxLength?: number
 }
+
+interface TextInputState {}
+
+export type TextInputDescriptor = Descriptor<"TextInput", TextInputProps, TextInputState, TextInputRawProps>
 
 function getCaretStyle(caretHidden: boolean): CaretStyle {
   return caretHidden ? { width: 0 } : undefined;
 }
-
-export type TextInputDescriptor = Descriptor<"TextInput", TextInputProps, {}, TextInputRawProps>
 
 @Component
 export struct RNTextInput {

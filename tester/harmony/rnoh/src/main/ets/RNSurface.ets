@@ -10,12 +10,16 @@ import { RNSurfaceManager } from './RNOHCorePackage/componentManagers/RNSurfaceM
 
 export type RootDescriptor = Descriptor<"RootView", ViewBaseProps>
 
-type SurfaceConfig = {
+interface SurfaceConfig1 {
   surfaceHandle: SurfaceHandle
-} | {
+}
+
+interface SurfaceConfig2 {
   appKey: string,
   initialProps: SurfaceProps,
 }
+
+type SurfaceConfig = SurfaceConfig1 | SurfaceConfig2
 
 @Component
 export struct RNSurface {

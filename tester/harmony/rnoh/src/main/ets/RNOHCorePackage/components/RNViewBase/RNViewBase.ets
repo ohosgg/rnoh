@@ -106,12 +106,7 @@ export struct RNViewBase {
     }
   }
 
-  getShadow(): {
-    radius: number;
-    color?: string;
-    offsetX?: number;
-    offsetY?: number;
-  } | undefined {
+  getShadow(): ShadowOptions | undefined {
     const shadowRadius = this.descriptor.props.shadowRadius
     if (shadowRadius === undefined || shadowRadius === 0)
       return undefined

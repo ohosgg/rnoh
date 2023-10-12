@@ -1,11 +1,11 @@
-import type { Descriptor } from '../../RNOH';
+import type { Descriptor, Size } from '../../RNOH';
 import { RNOHContext, Tag } from '../../RNOH';
 import { _RNScrollViewManager } from '../componentManagers/RNScrollViewManager';
 import type { ViewBaseProps } from './RNViewBase';
 import { RNViewBase } from './RNViewBase';
 import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from './RNPullToRefreshView';
 
-export type ScrollViewProps = ViewBaseProps & {
+export interface ScrollViewProps extends ViewBaseProps {
   scrollEnabled?: boolean
   contentOffsetX: number
   contentOffsetY: number
@@ -19,21 +19,16 @@ export type ScrollViewProps = ViewBaseProps & {
   scrollEventThrottle?: number
 }
 
-export type ScrollViewRawProps = {
+export interface ScrollViewRawProps {
   snapToInterval?: number
   snapToOffsets?: number[]
 }
 
-export type ScrollViewState = {
+export interface ScrollViewState {
   contentOffsetX: number
   contentOffsetY: number
   contentSizeWidth: number
   contentSizeHeight: number
-}
-
-type Size = {
-  width: number
-  height: number
 }
 
 enum IndicatorStyle {

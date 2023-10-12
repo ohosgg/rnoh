@@ -1,4 +1,5 @@
 import display from '@ohos.display';
+import type { Size} from '../../RNOH'
 import type { Descriptor} from '../../RNOH/DescriptorBase';
 import { Tag } from '../../RNOH/DescriptorBase'
 import { RNOHContext } from '../../RNOH/RNOHContext'
@@ -6,16 +7,13 @@ import type { ViewBaseProps } from './RNViewBase'
 import { TouchDispatcher } from '../../RNOH/TouchDispatcher'
 import { RNModalHostViewManager } from '../componentManagers/RNModalHostViewManager';
 
-type ModalHostViewProps = ViewBaseProps & {
+interface ModalHostViewProps extends ViewBaseProps {
   transparent: boolean;
   visible: boolean;
   identifier: number;
 };
-type ModalHostViewState = {
-  screenSize: {
-    width: number;
-    height: number;
-  };
+interface ModalHostViewState {
+  screenSize: Size
 };
 type ModalHostViewDescriptor = Descriptor<"ModalHostView", ModalHostViewProps, ModalHostViewState>;
 

@@ -1,11 +1,10 @@
-import image from '@ohos.multimedia.image'
 import type { ColorSegments, Descriptor} from '../../RNOH';
 import { getTintColorMatrix, RNOHContext } from '../../RNOH'
 import type { ImageLoaderTurboModule } from '../turboModules/ImageLoaderTurboModule'
 import type { ViewBaseProps } from './RNViewBase';
 import { RNViewBase } from './RNViewBase'
 
-export type ImageProps = ViewBaseProps & {
+export interface ImageProps extends ViewBaseProps {
   uri: string,
   resizeMode: number,
   tintColor?: ColorSegments,

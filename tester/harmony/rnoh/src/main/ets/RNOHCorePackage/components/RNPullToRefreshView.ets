@@ -1,7 +1,7 @@
 import type { Descriptor} from '../../RNOH';
 import { RNOHContext } from '../../RNOH'
 
-export type PullToRefreshProps = {
+export interface PullToRefreshProps {
   refreshing?: boolean
 }
 

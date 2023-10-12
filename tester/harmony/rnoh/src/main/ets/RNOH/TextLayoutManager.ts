@@ -1,6 +1,7 @@
 import type {MeasureOptions} from '@ohos.measure';
 import TextMeasurer from '@ohos.measure';
 import type {Tag} from './DescriptorBase';
+import type {Size} from './types'
 import type {
   Fragment as ParagraphMeasurerFragment,
   TextFragmentMeasurer,
@@ -41,11 +42,6 @@ export type AttributedString = {
 
 export type ParagraphAttributes = {
   maximumNumberOfLines: number;
-};
-
-export type Size = {
-  width: number;
-  height: number;
 };
 
 export type LayoutConstrains = {

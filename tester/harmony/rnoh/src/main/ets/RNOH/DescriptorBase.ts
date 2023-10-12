@@ -13,7 +13,7 @@ export type ColorValue = number;
 
 export type Tag = number;
 
-export type LayoutProps = {
+export interface LayoutProps {
   top: number;
   left: number;
   width: number;

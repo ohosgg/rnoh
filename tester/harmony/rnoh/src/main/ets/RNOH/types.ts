@@ -9,3 +9,9 @@ export type BoundingBox = {
   top: number,
   bottom: number,
 }
+
+export interface Size {
+  width: number;
+  height: number;
+}
+

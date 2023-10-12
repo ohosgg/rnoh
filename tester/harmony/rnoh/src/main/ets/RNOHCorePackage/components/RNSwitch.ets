@@ -3,7 +3,7 @@ import { convertColorSegmentsToString, RNOHContext } from '../../RNOH'
 import type { ViewBaseProps} from './RNViewBase';
 import { RNViewBase } from './RNViewBase'
 
-export type SwitchProps = ViewBaseProps & {
+export interface SwitchProps extends ViewBaseProps {
   trackColor?: ColorSegments
   thumbColor?: ColorSegments
   value?: boolean

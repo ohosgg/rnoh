@@ -64,24 +64,17 @@ export function getMaxLines(maximumNumberOfLines: number) {
   return (maximumNumberOfLines ?? 0) > 0 ? maximumNumberOfLines : undefined
 }
 
-export function getTextShadow(textShadowProps: TextShadowProps | undefined): {
-  radius: number;
-  color?: string;
-  offsetX?: number;
-  offsetY?: number;
-} | undefined {
+export function getTextShadow(textShadowProps: TextShadowProps | undefined): ShadowOptions | undefined {
   const shadowRadius = textShadowProps?.textShadowRadius
-
   if (shadowRadius === undefined || shadowRadius === 0)
     return undefined
-  const color = textShadowProps.textShadowColor;
-
-  return {
+  const result: ShadowOptions = {
     radius: shadowRadius,
-    color: convertColorSegmentsToString(color),
+    color: convertColorSegmentsToString(textShadowProps.textShadowColor),
     offsetX: textShadowProps.textShadowOffset?.width,
     offsetY: textShadowProps.textShadowOffset?.height,
   }
+  return result
 }
 
 export function capitalizeTextIfNecessary(text: string, textTransform: string): string {

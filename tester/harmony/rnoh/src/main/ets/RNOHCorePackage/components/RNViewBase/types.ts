@@ -9,7 +9,7 @@ import type { PointerEvents } from '../../componentManagers/RNViewManager'
 
 export type BackfaceVisibility = "visible" | "hidden"
 
-export type ViewBaseProps = LayoutProps & {
+export interface ViewBaseProps extends LayoutProps {
   backgroundColor?: ColorSegments
   borderWidth?: BorderWidths
   borderColor?: BorderColors

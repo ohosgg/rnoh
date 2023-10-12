@@ -8,10 +8,9 @@ import { Tag } from "./RNOH/DescriptorBase"
 import { RNOHContext } from "./RNOH/RNOHContext"
 import { RNModalHostView } from './RNOHCorePackage/components/RNModalHostView'
 import { RNSwitch } from './RNOHCorePackage/components/RNSwitch'
-import { RNPullToRefreshView } from './RNOHCorePackage/components/RNPullToRefreshView'
 import { RNActivityIndicator } from './RNOHCorePackage/components/RNActivityIndicator'
 
-export type ComponentBuilderContext = {
+export interface ComponentBuilderContext {
   rnohContext: RNOHContext
   descriptor: Descriptor
 }

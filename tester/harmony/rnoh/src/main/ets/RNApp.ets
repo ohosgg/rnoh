@@ -1,11 +1,13 @@
 import type { ComponentBuilderContext } from './RNComponentFactory'
-import type { RNInstanceOptions} from './RNOH';
+import type { RNInstanceOptions } from './RNOH';
 import { RNInstance, JSBundleProvider, RNAbility } from './RNOH'
 import { RNSurface } from "./RNSurface"
 
-export type RNInstanceConfig = {
+interface CustomRNInstance {
   rnInstance: RNInstance
-} | RNInstanceOptions;
+}
+
+export type RNInstanceConfig = CustomRNInstance | RNInstanceOptions
 
 @Component
 @Preview
