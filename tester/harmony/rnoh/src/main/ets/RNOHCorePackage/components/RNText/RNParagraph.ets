@@ -71,29 +71,29 @@ export struct RNParagraph {
       ctx: this.ctx,
       tag: this.tag,
     }) {
-      ForEach(this.positionedLines, ({ positionedFragments, positionRelativeToParagraph, size: lineSize }: PositionedLine) => {
-        ForEach(positionedFragments, ({ fragment, positionRelativeToLine, size }: PositionedFragment<TextFragmentExtraData>) => {
-          if (fragment.type === "text") {
-            Text(capitalizeTextIfNecessary(fragment.content, fragment.extraData.textTransform))
-              .fontColor(fragment.extraData.fontColor)
-              .fontWeight(fragment.extraData.fontWeight)
-              .fontSize(fragment.extraData.fontSize)
-              .fontStyle(stringToFontStyle(fragment.extraData.fontStyle))
+      ForEach(this.positionedLines, (line: PositionedLine) => {
+        ForEach(line.positionedFragments, (positionedFragment: PositionedFragment<TextFragmentExtraData>) => {
+          if (positionedFragment.fragment.type === "text") {
+            Text(capitalizeTextIfNecessary(positionedFragment.fragment.content, positionedFragment.fragment.extraData.textTransform))
+              .fontColor(positionedFragment.fragment.extraData.fontColor)
+              .fontWeight(positionedFragment.fragment.extraData.fontWeight)
+              .fontSize(positionedFragment.fragment.extraData.fontSize)
+              .fontStyle(stringToFontStyle(positionedFragment.fragment.extraData.fontStyle))
               .decoration({
-                type: getTextDecorationLine(fragment.extraData.textDecorationLine),
-                color: convertColorSegmentsToString(fragment.extraData.textDecorationColor)
+                type: getTextDecorationLine(positionedFragment.fragment.extraData.textDecorationLine),
+                color: convertColorSegmentsToString(positionedFragment.fragment.extraData.textDecorationColor)
               })
-              .backgroundColor(fragment.extraData.backgroundColor)
-              .letterSpacing(getLetterSpacing(fragment.extraData.letterSpacing))
-              .lineHeight(lineSize.height)
-              .textCase(stringToTextTransform(fragment.extraData.textTransform))
-              .textShadow(getTextShadow(fragment.extraData?.textShadowProps))
+              .backgroundColor(positionedFragment.fragment.extraData.backgroundColor)
+              .letterSpacing(getLetterSpacing(positionedFragment.fragment.extraData.letterSpacing))
+              .lineHeight(line.size.height)
+              .textCase(stringToTextTransform(positionedFragment.fragment.extraData.textTransform))
+              .textShadow(getTextShadow(positionedFragment.fragment.extraData?.textShadowProps))
               .position({
-                x: positionRelativeToParagraph.x + positionRelativeToLine.x,
-                y: positionRelativeToParagraph.y + positionRelativeToLine.y + this.getVerticalOffset()
+                x: line.positionRelativeToParagraph.x + positionedFragment.positionRelativeToLine.x,
+                y: line.positionRelativeToParagraph.y + positionedFragment.positionRelativeToLine.y + this.getVerticalOffset()
               })
-              .width(size.width)
-              .height(lineSize.height)
+              .width(positionedFragment.size.width)
+              .height(line.size.height)
           }
         })
         this.buildChildren()

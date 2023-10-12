@@ -79,8 +79,8 @@ export class TouchDispatcher {
 
   private maybeRemoveDeletedTargets() {
     const deletedTargetIds = [...this.targetTagByTouchId.entries()]
-      .filter(([touchId, targetTag]) =>!this.rnInstance.descriptorRegistry.getDescriptor(targetTag))
-      .map(([touchId, targetTag]) => touchId);
+      .filter((touchIdAndTargetTag) =>!this.rnInstance.descriptorRegistry.getDescriptor(touchIdAndTargetTag[1]))
+      .map((touchIdAndTargetTag) => touchIdAndTargetTag[0]);
     deletedTargetIds.forEach(id => this.targetTagByTouchId.delete(id));
   }
 
@@ -98,8 +98,8 @@ export class TouchDispatcher {
 
   private cancelHandledTouches(timestamp: number) {
     const cancelledTouchIds = [...this.targetTagByTouchId.entries()]
-      .filter(([touchId, targetTag]) => this.shouldCancelTouchesForTag(targetTag))
-      .map(([touchId, targetTag]) => touchId);
+      .filter((touchIdAndTargetTag) => this.shouldCancelTouchesForTag(touchIdAndTargetTag[1]))
+      .map((touchIdAndTargetTag) => touchIdAndTargetTag[0]);
 
     cancelledTouchIds.forEach(touchId => this.targetTagByTouchId.delete(touchId));
 

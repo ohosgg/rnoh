@@ -51,8 +51,8 @@ export struct RNApp {
         return;
       }
       if (jsBundleExecutionStatus !== "DONE") {
-        this.cleanUpCallbacks.push(this.rnInstance.subscribeToLifecycleEvents("JS_BUNDLE_EXECUTION_FINISH", ({ appKeys }) => {
-          if (appKeys.includes(this.appKey)) {
+        this.cleanUpCallbacks.push(this.rnInstance.subscribeToLifecycleEvents("JS_BUNDLE_EXECUTION_FINISH", (args) => {
+          if (args.appKeys.includes(this.appKey)) {
             this.shouldShow = true
           }
         }))
