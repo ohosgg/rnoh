@@ -370,10 +370,7 @@ export function ScrollViewTest() {
         </TestCase>
         <TestCase
           modal
-          skip
-          itShould="snaps to  each second child (rectangle indices: 1, 3, 5, 7...) (snapToInterval)"
-          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/316
-        >
+          itShould="snaps to each second child (rectangle indices: 1, 3, 5, 7...) (snapToInterval)">
           <View style={[styles.wrapperView, {flexDirection: 'row'}]}>
             <ScrollView
               {...commonProps}
@@ -384,10 +381,7 @@ export function ScrollViewTest() {
         </TestCase>
         <TestCase
           modal
-          skip
-          itShould="snaps to in increasing multiples of 50 pixels (rectangle indices: 1, 2, 4, 7, 11, 16) (snapToOffset)) "
-          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/316
-        >
+          itShould="snaps to in increasing multiples of 50 pixels (rectangle indices: 1, 2, 4, 7, 11, 16) (snapToOffset)) ">
           <View style={[styles.wrapperView, {flexDirection: 'row'}]}>
             <ScrollView
               {...commonProps}

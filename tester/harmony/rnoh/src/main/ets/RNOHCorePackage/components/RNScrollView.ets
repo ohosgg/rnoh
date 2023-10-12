@@ -1,9 +1,9 @@
-import type { Descriptor} from '../../RNOH';
-import { RNOHContext, Tag } from '../../RNOH'
-import { _RNScrollViewManager } from '../componentManagers/RNScrollViewManager'
-import type { ViewBaseProps} from './RNViewBase';
-import { RNViewBase } from './RNViewBase'
-import { RNPullToRefreshView, RN_PULL_TO_REFRESH_VIEW_NAME } from './RNPullToRefreshView'
+import type { Descriptor } from '../../RNOH';
+import { RNOHContext, Tag } from '../../RNOH';
+import { _RNScrollViewManager } from '../componentManagers/RNScrollViewManager';
+import type { ViewBaseProps } from './RNViewBase';
+import { RNViewBase } from './RNViewBase';
+import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from './RNPullToRefreshView';
 
 export type ScrollViewProps = ViewBaseProps & {
   scrollEnabled?: boolean
@@ -17,6 +17,11 @@ export type ScrollViewProps = ViewBaseProps & {
   indicatorStyle?: IndicatorStyle
   decelerationRate?: number
   scrollEventThrottle?: number
+}
+
+export type ScrollViewRawProps = {
+  snapToInterval?: number
+  snapToOffsets?: number[]
 }
 
 export type ScrollViewState = {
@@ -37,7 +42,7 @@ enum IndicatorStyle {
   White = 2,
 }
 
-export type ScrollViewDescriptor = Descriptor<"ScrollView", ScrollViewProps, ScrollViewState>
+export type ScrollViewDescriptor = Descriptor<"ScrollView", ScrollViewProps, ScrollViewState, ScrollViewRawProps>
 
 @Component
 export struct RNScrollView {
@@ -139,7 +144,7 @@ export struct RNScrollView {
     return Color.Black;
   }
 
-  friction() {
+  getFriction() {
     // default deceleration rate and friction values differ between ArkUI and RN
     // so we need to adapt the decelerationRate got in props to resemble the behaviour
     // on other platforms
@@ -150,6 +155,22 @@ export struct RNScrollView {
       friction = (1 - this.props.decelerationRate) * ARKUI_DEFAULT_FRICTION / (1 - IOS_DEFAULT_DEC_RATE);
     }
     return friction
+  }
+
+  getScrollSnap(): ScrollSnapOptions {
+    if (this.descriptor.rawProps.snapToOffsets && this.descriptor.rawProps.snapToOffsets.length > 0) {
+      return {
+        snapAlign: ScrollAlign.CENTER,
+        snapPagination: this.descriptor.rawProps.snapToOffsets
+      }
+    }
+    if (this.descriptor.rawProps.snapToInterval > 0) {
+      return {
+        snapAlign: ScrollAlign.CENTER,
+        snapPagination: this.descriptor.rawProps.snapToInterval
+      }
+    }
+    return undefined
   }
 
   createScrollEvent() {
@@ -206,9 +227,9 @@ export struct RNScrollView {
     }
     descriptor.state.contentOffsetX = xOffset;
     descriptor.state.contentOffsetY = yOffset;
-    
+
     const now = Date.now();
-    if(this.allowNextScrollEvent || descriptor.props.scrollEventThrottle < now - this.lastScrollDispatchTime) {
+    if (this.allowNextScrollEvent || descriptor.props.scrollEventThrottle < now - this.lastScrollDispatchTime) {
       this.lastScrollDispatchTime = now
       this.ctx.rnInstance.emitComponentEvent(
         this.tag,
@@ -312,7 +333,8 @@ export struct RNScrollView {
     .onScrollStart(this.onScrollBegin.bind(this))
     .onScrollStop(this.onScrollEnd.bind(this))
     .onAppear(this.scrollToContentOffset.bind(this))
-    .friction(this.friction())
+    .friction(this.getFriction())
+    .scrollSnap(this.getScrollSnap())
   }
 
   build() {
