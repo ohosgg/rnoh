@@ -8,6 +8,7 @@ type CodelinterResult = {
   errorsCount: number;
   warningsCount: number;
   migrationWarningsCount: number;
+  issuesCountByType: Record<string, number>;
 };
 
 export async function lintEts({
@@ -71,5 +72,18 @@ function summarizeCodelinterOutput(fileContent: string): CodelinterResult {
     warningsCount,
     errorsCount,
     migrationWarningsCount,
+    issuesCountByType: aggregateIssues(fileContent),
   };
+}
+
+function aggregateIssues(input: string): Record<string, number> {
+  const lines = input.split('\n');
+  const result: Record<string, number> = {};
+  for (const line of lines) {
+    if (line.includes('rule:')) {
+      const rule = line.substring(line.indexOf(':') + 1).trim();
+      result[rule] = (result[rule] || 0) + 1;
+    }
+  }
+  return result;
 }

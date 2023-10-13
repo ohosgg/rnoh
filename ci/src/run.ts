@@ -35,6 +35,7 @@ async function runETSLint(activity: Activity) {
   });
   activity.stop();
   console.log('Linting ETS results:');
+  console.log(JSON.stringify(result.issuesCountByType, null, 2));
   console.log(
     `  migration warnings: ${
       result.migrationWarningsCount > 0
