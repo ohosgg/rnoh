@@ -1,7 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import React from 'react';
-import {Effect} from '../components';
 
 const WebSocketEcho = () => {
   const [status, setStatus] = React.useState('Loading...');
@@ -61,7 +60,6 @@ export const NetworkingTest = () => {
   return (
     <TestSuite name="Networking">
       <TestCase
-        skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/356
         itShould="download data"
         fn={async ({expect}) => {
           const response = await fetch('https://reactnative.dev/movies.json');
@@ -70,7 +68,6 @@ export const NetworkingTest = () => {
         }}
       />
       <TestCase
-        skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/356
         itShould="fail on bad url"
         fn={async ({expect}) => {
           const received = await canFetch(
