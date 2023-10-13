@@ -68,6 +68,6 @@ export struct RNPullToRefreshView {
     .onStateChange((refreshStatus) => {
       this.prevAndCurrentRefreshStatus = [this.prevAndCurrentRefreshStatus[1], refreshStatus]
     })
-    .onRefreshing(this.handleRefresh.bind(this))
+    .onRefreshing(() => this.handleRefresh())
   }
 }

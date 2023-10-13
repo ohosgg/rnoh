@@ -1,27 +1,29 @@
-import { RNView } from "./RNOHCorePackage/components/RNView"
-import { RNImage } from "./RNOHCorePackage/components/RNImage"
-import { RNTextInput } from "./RNOHCorePackage/components/RNTextInput"
-import { RNText } from "./RNOHCorePackage/components/RNText"
-import { RNScrollView } from "./RNOHCorePackage/components/RNScrollView"
-import type { Descriptor} from "./RNOH/DescriptorBase";
-import { Tag } from "./RNOH/DescriptorBase"
-import { RNOHContext } from "./RNOH/RNOHContext"
-import { RNModalHostView } from './RNOHCorePackage/components/RNModalHostView'
-import { RNSwitch } from './RNOHCorePackage/components/RNSwitch'
-import { RNActivityIndicator } from './RNOHCorePackage/components/RNActivityIndicator'
+import { Tag, RNOHContext } from "../../RNOH"
+import { RNView } from "./RNView"
+import { RNImage } from "./RNImage"
+import { RNTextInput } from "./RNTextInput"
+import { RNText } from "./RNText"
+import { RNScrollView } from "./RNScrollView"
+import type { Descriptor} from "../../RNOH/DescriptorBase";
+import { RNModalHostView } from './RNModalHostView'
+import { RNSwitch } from './RNSwitch'
+import { RNActivityIndicator } from './RNActivityIndicator'
 
 export interface ComponentBuilderContext {
   rnohContext: RNOHContext
-  descriptor: Descriptor
+  descriptor: {tag: Tag, type: string}
 }
+
+export type CustomComponentBuilder = (ctx: ComponentBuilderContext) => void
 
 @Component
 export struct RNComponentFactory {
-  ctx: RNOHContext
-  tag: number
-  @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void
-  @State descriptorType: string = ''
-  @State childrenTags: Tag[] = []
+  public ctx: RNOHContext
+  public tag: number
+  @BuilderParam public buildCustomComponent: CustomComponentBuilder
+
+  @State private descriptorType: string = ''
+  @State private childrenTags: Tag[] = []
   private cleanupCallback?: () => void = undefined
 
   aboutToAppear() {
@@ -44,26 +46,19 @@ export struct RNComponentFactory {
     this.childrenTags = newDescriptor.childrenTags
   }
 
-  @Builder
-  renderDescriptors() {
-    ForEach(this.childrenTags, (childrenTag) => {
-      RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
-    }, childrenTag => childrenTag)
-  }
-
   build() {
     if (this.descriptorType === "View") {
       RNView({
         ctx: this.ctx,
         tag: this.tag,
-        renderDescriptors: this.renderDescriptors.bind(this)
+        buildCustomComponent: this.buildCustomComponent
       })
     } else if (this.descriptorType === "Image") {
       RNImage({ ctx: this.ctx, tag: this.tag })
     } else if (this.descriptorType === "TextInput") {
       RNTextInput({ ctx: this.ctx, tag: this.tag })
     } else if (this.descriptorType === "Paragraph") {
-      RNText({ ctx: this.ctx, tag: this.tag, buildChildren: this.renderDescriptors.bind(this) })
+      RNText({ ctx: this.ctx, tag: this.tag, buildCustomComponent: this.buildCustomComponent })
     } else if (this.descriptorType === "PullToRefreshView") {
       /**
        * RNScrollView displays Refresh component if PullToRefreshView is its direct parent.
@@ -72,14 +67,14 @@ export struct RNComponentFactory {
       RNComponentFactory({
         ctx: this.ctx,
         tag: this.childrenTags[0],
-        buildCustomComponent: this.buildCustomComponent.bind(this)
+        buildCustomComponent: this.buildCustomComponent
       })
     }
     else if (this.descriptorType === "ScrollView") {
       RNScrollView({
         ctx: this.ctx,
         tag: this.tag,
-        renderDescriptors: this.renderDescriptors.bind(this)
+        buildCustomComponent: this.buildCustomComponent
       })
     } else if (this.descriptorType === "Switch") {
       RNSwitch({
@@ -90,7 +85,7 @@ export struct RNComponentFactory {
       RNModalHostView({
         ctx: this.ctx,
         tag: this.tag,
-        renderDescriptors: this.renderDescriptors.bind(this)
+        buildCustomComponent: this.buildCustomComponent
       })
     } else if (this.descriptorType === "ActivityIndicatorView") {
       RNActivityIndicator({

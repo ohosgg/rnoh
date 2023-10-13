@@ -1,4 +1,4 @@
-import type { ComponentBuilderContext } from './RNComponentFactory'
+import type { CustomComponentBuilder } from './RNOHCorePackage'
 import type { RNInstanceOptions } from './RNOH';
 import { RNInstance, JSBundleProvider, RNAbility } from './RNOH'
 import { RNSurface } from "./RNSurface"
@@ -32,7 +32,7 @@ export struct RNApp {
   /**
    * Builds a custom fabric component.
    */
-  @BuilderParam public buildCustomComponent: (ctx: ComponentBuilderContext) => void
+  @BuilderParam public buildCustomComponent: CustomComponentBuilder
   // -------------------------------------------------------------------------------------------------------------------
   @StorageLink('RNAbility') private rnAbility: RNAbility = undefined
   private rnInstance: RNInstance

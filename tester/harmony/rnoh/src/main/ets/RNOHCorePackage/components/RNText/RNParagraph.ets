@@ -1,9 +1,11 @@
-import { RNOHContext, OHOSTextFragmentMeasurer, convertColorSegmentsToString, } from '../../../RNOH'
+import { RNOHContext, convertColorSegmentsToString } from '../../../RNOH'
 import { RNViewBase } from '../RNViewBase'
 import type { PositionedFragment} from '../../../ParagraphMeasurer';
 import { PositionedLine, Size, } from '../../../ParagraphMeasurer'
 import { RNParagraphManager } from './RNParagraphManager'
-import { EllipsizeMode, TextDescriptor, TextFragmentExtraData } from './types'
+import type { CustomComponentBuilder } from '../RNComponentFactory'
+import { RNComponentFactory } from '../RNComponentFactory'
+import { TextDescriptor, TextFragmentExtraData } from './types'
 import {
   capitalizeTextIfNecessary,
   getLetterSpacing,
@@ -13,12 +15,11 @@ import {
   stringToTextTransform
 } from './conversions'
 
-
 @Component
 export struct RNParagraph {
   public ctx: RNOHContext
   public tag: number
-  @BuilderParam buildChildren: () => void
+  @BuilderParam buildCustomComponent: CustomComponentBuilder
   //--------------------------------------------------------------------------------------------------------------------
   @State descriptor: TextDescriptor = {} as TextDescriptor
   @State positionedLines: PositionedLine<TextFragmentExtraData>[] = []
@@ -96,7 +97,9 @@ export struct RNParagraph {
               .height(line.size.height)
           }
         })
-        this.buildChildren()
+        ForEach(this.descriptor.childrenTags, (childrenTag) => {
+          RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
+        }, childrenTag => childrenTag)
       })
     }
   }

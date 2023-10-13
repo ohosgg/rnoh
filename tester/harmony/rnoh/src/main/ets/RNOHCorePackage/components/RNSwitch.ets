@@ -51,7 +51,7 @@ export struct RNSwitch {
       Toggle({ type: ToggleType.Switch, isOn: this.descriptor.props.value })
         .selectedColor(convertColorSegmentsToString(this.descriptor.props.trackColor))
         .switchPointColor(convertColorSegmentsToString(this.descriptor.props.thumbColor))
-        .onChange(this.onChange.bind(this))
+        .onChange((isOn) => { this.onChange(isOn) })
         .enabled(!this.descriptor.props.disabled)
     }
   }

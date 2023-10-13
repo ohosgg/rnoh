@@ -1,10 +1,11 @@
 {
-  "files": ["rnoh/**/*.ts", "rnoh/**/*.ets"],
+  "files": ["**/*.ts", "**/*.ets"],
   "ignore": [
     "**/ohosTest/**/*",
     "**/node_modules/**/*",
     "**/hvigorfile.ts",
     "**/node_modules/**/*",
+    "**/oh_modules/**/*",
     "**/build/**/*",
     "**/.preview/**/*"
   ],

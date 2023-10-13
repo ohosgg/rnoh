@@ -6,6 +6,8 @@ import { RNOHContext } from '../../RNOH/RNOHContext'
 import type { ViewBaseProps } from './RNViewBase'
 import { TouchDispatcher } from '../../RNOH/TouchDispatcher'
 import { RNModalHostViewManager } from '../componentManagers/RNModalHostViewManager';
+import type { CustomComponentBuilder } from './RNComponentFactory'
+import { RNComponentFactory } from './RNComponentFactory'
 
 interface ModalHostViewProps extends ViewBaseProps {
   transparent: boolean;
@@ -23,10 +25,12 @@ function closeTo(a: number, b: number) {
 
 @CustomDialog
 struct ModalHostViewDialog {
+  public ctx: RNOHContext
+  public tag: Tag
+  @BuilderParam public buildCustomComponent: CustomComponentBuilder
+
+  @State descriptor: ModalHostViewDescriptor = {} as ModalHostViewDescriptor
   controller: CustomDialogController
-  ctx: RNOHContext
-  tag: Tag
-  @BuilderParam renderDescriptors: () => void
   @State showContent: boolean = false
   unsubscribeFromDescriptorChanges: () => void | undefined
   touchDispatcher: TouchDispatcher;
@@ -40,7 +44,9 @@ struct ModalHostViewDialog {
     this.emitComponentEvent("onShow")
     this.componentManager = new RNModalHostViewManager(this.tag, this.ctx);
     this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager);
+    this.descriptor = this.ctx.descriptorRegistry.getDescriptor<ModalHostViewDescriptor>(this.tag)
     this.unsubscribeFromDescriptorChanges = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag, (descriptor: ModalHostViewDescriptor) => {
+      this.descriptor = descriptor
       // NOTE: this should ensure we only update the Stack's dimensions
       // after React rerenders the contents,
       // to prevent flickering when opening the modal
@@ -62,7 +68,9 @@ struct ModalHostViewDialog {
   build() {
     if (this.showContent) {
       Stack() {
-        this.renderDescriptors()
+        ForEach(this.descriptor.childrenTags, (childrenTag) => {
+          RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
+        }, childrenTag => childrenTag)
       }.onTouch((touchEvent) => this.touchDispatcher.handleTouchEvent(touchEvent))
     }
   }
@@ -70,9 +78,9 @@ struct ModalHostViewDialog {
 
 @Component
 export struct RNModalHostView {
-  ctx: RNOHContext
-  tag: number
-  @BuilderParam renderDescriptors: () => void
+  public ctx: RNOHContext
+  public tag: number
+  @BuilderParam public buildCustomComponent: CustomComponentBuilder
   private dialogController: CustomDialogController
 
   aboutToAppear() {
@@ -80,7 +88,7 @@ export struct RNModalHostView {
       builder: ModalHostViewDialog({
         ctx: this.ctx,
         tag: this.tag,
-        renderDescriptors: this.renderDescriptors
+        buildCustomComponent: this.buildCustomComponent
       }),
       alignment: DialogAlignment.TopStart,
       customStyle: true,

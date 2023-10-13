@@ -13,7 +13,6 @@ export class TouchDispatcher {
 
   constructor(private surfaceTag: Tag, private rnInstance: RNInstance, private logger: RNOHLogger) {
     this.touchTargetHelper = new TouchTargetHelper(surfaceTag, rnInstance.descriptorRegistry, rnInstance.componentManagerRegistry, logger);
-    this.convertTouchObject = this.convertTouchObject.bind(this);
   }
 
   public handleTouchEvent(touchEvent: TouchEvent) {
@@ -31,7 +30,7 @@ export class TouchDispatcher {
     // only report touches RN we have calculated targets for
     touchEvent.touches = touchEvent.touches.filter(touch => this.targetTagByTouchId.has(touch.id));
 
-    touchEvent.touches.forEach(this.convertTouchObject);
+    touchEvent.touches.forEach((touch) => this.convertTouchObject(touch));
     touchEvent.changedTouches = touchEvent.touches.filter(touch => changedIds.includes(touch.id));
 
     this.removeEndedTouches(touchEvent, changedIds);

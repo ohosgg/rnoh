@@ -4,6 +4,8 @@ import { _RNScrollViewManager } from '../componentManagers/RNScrollViewManager';
 import type { ViewBaseProps } from './RNViewBase';
 import { RNViewBase } from './RNViewBase';
 import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from './RNPullToRefreshView';
+import type { CustomComponentBuilder } from './RNComponentFactory'
+import { RNComponentFactory } from './RNComponentFactory'
 
 export interface ScrollViewProps extends ViewBaseProps {
   scrollEnabled?: boolean
@@ -43,7 +45,7 @@ export type ScrollViewDescriptor = Descriptor<"ScrollView", ScrollViewProps, Scr
 export struct RNScrollView {
   ctx: RNOHContext
   tag: number
-  @BuilderParam renderDescriptors: () => void
+  @BuilderParam public buildCustomComponent: CustomComponentBuilder
   @State props: ScrollViewProps = {} as ScrollViewProps
   @State contentSize: Size = {} as Size
   @State childrenTags: Tag[] = []
@@ -63,7 +65,7 @@ export struct RNScrollView {
     this.onDescriptorUpdate(descriptor)
     this.state = descriptor.state
     this.cleanUpCallbacks.push(this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
-      this.onDescriptorUpdate.bind(this)
+      (descriptor: ScrollViewDescriptor) => this.onDescriptorUpdate(descriptor)
     ))
     this.cleanUpCallbacks.push(this.ctx.commandDispatcher.registerCommandCallback(
       this.tag,
@@ -308,7 +310,9 @@ export struct RNScrollView {
   buildScrollCore() {
     Scroll(this.scroller) {
       Stack() {
-        this.renderDescriptors()
+        ForEach(this.descriptor.childrenTags, (childrenTag) => {
+          RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
+        }, childrenTag => childrenTag)
       }
       .width(this.contentSize.width)
       .height(this.contentSize.height)
@@ -323,11 +327,22 @@ export struct RNScrollView {
     .scrollBarColor(this.scrollBarColor())
     .enableScrollInteraction(this.props.scrollEnabled)
     .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
-    .onScrollFrameBegin(this.onScroll.bind(this))
-    .onScroll(this.onScrollEvent.bind(this))
-    .onScrollStart(this.onScrollBegin.bind(this))
-    .onScrollStop(this.onScrollEnd.bind(this))
-    .onAppear(this.scrollToContentOffset.bind(this))
+    .onScrollFrameBegin((offset, state) => {
+      this.onScroll(offset, state)
+      return { offsetRemain: offset }
+    })
+    .onScroll((xOffset, yOffset) => {
+      this.onScrollEvent(xOffset, yOffset)
+    })
+    .onScrollStart(() => {
+      this.onScrollBegin()
+    })
+    .onScrollStop(() => {
+      this.onScrollEnd()
+    })
+    .onAppear(() => {
+      this.scrollToContentOffset()
+    })
     .friction(this.getFriction())
     .scrollSnap(this.getScrollSnap())
   }

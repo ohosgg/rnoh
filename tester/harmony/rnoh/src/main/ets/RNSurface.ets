@@ -1,5 +1,5 @@
-import type { ComponentBuilderContext } from './RNComponentFactory';
-import { RNComponentFactory } from './RNComponentFactory'
+import type { ComponentBuilderContext } from './RNOHCorePackage/components/RNComponentFactory';
+import { RNComponentFactory } from './RNOHCorePackage'
 import { DisplayMode, RNOHContext } from "./RNOH"
 import type { Descriptor } from './RNOH'
 import type { ViewBaseProps } from './RNOHCorePackage/components/RNViewBase'
@@ -117,7 +117,7 @@ export struct RNSurface {
     .width("100%")
     .height("100%")
     .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
-    .onAreaChange(this.handleAreaChange.bind(this))
-    .onTouch(this.handleTouch.bind(this))
+    .onAreaChange((oldArea, newArea) => this.handleAreaChange(oldArea, newArea))
+    .onTouch((e) => this.handleTouch(e))
   }
 }
