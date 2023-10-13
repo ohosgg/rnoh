@@ -148,6 +148,7 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
         }
         if (facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeEnd]).has_value()) {
             float paddingEnd = facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeEnd]).value();
+            isRTL ? (left = paddingEnd) : (right = paddingEnd);
         }
         if (facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeHorizontal]).has_value()) {
             float paddingHorizontal = facebook::react::optionalFloatFromYogaValue(yogaPadding[YGEdgeHorizontal]).value();
