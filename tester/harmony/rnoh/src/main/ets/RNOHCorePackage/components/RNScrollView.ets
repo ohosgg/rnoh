@@ -92,15 +92,13 @@ export struct RNScrollView {
     const oldProps = this.props
     this.props = newDescriptor.props
     this.descriptor = newDescriptor
-    const {contentSizeHeight, contentSizeWidth} = newDescriptor.state
     this.contentSize = {
-      width: contentSizeWidth,
-      height: contentSizeHeight
+      width: newDescriptor.state.contentSizeWidth,
+      height: newDescriptor.state.contentSizeHeight
     }
     this.childrenTags = newDescriptor.childrenTags
     this.parentTag = newDescriptor.parentTag
-    const {contentOffsetX, contentOffsetY} = newDescriptor.props
-    if (contentOffsetX !== oldProps.contentOffsetX || contentOffsetY !== oldProps.contentOffsetY) {
+    if (newDescriptor.props.contentOffsetX !== oldProps.contentOffsetX || newDescriptor.props.contentOffsetY !== oldProps.contentOffsetY) {
       this.scrollToContentOffset();
     }
   }
@@ -215,15 +213,15 @@ export struct RNScrollView {
   }
 
   onScrollEvent(dx?: number, dy?: number) {
-    const {xOffset, yOffset} = this.scroller.currentOffset();
+    const currentOffset = this.scroller.currentOffset();
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag);
 
     if (!descriptor) {
       // the view was unmounted while scrolling - don't report the event in that case
       return;
     }
-    descriptor.state.contentOffsetX = xOffset;
-    descriptor.state.contentOffsetY = yOffset;
+    descriptor.state.contentOffsetX = currentOffset.xOffset;
+    descriptor.state.contentOffsetY = currentOffset.yOffset;
 
     const now = Date.now();
     if (this.allowNextScrollEvent || descriptor.props.scrollEventThrottle < now - this.lastScrollDispatchTime) {
@@ -288,9 +286,9 @@ export struct RNScrollView {
     }
     this.scrollState = ScrollState.Idle;
 
-    const { xOffset, yOffset } = this.scroller.currentOffset();
-    this.state.contentOffsetX = xOffset;
-    this.state.contentOffsetY = yOffset;
+    const currentOffset = this.scroller.currentOffset();
+    this.state.contentOffsetX = currentOffset.xOffset;
+    this.state.contentOffsetY = currentOffset.yOffset;
     this.ctx.descriptorRegistry.setState<ScrollViewState>(this.tag, this.state);
   }
 

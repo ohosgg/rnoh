@@ -50,19 +50,17 @@ export class TouchDispatcher {
   }
 
   public findTargetTagForTouch(touch: TouchObject): Tag {
-    const {x, y} = touch;
-    return this.touchTargetHelper.findTouchTargetTag({ x, y }, this.surfaceTag);
+    return this.touchTargetHelper.findTouchTargetTag(touch, this.surfaceTag);
   }
 
   private convertTouchObject(touch: TouchObject): void {
-    const {x, y} = touch;
     const targetTag = this.targetTagByTouchId.get(touch.id);
     touch['targetTag'] = targetTag;
-    touch['pageX'] = x;
-    touch['pageY'] = y;
+    touch['pageX'] = touch.x;
+    touch['pageY'] = touch.y;
 
     const viewPoint =
-    this.touchTargetHelper.findViewCoordinates({ x, y }, targetTag);
+    this.touchTargetHelper.findViewCoordinates(touch, targetTag);
     touch.x = viewPoint.x;
     touch.y = viewPoint.y;
   }
@@ -124,11 +122,10 @@ export class TouchDispatcher {
   }
 
   private shouldCancelTouchesForTag(targetTag: Tag): boolean {
-    const { descriptorRegistry, componentManagerRegistry} = this.rnInstance;
     let currentTag = targetTag;
     while (currentTag !== undefined && currentTag !== this.surfaceTag) {
-      const componentManager = componentManagerRegistry.getComponentManager(currentTag);
-      const descriptor = descriptorRegistry.getDescriptor(currentTag);
+      const componentManager = this.rnInstance.componentManagerRegistry.getComponentManager(currentTag);
+      const descriptor = this.rnInstance.descriptorRegistry.getDescriptor(currentTag);
       if (!componentManager || !TouchTargetHelper.isTouchTargetHelperDelegate(componentManager) || componentManager.isHandlingTouches()) {
         return true;
       }
