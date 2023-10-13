@@ -297,7 +297,7 @@ export struct RNScrollView {
     if (pullToRefreshTag === undefined) {
       return false
     }
-    const parentDescriptor = this.ctx.descriptorRegistry.getDescriptor(pullToRefreshTag)
+    const parentDescriptor = this.ctx.descriptorRegistry.getDescriptor<Descriptor>(pullToRefreshTag)
     if (parentDescriptor.type !== RN_PULL_TO_REFRESH_VIEW_NAME) {
       return false
     }

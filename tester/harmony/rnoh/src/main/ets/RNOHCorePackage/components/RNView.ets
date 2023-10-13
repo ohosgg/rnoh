@@ -1,5 +1,5 @@
 import { RNOHContext, Tag } from '../../RNOH'
-import { RNViewBase } from './RNViewBase'
+import { RNViewBase, ViewBaseDescriptor } from './RNViewBase'
 import { RNComponentFactory, ComponentBuilderContext } from './RNComponentFactory'
 
 @Component
@@ -12,7 +12,7 @@ export struct RNView {
   private cleanupCallback?: () => void = undefined
 
   aboutToAppear() {
-    const descriptor = this.ctx.descriptorRegistry.getDescriptor(this.tag)
+    const descriptor = this.ctx.descriptorRegistry.getDescriptor<ViewBaseDescriptor>(this.tag)
     if (descriptor) {
       this.childrenTags = descriptor.childrenTags
     }

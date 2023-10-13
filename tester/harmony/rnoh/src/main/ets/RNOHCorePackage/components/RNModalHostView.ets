@@ -57,7 +57,7 @@ struct ModalHostViewDialog {
     const displayClass = display.getDefaultDisplaySync();
     const height = px2vp(displayClass.height);
     const width = px2vp(displayClass.width);
-    this.ctx.descriptorRegistry.setState(this.tag, { screenSize: { height, width } });
+    this.ctx.descriptorRegistry.setState<ModalHostViewState>(this.tag, { screenSize: { height, width } });
   }
 
   aboutToDisappear() {

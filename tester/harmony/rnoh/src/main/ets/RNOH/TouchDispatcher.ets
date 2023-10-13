@@ -1,5 +1,5 @@
 import { RNOHEventEmitRequestHandlerName } from '../RNOHCorePackage/RNOHEventEmitRequestHandler';
-import type { Tag } from './DescriptorBase';
+import type { Tag, Descriptor } from './DescriptorBase';
 import type { RNInstance } from './RNInstance';
 import type { RNOHLogger } from './RNOHLogger';
 import { TouchTargetHelper } from './TouchTargetHelper';
@@ -75,8 +75,8 @@ export class TouchDispatcher {
   }
 
   private maybeRemoveDeletedTargets() {
-    const deletedTargetIds = Array.from(this.targetTagByTouchId.entries())
-      .filter((touchIdAndTargetTag) =>!this.rnInstance.descriptorRegistry.getDescriptor(touchIdAndTargetTag[1]))
+    const deletedTargetIds = Array.from<[number, Tag]>(this.targetTagByTouchId.entries())
+      .filter((touchIdAndTargetTag) =>!this.rnInstance.descriptorRegistry.getDescriptor<Descriptor>(touchIdAndTargetTag[1]))
       .map((touchIdAndTargetTag) => touchIdAndTargetTag[0]);
     deletedTargetIds.forEach(id => this.targetTagByTouchId.delete(id));
   }
@@ -94,7 +94,7 @@ export class TouchDispatcher {
   }
 
   private cancelHandledTouches(timestamp: number) {
-    const cancelledTouchIds = Array.from(this.targetTagByTouchId.entries())
+    const cancelledTouchIds = Array.from<[number, Tag]>(this.targetTagByTouchId.entries())
       .filter((touchIdAndTargetTag) => this.shouldCancelTouchesForTag(touchIdAndTargetTag[1]))
       .map((touchIdAndTargetTag) => touchIdAndTargetTag[0]);
 
@@ -125,7 +125,7 @@ export class TouchDispatcher {
     let currentTag = targetTag;
     while (currentTag !== undefined && currentTag !== this.surfaceTag) {
       const componentManager = this.rnInstance.componentManagerRegistry.getComponentManager(currentTag);
-      const descriptor = this.rnInstance.descriptorRegistry.getDescriptor(currentTag);
+      const descriptor = this.rnInstance.descriptorRegistry.getDescriptor<Descriptor>(currentTag);
       if (!componentManager || !TouchTargetHelper.isTouchTargetHelperDelegate(componentManager) || componentManager.isHandlingTouches()) {
         return true;
       }

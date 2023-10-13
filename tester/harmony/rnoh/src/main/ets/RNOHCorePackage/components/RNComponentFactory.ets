@@ -27,7 +27,7 @@ export struct RNComponentFactory {
   private cleanupCallback?: () => void = undefined
 
   aboutToAppear() {
-    const descriptor = this.ctx.descriptorRegistry.getDescriptor(this.tag)
+    const descriptor = this.ctx.descriptorRegistry.getDescriptor<Descriptor>(this.tag)
     if (descriptor) {
       this.setDescriptor(descriptor)
     }
@@ -95,7 +95,7 @@ export struct RNComponentFactory {
     } else if (this.descriptorType !== '') {
       this.buildCustomComponent({
         rnohContext: this.ctx,
-        descriptor: this.ctx.descriptorRegistry.getDescriptor(this.tag)
+        descriptor: this.ctx.descriptorRegistry.getDescriptor<Descriptor>(this.tag)
       })
     }
   }
