@@ -26,9 +26,16 @@ function convertViewDynamicDescriptor(descriptor: ViewBaseDescriptor | ViewDynam
   const p = dynamicDescriptor.props
   const isRTL = dynamicDescriptor.layoutMetrics.layoutDirection === LayoutDirectionRN.RightToLeft
   const borderMetrics = resolveBorderMetrics(p as BorderMetrics, isRTL)
+
   return {
     isDynamicBinder: false,
-    ...dynamicDescriptor,
+    childrenTags: dynamicDescriptor.childrenTags,
+    tag: dynamicDescriptor.tag,
+    type: dynamicDescriptor.type,
+    parentTag: dynamicDescriptor.parentTag,
+    state: dynamicDescriptor.state,
+    rawProps: dynamicDescriptor.rawProps,
+    layoutMetrics: dynamicDescriptor.layoutMetrics,
     props: {
       top: 0,
       left: 0,
