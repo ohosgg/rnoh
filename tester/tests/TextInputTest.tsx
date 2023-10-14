@@ -6,9 +6,9 @@ import {
   TextInput,
   TextInputProps,
 } from 'react-native';
-import {TestSuite, TestCase} from '@rnoh/testerino';
-import {useState} from 'react';
-import {Button} from '../components';
+import { TestSuite, TestCase } from '@rnoh/testerino';
+import { useState } from 'react';
+import { Button } from '../components';
 
 export function TextInputTest() {
   return (
@@ -30,7 +30,7 @@ export function TextInputTest() {
         skip
         //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/403
         initialState={false}
-        arrange={({setState}) => {
+        arrange={({ setState }) => {
           return (
             <>
               <TextInputWithText
@@ -41,7 +41,7 @@ export function TextInputTest() {
             </>
           );
         }}
-        assert={({expect, state}) => {
+        assert={({ expect, state }) => {
           expect(state).to.be.true;
         }}
       />
@@ -49,7 +49,7 @@ export function TextInputTest() {
         modal
         itShould="not blur text on submit"
         skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/403
+      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/403
       >
         <TextInputWithText style={styles.textInput} blurOnSubmit={false} />
       </TestCase>
@@ -57,7 +57,7 @@ export function TextInputTest() {
         modal
         itShould="render textInput with blue underline"
         skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/404
+      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/404
       >
         <TextInputWithText
           style={styles.textInput}
@@ -70,10 +70,10 @@ export function TextInputTest() {
         skip
         //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/405
         initialState={false}
-        arrange={({setState}) => (
+        arrange={({ setState }) => (
           <TextInput style={styles.textInput} onFocus={() => setState(true)} />
         )}
-        assert={({expect, state}) => {
+        assert={({ expect, state }) => {
           expect(state).to.be.true;
         }}
       />
@@ -94,7 +94,7 @@ export function TextInputTest() {
         modal
         itShould="render multiline text input"
         skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/409
+      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/409
       >
         <TextInputWithText style={styles.textInputBigger} multiline />
       </TestCase>
@@ -110,14 +110,14 @@ export function TextInputTest() {
         skip
         //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/405
         initialState={false}
-        arrange={({setState}) => (
+        arrange={({ setState }) => (
           <TextInputWithText
             style={styles.textInput}
             autoFocus
             onFocus={() => setState(true)}
           />
         )}
-        assert={({expect, state}) => {
+        assert={({ expect, state }) => {
           expect(state).to.be.true;
         }}
       />
@@ -125,7 +125,7 @@ export function TextInputTest() {
         modal
         itShould="toggle between different capitalization modes"
         skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/408
+      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/408
       >
         <AutoCapitalize />
       </TestCase>
@@ -135,22 +135,20 @@ export function TextInputTest() {
         skip
         //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/411
         initialState={false}
-        arrange={({setState}) => (
+        arrange={({ setState }) => (
           <TextInputWithText
             style={styles.textInput}
             autoFocus
             onSubmitEditing={() => setState(true)}
           />
         )}
-        assert={({expect, state}) => {
+        assert={({ expect, state }) => {
           expect(state).to.be.true;
         }}
       />
       <TestCase
         modal
         itShould="toggle between different return keys"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/412
       >
         <ReturnKeyTypeView />
       </TestCase>
@@ -163,14 +161,14 @@ export function TextInputTest() {
         skip
         //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/413
         initialState={''}
-        arrange={({setState}) => (
+        arrange={({ setState }) => (
           <TextInputWithText
             style={styles.textInput}
             autoFocus
             onKeyPress={event => setState(event.nativeEvent.key)}
           />
         )}
-        assert={({expect, state}) => {
+        assert={({ expect, state }) => {
           expect(state).to.be.eq('A');
         }}
       />
@@ -178,7 +176,7 @@ export function TextInputTest() {
         modal
         itShould="show text input with default value"
         skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/414
+      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/414
       >
         <DefaultProps />
       </TestCase>
@@ -222,12 +220,13 @@ const ReturnKeyTypeView = () => {
   );
   const returnKey: Array<ReturnKeyType | ReturnKeyTypeAndroid> = [
     'none',
+    'done',
     'go',
     'next',
     'search',
     'send',
     'none',
-    'previous',
+    'previous', //currently not supported by ArkUI
   ];
   const toggleReturnKey = () => {
     const index = returnKey.indexOf(state);

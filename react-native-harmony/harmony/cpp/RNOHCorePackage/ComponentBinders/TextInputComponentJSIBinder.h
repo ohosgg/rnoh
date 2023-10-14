@@ -13,6 +13,7 @@ class TextInputComponentJSIBinder : public ViewComponentJSIBinder {
         nativeProps.setProperty(rt, "placeholderTextColor", "Color");
         nativeProps.setProperty(rt, "maxLength", "number");
         nativeProps.setProperty(rt, "selectionColor", "Color");
+        nativeProps.setProperty(rt, "returnKeyType", "ReturnKeyType");
 
         return nativeProps;
     };

@@ -23,10 +23,29 @@ class TextInputComponentNapiBinder : public ViewComponentNapiBinder {
                 .addProperty("placeholder", props->placeholder)
                 .addProperty("placeholderTextColor", props->placeholderTextColor)
                 .addProperty("selectionColor", props->selectionColor)
+                .addProperty("returnKeyType", returnKeyTypeToString(props->traits.returnKeyType))
                 .build();
         }
         return napiViewProps;
     };
+
+  private:
+    std::string returnKeyTypeToString(facebook::react::ReturnKeyType returnKeyType) {
+        switch (returnKeyType) {
+        case facebook::react::ReturnKeyType::Done:
+            return "done";
+        case facebook::react::ReturnKeyType::Go:
+            return "go";
+        case facebook::react::ReturnKeyType::Next:
+            return "next";
+        case facebook::react::ReturnKeyType::Search:
+            return "search";
+        case facebook::react::ReturnKeyType::Send:
+            return "send";
+        default:
+            return "default";
+        }
+    }
 };
 
 } // namespace rnoh

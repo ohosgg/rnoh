@@ -14,6 +14,7 @@ export interface TextInputProps extends ViewBaseProps {
   secureTextEntry?: boolean
   placeholder?: string
   placeholderTextColor?: ColorSegments
+  returnKeyType?: string
 }
 
 export interface TextInputRawProps {
@@ -26,6 +27,23 @@ export type TextInputDescriptor = Descriptor<"TextInput", TextInputProps, TextIn
 
 function getCaretStyle(caretHidden: boolean): CaretStyle {
   return caretHidden ? { width: 0 } : undefined;
+}
+
+function stringToEnterKeyType(enterKeyType: string): EnterKeyType {
+  switch (enterKeyType) {
+    case "done":
+      return EnterKeyType.Done
+    case "go":
+      return EnterKeyType.Go
+    case "next":
+      return EnterKeyType.Next
+    case "search":
+      return EnterKeyType.Search
+    case "send":
+      return EnterKeyType.Send
+    default:
+      return EnterKeyType.Done // Default value on ArkUI. If we would set undefined, then ArkUI would keep the value that was set earlier.
+  }
 }
 
 @Component
@@ -77,6 +95,7 @@ export struct RNTextInput {
         .selectedBackgroundColor(convertColorSegmentsToString(this.descriptor.props.selectionColor))
         .showPasswordIcon(false)
         .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
+        .enterKeyType(stringToEnterKeyType(this.descriptor.props.returnKeyType))
     }
   }
 }
