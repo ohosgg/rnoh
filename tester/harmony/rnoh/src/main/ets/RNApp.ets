@@ -1,5 +1,5 @@
-import type { CustomComponentBuilder } from './RNOHCorePackage'
-import type { RNInstanceOptions } from './RNOH';
+import { CustomComponentBuilder } from './RNOHCorePackage'
+import { RNInstanceOptions } from './RNOH';
 import { RNInstance, JSBundleProvider, RNAbility } from './RNOH'
 import { RNSurface } from "./RNSurface"
 

@@ -1,12 +1,12 @@
 import display from '@ohos.display';
-import type { Size} from '../../RNOH'
-import type { Descriptor} from '../../RNOH/DescriptorBase';
+import { Size} from '../../RNOH'
+import { Descriptor} from '../../RNOH/DescriptorBase';
 import { Tag } from '../../RNOH/DescriptorBase'
 import { RNOHContext } from '../../RNOH/RNOHContext'
-import type { ViewBaseProps } from './RNViewBase'
+import { ViewBaseProps } from './RNViewBase'
 import { TouchDispatcher } from '../../RNOH/TouchDispatcher'
 import { RNModalHostViewManager } from '../componentManagers/RNModalHostViewManager';
-import type { CustomComponentBuilder } from './RNComponentFactory'
+import { CustomComponentBuilder } from './RNComponentFactory'
 import { RNComponentFactory } from './RNComponentFactory'
 
 interface ModalHostViewProps extends ViewBaseProps {

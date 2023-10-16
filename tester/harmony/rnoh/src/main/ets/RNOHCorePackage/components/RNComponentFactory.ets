@@ -4,7 +4,7 @@ import { RNImage } from "./RNImage"
 import { RNTextInput } from "./RNTextInput"
 import { RNText } from "./RNText"
 import { RNScrollView } from "./RNScrollView"
-import type { Descriptor} from "../../RNOH/DescriptorBase";
+import { Descriptor} from "../../RNOH/DescriptorBase";
 import { RNModalHostView } from './RNModalHostView'
 import { RNSwitch } from './RNSwitch'
 import { RNActivityIndicator } from './RNActivityIndicator'

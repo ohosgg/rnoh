@@ -1,6 +1,6 @@
-import type { ColorSegments, Descriptor} from '../../RNOH';
+import { ColorSegments, Descriptor} from '../../RNOH';
 import { convertColorSegmentsToString, RNOHContext } from '../../RNOH'
-import type { ViewBaseProps} from './RNViewBase';
+import { ViewBaseProps} from './RNViewBase';
 import { RNViewBase } from './RNViewBase'
 
 export interface SwitchProps extends ViewBaseProps {

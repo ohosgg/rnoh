@@ -12,7 +12,7 @@ import {
   getTextShadow,
   capitalizeTextIfNecessary
 } from './conversions'
-import type { AttributedFragment} from './types';
+import { AttributedFragment} from './types';
 import { TextProps, EllipsizeMode, TextDescriptor } from './types'
 
 @Component

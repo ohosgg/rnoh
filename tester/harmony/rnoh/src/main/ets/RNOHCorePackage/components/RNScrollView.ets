@@ -1,10 +1,10 @@
-import type { Descriptor, Size } from '../../RNOH';
+import { Descriptor, Size } from '../../RNOH';
 import { RNOHContext, Tag } from '../../RNOH';
 import { _RNScrollViewManager } from '../componentManagers/RNScrollViewManager';
-import type { ViewBaseProps } from './RNViewBase';
+import { ViewBaseProps } from './RNViewBase';
 import { RNViewBase } from './RNViewBase';
 import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from './RNPullToRefreshView';
-import type { CustomComponentBuilder } from './RNComponentFactory'
+import { CustomComponentBuilder } from './RNComponentFactory'
 import { RNComponentFactory } from './RNComponentFactory'
 
 export interface ScrollViewProps extends ViewBaseProps {
@@ -155,13 +155,13 @@ export struct RNScrollView {
   getScrollSnap(): ScrollSnapOptions {
     if (this.descriptor.rawProps.snapToOffsets && this.descriptor.rawProps.snapToOffsets.length > 0) {
       return {
-        snapAlign: ScrollAlign.CENTER,
+        snapAlign: ScrollSnapAlign.CENTER,
         snapPagination: this.descriptor.rawProps.snapToOffsets
       }
     }
     if (this.descriptor.rawProps.snapToInterval > 0) {
       return {
-        snapAlign: ScrollAlign.CENTER,
+        snapAlign: ScrollSnapAlign.CENTER,
         snapPagination: this.descriptor.rawProps.snapToInterval
       }
     }

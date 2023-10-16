@@ -1,4 +1,4 @@
-import type { Descriptor} from '../../RNOH';
+import { Descriptor} from '../../RNOH';
 import { RNOHContext } from '../../RNOH'
 
 export interface PullToRefreshProps {

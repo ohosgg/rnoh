@@ -1,4 +1,4 @@
-import type {
+import {
   Descriptor,
   BorderMetrics} from '../../../RNOH';
 import {
@@ -11,7 +11,7 @@ import {
   LayoutDirectionRN,
   getTransformedVector,
 } from '../../../RNOH'
-import type { ViewBaseProps, ViewDynamicProps } from './types'
+import { ViewBaseProps, ViewDynamicProps } from './types'
 import { RNViewManager } from '../../componentManagers'
 
 export type ViewBaseDescriptor = Descriptor<string, ViewBaseProps>

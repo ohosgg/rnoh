@@ -1,9 +1,9 @@
 import { RNOHContext, convertColorSegmentsToString } from '../../../RNOH'
 import { RNViewBase } from '../RNViewBase'
-import type { PositionedFragment} from '../../../ParagraphMeasurer';
+import { PositionedFragment} from '../../../ParagraphMeasurer';
 import { PositionedLine, Size, } from '../../../ParagraphMeasurer'
 import { RNParagraphManager } from './RNParagraphManager'
-import type { CustomComponentBuilder } from '../RNComponentFactory'
+import { CustomComponentBuilder } from '../RNComponentFactory'
 import { RNComponentFactory } from '../RNComponentFactory'
 import { TextDescriptor, TextFragmentExtraData } from './types'
 import {
