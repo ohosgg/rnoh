@@ -1,19 +1,33 @@
-import {PixelRatio} from 'react-native';
-import {TestCase, TestSuite} from '@rnoh/testerino';
+import { PixelRatio } from 'react-native';
+import { TestCase, TestSuite } from '@rnoh/testerino';
 
 export const PixelRatioTest = () => {
   return (
     <TestSuite name="PixelRatio">
       <TestCase
-        itShould="return plausible pixel ratio (greater than 0)"
-        fn={({expect}) => {
-          expect(PixelRatio.get()).to.be.greaterThan(0);
+        itShould="return plausible pixel ratio (greater than or equal  1, less than 4)"
+        fn={({ expect }) => {
+          expect(PixelRatio.get()).to.be.greaterThanOrEqual(1).and.to.be.lessThan(4);
         }}
       />
       <TestCase
-        itShould="return plausible fontScale (greater than 0)"
-        fn={({expect}) => {
-          expect(PixelRatio.getFontScale()).to.be.greaterThan(0);
+        itShould="return plausible fontScale (greater than 0, less than 4)"
+        fn={({ expect }) => {
+          expect(PixelRatio.getFontScale()).to.be.greaterThan(0).and.to.be.lessThan(4);
+        }}
+      />
+      <TestCase
+        itShould="convert layout size to pixel size correctly"
+        fn={({ expect }) => {
+          expect(PixelRatio.getPixelSizeForLayoutSize(10)).to.be.equal(PixelRatio.get() * 10);
+        }}
+      />
+      <TestCase
+        itShould="round to nearest pixel correctly"
+        fn={({ expect }) => {
+          const ratio = PixelRatio.get();
+          const nearestPixel = Math.round(8.4 * ratio) / ratio;
+          expect(PixelRatio.roundToNearestPixel(8.4)).to.be.equal(nearestPixel);
         }}
       />
     </TestSuite>
