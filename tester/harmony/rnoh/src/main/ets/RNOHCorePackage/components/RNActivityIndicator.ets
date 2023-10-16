@@ -12,8 +12,8 @@ export type ActivityIndicatorDescriptor = Descriptor<"ActivityIndicatorView", Ac
 
 @Component
 export struct RNActivityIndicator {
-  ctx: RNOHContext
-  tag: number
+  ctx!: RNOHContext
+  tag: number = 0
   @State private descriptor: ActivityIndicatorDescriptor = {} as ActivityIndicatorDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined
 

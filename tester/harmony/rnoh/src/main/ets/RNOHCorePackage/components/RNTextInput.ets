@@ -48,8 +48,8 @@ function stringToEnterKeyType(enterKeyType: string): EnterKeyType {
 
 @Component
 export struct RNTextInput {
-  ctx: RNOHContext
-  tag: number
+  ctx!: RNOHContext
+  tag: number = 0
   @State descriptor: TextInputDescriptor = {} as TextInputDescriptor
   controller: TextInputController = new TextInputController()
   private unregisterDescriptorChangesListener?: () => void = undefined

@@ -16,11 +16,11 @@ export struct RNApp {
    * RNInstance or RNInstanceOptions used to create RNInstance.
    * If RNInstanceOptions are provided, this component takes the responsibility for creating and managing RNInstance.
    */
-  public rnInstanceConfig: RNInstanceConfig = undefined
+  public rnInstanceConfig!: RNInstanceConfig
   /**
    * App name. Check react-native/Libraries/AppRegistry for more info.
    */
-  public appKey: string
+  public appKey: string = ''
   /**
    * If provided, Runs JS Bundle against rnInstance. Creates surface after bundle has been loaded.
    */
@@ -32,10 +32,10 @@ export struct RNApp {
   /**
    * Builds a custom fabric component.
    */
-  @BuilderParam public buildCustomComponent: CustomComponentBuilder
+  @BuilderParam public buildCustomComponent!: CustomComponentBuilder
   // -------------------------------------------------------------------------------------------------------------------
   @StorageLink('RNAbility') private rnAbility: RNAbility = undefined
-  private rnInstance: RNInstance
+  private rnInstance!: RNInstance
   @State private shouldShow: boolean = false
   private shouldDestroyRNInstance: boolean = false
   private cleanUpCallbacks: (() => void)[] = []

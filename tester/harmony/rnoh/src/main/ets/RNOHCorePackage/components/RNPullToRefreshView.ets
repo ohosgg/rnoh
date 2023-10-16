@@ -10,8 +10,8 @@ export type PullToRefreshDescriptor = Descriptor<typeof RN_PULL_TO_REFRESH_VIEW_
 
 @Component
 export struct RNPullToRefreshView {
-  ctx: RNOHContext
-  tag: number
+  ctx!: RNOHContext
+  tag: number = 0
   @BuilderParam renderDescriptors: () => void
   @State private descriptor: PullToRefreshDescriptor = {} as PullToRefreshDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined

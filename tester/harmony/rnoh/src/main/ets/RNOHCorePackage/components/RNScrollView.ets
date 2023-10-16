@@ -43,9 +43,9 @@ export type ScrollViewDescriptor = Descriptor<"ScrollView", ScrollViewProps, Scr
 
 @Component
 export struct RNScrollView {
-  ctx: RNOHContext
-  tag: number
-  @BuilderParam public buildCustomComponent: CustomComponentBuilder
+  ctx!: RNOHContext
+  tag: number = 0
+  @BuilderParam public buildCustomComponent!: CustomComponentBuilder
   @State props: ScrollViewProps = {} as ScrollViewProps
   @State contentSize: Size = {} as Size
   @State childrenTags: Tag[] = []
@@ -56,7 +56,7 @@ export struct RNScrollView {
   private scroller = new Scroller()
   private cleanUpCallbacks: (() => void)[] = []
   private scrollState: ScrollState = ScrollState.Idle
-  private componentManager: _RNScrollViewManager = undefined
+  private componentManager!: _RNScrollViewManager
   private lastScrollDispatchTime: number = 0
   private allowNextScrollEvent: boolean = false
 

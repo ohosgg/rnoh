@@ -68,8 +68,8 @@ function convertViewDynamicDescriptor(descriptor: ViewBaseDescriptor | ViewDynam
 
 @Component
 export struct RNViewBase {
-  ctx: RNOHContext
-  tag: number
+  ctx!: RNOHContext
+  tag: number = 0
   @BuilderParam renderChildren: () => void
   public componentManager: RNViewManager = undefined;
   @State private descriptor: ViewBaseDescriptor = {} as ViewBaseDescriptor

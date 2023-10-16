@@ -17,8 +17,8 @@ import { TextProps, EllipsizeMode, TextDescriptor } from './types'
 
 @Component
 export struct RNSimpleText {
-  ctx: RNOHContext
-  tag: number
+  ctx!: RNOHContext
+  tag: number = 0
   @State descriptor: TextDescriptor = {} as TextDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined
 

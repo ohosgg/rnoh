@@ -4,8 +4,8 @@ import { RNComponentFactory, ComponentBuilderContext } from './RNComponentFactor
 
 @Component
 export struct RNView {
-  ctx: RNOHContext
-  tag: number
+  ctx!: RNOHContext
+  tag: number = 0
   @BuilderParam public buildCustomComponent: (ctx: ComponentBuilderContext) => void
 
   @State private childrenTags: Tag[] = []

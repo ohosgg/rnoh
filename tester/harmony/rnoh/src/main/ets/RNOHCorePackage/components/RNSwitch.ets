@@ -14,8 +14,8 @@ export type SwitchDescriptor = Descriptor<"Switch", SwitchProps>
 
 @Component
 export struct RNSwitch {
-  ctx: RNOHContext
-  tag: number
+  ctx!: RNOHContext
+  tag: number = 0
   @State private descriptor: SwitchDescriptor = {} as SwitchDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined
 

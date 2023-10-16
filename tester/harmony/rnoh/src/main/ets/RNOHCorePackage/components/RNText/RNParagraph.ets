@@ -17,16 +17,16 @@ import {
 
 @Component
 export struct RNParagraph {
-  public ctx: RNOHContext
-  public tag: number
-  @BuilderParam buildCustomComponent: CustomComponentBuilder
+  public ctx!: RNOHContext
+  public tag: number = 0
+  @BuilderParam buildCustomComponent!: CustomComponentBuilder
   //--------------------------------------------------------------------------------------------------------------------
   @State descriptor: TextDescriptor = {} as TextDescriptor
   @State positionedLines: PositionedLine<TextFragmentExtraData>[] = []
   @State paragraphSize: Size = { width: 0, height: 0 }
   private unregisterDescriptorChangesListener?: () => void = undefined
   private unregisterComponentManager?: () => void = undefined
-  private componentManager: RNParagraphManager = undefined
+  private componentManager!: RNParagraphManager
 
   aboutToAppear() {
     this.componentManager = new RNParagraphManager(this.tag, this.ctx)

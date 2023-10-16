@@ -18,9 +18,9 @@ export type CustomComponentBuilder = (ctx: ComponentBuilderContext) => void
 
 @Component
 export struct RNComponentFactory {
-  public ctx: RNOHContext
-  public tag: number
-  @BuilderParam public buildCustomComponent: CustomComponentBuilder
+  public ctx!: RNOHContext
+  public tag: number = 0
+  @BuilderParam public buildCustomComponent!: CustomComponentBuilder
 
   @State private descriptorType: string = ''
   @State private childrenTags: Tag[] = []

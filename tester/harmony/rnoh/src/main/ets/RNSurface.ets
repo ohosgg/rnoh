@@ -23,8 +23,8 @@ type SurfaceConfig = SurfaceConfig1 | SurfaceConfig2
 
 @Component
 export struct RNSurface {
-  ctx: RNOHContext;
-  surfaceConfig: SurfaceConfig;
+  ctx!: RNOHContext;
+  surfaceConfig!: SurfaceConfig;
   @BuilderParam buildCustomComponent: (ctx: ComponentBuilderContext) => void;
   surfaceWidth: number = 0;
   surfaceHeight: number = 0;
@@ -34,10 +34,10 @@ export struct RNSurface {
   @State private shouldStartSurface: boolean = false;
   private surfaceHandle: SurfaceHandle;
   private cleanup?: () => void = undefined;
-  private touchDispatcher: TouchDispatcher;
+  private touchDispatcher!: TouchDispatcher;
   private shouldStopSurface: boolean = false;
-  private initialProps: SurfaceProps;
-  private componentManager: RNSurfaceManager = undefined;
+  private initialProps!: SurfaceProps;
+  private componentManager!: RNSurfaceManager;
 
   aboutToAppear() {
     if ("surfaceHandle" in this.surfaceConfig){

@@ -25,16 +25,16 @@ function closeTo(a: number, b: number) {
 
 @CustomDialog
 struct ModalHostViewDialog {
-  public ctx: RNOHContext
-  public tag: Tag
-  @BuilderParam public buildCustomComponent: CustomComponentBuilder
+  public ctx!: RNOHContext
+  public tag!: Tag
+  @BuilderParam public buildCustomComponent!: CustomComponentBuilder
 
   @State descriptor: ModalHostViewDescriptor = {} as ModalHostViewDescriptor
   controller: CustomDialogController
   @State showContent: boolean = false
   unsubscribeFromDescriptorChanges: () => void | undefined
-  touchDispatcher: TouchDispatcher;
-  componentManager: RNModalHostViewManager = undefined;
+  touchDispatcher!: TouchDispatcher;
+  componentManager!: RNModalHostViewManager;
 
   emitComponentEvent(eventName: string) {
     this.ctx.rnInstanceManager.emitComponentEvent(this.tag, eventName, {});
@@ -78,9 +78,9 @@ struct ModalHostViewDialog {
 
 @Component
 export struct RNModalHostView {
-  public ctx: RNOHContext
-  public tag: number
-  @BuilderParam public buildCustomComponent: CustomComponentBuilder
+  public ctx!: RNOHContext
+  public tag: number = 0
+  @BuilderParam public buildCustomComponent!: CustomComponentBuilder
   private dialogController: CustomDialogController
 
   aboutToAppear() {

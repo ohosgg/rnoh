@@ -6,9 +6,9 @@ import { CustomComponentBuilder } from '../RNComponentFactory'
 
 @Component
 export struct RNText {
-  public ctx: RNOHContext
-  public tag: number
-  @BuilderParam public buildCustomComponent: CustomComponentBuilder
+  public ctx!: RNOHContext
+  public tag: number = 0
+  @BuilderParam public buildCustomComponent!: CustomComponentBuilder
   // -------------------------------------------------------------------------------------------------------------------
   @State descriptor: TextDescriptor = {} as TextDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined
