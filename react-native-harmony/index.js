@@ -19,7 +19,7 @@ module.exports = {
     return require('./Libraries/Utilities/BackHandler');
   },
   get Button() {
-    return require('react-native/Libraries/Components/Button');
+    return require('./Libraries/Components/Button/Button');
   },
   get Dimensions() {
     return require('react-native/Libraries/Utilities/Dimensions').default;
