@@ -30,7 +30,7 @@ export struct RNSurface {
   surfaceHeight: number = 0;
   surfaceOffsetX: number = 0;
   surfaceOffsetY: number = 0;
-  @State descriptor: RootDescriptor = {} as RootDescriptor;
+  @State descriptor: RootDescriptor = Object() as RootDescriptor;
   @State private shouldStartSurface: boolean = false;
   private surfaceHandle: SurfaceHandle;
   private cleanup?: () => void = undefined;

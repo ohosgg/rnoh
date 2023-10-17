@@ -1,4 +1,4 @@
-import { RNOHContext, convertColorSegmentsToString } from '../../../RNOH'
+import { RNOHContext, convertColorSegmentsToString, Tag } from '../../../RNOH'
 import { RNViewBase } from '../RNViewBase'
 import { PositionedFragment} from '../../../ParagraphMeasurer';
 import { PositionedLine, Size, } from '../../../ParagraphMeasurer'
@@ -97,9 +97,9 @@ export struct RNParagraph {
               .height(line.size.height)
           }
         })
-        ForEach(this.descriptor.childrenTags, (childrenTag) => {
+        ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
           RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
-        }, childrenTag => childrenTag)
+        }, (childrenTag: Tag) => childrenTag.toString())
       })
     }
   }

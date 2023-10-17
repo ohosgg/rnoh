@@ -17,7 +17,7 @@ export type ImageDescriptor = Descriptor<"Image", ImageProps>
 export struct RNImage {
   ctx!: RNOHContext
   tag: number = 0
-  @State descriptor: ImageDescriptor = {} as ImageDescriptor
+  @State descriptor: ImageDescriptor = Object() as ImageDescriptor
   defaultColorFilter: number[] = [
     1, 0, 0, 0, 0,
     0, 1, 0, 0, 0,

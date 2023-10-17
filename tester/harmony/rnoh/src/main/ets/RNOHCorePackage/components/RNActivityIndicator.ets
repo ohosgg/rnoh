@@ -14,7 +14,7 @@ export type ActivityIndicatorDescriptor = Descriptor<"ActivityIndicatorView", Ac
 export struct RNActivityIndicator {
   ctx!: RNOHContext
   tag: number = 0
-  @State private descriptor: ActivityIndicatorDescriptor = {} as ActivityIndicatorDescriptor
+  @State private descriptor: ActivityIndicatorDescriptor = Object() as ActivityIndicatorDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined
 
   aboutToAppear() {

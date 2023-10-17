@@ -49,7 +49,7 @@ export struct RNScrollView {
   @State props: ScrollViewProps = {} as ScrollViewProps
   @State contentSize: Size = {} as Size
   @State childrenTags: Tag[] = []
-  @State descriptor: ScrollViewDescriptor = {} as ScrollViewDescriptor
+  @State descriptor: ScrollViewDescriptor = Object() as ScrollViewDescriptor
   @State shouldPreventScrolling: boolean = false
   state: ScrollViewState = {} as ScrollViewState
   private parentTag: Tag | undefined = undefined
@@ -308,9 +308,9 @@ export struct RNScrollView {
   buildScrollCore() {
     Scroll(this.scroller) {
       Stack() {
-        ForEach(this.descriptor.childrenTags, (childrenTag) => {
+        ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
           RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
-        }, childrenTag => childrenTag)
+        }, (childrenTag: Tag) => childrenTag.toString())
       }
       .width(this.contentSize.width)
       .height(this.contentSize.height)

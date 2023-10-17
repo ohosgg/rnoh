@@ -13,7 +13,7 @@ export struct RNPullToRefreshView {
   ctx!: RNOHContext
   tag: number = 0
   @BuilderParam renderDescriptors: () => void
-  @State private descriptor: PullToRefreshDescriptor = {} as PullToRefreshDescriptor
+  @State private descriptor: PullToRefreshDescriptor = Object() as PullToRefreshDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined
   @State private isRefreshing: boolean = false // ignore linter, this variable is read
   private prevAndCurrentRefreshStatus: [RefreshStatus, RefreshStatus] = [RefreshStatus.Inactive, RefreshStatus.Inactive]

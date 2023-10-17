@@ -29,7 +29,7 @@ struct ModalHostViewDialog {
   public tag!: Tag
   @BuilderParam public buildCustomComponent!: CustomComponentBuilder
 
-  @State descriptor: ModalHostViewDescriptor = {} as ModalHostViewDescriptor
+  @State descriptor: ModalHostViewDescriptor = Object() as ModalHostViewDescriptor
   controller: CustomDialogController
   @State showContent: boolean = false
   unsubscribeFromDescriptorChanges: () => void | undefined
@@ -68,9 +68,9 @@ struct ModalHostViewDialog {
   build() {
     if (this.showContent) {
       Stack() {
-        ForEach(this.descriptor.childrenTags, (childrenTag) => {
+        ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
           RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
-        }, childrenTag => childrenTag)
+        }, (childrenTag: Tag) => childrenTag.toString())
       }.onTouch((touchEvent) => this.touchDispatcher.handleTouchEvent(touchEvent))
     }
   }

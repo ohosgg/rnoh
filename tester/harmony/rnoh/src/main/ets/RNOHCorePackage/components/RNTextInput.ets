@@ -50,7 +50,7 @@ function stringToEnterKeyType(enterKeyType: string): EnterKeyType {
 export struct RNTextInput {
   ctx!: RNOHContext
   tag: number = 0
-  @State descriptor: TextInputDescriptor = {} as TextInputDescriptor
+  @State descriptor: TextInputDescriptor = Object() as TextInputDescriptor
   controller: TextInputController = new TextInputController()
   private unregisterDescriptorChangesListener?: () => void = undefined
   private cleanupCommandCallback?: () => void = undefined

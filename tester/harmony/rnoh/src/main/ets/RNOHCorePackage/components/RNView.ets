@@ -33,9 +33,9 @@ export struct RNView {
       ctx: this.ctx,
       tag: this.tag,
     }) {
-      ForEach(this.childrenTags, (childrenTag) => {
+      ForEach(this.childrenTags, (childrenTag: Tag) => {
         RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
-      }, childrenTag => childrenTag)
+      }, (childrenTag: Tag) => childrenTag.toString())
     }
   }
 }
