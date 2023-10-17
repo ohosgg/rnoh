@@ -1,6 +1,6 @@
 import { ComponentBuilderContext } from './RNOHCorePackage/components/RNComponentFactory';
 import { RNComponentFactory } from './RNOHCorePackage'
-import { DisplayMode, RNOHContext } from "./RNOH"
+import { DisplayMode, RNOHContext, Tag } from "./RNOH"
 import { Descriptor } from './RNOH'
 import { ViewBaseProps } from './RNOHCorePackage/components/RNViewBase'
 import { convertColorSegmentsToString } from './RNOH'
@@ -32,7 +32,7 @@ export struct RNSurface {
   surfaceOffsetY: number = 0;
   @State descriptor: RootDescriptor = Object() as RootDescriptor;
   @State private shouldStartSurface: boolean = false;
-  private surfaceHandle: SurfaceHandle;
+  private surfaceHandle!: SurfaceHandle;
   private cleanup?: () => void = undefined;
   private touchDispatcher!: TouchDispatcher;
   private shouldStopSurface: boolean = false;
@@ -110,9 +110,9 @@ export struct RNSurface {
 
   build() {
     Stack() {
-      ForEach(this.descriptor.childrenTags, (childrenTag) => {
+      ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
         RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
-      }, childrenTag => childrenTag)
+      }, (childrenTag: Tag) => childrenTag.toString())
     }
     .width("100%")
     .height("100%")
