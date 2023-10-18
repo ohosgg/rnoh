@@ -23,6 +23,14 @@ function CustomComponentBuilder(ctx: ComponentBuilderContext) {
 @Component
 struct Index {
   @StorageLink('RNAbility') rnAbility: RNAbility | undefined = undefined
+  @State shouldShow: boolean = false
+
+  aboutToAppear() {
+    setTimeout(() => {
+      // Debugger don't work from the get-go, hence this artificial delay.
+      this.shouldShow = true
+    }, 1000)
+  }
 
   onBackPress() {
     // NOTE: this is required since `Ability`'s `onBackPressed` function always
@@ -33,7 +41,7 @@ struct Index {
 
   build() {
     Column() {
-      if (this.rnAbility) {
+      if (this.rnAbility && this.shouldShow) {
         RNApp({
           rnInstanceConfig: { createRNPackages },
           initialProps: { foo: "bar" },

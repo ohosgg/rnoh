@@ -1,10 +1,12 @@
+#pragma once
+
 #include <native_vsync/native_vsync.h>
 #include <string>
 
 namespace rnoh {
 
 class NativeVsyncHandle {
-public:
+  public:
     explicit NativeVsyncHandle(std::string &&name) : m_name(std::move(name)) {
         m_nativeVSync = OH_NativeVSync_Create(m_name.data(), m_name.size());
     }

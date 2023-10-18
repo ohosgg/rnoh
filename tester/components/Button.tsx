@@ -7,7 +7,6 @@ export function Button({label, onPress}: {onPress: () => void; label: string}) {
       style={{
         paddingVertical: 6,
         paddingHorizontal: 12,
-        alignSelf: 'flex-start',
         backgroundColor: 'hsl(210, 80%, 50%)',
         borderWidth: 2,
         borderColor: 'hsl(210, 50%, 35%)',

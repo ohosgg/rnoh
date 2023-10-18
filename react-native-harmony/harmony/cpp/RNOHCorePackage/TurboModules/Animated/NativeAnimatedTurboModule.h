@@ -8,14 +8,14 @@
 #include <native_vsync/native_vsync.h>
 
 #include "AnimatedNodesManager.h"
-#include "NativeVsyncHandle.h"
+#include "RNOH/NativeVsyncHandle.h"
 #include "RNOH/EventEmitRequestHandler.h"
 
 namespace rnoh {
 
 class NativeAnimatedTurboModule : public rnoh::ArkTSTurboModule, public rnoh::EventEmitRequestHandler, public std::enable_shared_from_this<NativeAnimatedTurboModule> {
 
-public:
+  public:
     using Context = rnoh::ArkTSTurboModule::Context;
 
     NativeAnimatedTurboModule(const ArkTSTurboModule::Context ctx, const std::string name);
@@ -44,7 +44,7 @@ public:
         facebook::react::Tag nodeTag,
         folly::dynamic const &config,
         std::function<void(bool)> &&endCallback);
-    
+
     void stopAnimation(facebook::react::Tag animationId);
 
     void setAnimatedNodeValue(facebook::react::Tag nodeTag, double value);
@@ -80,20 +80,20 @@ public:
     // EventEmitRequestHandler
     void handleEvent(EventEmitRequestHandler::Context const &ctx) override;
 
-private:
+  private:
     std::unique_lock<std::mutex> acquireLock() {
         return std::unique_lock(m_nodesManagerLock);
     }
-    
+
     // `shared_from_this` cannot be used in constructor,
     // so we defer the initialization of the event listener
     // until the first animated event is registered.
     void initializeEventListener();
-    
+
     NativeVsyncHandle m_vsyncHandle;
     AnimatedNodesManager m_animatedNodesManager;
     std::mutex m_nodesManagerLock;
     bool m_initializedEventListener = false;
 };
-    
+
 } // namespace rnoh

@@ -442,5 +442,6 @@ target_link_libraries(rnoh PUBLIC
     react_codegen_rncore
     react_nativemodule_core
     react_bridging
+    react_render_animations
 )
 target_compile_options(rnoh PUBLIC ${folly_compile_options} -std=c++17)

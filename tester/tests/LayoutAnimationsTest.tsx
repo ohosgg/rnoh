@@ -4,9 +4,11 @@ import {
   View,
   Platform,
   UIManager,
+  StyleSheet,
 } from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import {useState} from 'react';
+import {Button} from '../components';
 
 if (
   Platform.OS === 'android' &&
@@ -18,7 +20,7 @@ if (
 export function LayoutAnimationsTest() {
   return (
     <TestSuite name="LayoutAnimations">
-      <TestCase itShould="[FAILS] animate red rect after pressing the blue one">
+      <TestCase itShould="fade in orange rect, move it to right, then left, and fade it out">
         <LayoutAnimationExample />
       </TestCase>
     </TestSuite>
@@ -27,34 +29,66 @@ export function LayoutAnimationsTest() {
 
 function LayoutAnimationExample() {
   const [boxPosition, setBoxPosition] = useState('left');
-
-  const toggleBox = () => {
-    LayoutAnimation.configureNext({
-      duration: 2000,
-      create: {type: 'linear', property: 'opacity'},
-      update: {type: 'spring', springDamping: 1},
-      delete: {type: 'linear', property: 'opacity'},
-    });
-    setBoxPosition(boxPosition === 'left' ? 'right' : 'left');
-  };
+  const [isRectVisible, setVisible] = useState(false);
 
   return (
-    <View style={{height: 64}}>
-      <Pressable onPress={toggleBox}>
-        <View style={{width: 64, height: 64, backgroundColor: 'blue'}} />
-      </Pressable>
-      <View
-        style={[
-          {
-            width: 64,
-            height: 64,
-            position: 'absolute',
-            left: 64,
-            backgroundColor: 'red',
-          },
-          boxPosition === 'left' ? null : {left: 200},
-        ]}
-      />
+    <View
+      style={{
+        height: 64,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative',
+        flexDirection: 'row',
+      }}>
+      {!isRectVisible && (
+        <Button
+          label={'Run layout animation'}
+          onPress={() => {
+            LayoutAnimation.configureNext(
+              LayoutAnimation.Presets.easeInEaseOut,
+            );
+            setVisible(true);
+
+            setTimeout(() => {
+              LayoutAnimation.configureNext({
+                duration: 500,
+                update: {type: 'spring'},
+              });
+              setBoxPosition('right');
+              setTimeout(() => {
+                LayoutAnimation.configureNext(
+                  LayoutAnimation.Presets.easeInEaseOut,
+                );
+                setBoxPosition('left');
+              }, 500);
+
+              setTimeout(() => {
+                LayoutAnimation.configureNext(
+                  LayoutAnimation.Presets.easeInEaseOut,
+                );
+                setVisible(false);
+              }, 1000);
+            }, 500);
+          }}
+        />
+      )}
+      {isRectVisible && (
+        <View
+          style={StyleSheet.flatten([
+            {
+              width: 64,
+              height: 64,
+              top: 0,
+              left: 0,
+              opacity: 1,
+              backgroundColor: 'orange',
+              position: 'absolute',
+            },
+            boxPosition === 'left' ? null : {left: 200},
+          ])}
+        />
+      )}
     </View>
   );
 }

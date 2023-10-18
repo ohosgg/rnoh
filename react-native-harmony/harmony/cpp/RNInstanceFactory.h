@@ -20,10 +20,11 @@
 #include "RNOHCorePackage/RNOHCorePackage.h"
 #include "RNOH/EventEmitRequestHandler.h"
 #include "RNOH/TextMeasurer.h"
+#include "RNOH/UITicker.h"
 
 using namespace rnoh;
 
-std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboModuleProviderRef, napi_ref measureTextFnRef) {
+std::unique_ptr<RNInstance> createRNInstance(int id, napi_env env, napi_ref arkTsTurboModuleProviderRef, napi_ref measureTextFnRef, UITicker::Shared uiTicker) {
     static std::shared_ptr<TaskExecutor> taskExecutor = nullptr;
     if (taskExecutor == nullptr) {
         taskExecutor = std::make_shared<TaskExecutor>(env);
@@ -58,20 +59,21 @@ std::unique_ptr<RNInstance> createRNInstance(napi_env env, napi_ref arkTsTurboMo
         };
         auto packageEventEmitRequestHandlers = package->createEventEmitRequestHandlers();
         eventEmitRequestHandlers.insert(
-            eventEmitRequestHandlers.end(), 
-            std::make_move_iterator(packageEventEmitRequestHandlers.begin()), 
-            std::make_move_iterator(packageEventEmitRequestHandlers.end())
-        );
+            eventEmitRequestHandlers.end(),
+            std::make_move_iterator(packageEventEmitRequestHandlers.begin()),
+            std::make_move_iterator(packageEventEmitRequestHandlers.end()));
     }
 
     auto turboModuleFactory = TurboModuleFactory(env, arkTsTurboModuleProviderRef,
                                                  std::move(componentJSIBinderByName),
                                                  taskExecutor,
                                                  std::move(turboModuleFactoryDelegates));
-    return std::make_unique<RNInstance>(contextContainer,
+    return std::make_unique<RNInstance>(id,
+                                        contextContainer,
                                         std::move(turboModuleFactory),
                                         taskExecutor,
                                         componentDescriptorProviderRegistry,
                                         MutationsToNapiConverter(std::move(componentNapiBinderByName)),
-                                        eventEmitRequestHandlers);
+                                        eventEmitRequestHandlers,
+                                        uiTicker);
 }

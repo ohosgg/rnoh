@@ -7,12 +7,15 @@
 #include <napi/native_api.h>
 #include <js_native_api.h>
 #include <js_native_api_types.h>
+#include <atomic>
 
 #include <cxxreact/Instance.h>
 #include <cxxreact/ModuleRegistry.h>
 #include <cxxreact/NativeModule.h>
 #include <folly/dynamic.h>
 #include <react/renderer/scheduler/Scheduler.h>
+#include <react/renderer/animations/LayoutAnimationDriver.h>
+#include <react/renderer/uimanager/LayoutAnimationStatusDelegate.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h>
 #include <ReactCommon/LongLivedObject.h>
 
@@ -23,19 +26,22 @@
 #include "RNOH/EventDispatcher.h"
 #include "RNOH/EventEmitRequestHandler.h"
 #include "RNOH/TaskExecutor/TaskExecutor.h"
-
+#include "RNOH/UITicker.h"
 namespace rnoh {
-class RNInstance {
+class RNInstance : public facebook::react::LayoutAnimationStatusDelegate {
   public:
     using MutationsListener = std::function<void(MutationsToNapiConverter, facebook::react::ShadowViewMutationList const &mutations)>;
 
-    RNInstance(std::shared_ptr<facebook::react::ContextContainer> contextContainer,
+    RNInstance(int id,
+               std::shared_ptr<facebook::react::ContextContainer> contextContainer,
                TurboModuleFactory &&turboModuleFactory,
                std::shared_ptr<TaskExecutor> taskExecutor,
                std::shared_ptr<facebook::react::ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry,
                MutationsToNapiConverter mutationsToNapiConverter,
-               EventEmitRequestHandlers eventEmitRequestHandlers)
-        : instance(std::make_shared<facebook::react::Instance>()),
+               EventEmitRequestHandlers eventEmitRequestHandlers,
+               UITicker::Shared uiTicker)
+        : m_id(id),
+          instance(std::make_shared<facebook::react::Instance>()),
           m_contextContainer(contextContainer),
           scheduler(nullptr),
           taskExecutor(taskExecutor),
@@ -43,7 +49,21 @@ class RNInstance {
           m_turboModuleFactory(std::move(turboModuleFactory)),
           m_componentDescriptorProviderRegistry(componentDescriptorProviderRegistry),
           m_mutationsToNapiConverter(mutationsToNapiConverter),
-          m_eventEmitRequestHandlers(eventEmitRequestHandlers) {}
+          m_eventEmitRequestHandlers(eventEmitRequestHandlers),
+          m_shouldRelayUITick(false),
+          m_uiTicker(uiTicker) {
+        this->unsubscribeUITickListener = this->m_uiTicker->subscribe(m_id, [this]() {
+            this->taskExecutor->runTask(TaskThread::MAIN, [this]() {
+                this->onUITick();
+            });
+        });
+    }
+
+    ~RNInstance() {
+        if (this->unsubscribeUITickListener != nullptr) {
+            unsubscribeUITickListener();
+        }
+    }
 
     void registerSurface(
         MutationsListener &&,
@@ -65,7 +85,8 @@ class RNInstance {
     std::shared_ptr<TaskExecutor> taskExecutor;
 
   private:
-    std::shared_ptr<facebook::react::ContextContainer> m_contextContainer;
+    int m_id;
+    facebook::react::ContextContainer::Shared m_contextContainer;
     std::shared_ptr<facebook::react::Instance> instance;
     std::map<facebook::react::Tag, std::shared_ptr<facebook::react::SurfaceHandler>> surfaceHandlers;
     std::function<void(MutationsToNapiConverter, facebook::react::ShadowViewMutationList const &mutations)> mutationsListener;
@@ -78,9 +99,17 @@ class RNInstance {
     std::shared_ptr<EventDispatcher> m_eventDispatcher;
     MutationsToNapiConverter m_mutationsToNapiConverter;
     EventEmitRequestHandlers m_eventEmitRequestHandlers;
+    std::shared_ptr<facebook::react::LayoutAnimationDriver> m_animationDriver;
+    UITicker::Shared m_uiTicker;
+    std::function<void()> unsubscribeUITickListener = nullptr;
+    std::atomic<bool> m_shouldRelayUITick;
 
     void initialize();
     void initializeScheduler();
+    void onUITick();
+
+    virtual void onAnimationStarted() override;      // react::LayoutAnimationStatusDelegate
+    virtual void onAllAnimationsComplete() override; // react::LayoutAnimationStatusDelegate
 };
 
 } // namespace rnoh

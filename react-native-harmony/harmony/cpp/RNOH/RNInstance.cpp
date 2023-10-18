@@ -1,5 +1,6 @@
 #include <react/renderer/scheduler/Scheduler.h>
 #include <react/renderer/componentregistry/ComponentDescriptorRegistry.h>
+#include <react/renderer/animations/LayoutAnimationDriver.h>
 #include <cxxreact/JSBundleType.h>
 #include "RNOH/MessageQueueThread.h"
 #include "RNOH/RNInstance.h"
@@ -92,7 +93,9 @@ void RNInstance::initializeScheduler() {
                 this->commandDispatcher(tag, commandName, args);
             });
         }));
-    this->scheduler = std::make_unique<react::Scheduler>(schedulerToolbox, nullptr, schedulerDelegate.get());
+    m_animationDriver = std::make_shared<react::LayoutAnimationDriver>(
+        this->instance->getRuntimeExecutor(), m_contextContainer, this);
+    this->scheduler = std::make_unique<react::Scheduler>(schedulerToolbox, m_animationDriver.get(), schedulerDelegate.get());
 }
 
 void RNInstance::loadScript(std::vector<uint8_t> &&bundle, std::string const sourceURL, std::function<void(const std::string)> &&onFinish) {
@@ -153,6 +156,8 @@ void RNInstance::startSurface(react::Tag surfaceId, float width, float height, f
         layoutContext.viewportOffset = {viewportOffsetX, viewportOffsetY};
         surfaceHandler->constraintLayout(layoutConstraints, layoutContext);
         surfaceHandler->start();
+        auto mountingCoordinator = surfaceHandler->getMountingCoordinator();
+        mountingCoordinator->setMountingOverrideDelegate(m_animationDriver);
     } catch (const std::exception &e) {
         LOG(ERROR) << "startSurface: " << e.what() << "\n";
         throw e;
@@ -256,4 +261,18 @@ void RNInstance::callFunction(std::string &&module, std::string &&method, folly:
     this->taskExecutor->runTask(TaskThread::JS, [this, module = std::move(module), method = std::move(method), params = std::move(params)]() mutable {
         this->instance->callJSFunction(std::move(module), std::move(method), std::move(params));
     });
+}
+
+void RNInstance::onAnimationStarted() {
+    m_shouldRelayUITick.store(true);
+}
+
+void RNInstance::onAllAnimationsComplete() {
+    m_shouldRelayUITick.store(false);
+}
+
+void RNInstance::onUITick() {
+    if (this->m_shouldRelayUITick.load()) {
+        this->scheduler->animationTick();
+    }
 }

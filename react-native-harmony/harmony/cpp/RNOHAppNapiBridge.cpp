@@ -9,11 +9,13 @@
 #include "RNOH/ArkJS.h"
 #include "RNOH/RNInstance.h"
 #include "RNOH/LogSink.h"
+#include "RNOH/UITicker.h"
 #include "RNInstanceFactory.h"
 
 using namespace rnoh;
 
 std::unordered_map<size_t, std::unique_ptr<RNInstance>> rnInstanceById;
+auto uiTicker = std::make_shared<UITicker>();
 
 static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
     LogSink::initializeLogging();
@@ -24,7 +26,7 @@ static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
     size_t instanceId = arkJs.getDouble(args[0]);
     auto arkTsTurboModuleProviderRef = arkJs.createReference(args[1]);
     auto measureTextFnRef = arkJs.createReference(args[2]);
-    auto rnInstance = createRNInstance(env, arkTsTurboModuleProviderRef, measureTextFnRef);
+    auto rnInstance = createRNInstance(instanceId, env, arkTsTurboModuleProviderRef, measureTextFnRef, uiTicker);
     auto [it, inserted] = rnInstanceById.insert_or_assign(instanceId, std::move(rnInstance));
     it->second->start();
     return arkJs.getUndefined();
