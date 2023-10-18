@@ -1,11 +1,8 @@
-import { Descriptor, Size } from '../../RNOH';
-import { RNOHContext, Tag } from '../../RNOH';
+import { Descriptor, RNOHContext, Size, Tag } from '../../RNOH';
 import { _RNScrollViewManager } from '../componentManagers/RNScrollViewManager';
-import { ViewBaseProps } from './RNViewBase';
-import { RNViewBase } from './RNViewBase';
+import { RNViewBase, ViewBaseProps } from './RNViewBase';
 import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from './RNPullToRefreshView';
-import { CustomComponentBuilder } from './RNComponentFactory'
-import { RNComponentFactory } from './RNComponentFactory'
+import { CustomComponentBuilder, RNComponentFactory } from './RNComponentFactory';
 
 export interface ScrollViewProps extends ViewBaseProps {
   scrollEnabled?: boolean
@@ -141,15 +138,19 @@ export struct RNScrollView {
 
   getFriction() {
     // default deceleration rate and friction values differ between ArkUI and RN
-    // so we need to adapt the decelerationRate got in props to resemble the behaviour
-    // on other platforms
-    const IOS_DEFAULT_DEC_RATE = 0.998;
-    const ARKUI_DEFAULT_FRICTION = 0.9;
-    let friction = 100;
-    if (this.props.decelerationRate > 0 && this.props.decelerationRate < 1) {
-      friction = (1 - this.props.decelerationRate) * ARKUI_DEFAULT_FRICTION / (1 - IOS_DEFAULT_DEC_RATE);
+    // so we adapt the decelerationRate accordingly to resemble iOS behaviour
+    // iOS's UIScrollView supports only two values of decelerationRate
+    // called 'normal' and 'fast' and maps all other to the nearest of those two
+    const IOS_NORMAL = 0.998;
+    const IOS_FAST = 0.99;
+    const ARKUI_FAST = 2;
+    const ARKUI_NORMAL = 0.6;
+    if (this.props.decelerationRate < (IOS_NORMAL + IOS_FAST) / 2) {
+      return ARKUI_FAST;
     }
-    return friction
+    else {
+      return ARKUI_NORMAL;
+    }
   }
 
   getScrollSnap(): ScrollSnapOptions {
