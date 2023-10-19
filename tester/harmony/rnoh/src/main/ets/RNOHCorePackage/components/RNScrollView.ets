@@ -153,18 +153,23 @@ export struct RNScrollView {
   }
 
   getScrollSnap(): ScrollSnapOptions {
-    if (this.descriptor.rawProps.snapToOffsets && this.descriptor.rawProps.snapToOffsets.length > 0) {
-      return {
-        snapAlign: ScrollSnapAlign.CENTER,
-        snapPagination: this.descriptor.rawProps.snapToOffsets
-      }
-    }
-    if (this.descriptor.rawProps.snapToInterval > 0) {
-      return {
-        snapAlign: ScrollSnapAlign.CENTER,
-        snapPagination: this.descriptor.rawProps.snapToInterval
-      }
-    }
+    // ScrollSnap API changed between SDKs causing compile errors
+    // and newer SDK requires updating OS on the devices.
+    // We temporarily disable this feature until we completely move to the newer SDK.
+
+    // if (this.descriptor.rawProps.snapToOffsets && this.descriptor.rawProps.snapToOffsets.length > 0) {
+    //   return {
+    //     snapAlign: ScrollSnapAlign.CENTER,
+    //     snapPagination: this.descriptor.rawProps.snapToOffsets
+    //   }
+    // }
+    // if (this.descriptor.rawProps.snapToInterval > 0) {
+    //   return {
+    //     snapAlign: ScrollSnapAlign.CENTER,
+    //     snapPagination: this.descriptor.rawProps.snapToInterval
+    //   }
+    // }
+
     return undefined
   }
 
