@@ -54,7 +54,7 @@ export function ellipsizeModeToTextOverflow(ellipsizeMode: EllipsizeMode): TextO
 }
 
 export function getLetterSpacing(letterSpacing: number) {
-  if (isNaN(letterSpacing)) {
+  if (Number.isNaN(letterSpacing)) {
     return undefined
   }
   return letterSpacing
@@ -70,9 +70,9 @@ export function getTextShadow(textShadowProps: TextShadowProps | undefined): Sha
     return undefined
   const result: ShadowOptions = {
     radius: shadowRadius,
-    color: convertColorSegmentsToString(textShadowProps.textShadowColor),
-    offsetX: textShadowProps.textShadowOffset?.width,
-    offsetY: textShadowProps.textShadowOffset?.height,
+    color: convertColorSegmentsToString(textShadowProps?.textShadowColor),
+    offsetX: textShadowProps?.textShadowOffset?.width,
+    offsetY: textShadowProps?.textShadowOffset?.height,
   }
   return result
 }
@@ -83,7 +83,7 @@ export function capitalizeTextIfNecessary(text: string, textTransform: string): 
   }
   let words = text.split(' ');
   let transformedWords = words.map(word => {
-    if (word && isNaN(Number(word[0]))) {
+    if (word && Number.isNaN(Number(word[0]))) {
       return word[0].toUpperCase() + word.slice(1).toLowerCase();
     }
     return word.toLowerCase();

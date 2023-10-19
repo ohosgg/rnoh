@@ -475,12 +475,6 @@ export function TextTest() {
             </Text>
           </View>
         </TestCase>
-        <TestCase itShould="show text with ellipsize at the end of the firs line">
-          <Text ellipsizeMode="tail" numberOfLines={1}>
-            Cupidatat irure velit id consequat magna irure quis laborum aute
-            anim est cillum aliqua dolor.
-          </Text>
-        </TestCase>
         <TestCase itShould="use green background color for INNER (backgroundColor in text fragments)">
           <View
             style={{

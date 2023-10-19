@@ -6,8 +6,8 @@ export type PropsDisplayerDescriptor = Descriptor<"PropsDisplayer", ViewDynamicP
 @Component
 export struct PropsDisplayer {
   static NAME = "PropsDisplayer" as const
-  ctx: RNOHContext
-  tag: number
+  ctx!: RNOHContext
+  tag: number = 0
   private unregisterDescriptorChangesListener?: () => void = undefined
   @State private descriptor: PropsDisplayerDescriptor = {} as PropsDisplayerDescriptor
 

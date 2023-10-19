@@ -3,8 +3,7 @@ import type {
   Fragment as MeasurerFragment} from '../../../ParagraphMeasurer';
 import {
   ParagraphMeasurer,
-  UnhyphenatedWordWrapStrategy,
-  TailEllipsisInserter
+  UnhyphenatedWordWrapStrategy
 } from '../../../ParagraphMeasurer';
 import type { RNOHContext } from '../../../RNOH';
 import { convertColorSegmentsToString, OHOSTextFragmentMeasurer, PLACEHOLDER_SYMBOL } from '../../../RNOH';
@@ -56,7 +55,6 @@ export class RNParagraphManager extends RNViewManager {
   public createLayout(textDescriptor: TextDescriptor) {
     const paragraphMeasurer = new ParagraphMeasurer()
     const fragments = this.mapAttributedFragmentsToMeasurerFragments(textDescriptor.props.fragments)
-    const textFragmentMeasurer = new OHOSTextFragmentMeasurer()
     return paragraphMeasurer.measureParagraph({ fragments }, {
       containerConfig: {
         width: textDescriptor.layoutMetrics.frame.size.width,
@@ -67,8 +65,7 @@ export class RNParagraphManager extends RNViewManager {
         } as const)[textDescriptor.props.textAlign ?? "left"],
         maxNumberOfLines: textDescriptor.props.maximumNumberOfLines || undefined
       },
-      wordWrapStrategy: new UnhyphenatedWordWrapStrategy(textFragmentMeasurer),
-      ellipsisInserter: new TailEllipsisInserter(textFragmentMeasurer)
+      wordWrapStrategy: new UnhyphenatedWordWrapStrategy(new OHOSTextFragmentMeasurer())
     })
   }
 }

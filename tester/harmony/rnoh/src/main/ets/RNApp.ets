@@ -28,13 +28,13 @@ export struct RNApp {
   /**
    * Initial properties for the main component of the React Native app.
    */
-  public initialProps: Record<string, any>
+  public initialProps: Record<string, string> = {}
   /**
    * Builds a custom fabric component.
    */
   @BuilderParam public buildCustomComponent!: CustomComponentBuilder
   // -------------------------------------------------------------------------------------------------------------------
-  @StorageLink('RNAbility') private rnAbility: RNAbility = undefined
+  @StorageLink('RNAbility') private rnAbility: RNAbility = {} as RNAbility
   private rnInstance!: RNInstance
   @State private shouldShow: boolean = false
   private shouldDestroyRNInstance: boolean = false
@@ -43,7 +43,7 @@ export struct RNApp {
   aboutToAppear() {
     this.getOrCreateRNInstance().then(rnInstance => {
       this.rnInstance = rnInstance
-      const jsBundleExecutionStatus = this.rnInstance.getBundleExecutionStatus(this.jsBundleProvider.getURL())
+      const jsBundleExecutionStatus = this.rnInstance.getBundleExecutionStatus(this.jsBundleProvider?.getURL())
       if (this.jsBundleProvider && jsBundleExecutionStatus === undefined) {
         this.rnInstance.runJSBundle(this.jsBundleProvider).then(() => {
           this.shouldShow = true
@@ -59,7 +59,7 @@ export struct RNApp {
       } else {
         this.shouldShow = true
       }
-    }).catch(reason => {
+    }).catch((reason: string | Error) => {
       if (typeof reason === "string")
         this.rnAbility.getLogger().error(reason)
       else if (reason instanceof Error) {
@@ -77,12 +77,12 @@ export struct RNApp {
   }
 
   private getOrCreateRNInstance(): Promise<RNInstance> {
-    if ("rnInstance" in this.rnInstanceConfig) {
-      return Promise.resolve(this.rnInstanceConfig.rnInstance)
+    if (Object.keys(this.rnInstanceConfig).includes("rnInstance")) {
+      return Promise.resolve((this.rnInstanceConfig as CustomRNInstance).rnInstance)
     } else {
       const options = this.rnInstanceConfig
       this.shouldDestroyRNInstance = true
-      return this.rnAbility.createAndRegisterRNInstance(options)
+      return this.rnAbility.createAndRegisterRNInstance(options as RNInstanceOptions)
     }
   }
 

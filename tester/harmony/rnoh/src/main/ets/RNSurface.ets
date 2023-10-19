@@ -36,16 +36,16 @@ export struct RNSurface {
   private cleanup?: () => void = undefined;
   private touchDispatcher!: TouchDispatcher;
   private shouldStopSurface: boolean = false;
-  private initialProps!: SurfaceProps;
+  private initialProps!: SurfaceProps | undefined;
   private componentManager!: RNSurfaceManager;
 
   aboutToAppear() {
-    if ("surfaceHandle" in this.surfaceConfig){
-      this.surfaceHandle = this.surfaceConfig.surfaceHandle;
+    if (Object.keys(this.surfaceConfig).includes("this.surfaceConfig")) {
+      this.surfaceHandle = (this.surfaceConfig as SurfaceConfig1).surfaceHandle;
       this.surfaceHandle.setDisplayMode(DisplayMode.Visible);
     } else {
-      this.surfaceHandle = this.ctx.rnInstance.createSurface(this.surfaceConfig.appKey);
-      this.initialProps = this.surfaceConfig.initialProps;
+      this.surfaceHandle = this.ctx.rnInstance.createSurface((this.surfaceConfig as SurfaceConfig2).appKey);
+      this.initialProps = (this.surfaceConfig as SurfaceConfig2).initialProps;
       this.shouldStartSurface = true;
       this.shouldStopSurface = true;
     }

@@ -82,6 +82,7 @@ export class UnhyphenatedWordWrapStrategy<
     return this.distributeMeasuredTokensAcrossLines(
       measuredTokens,
       containerConfig.width || Number.MAX_SAFE_INTEGER,
+      containerConfig.maxNumberOfLines || Number.MAX_SAFE_INTEGER,
     ).map(lineOfMeasuredTokens => ({
       positionedFragments: this.mapMeasuredFragmentsToPositionedFragments(
         this.convertMeasuredTokensToMeasuredFragments(lineOfMeasuredTokens),
@@ -169,10 +170,11 @@ export class UnhyphenatedWordWrapStrategy<
   private distributeMeasuredTokensAcrossLines(
     measuredTokens: MeasuredToken[],
     containerWidth: number,
+    maxLines: number,
   ): MeasuredToken[][] {
     const linesOfTokens: MeasuredToken[][] = [];
     let remainingTokens = measuredTokens;
-    while (remainingTokens.length > 0) {
+    while (remainingTokens.length > 0 && linesOfTokens.length < maxLines) {
       const {nextLine, remainingTokens: newRemainingTokens} = this.getNextLine(
         remainingTokens,
         containerWidth,

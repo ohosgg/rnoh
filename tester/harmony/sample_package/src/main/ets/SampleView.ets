@@ -10,8 +10,8 @@ export type SampleViewDescriptor = Descriptor<typeof SAMPLE_VIEW_TYPE, ViewDynam
 
 @Component
 export struct SampleView {
-  ctx: RNOHContext
-  tag: number
+  ctx!: RNOHContext
+  tag: number = 0
   @BuilderParam buildCustomComponent: (componentBuilderContext: ComponentBuilderContext) => void
   @State descriptor: SampleViewDescriptor = {} as SampleViewDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined

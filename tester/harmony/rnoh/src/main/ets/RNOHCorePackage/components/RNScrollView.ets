@@ -155,13 +155,13 @@ export struct RNScrollView {
   getScrollSnap(): ScrollSnapOptions {
     if (this.descriptor.rawProps.snapToOffsets && this.descriptor.rawProps.snapToOffsets.length > 0) {
       return {
-        snapAlign: ScrollAlign.CENTER,
+        snapAlign: ScrollSnapAlign.CENTER,
         snapPagination: this.descriptor.rawProps.snapToOffsets
       }
     }
     if (this.descriptor.rawProps.snapToInterval > 0) {
       return {
-        snapAlign: ScrollAlign.CENTER,
+        snapAlign: ScrollSnapAlign.CENTER,
         snapPagination: this.descriptor.rawProps.snapToInterval
       }
     }
