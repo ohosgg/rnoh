@@ -8,8 +8,8 @@ export type SampleViewDescriptor = Descriptor<"SampleView", ViewDynamicProps2>
 
 @Component
 export struct SampleView {
-  ctx!: RNOHContext
-  tag: number = 0
+  ctx: RNOHContext
+  tag: number
   @BuilderParam buildCustomComponent: (componentBuilderContext: ComponentBuilderContext) => void
   @State descriptor: SampleViewDescriptor = {} as SampleViewDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined

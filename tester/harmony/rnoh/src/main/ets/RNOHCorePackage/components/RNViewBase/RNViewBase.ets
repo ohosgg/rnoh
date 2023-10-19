@@ -71,7 +71,7 @@ export struct RNViewBase {
   ctx!: RNOHContext
   tag: number = 0
   @BuilderParam renderChildren: () => void
-  public componentManager!: RNViewManager;
+  public componentManager: RNViewManager = undefined;
   @State private descriptor: ViewBaseDescriptor = {} as ViewBaseDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined
   private unregisterComponentManager?: () => void = undefined
@@ -180,10 +180,10 @@ export struct RNViewBase {
     .position({ y: this.descriptor.layoutMetrics.frame.origin.y, x: this.descriptor.layoutMetrics.frame.origin.x })
     .borderWidth(this.descriptor.props.borderWidth)
     .borderColor({
-      left: convertColorSegmentsToString(this.descriptor.props.borderColor?.left),
-      top: convertColorSegmentsToString(this.descriptor.props.borderColor?.top),
-      right: convertColorSegmentsToString(this.descriptor.props.borderColor?.right),
-      bottom: convertColorSegmentsToString(this.descriptor.props.borderColor?.bottom),
+      left: convertColorSegmentsToString(this.descriptor.props.borderColor.left),
+      top: convertColorSegmentsToString(this.descriptor.props.borderColor.top),
+      right: convertColorSegmentsToString(this.descriptor.props.borderColor.right),
+      bottom: convertColorSegmentsToString(this.descriptor.props.borderColor.bottom),
     }
     )
     .borderRadius(this.descriptor.props.borderRadius)

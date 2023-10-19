@@ -6,6 +6,7 @@ import type {
   MeasuredLine,
   PositionedLine,
   HorizontalAlignment,
+  EllipsisInserter,
 } from './types';
 
 export const PLACEHOLDER_SYMBOL = '￼' as const;
@@ -16,24 +17,49 @@ export class ParagraphMeasurer {
     {
       wordWrapStrategy,
       containerConfig,
-    }: {wordWrapStrategy: WordWrapStrategy; containerConfig: ContainerConfig},
+      ellipsisInserter,
+    }: {
+      wordWrapStrategy: WordWrapStrategy;
+      containerConfig: ContainerConfig;
+      ellipsisInserter?: EllipsisInserter<TTextExtraData>;
+    },
   ): MeasuredParagraph<TTextExtraData> {
     const horizontalAlignment = containerConfig.horizontalAlignment ?? 'start';
-    let lines = wordWrapStrategy.convertFragmentsIntoLines(
+    const lines = wordWrapStrategy.convertFragmentsIntoLines(
       paragraph.fragments,
       containerConfig,
     );
-    const maxLineWidth = Math.max(...lines.map(line => line.size.width));
-    const lineHeightsSum = lines
+    let includedLines = lines;
+    if (containerConfig.maxNumberOfLines) {
+      includedLines = lines.slice(0, containerConfig.maxNumberOfLines);
+      const excludedLines = lines.slice(containerConfig.maxNumberOfLines);
+      if (
+        includedLines.length > 0 &&
+        excludedLines.length > 0 &&
+        ellipsisInserter &&
+        containerConfig.width
+      ) {
+        const newLastLine = ellipsisInserter.insertEllipsis(
+          includedLines[includedLines.length - 1],
+          excludedLines[0],
+          containerConfig.width,
+        );
+        includedLines = [...includedLines.slice(0, -1), newLastLine];
+      }
+    }
+    const maxLineWidth = Math.max(
+      ...includedLines.map(line => line.size.width),
+    );
+    const lineHeightsSum = includedLines
       .map(line => line.size.height)
       .reduce((sum, height) => sum + height, 0);
-    lines = this.alignFragmentsHorizontallyIfNecessary(
+    includedLines = this.alignFragmentsHorizontallyIfNecessary(
       containerConfig,
       horizontalAlignment,
-      lines,
+      includedLines,
     );
     return {
-      positionedLines: this.mapMeasuredLinesToPositionedLines(lines),
+      positionedLines: this.mapMeasuredLinesToPositionedLines(includedLines),
       size: {
         width: maxLineWidth,
         height: lineHeightsSum,

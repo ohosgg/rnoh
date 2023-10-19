@@ -88,7 +88,7 @@ export struct RNImage {
     )
   }
 
-  getColorFilter(): number[] {
+  getColorFilter() {
     if (!this.descriptor.props.tintColor || this.descriptor.props.tintColor.every((element) => element === 0)){
       return this.defaultColorFilter;
     }
