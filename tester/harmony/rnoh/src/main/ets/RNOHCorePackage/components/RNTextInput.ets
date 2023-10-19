@@ -25,7 +25,7 @@ interface TextInputState {}
 
 export type TextInputDescriptor = Descriptor<"TextInput", TextInputProps, TextInputState, TextInputRawProps>
 
-function getCaretStyle(caretHidden: boolean): CaretStyle {
+function getCaretStyle(caretHidden: boolean): CaretStyle | undefined {
   return caretHidden ? { width: 0 } : undefined;
 }
 

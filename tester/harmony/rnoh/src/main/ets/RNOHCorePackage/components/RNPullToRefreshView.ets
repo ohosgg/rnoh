@@ -5,8 +5,8 @@ export interface PullToRefreshProps {
   refreshing?: boolean
 }
 
-export const RN_PULL_TO_REFRESH_VIEW_NAME = "PullToRefreshView" as const
-export type PullToRefreshDescriptor = Descriptor<typeof RN_PULL_TO_REFRESH_VIEW_NAME, PullToRefreshProps>
+export const RN_PULL_TO_REFRESH_VIEW_NAME: string = "PullToRefreshView"
+export type PullToRefreshDescriptor = Descriptor<"PullToRefreshView", PullToRefreshProps>
 
 @Component
 export struct RNPullToRefreshView {

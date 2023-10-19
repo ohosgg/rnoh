@@ -32,7 +32,7 @@ struct Index {
     }, 1000)
   }
 
-  onBackPress() {
+  onBackPress(): boolean | undefined {
     // NOTE: this is required since `Ability`'s `onBackPressed` function always
     // terminates or puts the app in the background, but we want Ark to ignore it completely
     // when handled by RN

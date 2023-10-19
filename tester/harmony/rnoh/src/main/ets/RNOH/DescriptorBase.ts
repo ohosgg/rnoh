@@ -46,9 +46,9 @@ export enum OverflowMode {
   SCROLL = 2,
 };
 
-export type Descriptor<TType = string,
+export interface Descriptor<TType = string,
 TProps extends Object = Object,
-TState = {}, TRawProps extends Object = {}> = {
+TState = {}, TRawProps extends Object = {}> {
   type: TType;
   tag: Tag;
   parentTag?: Tag;

@@ -10,7 +10,7 @@ export class TouchDispatcher {
   private rnInstance: RNInstance
   private logger: RNOHLogger
   private touchTargetHelper: TouchTargetHelper
-  private targetTagByTouchId: Map<number, Tag> = new Map();
+  private targetTagByTouchId: Map<number, Tag | null> = new Map();
   // last reported touch event
   private previousEvent?: TouchEvent;
 
@@ -55,7 +55,7 @@ export class TouchDispatcher {
     this.rnInstance.emitComponentEvent(-1, RNOHEventEmitRequestHandlerName.Touch, touchEvent);
   }
 
-  public findTargetTagForTouch(touch: TouchObject): Tag {
+  public findTargetTagForTouch(touch: TouchObject): Tag | null {
     return this.touchTargetHelper.findTouchTargetTag(touch, this.surfaceTag);
   }
 
@@ -81,7 +81,7 @@ export class TouchDispatcher {
   }
 
   private maybeRemoveDeletedTargets() {
-    const deletedTargetIds = Array.from<[number, Tag]>(this.targetTagByTouchId.entries())
+    const deletedTargetIds = Array.from<[number, Tag | null]>(this.targetTagByTouchId.entries())
       .filter((touchIdAndTargetTag) =>!this.rnInstance.descriptorRegistry.getDescriptor<Descriptor>(touchIdAndTargetTag[1]))
       .map((touchIdAndTargetTag) => touchIdAndTargetTag[0]);
     deletedTargetIds.forEach(id => this.targetTagByTouchId.delete(id));
@@ -100,7 +100,7 @@ export class TouchDispatcher {
   }
 
   private cancelHandledTouches(timestamp: number) {
-    const cancelledTouchIds = Array.from<[number, Tag]>(this.targetTagByTouchId.entries())
+    const cancelledTouchIds = Array.from<[number, Tag | null]>(this.targetTagByTouchId.entries())
       .filter((touchIdAndTargetTag) => this.shouldCancelTouchesForTag(touchIdAndTargetTag[1]))
       .map((touchIdAndTargetTag) => touchIdAndTargetTag[0]);
 
@@ -127,15 +127,17 @@ export class TouchDispatcher {
     this.rnInstance.emitComponentEvent(-1, RNOHEventEmitRequestHandlerName.Touch, touchEvent);
   }
 
-  private shouldCancelTouchesForTag(targetTag: Tag): boolean {
+  private shouldCancelTouchesForTag(targetTag: Tag | null): boolean {
     let currentTag = targetTag;
-    while (currentTag !== undefined && currentTag !== this.surfaceTag) {
+    while (currentTag !== undefined && currentTag !== null && currentTag !== this.surfaceTag) {
       const componentManager = this.rnInstance.componentManagerRegistry.getComponentManager(currentTag);
       const descriptor = this.rnInstance.descriptorRegistry.getDescriptor<Descriptor>(currentTag);
       if (!componentManager || !TouchTargetHelper.isTouchTargetHelperDelegate(componentManager) || componentManager.isHandlingTouches()) {
         return true;
       }
-      currentTag = descriptor.parentTag;
+      if (descriptor.parentTag) {
+        currentTag = descriptor.parentTag;
+      }
     }
 
     // if we didn't reach the surface,

@@ -144,7 +144,7 @@ export struct RNViewBase {
     return this.descriptor.props.overflow !== OverflowMode.VISIBLE
   }
   
-  getOpacity(): number {
+  getOpacity(): number | undefined {
     /**
      * When backfaceVisibility is set to 'hidden' we need to determine whether the
      * front face or the back face of the view is shown - and make it invisible in
