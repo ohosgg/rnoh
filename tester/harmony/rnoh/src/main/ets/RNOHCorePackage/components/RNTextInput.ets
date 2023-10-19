@@ -98,6 +98,13 @@ export struct RNTextInput {
         .showPasswordIcon(false)
         .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
         .enterKeyType(stringToEnterKeyType(this.descriptor.props.returnKeyType))
+        /**
+         * We set the below props to 0/Transparent because RNViewBase should handle them.
+         * We don't want default values set only on the native side, as they break the layout.
+         */
+        .padding(0)
+        .borderRadius(0)
+        .backgroundColor(Color.Transparent)
     }
   }
 }
