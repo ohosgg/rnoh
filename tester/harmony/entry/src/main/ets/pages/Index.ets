@@ -1,4 +1,4 @@
-import type { ComponentBuilderContext } from 'rnoh';
+import { ComponentBuilderContext } from 'rnoh';
 import { RNApp, RNAbility, AnyJSBundleProvider, MetroJSBundleProvider, ResourceJSBundleProvider } from 'rnoh'
 import { SampleView, SAMPLE_VIEW_TYPE, PropsDisplayer } from "rnoh-sample-package"
 import { createRNPackages } from '../RNPackagesFactory'

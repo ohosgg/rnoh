@@ -6,12 +6,18 @@ import { TouchTargetHelper } from './TouchTargetHelper';
 
 
 export class TouchDispatcher {
+  private surfaceTag: Tag
+  private rnInstance: RNInstance
+  private logger: RNOHLogger
   private touchTargetHelper: TouchTargetHelper
   private targetTagByTouchId: Map<number, Tag> = new Map();
   // last reported touch event
-  private previousEvent: TouchEvent = undefined;
+  private previousEvent?: TouchEvent;
 
-  constructor(private surfaceTag: Tag, private rnInstance: RNInstance, private logger: RNOHLogger) {
+  constructor(surfaceTag: Tag, rnInstance: RNInstance, logger: RNOHLogger) {
+    this.surfaceTag = surfaceTag;
+    this.rnInstance = rnInstance;
+    this.logger = logger;
     this.touchTargetHelper = new TouchTargetHelper(surfaceTag, rnInstance.descriptorRegistry, rnInstance.componentManagerRegistry, logger);
   }
 

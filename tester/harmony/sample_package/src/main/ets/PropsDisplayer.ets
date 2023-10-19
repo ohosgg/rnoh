@@ -1,4 +1,4 @@
-import type { Descriptor, ViewDynamicProps } from 'rnoh';
+import { Descriptor, ViewDynamicProps } from 'rnoh';
 import { RNOHContext, RNViewBase } from 'rnoh'
 
 export type PropsDisplayerDescriptor = Descriptor<"PropsDisplayer", ViewDynamicProps>

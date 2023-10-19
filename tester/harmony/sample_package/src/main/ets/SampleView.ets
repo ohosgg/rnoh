@@ -1,4 +1,4 @@
-import type { Descriptor, ComponentBuilderContext, ViewDynamicProps } from 'rnoh';
+import { Descriptor, ComponentBuilderContext, ViewDynamicProps, Tag } from 'rnoh';
 import { RNComponentFactory, RNOHContext, RNViewBase } from 'rnoh'
 
 export const SAMPLE_VIEW_TYPE = "SampleView" as const
