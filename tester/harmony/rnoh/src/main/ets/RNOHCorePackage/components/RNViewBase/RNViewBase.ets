@@ -141,7 +141,7 @@ export struct RNViewBase {
   }
 
   getClip(): boolean {
-    return this.descriptor.props.overflow !== OverflowMode.VISIBLE
+    return this.componentManager.isClippingChildren()
   }
   
   getOpacity(): number | undefined {
