@@ -8,7 +8,7 @@ import { TouchDispatcher } from './RNOH/TouchDispatcher'
 import { SurfaceHandle, SurfaceProps } from './RNOH/SurfaceHandle'
 import { RNSurfaceManager } from './RNOHCorePackage/componentManagers/RNSurfaceManager'
 
-export type RootDescriptor = Descriptor<"RootView", ViewBaseProps>
+export type RootDescriptor = Descriptor<"RootView", ViewBaseProps>;
 
 interface SurfaceConfig1 {
   surfaceHandle: SurfaceHandle
@@ -40,12 +40,12 @@ export struct RNSurface {
   private componentManager!: RNSurfaceManager;
 
   aboutToAppear() {
-    if ("surfaceHandle" in this.surfaceConfig){
-      this.surfaceHandle = this.surfaceConfig.surfaceHandle;
+    if (Object.keys(this.surfaceConfig).includes("this.surfaceConfig")) {
+      this.surfaceHandle = (this.surfaceConfig as SurfaceConfig1).surfaceHandle;
       this.surfaceHandle.setDisplayMode(DisplayMode.Visible);
     } else {
-      this.surfaceHandle = this.ctx.rnInstance.createSurface(this.surfaceConfig.appKey);
-      this.initialProps = this.surfaceConfig.initialProps;
+      this.surfaceHandle = this.ctx.rnInstance.createSurface((this.surfaceConfig as SurfaceConfig2).appKey);
+      this.initialProps = (this.surfaceConfig as SurfaceConfig2).initialProps;
       this.shouldStartSurface = true;
       this.shouldStopSurface = true;
     }

@@ -4,14 +4,19 @@ import { RNImage } from "./RNImage"
 import { RNTextInput } from "./RNTextInput"
 import { RNText } from "./RNText"
 import { RNScrollView } from "./RNScrollView"
-import { Descriptor} from "../../RNOH/DescriptorBase";
+import { Descriptor } from "../../RNOH/DescriptorBase";
 import { RNModalHostView } from './RNModalHostView'
 import { RNSwitch } from './RNSwitch'
 import { RNActivityIndicator } from './RNActivityIndicator'
 
 export interface ComponentBuilderContext {
   rnohContext: RNOHContext
-  descriptor: {tag: Tag, type: string}
+  descriptor: DescriptorEssence
+}
+
+interface DescriptorEssence {
+  tag: Tag,
+  type: string
 }
 
 export type CustomComponentBuilder = (ctx: ComponentBuilderContext) => void
@@ -21,7 +26,6 @@ export struct RNComponentFactory {
   public ctx!: RNOHContext
   public tag: number = 0
   @BuilderParam public buildCustomComponent!: CustomComponentBuilder
-
   @State private descriptorType: string = ''
   @State private childrenTags: Tag[] = []
   private cleanupCallback?: () => void = undefined
@@ -95,7 +99,7 @@ export struct RNComponentFactory {
     } else if (this.descriptorType !== '') {
       this.buildCustomComponent({
         rnohContext: this.ctx,
-        descriptor: this.ctx.descriptorRegistry.getDescriptor<Descriptor>(this.tag)
+        descriptor: this.ctx.descriptorRegistry.getDescriptor<Descriptor>(this.tag) as DescriptorEssence
       })
     }
   }

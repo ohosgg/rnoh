@@ -14,7 +14,7 @@ import {
 import { ViewBaseProps, ViewDynamicProps } from './types'
 import { RNViewManager } from '../../componentManagers'
 
-export type ViewBaseDescriptor = Descriptor<string, ViewBaseProps>
+export type ViewBaseDescriptor = Descriptor<string, ViewBaseProps>;
 
 export type ViewDynamicDescriptor = Descriptor<string, ViewDynamicProps>
 

@@ -36,7 +36,35 @@ enum IndicatorStyle {
   White = 2,
 }
 
-export type ScrollViewDescriptor = Descriptor<"ScrollView", ScrollViewProps, ScrollViewState, ScrollViewRawProps>
+interface CurrentOffset {
+  xOffset: number,
+  yOffset: number
+}
+
+interface Dimensions {
+  width: number;
+  height: number;
+}
+
+interface Coordinates {
+  x: number;
+  y: number;
+}
+
+interface ScrollEvent {
+  contentSize: Dimensions;
+  contentOffset: Coordinates;
+  containerSize: Dimensions;
+  zoomScale: number;
+}
+
+interface IAnimation {
+  duration?: number;
+  curve?: Curve | ICurve;
+};
+type Animation = IAnimation | boolean;
+
+export type ScrollViewDescriptor = Descriptor<"ScrollView", ScrollViewProps, ScrollViewState, ScrollViewRawProps>;
 
 @Component
 export struct RNScrollView {
@@ -66,7 +94,7 @@ export struct RNScrollView {
     ))
     this.cleanUpCallbacks.push(this.ctx.commandDispatcher.registerCommandCallback(
       this.tag,
-      (command, args) => {
+      (command, args: [number, number, number]) => {
         if (command === 'scrollTo') {
           this.scrollTo(args[0], args[1], args[2]);
         }
@@ -106,8 +134,8 @@ export struct RNScrollView {
     this.scroller.scrollTo({ xOffset, yOffset });
   }
 
-  scrollTo(xOffset, yOffset, animated) {
-    const animation = animated ? { duration: 1000, curve: Curve.Smooth } : undefined;
+  scrollTo(xOffset: number, yOffset: number, animated: number) {
+    const animation: Animation = animated ? { duration: 1000, curve: Curve.Smooth } : undefined;
     this.scroller.scrollTo({ xOffset, yOffset, animation })
     this.ctx.rnInstance.emitComponentEvent(
       this.tag,
@@ -174,7 +202,7 @@ export struct RNScrollView {
     return undefined
   }
 
-  createScrollEvent() {
+  createScrollEvent(): ScrollEvent {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag);
 
     if (!descriptor) {
@@ -218,8 +246,8 @@ export struct RNScrollView {
     this.scrollState = scrollState
   }
 
-  onScrollEvent(dx?: number, dy?: number) {
-    const currentOffset = this.scroller.currentOffset();
+  onScrollEvent() {
+    const currentOffset: CurrentOffset = this.scroller.currentOffset();
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag);
 
     if (!descriptor) {
@@ -292,7 +320,7 @@ export struct RNScrollView {
     }
     this.scrollState = ScrollState.Idle;
 
-    const currentOffset = this.scroller.currentOffset();
+    const currentOffset: CurrentOffset = this.scroller.currentOffset();
     this.state.contentOffsetX = currentOffset.xOffset;
     this.state.contentOffsetY = currentOffset.yOffset;
     this.ctx.descriptorRegistry.setState<ScrollViewState>(this.tag, this.state);
@@ -335,8 +363,8 @@ export struct RNScrollView {
       this.onScroll(offset, state)
       return { offsetRemain: offset }
     })
-    .onScroll((xOffset, yOffset) => {
-      this.onScrollEvent(xOffset, yOffset)
+    .onScroll(() => {
+      this.onScrollEvent()
     })
     .onScrollStart(() => {
       this.onScrollBegin()
