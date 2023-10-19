@@ -1,8 +1,6 @@
-import { ColorSegments, Descriptor} from '../../RNOH';
-import { convertColorSegmentsToString, RNOHContext } from '../../RNOH'
-import { ViewBaseProps } from './RNViewBase';
-import { RNViewBase } from './RNViewBase'
-import { RNOHEventEmitRequestHandlerName } from './../RNOHEventEmitRequestHandler'
+import { ColorSegments, convertColorSegmentsToString, Descriptor, RNOHContext } from '../../RNOH';
+import { RNViewBase, ViewBaseProps } from './RNViewBase';
+import { RNOHEventEmitRequestHandlerName } from './../RNOHEventEmitRequestHandler';
 
 export interface TextInputProps extends ViewBaseProps {
   fontColor?: ColorSegments
@@ -46,6 +44,10 @@ function stringToEnterKeyType(enterKeyType: string): EnterKeyType {
   }
 }
 
+function getFontSize(fontSize: number): number {
+  return Number.isNaN(fontSize) ? undefined : fontSize;
+}
+
 @Component
 export struct RNTextInput {
   ctx!: RNOHContext
@@ -86,7 +88,7 @@ export struct RNTextInput {
         .width("100%")
         .height("100%")
         .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
-        .fontSize(this.descriptor.props.fontSize)
+        .fontSize(getFontSize(this.descriptor.props.fontSize))
         .onChange((event) => this.handleChangeEvent(event))
         .enabled(this.descriptor.props.editable)
         .caretStyle(getCaretStyle(this.descriptor.props.caretHidden))
