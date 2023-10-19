@@ -38,6 +38,10 @@ export type ViewDynamicProps = BorderMetrics & {
   alignItems?: string,
 }
 
+export type ViewDynamicProps2 = ViewDynamicProps & {
+  size: number
+}
+
 export type BorderRadii = {
   topLeft?: number
   topRight?: number

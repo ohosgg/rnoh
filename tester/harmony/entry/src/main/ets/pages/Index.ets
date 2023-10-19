@@ -44,7 +44,7 @@ struct Index {
       if (this.rnAbility && this.shouldShow) {
         RNApp({
           rnInstanceConfig: { createRNPackages },
-          initialProps: { foo: "bar" },
+          initialProps: { "foo": "bar" } as Record<string, string>,
           appKey: "app_name",
           buildCustomComponent: CustomComponentBuilder,
           jsBundleProvider: new AnyJSBundleProvider([
