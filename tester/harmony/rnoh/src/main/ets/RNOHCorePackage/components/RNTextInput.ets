@@ -6,6 +6,7 @@ export interface TextInputProps extends ViewBaseProps {
   fontColor?: ColorSegments
   fontSize?: number
   text?: string
+  multiline?: boolean
   editable?: boolean
   caretHidden?: boolean
   selectionColor?: ColorSegments
@@ -84,27 +85,37 @@ export struct RNTextInput {
 
   build() {
     RNViewBase({ ctx: this.ctx, tag: this.tag }) {
-      TextInput({ controller: this.controller, placeholder: this.descriptor.props.placeholder })
-        .width("100%")
-        .height("100%")
-        .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
-        .fontSize(getFontSize(this.descriptor.props.fontSize))
-        .onChange((event) => this.handleChangeEvent(event))
-        .enabled(this.descriptor.props.editable)
-        .caretStyle(getCaretStyle(this.descriptor.props.caretHidden))
-        .type(this.descriptor.props.secureTextEntry ? InputType.Password : undefined)
-        .maxLength(this.descriptor.rawProps.maxLength)
-        .selectedBackgroundColor(convertColorSegmentsToString(this.descriptor.props.selectionColor))
-        .showPasswordIcon(false)
-        .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
-        .enterKeyType(stringToEnterKeyType(this.descriptor.props.returnKeyType))
-        /**
-         * We set the below props to 0/Transparent because RNViewBase should handle them.
-         * We don't want default values set only on the native side, as they break the layout.
-         */
-        .padding(0)
-        .borderRadius(0)
-        .backgroundColor(Color.Transparent)
+      if (this.descriptor.props.multiline) {
+        TextArea({ placeholder: this.descriptor.props.placeholder })
+          .width("100%")
+          .height("100%")
+          .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
+          .fontSize(this.descriptor.props.fontSize)
+          .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
+          .maxLength(this.descriptor.rawProps.maxLength)
+      } else {
+        TextInput({ controller: this.controller, placeholder: this.descriptor.props.placeholder })
+          .width("100%")
+          .height("100%")
+          .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
+          .fontSize(getFontSize(this.descriptor.props.fontSize))
+          .onChange((event) => this.handleChangeEvent(event))
+          .enabled(this.descriptor.props.editable)
+          .caretStyle(getCaretStyle(this.descriptor.props.caretHidden))
+          .type(this.descriptor.props.secureTextEntry ? InputType.Password : undefined)
+          .maxLength(this.descriptor.rawProps.maxLength)
+          .selectedBackgroundColor(convertColorSegmentsToString(this.descriptor.props.selectionColor))
+          .showPasswordIcon(false)
+          .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
+          .enterKeyType(stringToEnterKeyType(this.descriptor.props.returnKeyType))
+          /**
+          * We set the below props to 0/Transparent because RNViewBase should handle them.
+          * We don't want default values set only on the native side, as they break the layout.
+          */
+          .padding(0)
+          .borderRadius(0)
+          .backgroundColor(Color.Transparent)
+      }
     }
   }
 }

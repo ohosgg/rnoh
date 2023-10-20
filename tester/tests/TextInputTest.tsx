@@ -93,8 +93,6 @@ export function TextInputTest() {
       <TestCase
         modal
         itShould="render multiline text input"
-        skip
-      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/409
       >
         <TextInputWithText style={styles.textInputBigger} multiline />
       </TestCase>

@@ -123,6 +123,7 @@ class RNOHCorePackage : public Package {
             {"RCTVirtualText", std::make_shared<ViewComponentJSIBinder>()},
             {"RCTSinglelineTextInputView", std::make_shared<TextInputComponentJSIBinder>()},
             {"RCTScrollView", std::make_shared<ScrollViewComponentJSIBinder>()},
+            {"RCTMultilineTextInputView", std::make_shared<TextInputComponentJSIBinder>()},
             {"RCTScrollContentView", std::make_shared<ViewComponentJSIBinder>()},
             {"RCTModalHostView", std::make_shared<ModalHostViewJSIBinder>()},
             {"RCTSwitch", std::make_shared<SwitchComponentJSIBinder>()},
