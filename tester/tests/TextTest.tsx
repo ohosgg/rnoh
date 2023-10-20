@@ -620,11 +620,37 @@ export function TextTest() {
             <Text style={{fontSize: 8}}>{SAMPLE_PARAGRAPH_TEXT}</Text>
           </Text>
         </TestCase>
-        <TestCase skip itShould="display 2 lines of text">
+        <TestCase itShould="display 1 line of text">
+          <View style={{width: 200, backgroundColor: 'silver'}}>
+            <Text style={{textAlign: 'left'}} numberOfLines={1}>
+              <Text style={{fontSize: 12, backgroundColor: 'cyan'}}>{'>'}</Text>
+              <Text style={{fontSize: 8}}>{SAMPLE_PARAGRAPH_TEXT}</Text>
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase itShould="display 2 lines of text">
           <Text style={{textAlign: 'left'}} numberOfLines={2}>
-            <Text style={{fontSize: 32, backgroundColor: 'cyan'}}>{'>'}</Text>
+            <Text style={{fontSize: 12, backgroundColor: 'cyan'}}>
+              {'@@@@@'}
+            </Text>
             <Text style={{fontSize: 8}}>{SAMPLE_PARAGRAPH_TEXT}</Text>
           </Text>
+        </TestCase>
+        <TestCase itShould="display 2 lines of text (placeholder test)">
+          <Text style={{textAlign: 'left'}} numberOfLines={2}>
+            <View style={{width: 0, height: 8, backgroundColor: 'red'}} />
+            <Text style={{fontSize: 8}}>{SAMPLE_PARAGRAPH_TEXT}</Text>
+          </Text>
+        </TestCase>
+        <TestCase itShould="wrap long words">
+          <View style={{backgroundColor: 'silver', width: 200}}>
+            <Text style={{textAlign: 'left'}}>
+              <View style={{width: 8, height: 8, backgroundColor: 'red'}} />
+              <Text style={{fontSize: 8}}>
+                0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+              </Text>
+            </Text>
+          </View>
         </TestCase>
       </TestSuite>
     </TestSuite>

@@ -2,6 +2,9 @@ import {
   EllipsisInserter,
   MeasuredFragment,
   MeasuredLine,
+  Position,
+  PositionedFragment,
+  Size,
   TextFragment,
   TextFragmentMeasurer,
 } from './types';
@@ -18,14 +21,37 @@ export class TailEllipsisInserter<TTextExtraData extends Record<string, any>>
     nextHiddenLine: MeasuredLine<TTextExtraData>,
     containerWidth: number,
   ): MeasuredLine<TTextExtraData> {
-    const ellipsisMeasuredFragment =
-      this.createEllipsisMeasuredFragment(lastVisibleLine);
+    const ellipsisMeasuredFragment = this.createMeasuredTextFragment(
+      '…',
+      lastVisibleLine,
+    );
+    const spaceMeasuredFragment = this.createMeasuredTextFragment(
+      ' ',
+      lastVisibleLine,
+    );
     if (!ellipsisMeasuredFragment) return lastVisibleLine;
     const availableWidth = containerWidth - lastVisibleLine.size.width;
     if (ellipsisMeasuredFragment.size.width <= availableWidth) {
+      if (nextHiddenLine.positionedFragments.length > 0) {
+        if (spaceMeasuredFragment) {
+          lastVisibleLine = this.insertMeasuredTextFragmentIntoLine(
+            spaceMeasuredFragment,
+            lastVisibleLine,
+          );
+        }
+        lastVisibleLine = this.insertMeasuredTextFragmentIntoLine(
+          nextHiddenLine.positionedFragments[0],
+          lastVisibleLine,
+        );
+      }
+      const trimmedLastVisibleLine = this.trimLine(
+        lastVisibleLine,
+        containerWidth - ellipsisMeasuredFragment.size.width,
+      );
+      if (!trimmedLastVisibleLine) return lastVisibleLine;
       return this.insertEllipsisIntoLine(
         ellipsisMeasuredFragment,
-        lastVisibleLine,
+        trimmedLastVisibleLine,
       );
     } else {
       const trimmedLastVisibleLine = this.trimLine(
@@ -40,7 +66,8 @@ export class TailEllipsisInserter<TTextExtraData extends Record<string, any>>
     }
   }
 
-  private createEllipsisMeasuredFragment(
+  private createMeasuredTextFragment(
+    textContent: string,
     lastVisibleLine: MeasuredLine<TTextExtraData>,
   ): MeasuredFragment<TTextExtraData> | null {
     const lastPositionedTextFragment = lastVisibleLine.positionedFragments
@@ -52,7 +79,7 @@ export class TailEllipsisInserter<TTextExtraData extends Record<string, any>>
       lastPositionedTextFragment.fragment as TextFragment<TTextExtraData>;
     const ellipsisTextFragment: TextFragment<TTextExtraData> = {
       type: 'text',
-      content: '…',
+      content: textContent,
       extraData: lastTextFragment.extraData,
     };
 
@@ -64,6 +91,42 @@ export class TailEllipsisInserter<TTextExtraData extends Record<string, any>>
     };
   }
 
+  private insertMeasuredTextFragmentIntoLine(
+    measuredTextFragment: MeasuredFragment<TTextExtraData>,
+    line: MeasuredLine<TTextExtraData>,
+  ): MeasuredLine<TTextExtraData> {
+    if (measuredTextFragment.fragment.type !== 'text') {
+      return line;
+    }
+    let lastPositionedFragmentPositionRelativeToLine: Position = {x: 0, y: 0};
+    let lastPositionedFragmentSize: Size = {width: 0, height: 0};
+    if (line.positionedFragments.length > 0) {
+      const lastPositionedFragment =
+        line.positionedFragments[line.positionedFragments.length - 1];
+      lastPositionedFragmentPositionRelativeToLine =
+        lastPositionedFragment.positionRelativeToLine;
+      lastPositionedFragmentSize = lastPositionedFragment.size;
+    }
+    return {
+      positionedFragments: [
+        ...line.positionedFragments,
+        {
+          ...measuredTextFragment,
+          positionRelativeToLine: {
+            x:
+              lastPositionedFragmentPositionRelativeToLine.x +
+              lastPositionedFragmentSize.width,
+            y: lastPositionedFragmentPositionRelativeToLine.y,
+          },
+        },
+      ],
+      size: {
+        width: line.size.width + measuredTextFragment.size.width,
+        height: line.size.height,
+      },
+    };
+  }
+
   private trimLine(
     line: MeasuredLine<TTextExtraData>,
     maxWidth: number,
@@ -71,6 +134,8 @@ export class TailEllipsisInserter<TTextExtraData extends Record<string, any>>
     if (line.positionedFragments.length === 0) return line;
     const lastPositionedTextFragment =
       line.positionedFragments[line.positionedFragments.length - 1];
+    const lineWidthWithoutLastFragment =
+      line.size.width - lastPositionedTextFragment.size.width;
     if (lastPositionedTextFragment.fragment.type === 'text') {
       const content = lastPositionedTextFragment.fragment.content;
       let lastFittingMeasuredTextFragment: MeasuredFragment<TTextExtraData> | null =
@@ -83,7 +148,7 @@ export class TailEllipsisInserter<TTextExtraData extends Record<string, any>>
         };
         const size =
           this.textFragmentMeasurer.measureTextFragment(textFragment);
-        if (size.width > maxWidth) {
+        if (lineWidthWithoutLastFragment + size.width > maxWidth) {
           if (!lastFittingMeasuredTextFragment) return null;
           const newPositionedFragments = [
             ...line.positionedFragments.slice(0, -1),

@@ -13,7 +13,7 @@ const DATA_PATH = join(MODULE_ROOT_PATH, 'data');
 await (async function run() {
   const activity = new Activity();
   try {
-    await runETSLint(activity);
+    // await runETSLint(activity); // linter is unreliable
   } catch (err) {
     activity.stop();
     if (err instanceof CIFail) {

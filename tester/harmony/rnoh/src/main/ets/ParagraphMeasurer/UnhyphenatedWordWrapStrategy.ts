@@ -1,4 +1,8 @@
 import {ParagraphMeasurerError} from './Error';
+import {
+  convertMeasuredFragmentsToPositionedFragments,
+  reduceMeasuredFragments,
+} from './FragmentUtils';
 import type {
   ContainerConfig,
   Fragment,
@@ -42,9 +46,9 @@ export class UnhyphenatedWordWrapStrategy<
     return fragments
       .map(fragment => {
         if (fragment.type === 'text') {
-          return this.splitWhilePreservingWhiteSpaceCharacters(
-            fragment.content,
-          ).map(newContent => ({...fragment, content: newContent}));
+          return this.splitTextFragmentContent(fragment.content).map(
+            newContent => ({...fragment, content: newContent}),
+          );
         } else {
           return [fragment];
         }
@@ -52,9 +56,8 @@ export class UnhyphenatedWordWrapStrategy<
       .flat();
   }
 
-  private splitWhilePreservingWhiteSpaceCharacters(s: string): string[] {
-    const regex = /(\s+|[^\s]+)/g;
-    return Array.from(s.match(regex) ?? []);
+  protected splitTextFragmentContent(s: string): string[] {
+    return s.split('');
   }
 
   private measureToken(fragment: Fragment): MeasuredToken {
@@ -83,61 +86,11 @@ export class UnhyphenatedWordWrapStrategy<
       measuredTokens,
       containerConfig.width || Number.MAX_SAFE_INTEGER,
     ).map(lineOfMeasuredTokens => ({
-      positionedFragments: this.mapMeasuredFragmentsToPositionedFragments(
-        this.convertMeasuredTokensToMeasuredFragments(lineOfMeasuredTokens),
+      positionedFragments: convertMeasuredFragmentsToPositionedFragments(
+        reduceMeasuredFragments(lineOfMeasuredTokens),
       ),
       size: this.getLineSizeFromMeasuredTokens(lineOfMeasuredTokens),
     }));
-  }
-
-  private convertMeasuredTokensToMeasuredFragments(
-    tokens: MeasuredFragment[],
-  ): MeasuredFragment[] {
-    if (tokens.length === 0) return [];
-    if (tokens.length === 1) return tokens;
-    const results: MeasuredFragment[] = [];
-    let lhs = tokens[0];
-    for (const rhs of tokens.slice(1)) {
-      if (this.canMeasuredFragmentsBeJoined(lhs, rhs)) {
-        lhs = this.joinFragments(lhs, rhs);
-      } else {
-        results.push(lhs);
-        lhs = rhs;
-      }
-    }
-    results.push(lhs);
-    return results;
-  }
-
-  private canMeasuredFragmentsBeJoined(
-    lhs: MeasuredFragment,
-    rhs: MeasuredFragment,
-  ): boolean {
-    if (lhs.fragment.type !== 'text' || rhs.fragment.type !== 'text')
-      return false;
-    for (const key of Object.keys(lhs.fragment.extraData)) {
-      if (lhs.fragment.extraData[key] !== rhs.fragment.extraData[key]) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  private joinFragments(
-    lhs: MeasuredFragment,
-    rhs: MeasuredFragment,
-  ): MeasuredFragment {
-    if (lhs.fragment.type !== 'text' || rhs.fragment.type !== 'text') {
-      throw new ParagraphMeasurerError('Only Text fragments can be joined');
-    }
-    return {
-      ...lhs,
-      size: {...lhs.size, width: lhs.size.width + rhs.size.width},
-      fragment: {
-        ...lhs.fragment,
-        content: lhs.fragment.content + rhs.fragment.content,
-      },
-    };
   }
 
   private getLineSizeFromMeasuredTokens(measuredTokens: MeasuredToken[]): Size {
@@ -148,22 +101,6 @@ export class UnhyphenatedWordWrapStrategy<
       ...measuredTokens.map(measuredFragment => measuredFragment.size.height),
     );
     return {width, height};
-  }
-
-  private mapMeasuredFragmentsToPositionedFragments(
-    measuredFragments: MeasuredFragment[],
-  ): PositionedFragment[] {
-    const positionedFragments: PositionedFragment[] = [];
-    let offsetX = 0;
-    let offsetY = 0;
-    for (const measuredFragment of measuredFragments) {
-      positionedFragments.push({
-        ...measuredFragment,
-        positionRelativeToLine: {x: offsetX, y: offsetY},
-      });
-      offsetX += measuredFragment.size.width;
-    }
-    return positionedFragments;
   }
 
   private distributeMeasuredTokensAcrossLines(
@@ -248,17 +185,24 @@ export class UnhyphenatedWordWrapStrategy<
             currentLineWidth += currentToken.size.width;
             continue;
           } else if (lastSpaceInCurrentLineTokenIdx === undefined) {
-            if (lastPlaceholderInCurrentLineTokenIdx === undefined) {
-              currentLineTokens.push(currentToken);
-              currentLineWidth += currentToken.size.width;
-              continue;
-            } else {
-              return this.prepareNewLine({
+            if (lastPlaceholderInCurrentLineTokenIdx !== undefined) {
+              const wordWidth = this.calculateWordWidthAtIndex({
                 measuredTokens,
-                lineEndIdx: lastPlaceholderInCurrentLineTokenIdx + 1,
-                remainingTokenIdx: lastPlaceholderInCurrentLineTokenIdx + 1,
+                tokenIdx: measuredTokenIdx,
               });
+              if (wordWidth < containerWidth) {
+                return this.prepareNewLine({
+                  measuredTokens,
+                  lineEndIdx: lastPlaceholderInCurrentLineTokenIdx + 1,
+                  remainingTokenIdx: lastPlaceholderInCurrentLineTokenIdx + 1,
+                });
+              }
             }
+            return this.prepareNewLine({
+              measuredTokens,
+              lineEndIdx: measuredTokenIdx,
+              remainingTokenIdx: measuredTokenIdx,
+            });
           } else {
             return this.prepareNewLine({
               measuredTokens,
@@ -303,5 +247,39 @@ export class UnhyphenatedWordWrapStrategy<
       nextLine,
       remainingTokens,
     };
+  }
+
+  private calculateWordWidthAtIndex({
+    measuredTokens,
+    tokenIdx,
+  }: {
+    measuredTokens: MeasuredToken[];
+    tokenIdx: number;
+  }) {
+    let wordWidth = 0;
+    const tokensBefore = measuredTokens.slice(0, tokenIdx);
+    const tokensAfter = measuredTokens.slice(tokenIdx);
+
+    for (const tokenBefore of tokensBefore.reverse()) {
+      if (
+        tokenBefore.fragment.type === 'placeholder' ||
+        (tokenBefore.fragment.type === 'text' &&
+          tokenBefore.fragment.content === ' ')
+      ) {
+        break;
+      }
+      wordWidth += tokenBefore.size.width;
+    }
+    for (const tokenAfter of tokensAfter) {
+      if (
+        tokenAfter.fragment.type === 'placeholder' ||
+        (tokenAfter.fragment.type === 'text' &&
+          tokenAfter.fragment.content === ' ')
+      ) {
+        break;
+      }
+      wordWidth += tokenAfter.size.width;
+    }
+    return wordWidth;
   }
 }

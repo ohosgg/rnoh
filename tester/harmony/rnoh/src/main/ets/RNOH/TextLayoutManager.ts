@@ -235,16 +235,40 @@ export type OHOSMeasurerTextFragmentExtraData = {
 export class OHOSTextFragmentMeasurer
   implements TextFragmentMeasurer<OHOSMeasurerTextFragmentExtraData>
 {
+  private sizeByMeasuredTextFragmentHash = new Map<string, Size>()
+
   public measureTextFragment(
     textFragment: TextFragment<OHOSMeasurerTextFragmentExtraData>,
   ): Size {
-    const size = TextMeasurer.measureTextSize({
+    const cachedSize = this.maybeGetCachedSize(textFragment)
+    if (cachedSize) {
+      return cachedSize
+    }
+    let size = TextMeasurer.measureTextSize({
       textContent: textFragment.content,
       fontSize: textFragment.extraData.fontSize,
       lineHeight: textFragment.extraData.lineHeight,
       fontWeight: textFragment.extraData.fontWeight,
       letterSpacing: textFragment.extraData.letterSpacing,
     }) as Size;
-    return {width: px2vp(size.width), height: px2vp(size.height)};
+    size = {width: px2vp(size.width), height: px2vp(size.height)};
+    this.updateCache(textFragment, size)
+    return size;
+  }
+
+  private maybeGetCachedSize(textFragment: TextFragment<OHOSMeasurerTextFragmentExtraData>): Size | undefined {
+    return this.sizeByMeasuredTextFragmentHash.get(this.calculateTextFragmentHash(textFragment))
+  }
+
+  private calculateTextFragmentHash(textFragment: TextFragment<OHOSMeasurerTextFragmentExtraData>): string {
+    let hash = textFragment.content + textFragment.extraData.fontSize.toString()
+    hash += textFragment.extraData.letterSpacing ?? '-'
+    hash += textFragment.extraData.fontWeight ?? '-'
+    hash += textFragment.extraData.lineHeight ?? '-'
+    return hash
+  }
+
+  private updateCache(textFragment: TextFragment<OHOSMeasurerTextFragmentExtraData>, size: Size) {
+    this.sizeByMeasuredTextFragmentHash.set(this.calculateTextFragmentHash(textFragment), size)
   }
 }

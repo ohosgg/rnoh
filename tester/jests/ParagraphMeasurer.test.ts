@@ -82,8 +82,7 @@ describe('ParagraphMeasurer', () => {
         fragments: [
           {
             type: 'text',
-            content:
-              'Aute reprehenderit amet deserunt enim laborum ad excepteur cillum.',
+            content: 'baz x foobar',
             extraData: {},
           },
         ],
@@ -92,16 +91,13 @@ describe('ParagraphMeasurer', () => {
         wordWrapStrategy: new UnhyphenatedWordWrapStrategy(
           textFragmentMeasurer,
         ),
-        containerConfig: {width: 16, maxNumberOfLines: 2},
+        containerConfig: {width: 4, maxNumberOfLines: 2},
         ellipsisInserter: new TailEllipsisInserter(textFragmentMeasurer),
       },
     );
 
     expect(result.positionedLines.length).toBe(2);
-    expectLineSplitting(result.positionedLines, [
-      ['Aute'],
-      ['reprehenderit', '…'],
-    ]);
+    expectLineSplitting(result.positionedLines, [['baz'], ['x f…']]);
   });
 
   describe('horizontalAlignment', () => {
@@ -184,6 +180,27 @@ describe('UnhyphenatedWordWrapStrategy', () => {
     expect(lines[0].positionedFragments.length).toBe(1);
     expect(lines[0].positionedFragments[0].size.height).toBe(LINE_HEIGHT);
     expect(lines[0].positionedFragments[0].size.width).toBe(TEXT.length);
+  });
+
+  it('should break words longer than container', () => {
+    const strategy = new UnhyphenatedWordWrapStrategy(
+      new FakeTextFragmentMeasurer(),
+    );
+
+    const lines = strategy.convertFragmentsIntoLines(
+      [
+        {
+          type: 'text',
+          content: 'foobar',
+          extraData: {},
+        },
+      ],
+      {width: 3},
+    );
+    result = lines;
+
+    expect(lines.length).toBe(2);
+    expectLineSplitting(lines, [['foo'], ['bar']]);
   });
 
   it('should handle two words in a single line', () => {
@@ -309,72 +326,6 @@ describe('UnhyphenatedWordWrapStrategy', () => {
 });
 
 describe('TailEllipsisInserter', () => {
-  it("should insert '…'", () => {
-    const ellipsisInserter = new TailEllipsisInserter(
-      new FakeTextFragmentMeasurer(),
-    );
-
-    const newLastLine = ellipsisInserter.insertEllipsis(
-      {
-        positionedFragments: [
-          {
-            fragment: {type: 'text', content: 'foo', extraData: {}},
-            positionRelativeToLine: {x: 0, y: 0},
-            size: {width: 3, height: 1},
-          },
-        ],
-        size: {width: 3, height: 1},
-      },
-      {
-        positionedFragments: [
-          {
-            fragment: {type: 'text', content: 'barbar', extraData: {}},
-            positionRelativeToLine: {x: 0, y: 0},
-            size: {width: 6, height: 1},
-          },
-        ],
-        size: {width: 6, height: 1},
-      },
-      6,
-    );
-
-    expect(newLastLine.positionedFragments.length).toBe(2);
-    expectLineSplitting([newLastLine], [['foo', '…']]);
-  });
-
-  it("should insert '…' if there's available enough space", () => {
-    const ellipsisInserter = new TailEllipsisInserter(
-      new FakeTextFragmentMeasurer(),
-    );
-
-    const newLastLine = ellipsisInserter.insertEllipsis(
-      {
-        positionedFragments: [
-          {
-            fragment: {type: 'text', content: 'foo', extraData: {}},
-            positionRelativeToLine: {x: 0, y: 0},
-            size: {width: 3, height: 1},
-          },
-        ],
-        size: {width: 3, height: 1},
-      },
-      {
-        positionedFragments: [
-          {
-            fragment: {type: 'text', content: 'barbar', extraData: {}},
-            positionRelativeToLine: {x: 0, y: 0},
-            size: {width: 6, height: 1},
-          },
-        ],
-        size: {width: 6, height: 1},
-      },
-      6,
-    );
-
-    expect(newLastLine.positionedFragments.length).toBe(2);
-    expectLineSplitting([newLastLine], [['foo', '…']]);
-  });
-
   it('should trim last world to give a space for …', () => {
     const ellipsisInserter = new TailEllipsisInserter(
       new FakeTextFragmentMeasurer(),
@@ -406,5 +357,49 @@ describe('TailEllipsisInserter', () => {
 
     expect(newLastLine.positionedFragments.length).toBe(2);
     expectLineSplitting([newLastLine], [['fo', '…']]);
+  });
+
+  it('should take the words from the next line', () => {
+    const ellipsisInserter = new TailEllipsisInserter(
+      new FakeTextFragmentMeasurer(),
+    );
+
+    const newLastLine = ellipsisInserter.insertEllipsis(
+      {
+        positionedFragments: [
+          {
+            fragment: {
+              type: 'text',
+              content: '>',
+              extraData: {},
+            },
+            positionRelativeToLine: {x: 0, y: 0},
+            size: {width: 1, height: 1},
+          },
+          {
+            fragment: {type: 'text', content: 'fo', extraData: {}},
+            positionRelativeToLine: {x: 1, y: 0},
+            size: {width: 2, height: 1},
+          },
+        ],
+        size: {width: 3, height: 1},
+      },
+      {
+        positionedFragments: [
+          {
+            fragment: {type: 'text', content: 'barbar', extraData: {}},
+            positionRelativeToLine: {x: 0, y: 0},
+            size: {width: 6, height: 1},
+          },
+        ],
+        size: {width: 6, height: 1},
+      },
+      6,
+    );
+
+    expectLineSplitting([newLastLine], [['>', 'fo', ' ', 'b', '…']]);
+    expect(newLastLine.positionedFragments[3].positionRelativeToLine.x).toBe(
+      '>fo '.length,
+    );
   });
 });

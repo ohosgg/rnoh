@@ -8,6 +8,10 @@ import type {
   HorizontalAlignment,
   EllipsisInserter,
 } from './types';
+import {
+  convertMeasuredFragmentsToPositionedFragments,
+  reduceMeasuredFragments,
+} from './FragmentUtils';
 
 export const PLACEHOLDER_SYMBOL = '￼' as const;
 
@@ -47,6 +51,14 @@ export class ParagraphMeasurer {
         includedLines = [...includedLines.slice(0, -1), newLastLine];
       }
     }
+    includedLines = includedLines.map(includedLine => {
+      return {
+        ...includedLine,
+        positionedFragments: convertMeasuredFragmentsToPositionedFragments(
+          reduceMeasuredFragments(includedLine.positionedFragments),
+        ),
+      };
+    });
     const maxLineWidth = Math.max(
       ...includedLines.map(line => line.size.width),
     );
