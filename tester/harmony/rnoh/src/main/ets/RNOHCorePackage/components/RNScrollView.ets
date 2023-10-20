@@ -14,8 +14,8 @@ export interface ScrollViewProps extends ViewBaseProps {
   showsHorizontalScrollIndicator: boolean
   showsVerticalScrollIndicator: boolean
   indicatorStyle?: IndicatorStyle
-  decelerationRate?: number
-  scrollEventThrottle?: number
+  decelerationRate: number
+  scrollEventThrottle: number
 }
 
 export interface ScrollViewRawProps {
@@ -90,7 +90,7 @@ export struct RNScrollView {
     this.onDescriptorUpdate(descriptor)
     this.state = descriptor.state
     this.cleanUpCallbacks.push(this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
-      (descriptor: ScrollViewDescriptor) => this.onDescriptorUpdate(descriptor)
+      (descriptor) => this.onDescriptorUpdate(descriptor as ScrollViewDescriptor)
     ))
     this.cleanUpCallbacks.push(this.ctx.commandDispatcher.registerCommandCallback(
       this.tag,
@@ -135,7 +135,7 @@ export struct RNScrollView {
   }
 
   scrollTo(xOffset: number, yOffset: number, animated: number) {
-    const animation: Animation = animated ? { duration: 1000, curve: Curve.Smooth } : undefined;
+    const animation: Animation | undefined = animated ? { duration: 1000, curve: Curve.Smooth } : undefined;
     this.scroller.scrollTo({ xOffset, yOffset, animation })
     this.ctx.rnInstance.emitComponentEvent(
       this.tag,
@@ -181,7 +181,7 @@ export struct RNScrollView {
     }
   }
 
-  getScrollSnap(): ScrollSnapOptions {
+  getScrollSnap(): ScrollSnapOptions | undefined{
     // ScrollSnap API changed between SDKs causing compile errors
     // and newer SDK requires updating OS on the devices.
     // We temporarily disable this feature until we completely move to the newer SDK.
@@ -202,7 +202,7 @@ export struct RNScrollView {
     return undefined
   }
 
-  createScrollEvent(): ScrollEvent {
+  createScrollEvent(): ScrollEvent | undefined {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag);
 
     if (!descriptor) {
@@ -349,7 +349,7 @@ export struct RNScrollView {
       .width(this.contentSize.width)
       .height(this.contentSize.height)
       .backgroundColor(Color.Transparent)
-      .margin({ top: -this.props.borderWidth.top, left: -this.props.borderWidth.left })
+      .margin({ top: -Number(this.props.borderWidth?.top), left: -Number(this.props.borderWidth?.left) })
     }
     .width("100%")
     .height("100%")

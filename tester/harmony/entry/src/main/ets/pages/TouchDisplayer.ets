@@ -6,7 +6,7 @@ export struct TouchDisplayer {
   build() {
     Stack() {
       this.buildChildren()
-      ForEach(this.currentTouches, (activeTouch) => {
+      ForEach(this.currentTouches, (activeTouch: TouchObject) => {
         Stack() {
         }
         .width(64)

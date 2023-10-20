@@ -45,7 +45,7 @@ function stringToEnterKeyType(enterKeyType: string): EnterKeyType {
   }
 }
 
-function getFontSize(fontSize: number): number {
+function getFontSize(fontSize: number): number | undefined {
   return Number.isNaN(fontSize) ? undefined : fontSize;
 }
 

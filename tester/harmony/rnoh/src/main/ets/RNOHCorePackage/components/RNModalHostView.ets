@@ -45,8 +45,8 @@ struct ModalHostViewDialog {
     this.componentManager = new RNModalHostViewManager(this.tag, this.ctx);
     this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager);
     this.descriptor = this.ctx.descriptorRegistry.getDescriptor<ModalHostViewDescriptor>(this.tag)
-    this.unsubscribeFromDescriptorChanges = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag, (descriptor: ModalHostViewDescriptor) => {
-      this.descriptor = descriptor
+    this.unsubscribeFromDescriptorChanges = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag, (descriptor) => {
+      this.descriptor = (descriptor as ModalHostViewDescriptor)
       // NOTE: this should ensure we only update the Stack's dimensions
       // after React rerenders the contents,
       // to prevent flickering when opening the modal
@@ -81,7 +81,7 @@ export struct RNModalHostView {
   public ctx!: RNOHContext
   public tag: number = 0
   @BuilderParam public buildCustomComponent!: CustomComponentBuilder
-  private dialogController: CustomDialogController
+  private dialogController!: CustomDialogController
 
   aboutToAppear() {
     this.dialogController = new CustomDialogController({
