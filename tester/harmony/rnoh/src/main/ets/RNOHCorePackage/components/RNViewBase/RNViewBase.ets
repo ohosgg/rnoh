@@ -141,7 +141,7 @@ export struct RNViewBase {
   }
 
   getClip(): boolean {
-    return this.componentManager.isClippingChildren()
+    return this.descriptor.props.overflow === OverflowMode.HIDDEN || this.descriptor.props.overflow === OverflowMode.SCROLL
   }
   
   getOpacity(): number | undefined {
