@@ -32,7 +32,7 @@ struct ModalHostViewDialog {
   @State descriptor: ModalHostViewDescriptor = Object() as ModalHostViewDescriptor
   controller: CustomDialogController
   @State showContent: boolean = false
-  unsubscribeFromDescriptorChanges: () => void | undefined
+  unsubscribeFromDescriptorChanges: () => void | undefined = () => {}
   touchDispatcher!: TouchDispatcher;
   componentManager!: RNModalHostViewManager;
 
