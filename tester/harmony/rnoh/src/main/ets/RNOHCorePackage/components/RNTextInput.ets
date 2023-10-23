@@ -97,7 +97,7 @@ export struct RNTextInput {
 
   aboutToAppear() {
     this.descriptor = this.ctx.descriptorRegistry.getDescriptor<TextInputDescriptor>(this.tag)
-    this.value = this.descriptor.props.text
+    this.value = this.descriptor.props.text ?? ''
     this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
         this.descriptor = (newDescriptor as TextInputDescriptor)
@@ -116,7 +116,9 @@ export struct RNTextInput {
         }
         else if (command === 'setTextAndSelection') {
           const parsedArgs = parseSetTextAndSelectionCommandCallback(args);
+          if (parsedArgs.value) {
           this.value = parsedArgs.value;
+          }
         }
       });
   }
