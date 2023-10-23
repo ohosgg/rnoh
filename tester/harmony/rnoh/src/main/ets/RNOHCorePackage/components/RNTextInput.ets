@@ -95,6 +95,9 @@ export struct RNTextInput {
     this.ctx.rnInstanceManager.emitComponentEvent(this.descriptor.tag, RNOHEventEmitRequestHandlerName.TextInputChange, value)
   }
 
+  onFocusEvent() {
+    this.ctx.rnInstanceManager.emitComponentEvent(this.descriptor.tag, "onFocus", undefined)
+  }
   aboutToAppear() {
     this.descriptor = this.ctx.descriptorRegistry.getDescriptor<TextInputDescriptor>(this.tag)
     this.value = this.descriptor.props.text ?? ''
@@ -170,6 +173,7 @@ export struct RNTextInput {
           .borderRadius(0)
           .backgroundColor(Color.Transparent)
           .onSubmit(() => this.onSubmitEditing())
+          .onFocus(() => this.onFocusEvent())
       }
     }
   }
