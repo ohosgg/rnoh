@@ -12,6 +12,11 @@ class TextInputComponentNapiBinder : public ViewComponentNapiBinder {
     napi_value createProps(napi_env env, facebook::react::ShadowView const shadowView) override {
         napi_value napiViewProps = ViewComponentNapiBinder::createProps(env, shadowView);
         if (auto props = std::dynamic_pointer_cast<const facebook::react::TextInputProps>(shadowView.props)) {
+            auto textAlign = props->textAttributes.alignment;
+            std::string alignment = "";
+            if (textAlign.has_value()) {
+                alignment = textAlignmentToString(textAlign.value());
+            }
             return ArkJS(env)
                 .getObjectBuilder(napiViewProps)
                 .addProperty("text", props->text)
@@ -25,6 +30,7 @@ class TextInputComponentNapiBinder : public ViewComponentNapiBinder {
                 .addProperty("secureTextEntry", props->traits.secureTextEntry)
                 .addProperty("selectionColor", props->selectionColor)
                 .addProperty("returnKeyType", returnKeyTypeToString(props->traits.returnKeyType))
+                .addProperty("textAlign", alignment)
                 .build();
         }
         return napiViewProps;
@@ -46,7 +52,22 @@ class TextInputComponentNapiBinder : public ViewComponentNapiBinder {
         default:
             return "default";
         }
-    }
+    };
+
+    std::string textAlignmentToString(facebook::react::TextAlignment alignment) {
+        switch (alignment) {
+        case facebook::react::TextAlignment::Natural:
+            return "natural";
+        case facebook::react::TextAlignment::Left:
+            return "left";
+        case facebook::react::TextAlignment::Right:
+            return "right";
+        case facebook::react::TextAlignment::Center:
+            return "center";
+        case facebook::react::TextAlignment::Justified:
+            return "justified";
+        }
+    };
 };
 
 } // namespace rnoh

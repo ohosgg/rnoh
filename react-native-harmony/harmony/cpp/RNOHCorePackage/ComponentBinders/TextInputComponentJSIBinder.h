@@ -15,6 +15,7 @@ class TextInputComponentJSIBinder : public ViewComponentJSIBinder {
         nativeProps.setProperty(rt, "maxLength", "number");
         nativeProps.setProperty(rt, "selectionColor", "Color");
         nativeProps.setProperty(rt, "returnKeyType", "ReturnKeyType");
+        nativeProps.setProperty(rt, "textAlign", "string");
 
         return nativeProps;
     };

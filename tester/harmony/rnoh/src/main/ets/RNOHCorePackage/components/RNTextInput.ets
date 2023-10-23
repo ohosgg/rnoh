@@ -14,6 +14,7 @@ export interface TextInputProps extends ViewBaseProps {
   placeholder?: string
   placeholderTextColor?: ColorSegments
   returnKeyType?: string
+  textAlign?: string
 }
 
 export interface TextInputRawProps {
@@ -26,6 +27,19 @@ export type TextInputDescriptor = Descriptor<"TextInput", TextInputProps, TextIn
 
 function getCaretStyle(caretHidden: boolean): CaretStyle | undefined {
   return caretHidden ? { width: 0 } : undefined;
+}
+
+function stringToAlignment(alignment: string) {
+  switch (alignment) {
+    case "center":
+      return TextAlign.Center
+    case "right":
+      return TextAlign.End
+    case "justified":
+      return TextAlign.JUSTIFY
+    default:
+      return TextAlign.Start
+  }
 }
 
 function stringToEnterKeyType(enterKeyType: string): EnterKeyType {
@@ -108,6 +122,7 @@ export struct RNTextInput {
           .showPasswordIcon(false)
           .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
           .enterKeyType(stringToEnterKeyType(this.descriptor.props.returnKeyType))
+          .textAlign(stringToAlignment(this.descriptor.props.textAlign))
           /**
           * We set the below props to 0/Transparent because RNViewBase should handle them.
           * We don't want default values set only on the native side, as they break the layout.
