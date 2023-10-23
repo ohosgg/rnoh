@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.72.8
+- added layout animations support
+- added ellipsis support when text components are nested or text component inside another text component
+- fixed timer behavior when an app is in background
+- fixed text input styling issues
+- fixed `fetch`
+- fixed errors reported by new ArkTS linter
+- fixed app crashes caused sometimes caused by touches
+
 ## v0.72.7
 - added ScrollView::persistentScrollbar
 - added ActivityIndicator support
