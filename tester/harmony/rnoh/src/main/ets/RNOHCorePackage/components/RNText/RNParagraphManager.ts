@@ -1,5 +1,6 @@
 import type {
   PlaceholderFragment,
+  MeasuredParagraph,
   Fragment as MeasurerFragment} from '../../../ParagraphMeasurer';
 import {
   ParagraphMeasurer,
@@ -53,7 +54,7 @@ export class RNParagraphManager extends RNViewManager {
     })
   }
 
-  public createLayout(textDescriptor: TextDescriptor) {
+  public createLayout(textDescriptor: TextDescriptor): MeasuredParagraph {
     const paragraphMeasurer = new ParagraphMeasurer()
     const fragments = this.mapAttributedFragmentsToMeasurerFragments(textDescriptor.props.fragments)
     const textFragmentMeasurer = new OHOSTextFragmentMeasurer()
