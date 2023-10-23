@@ -43,7 +43,7 @@
 #include "RNOHCorePackage/ComponentBinders/ActivityIndicatorComponentJSIBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ActivityIndicatorComponentNapiBinder.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/TouchEventEmitRequestHandler.h"
-#include "RNOHCorePackage/EventEmitRequestHandlers/TextInputChangeEventEmitRequestHandler.h"
+#include "RNOHCorePackage/EventEmitRequestHandlers/TextInputEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/PullToRefreshViewEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/ScrollEventEmitRequestHandler.h"
 #include "RNOHCorePackage/EventEmitRequestHandlers/ModalEventEmitRequestHandler.h"
@@ -147,7 +147,7 @@ class RNOHCorePackage : public Package {
 
     EventEmitRequestHandlers createEventEmitRequestHandlers() override {
         return {std::make_shared<TouchEventEmitRequestHandler>(),
-                std::make_shared<TextInputChangeEventEmitRequestHandler>(),
+                std::make_shared<TextInputEventEmitRequestHandler>(),
                 std::make_shared<ScrollEventEmitRequestHandler>(),
                 std::make_shared<ModalEventEmitRequestHandler>(),
                 std::make_shared<SwitchEventEmitRequestHandler>(),

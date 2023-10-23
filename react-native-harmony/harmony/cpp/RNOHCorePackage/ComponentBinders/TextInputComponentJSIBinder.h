@@ -6,6 +6,7 @@ namespace rnoh {
 class TextInputComponentJSIBinder : public ViewComponentJSIBinder {
     facebook::jsi::Object createNativeProps(facebook::jsi::Runtime &rt) override {
         auto nativeProps = ViewComponentJSIBinder::createNativeProps(rt);
+        nativeProps.setProperty(rt, "text", "string");
         nativeProps.setProperty(rt, "editable", "boolean");
         nativeProps.setProperty(rt, "multiline", "boolean");
         nativeProps.setProperty(rt, "placeholder", "string");

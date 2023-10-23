@@ -84,10 +84,7 @@ export function TextInputTest() {
           placeholderTextColor={'red'}
         />
       </TestCase>
-      <TestCase
-        modal
-        itShould="render textinput with green selection color"
-      >
+      <TestCase modal itShould="render textinput with green selection color">
         <TextInputWithText style={styles.textInput} selectionColor="green" />
       </TestCase>
       <TestCase
@@ -96,10 +93,7 @@ export function TextInputTest() {
       >
         <TextInputWithText style={styles.textInputBigger} multiline />
       </TestCase>
-      <TestCase
-        modal
-        itShould="render text input with maximally 10 characters"
-      >
+      <TestCase modal itShould="render text input with maximally 10 characters">
         <TextInputWithText style={styles.textInput} maxLength={10} />
       </TestCase>
       <TestCase
@@ -130,13 +124,10 @@ export function TextInputTest() {
       <TestCase
         modal
         itShould="trigger onSubmitEditing event after submiting"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/411
         initialState={false}
         arrange={({ setState }) => (
           <TextInputWithText
             style={styles.textInput}
-            autoFocus
             onSubmitEditing={() => setState(true)}
           />
         )}
@@ -170,12 +161,7 @@ export function TextInputTest() {
           expect(state).to.be.eq('A');
         }}
       />
-      <TestCase
-        modal
-        itShould="show text input with default value"
-        skip
-      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/414
-      >
+      <TestCase modal itShould="show text input with default value">
         <DefaultProps />
       </TestCase>
     </TestSuite>
