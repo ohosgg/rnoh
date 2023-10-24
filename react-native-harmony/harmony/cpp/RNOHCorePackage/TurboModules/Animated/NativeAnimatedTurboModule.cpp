@@ -117,7 +117,7 @@ jsi::Value startAnimatingNode(
     auto endCallback = [&rt, callback = std::move(callback)](bool finished) {
         auto result = jsi::Object(rt);
         result.setProperty(rt, "finished", jsi::Value(finished));
-        callback->call(rt, std::move(result));
+        callback->call(rt, { std::move(result) });
     };
     self->startAnimatingNode(args[0].getNumber(), args[1].getNumber(), config, std::move(endCallback));
     return facebook::jsi::Value::undefined();
@@ -330,8 +330,10 @@ void NativeAnimatedTurboModule::startAnimatingNode(
     react::Tag nodeTag,
     folly::dynamic const &config,
     std::function<void(bool)> &&endCallback) {
-    auto jsThreadCallback = [taskExecutor = this->m_ctx.taskExecutor, endCallback = std::move(endCallback)](bool finished) mutable {
-        taskExecutor->runTask(TaskThread::JS, [finished, endCallback = std::move(endCallback)]() { endCallback(finished); });
+    auto jsThreadCallback = [jsInvoker = this->jsInvoker_, endCallback = std::move(endCallback)](bool finished) mutable {
+        // callbacks passed from JS need to be called through the jsInvoker
+        // to ensure proper handling by React
+        jsInvoker->invokeAsync([finished, endCallback = std::move(endCallback)] { endCallback(finished); });
     };
     auto lock = acquireLock();
     m_animatedNodesManager.startAnimatingNode(animationId, nodeTag, config, std::move(jsThreadCallback));

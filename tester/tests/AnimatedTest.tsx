@@ -3,10 +3,14 @@ import React, {useRef, useState} from 'react';
 import {Animated, Pressable, Text, View} from 'react-native';
 
 import {TestCase, TestSuite} from '@rnoh/testerino';
+import { Button } from '../components';
 
 export function AnimatedTest() {
   return (
     <TestSuite name="Animated">
+      <TestCase itShould="update the button label after a delay" >
+        <AnimatedEndCallbackTest />
+      </TestCase>
       <TestCase itShould="animate width">
         <AnimatedRectangle />
       </TestCase>
@@ -508,3 +512,23 @@ const ValueXY = () => {
     </Pressable>
   );
 };
+
+const AnimatedEndCallbackTest = () => {
+  const [count, setCount] = React.useState(0);
+  const increase = () => {
+    Animated.timing(new Animated.Value(20), {
+      toValue: 0,
+      useNativeDriver: true,
+      duration: 1000
+    }).start(() => {
+      setCount(c => c + 1)
+    });
+  }
+
+  return (
+    <Button
+      onPress={increase}
+      label={JSON.stringify(count)}
+    />
+  )
+}
