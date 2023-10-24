@@ -97,6 +97,8 @@ export struct RNScrollView {
       (command, args: [number, number, number]) => {
         if (command === 'scrollTo') {
           this.scrollTo(args[0], args[1], args[2]);
+        } else if (command === 'scrollToEnd') {
+          this.scrollToEnd(args[0], args[1]);
         }
       }));
     this.componentManager = new _RNScrollViewManager(this.tag, this.ctx, this.scroller)
@@ -136,6 +138,18 @@ export struct RNScrollView {
 
   scrollTo(xOffset: number, yOffset: number, animated: number) {
     const animation: Animation | undefined = animated ? { duration: 1000, curve: Curve.Smooth } : undefined;
+    this.scroller.scrollTo({ xOffset, yOffset, animation })
+    this.ctx.rnInstance.emitComponentEvent(
+      this.tag,
+      "onScroll",
+      this.createScrollEvent()
+    )
+  }
+
+  scrollToEnd(animated: number, duration: number) {
+    const animation: Animation | undefined = animated ? { duration: duration || 1000, curve: Curve.Smooth } : undefined;
+    const xOffset = this.props.flexDirection === 2 ? this.contentSize.width - this.descriptor.layoutMetrics.frame.size.width : 0;
+    const yOffset = this.props.flexDirection === 2 ? 0 : this.contentSize.height - this.descriptor.layoutMetrics.frame.size.height;
     this.scroller.scrollTo({ xOffset, yOffset, animation })
     this.ctx.rnInstance.emitComponentEvent(
       this.tag,
