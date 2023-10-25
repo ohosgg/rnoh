@@ -4,10 +4,13 @@ module.exports = {
       .default;
   },
   get Alert() {
-    return require("./Libraries/Alert/Alert.harmony");
+    return require('./Libraries/Alert/Alert.harmony');
   },
   get Animated() {
     return require('react-native/Libraries/Animated/Animated').default;
+  },
+  get Appearance() {
+    return require('react-native/Libraries/Utilities/Appearance');
   },
   get AppRegistry() {
     return require('react-native/Libraries/ReactNative/AppRegistry');

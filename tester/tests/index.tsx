@@ -3,6 +3,7 @@ export * from './AlertTest';
 export * from './AnimatedEasingTest';
 export * from './AnimatedTest';
 export * from './AnimatedValueTest';
+export * from './AppearanceTest';
 export * from './AppRegistryTest';
 export * from './AppStateTest';
 export * from './BackHandlerTest';

@@ -1,3 +1,4 @@
+export * from "./AppearanceTurboModule";
 export * from "./AppStateTurboModule";
 export * from "./DeviceInfoTurboModule";
 export * from "./DeviceEventManagerTurboModule";
