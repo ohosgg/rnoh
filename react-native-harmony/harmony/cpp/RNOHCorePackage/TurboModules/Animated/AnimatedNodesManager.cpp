@@ -14,6 +14,7 @@
 #include "Drivers/EventAnimationDriver.h"
 #include "Drivers/FrameBasedAnimationDriver.h"
 #include "Drivers/SpringAnimationDriver.h"
+#include "Drivers/DecayAnimationDriver.h"
 
 using namespace facebook;
 
@@ -173,6 +174,8 @@ void AnimatedNodesManager::startAnimatingNode(facebook::react::Tag animationId, 
         driver = std::make_unique<FrameBasedAnimationDriver>(animationId, nodeTag, *this, config, std::move(endCallback));
     } else if (type == "spring") {
         driver = std::make_unique<SpringAnimationDriver>(animationId, nodeTag, *this, config, std::move(endCallback));
+    } else if (type == "decay") {
+        driver = std::make_unique<DecayAnimationDriver>(animationId, nodeTag, *this, config, std::move(endCallback));
     } else {
         throw std::runtime_error("Unsupported animation type: " + type);
     }

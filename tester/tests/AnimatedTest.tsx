@@ -36,6 +36,9 @@ export function AnimatedTest() {
       <TestCase itShould="rotate squares with different stiffness/mass">
         <Spring />
       </TestCase>
+      <TestCase itShould="move squares with different initial velocity and deceleration values">
+        <Decay />
+      </TestCase>
       <TestCase itShould="move grey square 2x further horizontally than red">
         <Multiply />
       </TestCase>
@@ -400,6 +403,58 @@ const Spring = () => {
                 inputRange: [0, 1],
                 outputRange: ['0deg', '360deg'],
               }),
+            },
+          ],
+        }}
+      />
+      <Text style={{height: 20}}>Press me to start animation</Text>
+    </Pressable>
+  );
+};
+
+const Decay = () => {
+  const square1Anim = useRef(new Animated.Value(0)).current;
+  const square2Anim = useRef(new Animated.Value(0)).current;
+
+  const animation = Animated.parallel([
+    Animated.decay(square1Anim, {
+      velocity: 0.5,
+      useNativeDriver: true,
+    }),
+    Animated.decay(square2Anim, {
+      velocity: 0.25,
+      // a deceleration value empirically determined to be _nice_
+      deceleration: 0.99875,
+      useNativeDriver: true,
+    }),
+  ]);
+  const handleAnimation = () => {
+    animation.reset();
+    animation.start();
+  };
+
+  return (
+    <Pressable style={{height: 120, width: '100%'}} onPress={handleAnimation}>
+      <Animated.View
+        style={{
+          height: 50,
+          width: 50,
+          backgroundColor: 'red',
+          transform: [
+            {
+              translateX: square1Anim,
+            },
+          ],
+        }}
+      />
+      <Animated.View
+        style={{
+          height: 50,
+          width: 50,
+          backgroundColor: 'grey',
+          transform: [
+            {
+              translateX: square2Anim,
             },
           ],
         }}
