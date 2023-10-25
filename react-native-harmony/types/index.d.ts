@@ -75,7 +75,7 @@ export * from 'react-native/Libraries/Utilities/BackHandler';
 export * from 'react-native/Libraries/Utilities/Dimensions';
 export * from 'react-native/Libraries/Utilities/PixelRatio';
 export * from '../Libraries/Utilities/Platform';
-// export * from 'react-native/Libraries/Vibration/Vibration';
+export * from 'react-native/Libraries/Vibration/Vibration';
 // export * from 'react-native/Libraries/YellowBox/YellowBoxDeprecated';
 // export * from 'react-native/Libraries/vendor/core/ErrorUtils';
 // export * from 'react-native/Libraries/vendor/emitter/EventEmitter';

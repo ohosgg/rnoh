@@ -41,5 +41,6 @@ export * from './TouchablesTest';
 export * from './TurboModuleTest';
 export * from './UseWindowDimensionsTest';
 export * from './UIManagerTest';
-export * from './VirtualizedListTest';
 export * from './ViewTest';
+export * from './VibrationTest';
+export * from './VirtualizedListTest';
