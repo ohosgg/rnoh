@@ -33,11 +33,7 @@ export function AnimatedTest() {
       <TestCase itShould="rotate button on press">
         <AnimatedPressableView />
       </TestCase>
-      <TestCase
-        itShould="rotate squares with different stiffness/mass"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/261
-      >
+      <TestCase itShould="rotate squares with different stiffness/mass">
         <Spring />
       </TestCase>
       <TestCase itShould="move grey square 2x further horizontally than red">
@@ -385,9 +381,9 @@ const Spring = () => {
           backgroundColor: 'red',
           transform: [
             {
-              translateX: square1Anim.interpolate({
+              rotateZ: square1Anim.interpolate({
                 inputRange: [0, 1],
-                outputRange: [0, 200],
+                outputRange: ['0deg', '360deg'],
               }),
             },
           ],
@@ -400,9 +396,9 @@ const Spring = () => {
           backgroundColor: 'grey',
           transform: [
             {
-              translateX: square2Anim.interpolate({
+              rotateZ: square2Anim.interpolate({
                 inputRange: [0, 1],
-                outputRange: [0, 200],
+                outputRange: ['0deg', '360deg'],
               }),
             },
           ],
