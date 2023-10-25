@@ -130,6 +130,9 @@ module.exports = {
   get useAnimatedValue() {
     return require('react-native/Libraries/Animated/useAnimatedValue').default;
   },
+  get useColorScheme() {
+    return require('react-native/Libraries/Utilities/useColorScheme').default;
+  },
   get useWindowDimensions() {
     return require('react-native/Libraries/Utilities/useWindowDimensions')
       .default;

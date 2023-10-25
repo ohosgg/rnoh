@@ -40,6 +40,7 @@ export * from './TimerTest';
 export * from './TouchableOpacityTest';
 export * from './TouchablesTest';
 export * from './TurboModuleTest';
+export * from './UseColorSchemeTest';
 export * from './UseWindowDimensionsTest';
 export * from './UIManagerTest';
 export * from './ViewTest';
