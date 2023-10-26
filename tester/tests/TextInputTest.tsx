@@ -67,13 +67,11 @@ export function TextInputTest() {
       <TestCase
         modal
         itShould="focus textInput on click"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/405
         initialState={false}
-        arrange={({ setState }) => (
+        arrange={({setState}) => (
           <TextInput style={styles.textInput} onFocus={() => setState(true)} />
         )}
-        assert={({ expect, state }) => {
+        assert={({expect, state}) => {
           expect(state).to.be.true;
         }}
       />

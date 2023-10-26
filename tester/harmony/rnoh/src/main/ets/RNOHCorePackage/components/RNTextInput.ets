@@ -96,8 +96,9 @@ export struct RNTextInput {
   }
 
   onFocusEvent() {
-    this.ctx.rnInstanceManager.emitComponentEvent(this.descriptor.tag, "onFocus", undefined)
+    this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "onFocus", this.value)
   }
+
   aboutToAppear() {
     this.descriptor = this.ctx.descriptorRegistry.getDescriptor<TextInputDescriptor>(this.tag)
     this.value = this.descriptor.props.text ?? ''

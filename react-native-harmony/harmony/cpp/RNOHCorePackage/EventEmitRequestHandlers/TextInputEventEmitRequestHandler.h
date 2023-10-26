@@ -27,7 +27,7 @@ class TextInputEventEmitRequestHandler : public EventEmitRequestHandler {
             eventEmitter->onSubmitEditing(convertTextInputEvent(arkJs, ctx.payload));
         }
         else if (ctx.eventName == "onFocus") {
-            eventEmitter->onFocus({});
+            eventEmitter->onFocus(convertTextInputEvent(arkJs, ctx.payload));
         }
         
 
