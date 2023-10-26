@@ -120,7 +120,7 @@ export struct RNTextInput {
         else if (command === 'setTextAndSelection') {
           const parsedArgs = parseSetTextAndSelectionCommandCallback(args);
           if (parsedArgs.value) {
-          this.value = parsedArgs.value;
+            this.value = parsedArgs.value;
           }
         }
       });
@@ -142,9 +142,20 @@ export struct RNTextInput {
           .width("100%")
           .height("100%")
           .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
-          .fontSize(this.descriptor.props.fontSize)
-          .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
+          .fontSize(getFontSize(this.descriptor.props.fontSize))
+          .onChange((value) => this.handleChangeEvent(value))
+          .enabled(this.descriptor.props.editable)
           .maxLength(this.descriptor.rawProps.maxLength)
+          .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
+          .textAlign(stringToAlignment(this.descriptor.props.textAlign))
+          /*
+           * We set the below props to 0/Transparent because RNViewBase should handle them.
+           * We don't want default values set only on the native side, as they break the layout.
+           */
+          .padding(0)
+          .borderRadius(0)
+          .backgroundColor(Color.Transparent)
+          .onFocus(() => this.onFocusEvent())
       } else {
         TextInput({
           controller: this.inputController,
@@ -165,7 +176,7 @@ export struct RNTextInput {
           .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
           .enterKeyType(stringToEnterKeyType(this.descriptor.props.returnKeyType))
           .textAlign(stringToAlignment(this.descriptor.props.textAlign))
-          /**
+          /*
            * We set the below props to 0/Transparent because RNViewBase should handle them.
            * We don't want default values set only on the native side, as they break the layout.
            */
