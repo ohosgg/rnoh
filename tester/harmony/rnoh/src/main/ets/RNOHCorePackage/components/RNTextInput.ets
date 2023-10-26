@@ -98,6 +98,9 @@ export struct RNTextInput {
   onFocusEvent() {
     this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "onFocus", this.value)
   }
+  onBlurEvent() {
+    this.ctx.rnInstanceManager.emitComponentEvent(this.descriptor.tag, "onBlur", undefined)
+  }
 
   aboutToAppear() {
     this.descriptor = this.ctx.descriptorRegistry.getDescriptor<TextInputDescriptor>(this.tag)
@@ -157,6 +160,7 @@ export struct RNTextInput {
           .borderRadius(0)
           .backgroundColor(Color.Transparent)
           .onFocus(() => this.onFocusEvent())
+          .onBlur(() => this.onBlurEvent())
       } else {
         TextInput({
           controller: this.inputController,
@@ -186,6 +190,7 @@ export struct RNTextInput {
           .backgroundColor(Color.Transparent)
           .onSubmit(() => this.onSubmitEditing())
           .onFocus(() => this.onFocusEvent())
+          .onBlur(() => this.onBlurEvent())
       }
     }
   }

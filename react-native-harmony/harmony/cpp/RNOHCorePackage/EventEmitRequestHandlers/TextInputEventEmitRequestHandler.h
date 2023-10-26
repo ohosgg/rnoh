@@ -11,7 +11,7 @@ facebook::react::TextInputMetrics convertTextInputEvent(ArkJS &arkJs, napi_value
 
 class TextInputEventEmitRequestHandler : public EventEmitRequestHandler {
     void handleEvent(EventEmitRequestHandler::Context const &ctx) override {
-        if (ctx.eventName != "TextInputChange" && ctx.eventName != "onSubmitEditing" && ctx.eventName != "onFocus") {
+        if (ctx.eventName != "TextInputChange" && ctx.eventName != "onSubmitEditing" && ctx.eventName != "onFocus" && ctx.eventName != "onBlur") {
             return;
         }
 
@@ -28,6 +28,9 @@ class TextInputEventEmitRequestHandler : public EventEmitRequestHandler {
         }
         else if (ctx.eventName == "onFocus") {
             eventEmitter->onFocus(convertTextInputEvent(arkJs, ctx.payload));
+        }
+        else if (ctx.eventName == "onBlur") {
+            eventEmitter->onBlur(convertTextInputEvent(arkJs, ctx.payload));
         }
         
 
