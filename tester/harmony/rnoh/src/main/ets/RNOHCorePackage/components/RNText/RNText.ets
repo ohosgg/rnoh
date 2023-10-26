@@ -1,4 +1,4 @@
-import { RNOHContext } from '../../../RNOH'
+import { RNOHContext, PLACEHOLDER_SYMBOL } from '../../../RNOH'
 import { RNSimpleText } from './RNSimpleText'
 import { RNParagraph } from './RNParagraph'
 import { TextDescriptor } from './types'
@@ -31,7 +31,7 @@ export struct RNText {
   }
 
   build() {
-    if (this.descriptor.props.fragments.length <= 1) {
+    if (this.descriptor.props.fragments.length <= 1 && !this.descriptor.props.fragments.some(fragment => fragment.text === PLACEHOLDER_SYMBOL)) {
       RNSimpleText({ ctx: this.ctx, tag: this.tag })
     } else {
       RNParagraph({ ctx: this.ctx, tag: this.tag, buildCustomComponent: this.buildCustomComponent })

@@ -349,6 +349,11 @@ export function TextTest() {
           </View>
         </TestCase>
         <TestSuite name="views in text">
+          <TestCase itShould="not crash the app">
+            <Text>
+              <View style={{width: 64, height: 64, backgroundColor: 'red'}} />
+            </Text>
+          </TestCase>
           <TestCase itShould="render red rectangle after 'FOO'">
             <View
               style={{

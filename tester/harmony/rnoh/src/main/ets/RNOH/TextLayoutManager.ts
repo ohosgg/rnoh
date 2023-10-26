@@ -91,7 +91,8 @@ export function measureParagraph(
 }
 
 function createTextLayoutManager(fragments: Fragment[]): TextLayoutManager {
-  if (fragments.length <= 1) {
+  const shouldCreateSpaceForAttachment = fragments.some(fragment => fragment.string === PLACEHOLDER_SYMBOL)
+  if (fragments.length <= 1 && !shouldCreateSpaceForAttachment) {
     return new SimpleTextLayoutManager();
   }
   return new AdvancedTextLayoutManager(
