@@ -162,6 +162,30 @@ export function TextInputTest() {
       <TestCase modal itShould="show text input with default value">
         <DefaultProps />
       </TestCase>
+      <TestCase
+        modal
+        itShould="trigger onLayout event on mount"
+        initialState={{}}
+        arrange={({setState}) => {
+          const [layout, setLayout] = useState('');
+          return (
+            <>
+              <Text>{layout}</Text>
+              <TextInput
+                style={styles.textInput}
+                onLayout={event => {
+                  setLayout(JSON.stringify(event.nativeEvent.layout));
+                  setState(event.nativeEvent.layout);
+                }}
+              />
+              ;
+            </>
+          );
+        }}
+        assert={({expect, state}) => {
+          expect(state).to.include.all.keys('width', 'height', 'x', 'y');
+        }}
+      />
     </TestSuite>
   );
 }
