@@ -11,13 +11,13 @@ import type {
   TextFragmentMeasurer,
   MeasuredFragment,
   Size,
-  PositionedFragment,
 } from './types';
 
-/**
- * MeasuredToken represents a single word or whitespace, whereas MeasuredFragment can consists of many words.
- */
-type MeasuredToken = MeasuredFragment & {_type: 'MeasuredToken'};
+type Token = Fragment & {canBreakLine: boolean; isIgnoredIfBreaksLine: boolean};
+type MeasuredToken = MeasuredFragment & {
+  canBreakLine: boolean;
+  isIgnoredIfBreaksLine: boolean;
+};
 
 export class UnhyphenatedWordWrapStrategy<
   TAttributesMap extends Record<string, any> = any,
@@ -42,36 +42,49 @@ export class UnhyphenatedWordWrapStrategy<
     );
   }
 
-  private tokenize(fragments: Fragment[]): Fragment[] {
+  private tokenize(fragments: Fragment[]): Token[] {
     return fragments
       .map(fragment => {
         if (fragment.type === 'text') {
-          return this.splitTextFragmentContent(fragment.content).map(
-            newContent => ({...fragment, content: newContent}),
+          return this.splitTextFragmentContent(fragment.content).map<Token>(
+            newContent => ({
+              ...fragment,
+              content: newContent,
+              canBreakLine: this.canCharacterBreakLine(newContent),
+              isIgnoredIfBreaksLine: [' ', '\n'].includes(newContent),
+            }),
           );
         } else {
-          return [fragment];
+          return [
+            {...fragment, canBreakLine: false, isIgnoredIfBreaksLine: false},
+          ];
         }
       })
       .flat();
+  }
+
+  protected canCharacterBreakLine(c: string): boolean {
+    return c === ' ' || isChineseOrJapaneseCharacter(c);
   }
 
   protected splitTextFragmentContent(s: string): string[] {
     return s.split('');
   }
 
-  private measureToken(fragment: Fragment): MeasuredToken {
-    if (fragment.type === 'placeholder') {
+  private measureToken(token: Token): MeasuredToken {
+    if (token.type === 'placeholder') {
       return {
-        _type: 'MeasuredToken',
-        fragment,
-        size: {width: fragment.width, height: fragment.height},
+        fragment: token,
+        size: {width: token.width, height: token.height},
+        canBreakLine: token.canBreakLine,
+        isIgnoredIfBreaksLine: token.isIgnoredIfBreaksLine,
       };
-    } else if (fragment.type === 'text') {
+    } else if (token.type === 'text') {
       return {
-        _type: 'MeasuredToken',
-        fragment,
-        size: this.textFragmentMeasurer.measureTextFragment(fragment),
+        fragment: token,
+        size: this.textFragmentMeasurer.measureTextFragment(token),
+        canBreakLine: token.canBreakLine,
+        isIgnoredIfBreaksLine: token.isIgnoredIfBreaksLine,
       };
     } else {
       throw new ParagraphMeasurerError(`Unsupported fragment`);
@@ -124,106 +137,94 @@ export class UnhyphenatedWordWrapStrategy<
     measuredTokens: MeasuredToken[],
     containerWidth: number,
   ): {nextLine: MeasuredToken[]; remainingTokens: MeasuredToken[]} {
-    let lastSpaceInCurrentLineTokenIdx: number | undefined = undefined;
-    let lastPlaceholderInCurrentLineTokenIdx: number | undefined = undefined;
-    let currentLineWidth = 0;
-    let currentLineTokens: MeasuredToken[] = [];
-
+    const currentLineTokens: MeasuredToken[] = [];
     for (
-      let measuredTokenIdx = 0;
-      measuredTokenIdx < measuredTokens.length;
-      measuredTokenIdx++
+      let currentTokenIdx = 0;
+      currentTokenIdx < measuredTokens.length;
+      currentTokenIdx++
     ) {
-      const currentToken = measuredTokens[measuredTokenIdx];
+      const {
+        currentLineWidth,
+        lastBreakableTokenIdxInCurrentLine,
+        lastPlaceholderInCurrentLineTokenIdx,
+      } = this.extractLineInfo(currentLineTokens);
+      const currentToken = measuredTokens[currentTokenIdx];
+      const canFitCurrentToken =
+        currentLineWidth + currentToken.size.width <= containerWidth;
       if (currentToken.fragment.type === 'text') {
         if (currentToken.fragment.content === '\n') {
-          return this.prepareNewLine({
+          return this.breakLine({
             measuredTokens,
-            lineEndIdx: measuredTokenIdx,
-            remainingTokenIdx: measuredTokenIdx + 1,
+            breakingTokenIdx: currentTokenIdx,
           });
-        } else if (currentToken.fragment.content === ' ') {
-          if (currentLineWidth + currentToken.size.width <= containerWidth) {
+        } else if (currentToken.canBreakLine) {
+          if (canFitCurrentToken) {
             const nextToken =
-              measuredTokenIdx + 1 < measuredTokens.length
-                ? measuredTokens[measuredTokenIdx + 1]
+              currentTokenIdx + 1 < measuredTokens.length
+                ? measuredTokens[currentTokenIdx + 1]
                 : undefined;
             if (nextToken) {
-              if (
+              const canFitCurrentAndNextToken =
                 currentLineWidth +
                   currentToken.size.width +
                   nextToken.size.width <=
-                containerWidth
-              ) {
+                containerWidth;
+              if (currentToken.canBreakLine || canFitCurrentAndNextToken) {
                 currentLineTokens.push(currentToken);
-                currentLineWidth += currentToken.size.width;
-                lastSpaceInCurrentLineTokenIdx = currentLineTokens.length - 1;
                 continue;
               } else {
-                return this.prepareNewLine({
+                return this.breakLine({
                   measuredTokens,
-                  lineEndIdx: measuredTokenIdx,
-                  remainingTokenIdx: measuredTokenIdx + 1,
+                  breakingTokenIdx: currentTokenIdx,
                 });
               }
             } else {
               currentLineTokens.push(currentToken);
-              currentLineWidth += currentToken.size.width;
-              lastSpaceInCurrentLineTokenIdx = currentLineTokens.length - 1;
               continue;
             }
           } else {
-            return this.prepareNewLine({
+            return this.breakLine({
               measuredTokens,
-              lineEndIdx: measuredTokenIdx,
-              remainingTokenIdx: measuredTokenIdx + 1,
+              breakingTokenIdx: currentTokenIdx,
             });
           }
         } else {
-          if (currentLineWidth + currentToken.size.width <= containerWidth) {
+          if (canFitCurrentToken) {
             currentLineTokens.push(currentToken);
-            currentLineWidth += currentToken.size.width;
             continue;
-          } else if (lastSpaceInCurrentLineTokenIdx === undefined) {
+          } else if (lastBreakableTokenIdxInCurrentLine === undefined) {
             if (lastPlaceholderInCurrentLineTokenIdx !== undefined) {
               const wordWidth = this.calculateWordWidthAtIndex({
                 measuredTokens,
-                tokenIdx: measuredTokenIdx,
+                tokenIdx: currentTokenIdx,
               });
               if (wordWidth < containerWidth) {
-                return this.prepareNewLine({
+                return this.breakLine({
                   measuredTokens,
-                  lineEndIdx: lastPlaceholderInCurrentLineTokenIdx + 1,
-                  remainingTokenIdx: lastPlaceholderInCurrentLineTokenIdx + 1,
+                  breakingTokenIdx: lastPlaceholderInCurrentLineTokenIdx + 1,
                 });
               }
             }
-            return this.prepareNewLine({
+            return this.breakLine({
               measuredTokens,
-              lineEndIdx: measuredTokenIdx,
-              remainingTokenIdx: measuredTokenIdx,
+              breakingTokenIdx: currentTokenIdx,
             });
           } else {
-            return this.prepareNewLine({
+            return this.breakLine({
               measuredTokens,
-              lineEndIdx: lastSpaceInCurrentLineTokenIdx,
-              remainingTokenIdx: lastSpaceInCurrentLineTokenIdx + 1,
+              breakingTokenIdx: lastBreakableTokenIdxInCurrentLine,
             });
           }
         }
       } else {
         if (currentLineWidth + currentToken.size.width <= containerWidth) {
           currentLineTokens.push(currentToken);
-          currentLineWidth += currentToken.size.width;
-          lastPlaceholderInCurrentLineTokenIdx = measuredTokenIdx;
-        } else if (lastSpaceInCurrentLineTokenIdx === undefined) {
+        } else if (lastBreakableTokenIdxInCurrentLine === undefined) {
           currentLineTokens.push(currentToken);
-          currentLineWidth += currentToken.size.width;
-          lastPlaceholderInCurrentLineTokenIdx = measuredTokenIdx;
         } else {
-          return this.prepareNewLine({
+          return this.breakLine({
             measuredTokens,
-            lineEndIdx: measuredTokenIdx + 1,
+            breakingTokenIdx: currentTokenIdx + 1,
           });
         }
       }
@@ -231,18 +232,38 @@ export class UnhyphenatedWordWrapStrategy<
     return {nextLine: currentLineTokens, remainingTokens: []};
   }
 
-  private prepareNewLine({
+  private extractLineInfo(lineTokens: MeasuredToken[]) {
+    const lastBreakableTokenIdxInCurrentLine = findLastIndex(
+      lineTokens,
+      token => token.canBreakLine,
+    );
+    const lastPlaceholderInCurrentLineTokenIdx = findLastIndex(
+      lineTokens,
+      token => token.fragment.type === 'placeholder',
+    );
+    const currentLineWidth = lineTokens.reduce(
+      (sum, token) => sum + token.size.width,
+      0,
+    );
+    return {
+      lastBreakableTokenIdxInCurrentLine,
+      lastPlaceholderInCurrentLineTokenIdx,
+      currentLineWidth,
+    };
+  }
+
+  private breakLine({
     measuredTokens,
-    lineEndIdx,
-    remainingTokenIdx,
+    breakingTokenIdx,
   }: {
     measuredTokens: MeasuredToken[];
-    lineEndIdx: number;
-    remainingTokenIdx?: number;
+    breakingTokenIdx: number;
   }) {
-    const nextLine = measuredTokens.slice(0, lineEndIdx);
-    const remainingTokens =
-      measuredTokens.slice(remainingTokenIdx ?? lineEndIdx) ?? [];
+    const breakingToken = measuredTokens[breakingTokenIdx];
+    const newLineStartIdx =
+      breakingTokenIdx + (breakingToken.isIgnoredIfBreaksLine ? 1 : 0);
+    const nextLine = measuredTokens.slice(0, breakingTokenIdx);
+    const remainingTokens = measuredTokens.slice(newLineStartIdx) ?? [];
     return {
       nextLine,
       remainingTokens,
@@ -282,4 +303,27 @@ export class UnhyphenatedWordWrapStrategy<
     }
     return wordWidth;
   }
+}
+
+export function isChineseOrJapaneseCharacter(character: string) {
+  const charCode = character.charCodeAt(0);
+  return (
+    (charCode >= 0x4e00 && charCode <= 0x9fff) || // Chinese character range
+    (charCode >= 0x3400 && charCode <= 0x4dbf) || // Extended Chinese character range
+    (charCode >= 0x3000 && charCode <= 0x30ff) || // Japanese character range
+    (charCode >= 0x31f0 && charCode <= 0x31ff) || // Katakana Phonetic Extensions range
+    (charCode >= 0xff00 && charCode <= 0xffef) // Halfwidth and Fullwidth Forms range
+  );
+}
+
+function findLastIndex<T>(
+  arr: T[],
+  predicate: (el: T) => boolean,
+): number | undefined {
+  for (let i = arr.length - 1; i >= 0; i--) {
+    if (predicate(arr[i])) {
+      return i;
+    }
+  }
+  return undefined;
 }

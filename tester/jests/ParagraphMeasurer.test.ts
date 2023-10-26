@@ -6,6 +6,7 @@ import {
   TextFragmentMeasurer,
   UnhyphenatedWordWrapStrategy,
   TailEllipsisInserter,
+  isChineseOrJapaneseCharacter,
 } from '../harmony/rnoh/src/main/ets/ParagraphMeasurer';
 
 type ExtraData = {
@@ -322,6 +323,28 @@ describe('UnhyphenatedWordWrapStrategy', () => {
     expect(lines[0].positionedFragments[0].fragment.type).toBe('placeholder');
     expect(lines[0].size.width).toBe(4);
     expect(lines[1].size.width).toBe(8);
+  });
+
+  it('should treat Chinese characters as english words', () => {
+    const strategy = new UnhyphenatedWordWrapStrategy(
+      new FakeTextFragmentMeasurer(),
+    );
+
+    const lines = strategy.convertFragmentsIntoLines(
+      [{type: 'text', content: '天地 玄黄', extraData: {}}],
+      {width: 4},
+    );
+    result = lines;
+
+    expectLineSplitting(lines, [['天地 玄'], ['黄']]);
+  });
+
+  it('should detect Chinese character', () => {
+    expect(isChineseOrJapaneseCharacter('天')).toBe(true);
+    expect(isChineseOrJapaneseCharacter('地')).toBe(true);
+    expect(isChineseOrJapaneseCharacter('玄')).toBe(true);
+    expect(isChineseOrJapaneseCharacter('黄')).toBe(true);
+    expect(isChineseOrJapaneseCharacter('A')).toBe(false);
   });
 });
 

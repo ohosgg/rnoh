@@ -349,6 +349,17 @@ export function TextTest() {
           </View>
         </TestCase>
         <TestSuite name="views in text">
+          <TestCase itShould="wrap first and second paragraph in the same way">
+            <View style={{width: 200, backgroundColor: 'silver'}}>
+              <Text>
+                天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏 闰馀成岁
+              </Text>
+              <Text style={{marginTop: 16}}>
+                <Text style={{fontWeight: 'bold'}}>天地玄黄</Text> 宇宙洪荒
+                日月盈昃 辰宿列张 寒来暑往 秋收冬藏 闰馀成岁
+              </Text>
+            </View>
+          </TestCase>
           <TestCase itShould="not crash the app">
             <Text>
               <View style={{width: 64, height: 64, backgroundColor: 'red'}} />
