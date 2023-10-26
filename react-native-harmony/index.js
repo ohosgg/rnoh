@@ -110,16 +110,16 @@ module.exports = {
     return require('react-native/Libraries/Components/Touchable/Touchable');
   },
   get TouchableHighlight() {
-    return require('react-native/Libraries/Components/Touchable/TouchableHighlight');
+    return require("./Libraries/Components/Touchable/TouchableHighlight");
   },
   get TouchableNativeFeedback() {
-    return require('react-native/Libraries/Components/Touchable/TouchableNativeFeedback');
+    return require("./Libraries/Components/Touchable/TouchableNativeFeedback");
   },
   get TouchableOpacity() {
     return require('react-native/Libraries/Components/Touchable/TouchableOpacity');
   },
   get TouchableWithoutFeedback() {
-    return require('react-native/Libraries/Components/Touchable/TouchableWithoutFeedback');
+    return require("./Libraries/Components/Touchable/TouchableWithoutFeedback");
   },
   get TurboModuleRegistry() {
     return require('react-native/Libraries/TurboModule/TurboModuleRegistry');

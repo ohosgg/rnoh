@@ -43,6 +43,22 @@ export const TouchablesTest = () => {
       <TestCase itShould="handle press without showing feedback">
         <TouchableWithoutFeedbackDemo />
       </TestCase>
+      <TestCase
+        itShould="handle presses on empty views"
+        initialState={false}
+        arrange={({setState}) => {
+          return (
+            <View style={{height: 100, backgroundColor: 'red'}}>
+              <TouchableWithoutFeedback onPress={() => setState(true)}>
+                <View style={{height: '100%', width: '100%'}}></View>
+              </TouchableWithoutFeedback>
+            </View>
+          );
+        }}
+        assert={({expect, state}) => {
+          expect(state).to.be.true;
+        }}
+      />
     </TestSuite>
   );
 };
