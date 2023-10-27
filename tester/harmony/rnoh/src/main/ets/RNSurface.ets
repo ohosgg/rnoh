@@ -110,6 +110,14 @@ export struct RNSurface {
 
   build() {
     Stack() {
+      // patch: solve autofocus issues
+      Button()
+        .key('fixedAutoFocus')
+        .width(0)
+        .height(0)
+        .padding(0)
+        .margin(0)
+        .defaultFocus(true)
       ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
         RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
       }, (childrenTag: Tag) => childrenTag.toString())
