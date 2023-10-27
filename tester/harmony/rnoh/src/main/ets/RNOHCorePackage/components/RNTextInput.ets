@@ -107,7 +107,8 @@ export struct RNTextInput {
     this.value = this.descriptor.props.text ?? ''
     this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
-        this.descriptor = (newDescriptor as TextInputDescriptor)
+        this.descriptor = (newDescriptor as TextInputDescriptor);
+        this.value = this.descriptor.props.text ?? '';
       }
     )
     this.cleanupCommandCallback = this.ctx.commandDispatcher.registerCommandCallback(
