@@ -324,6 +324,37 @@ export function ViewTest() {
         />
       </TestSuite>
       <TestCase
+        tags={['dev']}
+        itShould="pass on touching blue background"
+        initialState={false}
+        arrange={({setState}) => (
+          <View style={{backgroundColor: 'blue', alignSelf: 'center'}}>
+            <View
+              hitSlop={{top: 48, left: 48, bottom: 48, right: 48}}
+              style={{
+                width: 48,
+                height: 48,
+                backgroundColor: 'green',
+                margin: 48,
+              }}
+              onTouchEnd={() => {
+                setState(true);
+              }}>
+              <View
+                style={{width: 48, height: 48, backgroundColor: 'red'}}
+                onTouchEnd={e => {
+                  e.stopPropagation();
+                }}
+              />
+            </View>
+          </View>
+        )}
+        assert={({expect, state}) => {
+          expect(state).to.be.true;
+        }}
+      />
+
+      <TestCase
         itShould="render view focusable with a non-touch input device"
         skip
         //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/258

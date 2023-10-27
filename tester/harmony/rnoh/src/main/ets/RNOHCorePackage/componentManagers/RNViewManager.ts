@@ -7,15 +7,19 @@ import type {
   DescriptorRegistry,
   Point,
   BoundingBox,
-  TouchTargetHelperDelegate} from '../../RNOH';
-import {
-  OverflowMode,
-  ComponentManager
+  TouchTargetHelperDelegate
 } from '../../RNOH';
+import { OverflowMode, ComponentManager } from '../../RNOH';
 
 
 export type PointerEvents = "auto" | "none" | "box-none" | "box-only"
 
+export interface HitSlop {
+  top: number,
+  left: number,
+  bottom: number,
+  right: number
+}
 
 export class RNViewManager extends ComponentManager implements TouchTargetHelperDelegate {
   protected boundingBox: BoundingBox = {
@@ -45,10 +49,14 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
   public isPointInView({x, y}: Point): boolean {
     const descriptor = this.getDescriptor();
     const size = descriptor.layoutMetrics.frame.size;
-    // TODO: add hitslops
-    const withinX = x >= 0 && x <= size.width;
-    const withinY = y >= 0 && y <= size.height;
+    const hitSlop = this.getHitSlop()
+    const withinX = x >= -hitSlop.left && x <= (size.width + hitSlop.right);
+    const withinY = y >= -hitSlop.top && y <= (size.height + hitSlop.bottom);
     return withinX && withinY;
+  }
+
+  private getHitSlop(): HitSlop {
+    return this.getDescriptor().rawProps["hitSlop"] ?? {top: 0, left:0, right: 0, bottom: 0}
   }
 
   public isPointInBoundingBox({x, y}: Point): boolean {
