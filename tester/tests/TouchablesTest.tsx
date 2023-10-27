@@ -31,7 +31,7 @@ export const TouchablesTest = () => {
       <TestCase itShould="show number of presses on press in (TouchableHighlight)">
         <TouchableHighlight
           onPress={() => setPressCountHighlight(pressCountHighlight + 1)}>
-          <PressMe endLabel={pressCountHighlight}/>
+          <PressMe endLabel={pressCountHighlight} />
         </TouchableHighlight>
       </TestCase>
       <TestCase
@@ -59,6 +59,42 @@ export const TouchablesTest = () => {
           expect(state).to.be.true;
         }}
       />
+      <TestCase
+        itShould="pass when blue background is pressed"
+        initialState={false}
+        arrange={({setState}) => (
+          <View
+            style={{
+              backgroundColor: 'blue',
+              alignSelf: 'center',
+              position: 'relative',
+            }}>
+            <TouchableWithoutFeedback
+              hitSlop={{top: 48, left: 48, bottom: 48, right: 48}}
+              onPress={() => {
+                setState(true);
+              }}>
+              <View style={{width: 48, height: 48, margin: 48}} />
+            </TouchableWithoutFeedback>
+            <View
+              style={{
+                width: 48,
+                height: 48,
+                backgroundColor: 'red',
+                position: 'absolute',
+                top: 48,
+                left: 48,
+              }}
+              onTouchEnd={e => {
+                e.stopPropagation();
+              }}
+            />
+          </View>
+        )}
+        assert={({expect, state}) => {
+          expect(state).to.be.true;
+        }}
+      />
     </TestSuite>
   );
 };
@@ -66,8 +102,8 @@ export const TouchablesTest = () => {
 function TouchableWithoutFeedbackDemo() {
   const [counter, setCounter] = useState(0);
   return (
-    <TouchableWithoutFeedback onPressIn={() => setCounter(prev => prev+1)}>
-        <PressMe endLabel={counter} />
+    <TouchableWithoutFeedback onPressIn={() => setCounter(prev => prev + 1)}>
+      <PressMe endLabel={counter} />
     </TouchableWithoutFeedback>
   );
 }

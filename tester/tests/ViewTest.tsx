@@ -324,7 +324,6 @@ export function ViewTest() {
         />
       </TestSuite>
       <TestCase
-        tags={['dev']}
         itShould="pass on touching blue background"
         initialState={false}
         arrange={({setState}) => (
@@ -353,7 +352,6 @@ export function ViewTest() {
           expect(state).to.be.true;
         }}
       />
-
       <TestCase
         itShould="render view focusable with a non-touch input device"
         skip

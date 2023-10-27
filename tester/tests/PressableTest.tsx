@@ -98,6 +98,47 @@ export function PressableTest() {
       >
         <HoverView />
       </TestCase>
+      <TestCase
+        itShould="pass when blue background is pressed"
+        initialState={false}
+        arrange={({setState}) => (
+          <View
+            style={{
+              backgroundColor: 'blue',
+              alignSelf: 'center',
+              position: 'relative',
+            }}>
+            <Pressable
+              hitSlop={{top: 48, left: 48, bottom: 48, right: 48}}
+              style={{
+                width: 48,
+                height: 48,
+                backgroundColor: 'green',
+                margin: 48,
+              }}
+              onPress={() => {
+                setState(true);
+              }}
+            />
+            <View
+              style={{
+                width: 48,
+                height: 48,
+                backgroundColor: 'red',
+                position: 'absolute',
+                top: 48,
+                left: 48,
+              }}
+              onTouchEnd={e => {
+                e.stopPropagation();
+              }}
+            />
+          </View>
+        )}
+        assert={({expect, state}) => {
+          expect(state).to.be.true;
+        }}
+      />
     </TestSuite>
   );
 }
