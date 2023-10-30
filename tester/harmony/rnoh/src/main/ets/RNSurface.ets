@@ -63,8 +63,9 @@ export struct RNSurface {
   aboutToDisappear() {
     this.cleanup?.();
     if (this.shouldStopSurface) {
-      this.surfaceHandle.stop();
-      this.surfaceHandle.destroy();
+      this.surfaceHandle.stop().then(() => {
+        this.surfaceHandle.destroy();
+      })
     } else if (this.surfaceHandle.getDisplayMode() === DisplayMode.Visible) {
       this.surfaceHandle.setDisplayMode(DisplayMode.Suspended);
     }

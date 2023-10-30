@@ -1,7 +1,7 @@
 import type { TurboModuleProvider } from "./TurboModuleProvider";
 import type { Mutation } from "./Mutation";
 import type { Tag } from "./DescriptorBase";
-import type { AttributedString, ParagraphAttributes, LayoutConstrains} from "./TextLayoutManager";
+import type { AttributedString, ParagraphAttributes, LayoutConstrains } from "./TextLayoutManager";
 import { measureParagraph } from "./TextLayoutManager"
 import type { DisplayMode } from './CppBridgeUtils';
 
@@ -99,24 +99,30 @@ export class NapiBridge {
     )
   }
 
-  stopSurface(
+  async stopSurface(
     instanceId: number,
     surfaceTag: number,
   ) {
-    this.libRNOHApp?.stopSurface(
-      instanceId,
-      surfaceTag,
-    );
+    return new Promise((resolve) => {
+      this.libRNOHApp?.stopSurface(
+        instanceId,
+        surfaceTag,
+        () => resolve(undefined)
+      );
+    })
   }
 
-  destroySurface(
+  async destroySurface(
     instanceId: number,
     surfaceTag: number,
   ) {
-    this.libRNOHApp?.destroySurface(
-      instanceId,
-      surfaceTag,
-    );
+    return new Promise((resolve) => {
+      this.libRNOHApp?.destroySurface(
+        instanceId,
+        surfaceTag,
+        () => resolve(undefined)
+      );
+    })
   }
 
   setSurfaceDisplayMode(instanceId: number, surfaceTag: Tag, displayMode: DisplayMode): void {

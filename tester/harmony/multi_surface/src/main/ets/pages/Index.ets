@@ -34,18 +34,18 @@ struct Index {
           }
           .margin(12)
         }
-        ForEach(PAGES, ([appKey, name]: string, index: number) => {
+        ForEach(PAGES, (appKeyAndTitle: [string, string], index: number) => {
           ListItem() {
             Navigator({target: "pages/ReactPage", type: NavigationType.Push}) {
-              Text("Go to " + name)
+              Text("Go to " + appKeyAndTitle[1])
                 .fontColor(Color.Blue)
                 .width('100%')
                 .textAlign(TextAlign.Center)
             }
-            .params({appKey})
+            .params({appKey: appKeyAndTitle[0]})
             .margin(12)
           }
-        }, item => item)
+        }, (appKeyAndTitle: [string, string]) => appKeyAndTitle[0])
       }
       .height('100%')
       .width('100%')

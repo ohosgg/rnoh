@@ -41,11 +41,11 @@ export class SurfaceHandle {
       this.props);
   }
 
-  public stop() {
+  public async stop() {
     if (this.destroyed) {
       throw new Error("stop called on a destroyed surface");
     }
-    this.napiBridge.stopSurface(this.rnInstance.getId(), this.tag);
+    return this.napiBridge.stopSurface(this.rnInstance.getId(), this.tag);
   }
 
   public updateConstraints(
@@ -89,11 +89,11 @@ export class SurfaceHandle {
     this.napiBridge.setSurfaceProps(this.rnInstance.getId(), this.tag, this.props);
   }
 
-  public destroy() {
+  public async destroy() {
     if (this.destroyed) {
       throw new Error("destroy called on a destroyed surface");
     }
-    this.napiBridge.destroySurface(this.rnInstance.getId(), this.tag);
+    await this.napiBridge.destroySurface(this.rnInstance.getId(), this.tag);
     this.rnInstance.descriptorRegistry.deleteRootDescriptor(this.tag);
   }
 }

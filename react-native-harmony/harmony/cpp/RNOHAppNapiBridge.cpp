@@ -33,6 +33,7 @@ static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
 }
 
 static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info info) {
+    LOG(INFO) << "subscribeToShadowTreeChanges\n";
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 3);
     size_t instanceId = arkJs.getDouble(args[0]);
@@ -58,6 +59,8 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
 }
 
 static napi_value loadScript(napi_env env, napi_callback_info info) {
+    LOG(INFO) << "loadScript"
+              << "\n";
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 4);
     size_t instanceId = arkJs.getDouble(args[0]);
@@ -78,6 +81,7 @@ static napi_value loadScript(napi_env env, napi_callback_info info) {
 }
 
 static napi_value updateSurfaceConstraints(napi_env env, napi_callback_info info) {
+    LOG(INFO) << "updateSurfaceConstraints\n";
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 7);
     size_t instanceId = arkJs.getDouble(args[0]);
@@ -96,6 +100,7 @@ static napi_value createSurface(napi_env env, napi_callback_info info) {
     size_t instanceId = arkJs.getDouble(args[0]);
     auto &rnInstance = rnInstanceById.at(instanceId);
     facebook::react::Tag surfaceId = arkJs.getDouble(args[1]);
+    LOG(INFO) << "createSurface: surfaceId=" << surfaceId;
     auto appKey = arkJs.getString(args[2]);
     rnInstance->createSurface(surfaceId, appKey);
     return arkJs.getUndefined();
@@ -106,7 +111,9 @@ static napi_value startSurface(napi_env env, napi_callback_info info) {
     auto args = arkJs.getCallbackArgs(info, 8);
     size_t instanceId = arkJs.getDouble(args[0]);
     auto &rnInstance = rnInstanceById.at(instanceId);
-    rnInstance->startSurface(arkJs.getDouble(args[1]),
+    facebook::react::Tag surfaceId = arkJs.getDouble(args[1]);
+    LOG(INFO) << "startSurface: surfaceId=" << surfaceId << "\n";
+    rnInstance->startSurface(surfaceId,
                              arkJs.getDouble(args[2]),
                              arkJs.getDouble(args[3]),
                              arkJs.getDouble(args[4]),
@@ -120,25 +127,43 @@ static napi_value setSurfaceProps(napi_env env, napi_callback_info info) {
     auto args = arkJs.getCallbackArgs(info, 3);
     size_t instanceId = arkJs.getDouble(args[0]);
     auto &rnInstance = rnInstanceById.at(instanceId);
+    facebook::react::Tag surfaceId = arkJs.getDouble(args[1]);
+    LOG(INFO) << "setSurfaceProps: surfaceId=" << surfaceId << "\n";
     rnInstance->setSurfaceProps(arkJs.getDouble(args[1]), arkJs.getDynamic(args[2]));
     return arkJs.getUndefined();
 }
 
 static napi_value stopSurface(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 2);
+    auto args = arkJs.getCallbackArgs(info, 3);
     size_t instanceId = arkJs.getDouble(args[0]);
     auto &rnInstance = rnInstanceById.at(instanceId);
-    rnInstance->stopSurface(arkJs.getDouble(args[1]));
+    facebook::react::Tag surfaceId = arkJs.getDouble(args[1]);
+    auto onFinishRef = arkJs.createReference(args[2]);
+    LOG(INFO) << "stopSurface: surfaceId=" << surfaceId << "\n";
+    rnInstance->stopSurface(surfaceId, [env, onFinishRef]() {
+        ArkJS arkJs(env);
+        auto listener = arkJs.getReferenceValue(onFinishRef);
+        arkJs.call<0>(listener, {});
+        arkJs.deleteReference(onFinishRef);
+    });
     return arkJs.getUndefined();
 }
 
 static napi_value destroySurface(napi_env env, napi_callback_info info) {
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 2);
+    auto args = arkJs.getCallbackArgs(info, 3);
     size_t instanceId = arkJs.getDouble(args[0]);
+    facebook::react::Tag surfaceId = arkJs.getDouble(args[1]);
+    LOG(INFO) << "destroySurface: surfaceId=" << surfaceId << "\n";
     auto &rnInstance = rnInstanceById.at(instanceId);
-    rnInstance->destroySurface(arkJs.getDouble(args[1]));
+    auto onFinishRef = arkJs.createReference(args[2]);
+    rnInstance->destroySurface(surfaceId, [env, onFinishRef]() {
+        ArkJS arkJs(env);
+        auto listener = arkJs.getReferenceValue(onFinishRef);
+        arkJs.call<0>(listener, {});
+        arkJs.deleteReference(onFinishRef);
+    });
     return arkJs.getUndefined();
 }
 
@@ -147,7 +172,9 @@ static napi_value setSurfaceDisplayMode(napi_env env, napi_callback_info info) {
     auto args = arkJs.getCallbackArgs(info, 3);
     size_t instanceId = arkJs.getDouble(args[0]);
     auto &rnInstance = rnInstanceById.at(instanceId);
-    rnInstance->setSurfaceDisplayMode(arkJs.getDouble(args[1]), static_cast<facebook::react::DisplayMode>(arkJs.getDouble(args[2])));
+    facebook::react::Tag surfaceId = arkJs.getDouble(args[1]);
+    LOG(INFO) << "setSurfaceDisplayMode: surfaceId=" << surfaceId << "\n";
+    rnInstance->setSurfaceDisplayMode(surfaceId, static_cast<facebook::react::DisplayMode>(arkJs.getDouble(args[2])));
     return arkJs.getUndefined();
 }
 

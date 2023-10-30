@@ -173,23 +173,29 @@ void rnoh::RNInstance::setSurfaceProps(facebook::react::Tag surfaceId, folly::dy
     it->second->setProps(std::move(props));
 }
 
-void rnoh::RNInstance::stopSurface(react::Tag surfaceId) {
-    auto it = surfaceHandlers.find(surfaceId);
-    if (it == surfaceHandlers.end()) {
-        LOG(ERROR) << "stopSurface: No surface with id " << surfaceId;
-        return;
-    }
-    it->second->stop();
+void rnoh::RNInstance::stopSurface(react::Tag surfaceId, std::function<void()> &&onFinish) {
+    this->taskExecutor->runTask(TaskThread::MAIN, [this, surfaceId, onFinish = std::move(onFinish)]() {
+        auto it = surfaceHandlers.find(surfaceId);
+        if (it == surfaceHandlers.end()) {
+            LOG(ERROR) << "stopSurface: No surface with id " << surfaceId;
+            return;
+        }
+        it->second->stop();
+        onFinish();
+    });
 }
 
-void rnoh::RNInstance::destroySurface(react::Tag surfaceId) {
-    auto it = surfaceHandlers.find(surfaceId);
-    if (it == surfaceHandlers.end()) {
-        LOG(ERROR) << "destroySurface: No surface with id " << surfaceId;
-        return;
-    }
-    scheduler->unregisterSurface(*it->second);
-    surfaceHandlers.erase(it);
+void rnoh::RNInstance::destroySurface(react::Tag surfaceId, std::function<void()> &&onFinish) {
+    this->taskExecutor->runTask(TaskThread::MAIN, [this, surfaceId, onFinish = std::move(onFinish)]() {
+        auto it = surfaceHandlers.find(surfaceId);
+        if (it == surfaceHandlers.end()) {
+            LOG(ERROR) << "destroySurface: No surface with id " << surfaceId;
+            return;
+        }
+        scheduler->unregisterSurface(*it->second);
+        surfaceHandlers.erase(it);
+        onFinish();
+    });
 }
 
 void rnoh::RNInstance::setSurfaceDisplayMode(facebook::react::Tag surfaceId, facebook::react::DisplayMode displayMode) {
