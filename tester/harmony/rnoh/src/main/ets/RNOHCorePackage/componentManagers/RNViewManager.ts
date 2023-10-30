@@ -1,15 +1,15 @@
 import matrix4 from '@ohos.matrix4';
 import type {
-  RNOHContext,
+  BoundingBox,
   ComponentManagerRegistry,
   Descriptor,
-  Tag,
   DescriptorRegistry,
   Point,
-  BoundingBox,
+  RNOHContext,
+  Tag,
   TouchTargetHelperDelegate
 } from '../../RNOH';
-import { OverflowMode, ComponentManager } from '../../RNOH';
+import { ComponentManager, OverflowMode } from '../../RNOH';
 
 
 export type PointerEvents = "auto" | "none" | "box-none" | "box-only"
@@ -30,6 +30,7 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
   };
   protected descriptorRegistry: DescriptorRegistry;
   protected componentManagerRegistry: ComponentManagerRegistry;
+  protected parentTag: Tag;
 
   constructor(
     protected tag: Tag,
@@ -191,5 +192,13 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
     const overflow = descriptor.props['overflow'];
     return overflow === OverflowMode.HIDDEN ||
       overflow === OverflowMode.SCROLL
+  }
+
+  public setParentTag(parentTag: Tag): void {
+    this.parentTag = parentTag;
+  }
+
+  public getParentTag(): Tag {
+    return this.parentTag
   }
 }

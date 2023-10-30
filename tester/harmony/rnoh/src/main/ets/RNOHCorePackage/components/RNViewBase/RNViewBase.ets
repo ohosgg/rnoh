@@ -1,18 +1,17 @@
 import {
-  Descriptor,
-  BorderMetrics} from '../../../RNOH';
-import {
-  RNOHContext,
+  BorderMetrics,
   convertColorSegmentsToString,
   convertColorValueToColorSegments,
   convertMatrixArrayToMatrix4,
+  Descriptor,
+  getTransformedVector,
+  LayoutDirectionRN,
   OverflowMode,
   resolveBorderMetrics,
-  LayoutDirectionRN,
-  getTransformedVector,
-} from '../../../RNOH'
-import { ViewBaseProps, ViewDynamicProps } from './types'
-import { RNViewManager } from '../../componentManagers'
+  RNOHContext
+} from '../../../RNOH';
+import { ViewBaseProps, ViewDynamicProps } from './types';
+import { RNViewManager } from '../../componentManagers';
 
 export type ViewBaseDescriptor = Descriptor<string, ViewBaseProps>;
 
@@ -83,6 +82,8 @@ export struct RNViewBase {
     }
     this.unregisterComponentManager = this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager)
     this.setDescriptor(descriptor)
+    const parentTag = descriptor.parentTag;
+    this.componentManager.setParentTag(parentTag);
     this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
         this.setDescriptor(newDescriptor)

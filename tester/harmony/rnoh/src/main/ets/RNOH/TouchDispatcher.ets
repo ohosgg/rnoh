@@ -1,3 +1,4 @@
+import { RNViewManager } from '../RNOHCorePackage';
 import { RNOHEventEmitRequestHandlerName } from '../RNOHCorePackage/RNOHEventEmitRequestHandler';
 import { Descriptor, Tag } from './DescriptorBase';
 import { RNInstance } from './RNInstance';
@@ -133,13 +134,10 @@ export class TouchDispatcher {
     let currentTag = targetTag;
     while (currentTag !== undefined && currentTag !== this.surfaceTag) {
       const componentManager = this.rnInstance.componentManagerRegistry.getComponentManager(currentTag);
-      const descriptor = this.rnInstance.descriptorRegistry.getDescriptor<Descriptor>(currentTag);
       if (!componentManager || !TouchTargetHelper.isTouchTargetHelperDelegate(componentManager) || componentManager.isHandlingTouches()) {
         return true;
       }
-      if (descriptor.parentTag) {
-        currentTag = descriptor.parentTag;
-      }
+      currentTag = (componentManager as RNViewManager).getParentTag();
     }
 
     // if we didn't reach the surface,
