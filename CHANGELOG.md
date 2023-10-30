@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.72.9
+- breaking change: SurfaceHandle::stop and SurfaceHandle::destroy are now async
+- added hitSlop support
+- added basic onBlur support
+- added support for TextInput content passed in onFocus event
+- added basic useColorScheme support
+- added Animated.decay support
+- added Animated.spring support
+- added ScrollView::scrollToEnd support
+- fixed incorrect lineHeight calculation
+- fixed onPress not firing when view and pressable were flattened
+- fixed onPress working unreliably
+- fixed TextInput autofocus
+- fixed TextInput::value
+- fixed wrapping of Chinese characters
+- fixed single view in Text crashing the app
+- fixed not working props for multiline TextInput
+- fixed Animated.Value callback timing issue
+- fixed deadlock caused when creating/destroying surfaces
+i
 ## v0.72.8
 - added layout animations support
 - added ellipsis support when text components are nested or text component inside another text component
