@@ -7,6 +7,8 @@ import { TouchTargetHelper } from './TouchTargetHelper';
 
 
 export class TouchDispatcher {
+  private static MEANINGFUL_MOVE_THRESHOLD = 1;
+
   private surfaceTag: Tag
   private rnInstance: RNInstance
   private logger: RNOHLogger
@@ -39,6 +41,10 @@ export class TouchDispatcher {
 
     touchEvent.touches.forEach((touch) => this.convertTouchObject(touch));
     touchEvent.changedTouches = touchEvent.touches.filter(touch => changedIds.includes(touch.id));
+
+    if (this.canIgnoreEvent(touchEvent)) {
+        return;
+    }
 
     this.removeEndedTouches(touchEvent, changedIds);
 
@@ -107,6 +113,10 @@ export class TouchDispatcher {
       .filter((touchIdAndTargetTag) => this.shouldCancelTouchesForTag(touchIdAndTargetTag[1]))
       .map((touchIdAndTargetTag) => touchIdAndTargetTag[0]);
 
+    if (cancelledTouchIds.length === 0) {
+      return;
+    }
+
     cancelledTouchIds.forEach(touchId => this.targetTagByTouchId.delete(touchId));
 
     const touchEvent = this.previousEvent;
@@ -144,5 +154,24 @@ export class TouchDispatcher {
     // this view is either unmounted or no longer handled
     // by this dispatcher -- cancel the touch
     return currentTag === undefined;
+  }
+
+  private canIgnoreEvent(currentEvent: TouchEvent): boolean {
+    if (currentEvent.type !== TouchType.Move) {
+      return false;
+    }
+    return !currentEvent.changedTouches.some((touch) => {
+      if (!this.previousEvent) {
+        return true;
+      }
+      const previousTouch = this.previousEvent.touches.find(t => t.id === touch.id);
+      return !previousTouch || this.isMoveMeaningful(touch, previousTouch);
+    });
+  }
+
+  private isMoveMeaningful(currentTouch: TouchObject, previousTouch: TouchObject): boolean {
+    const dx = currentTouch['pageX'] - previousTouch['pageX'];
+    const dy = currentTouch['pageY'] - previousTouch['pageY'];
+    return dx*dx + dy*dy > TouchDispatcher.MEANINGFUL_MOVE_THRESHOLD;
   }
 }
