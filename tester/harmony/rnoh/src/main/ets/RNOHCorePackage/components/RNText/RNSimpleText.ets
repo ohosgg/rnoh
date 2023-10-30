@@ -51,7 +51,7 @@ export struct RNSimpleText {
               type: getTextDecorationLine(fragment.textDecorationLine),
               color: convertColorSegmentsToString(fragment.textDecorationColor)
             })
-            .lineHeight(fragment.lineHeight ?? (fragment.fontSize ?? 16) * DEFAULT_LINE_SPACING)
+            .lineHeight(fragment.lineHeight || (fragment.fontSize ?? 16) * (DEFAULT_LINE_SPACING + 1))
             .backgroundColor(convertColorSegmentsToString(fragment.backgroundColor))// not supported
             .letterSpacing(getLetterSpacing(fragment.letterSpacing))
             .textCase(stringToTextTransform(fragment.textTransform))
