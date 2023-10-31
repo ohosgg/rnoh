@@ -3,6 +3,7 @@ import {TestCase, TestSuite} from '@rnoh/testerino';
 
 const LOCAL_IMAGE_ASSET_ID = require('../assets/pravatar-131.jpg');
 const REMOTE_IMAGE_URL = 'https://i.pravatar.cc/100?img=31';
+const REMOTE_REDIRECT_IMAGE_URL = 'http://placeholder.com/350x150';
 
 export const ImageTest = () => {
   return (
@@ -12,6 +13,19 @@ export const ImageTest = () => {
           <Image
             style={{borderRadius: 8, borderWidth: 1}}
             source={LOCAL_IMAGE_ASSET_ID}
+          />
+        </TestCase>
+        <TestCase itShould="support loading remote images">
+          <Image
+            style={{borderRadius: 8, borderWidth: 1, height: 100}}
+            source={{uri: REMOTE_IMAGE_URL}}
+            resizeMode="contain"
+          />
+        </TestCase>
+        <TestCase itShould="support loading remote images (with http redirect)">
+          <Image
+            style={{borderRadius: 8, borderWidth: 1, height: 150}}
+            source={{uri: REMOTE_REDIRECT_IMAGE_URL}}
           />
         </TestCase>
         <TestCase

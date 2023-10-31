@@ -1,6 +1,7 @@
 import type { TurboModuleContext } from '../../RNOH/TurboModule';
 import { TurboModule } from '../../RNOH/TurboModule';
 import { RemoteImageLoader, RemoteImageMemoryCache, RemoteImageDiskCache } from "../../RemoteImageLoader"
+import image from '@ohos.multimedia.image';
 
 export class ImageLoaderTurboModule extends TurboModule {
   static NAME = "ImageLoader" as const
@@ -47,5 +48,9 @@ export class ImageLoaderTurboModule extends TurboModule {
 
   public getCachedImage(uri: string): string | undefined {
     return this.imageLoader.getImageFromCache(uri)
+  }
+
+  public getImageSource(uri:string): Promise<image.ImageSource> {
+    return this.imageLoader.getImageSource(uri);
   }
 }

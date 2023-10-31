@@ -1,3 +1,4 @@
+import image from '@ohos.multimedia.image';
 import { ColorSegments, Descriptor} from '../../RNOH';
 import { getTintColorMatrix, RNOHContext } from '../../RNOH'
 import { ImageLoaderTurboModule } from '../turboModules/ImageLoaderTurboModule'
@@ -18,6 +19,7 @@ export struct RNImage {
   ctx!: RNOHContext
   tag: number = 0
   @State descriptor: ImageDescriptor = Object() as ImageDescriptor
+  @State imageSource: Resource | PixelMap | undefined = undefined
   defaultColorFilter: number[] = [
     1, 0, 0, 0, 0,
     0, 1, 0, 0, 0,
@@ -29,13 +31,16 @@ export struct RNImage {
   aboutToAppear() {
     this.descriptor = this.ctx.descriptorRegistry.getDescriptor<ImageDescriptor>(this.tag)
     this.onLoadStart();
+    this.updateImageSource();
     this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
         const newImageDescriptor = (newDescriptor as ImageDescriptor);
-        if(newImageDescriptor.props.uri !== this.descriptor.props.uri) {
-          this.onLoadStart();
-        }
+        const uriChanged = newImageDescriptor.props.uri !== this.descriptor.props.uri;
         this.descriptor = newImageDescriptor;
+        if (uriChanged) {
+          this.onLoadStart();
+          this.updateImageSource();
+        }
       }
     )
   }
@@ -44,15 +49,18 @@ export struct RNImage {
     this.unregisterDescriptorChangesListener?.()
   }
 
-  getSource() {
-    const uri = this.descriptor.props.uri
+  updateImageSource() {
+    const uri = this.descriptor.props.uri;
     if (uri.startsWith("asset://")) {
-      return $rawfile(uri.replace("asset://", "assets/"));
+      this.imageSource = $rawfile(uri.replace("asset://", "assets/"));
+      return;
     }
-    const filePath =
-      this.ctx.rnInstanceManager.getTurboModule<ImageLoaderTurboModule>("ImageLoader")
-        .getCachedImage(uri)
-    return filePath ?? uri
+    const imageLoader = this.ctx.rnInstance.getTurboModule<ImageLoaderTurboModule>("ImageLoader");
+    this.imageSource = undefined;
+    imageLoader.getImageSource(uri).then(async (imageSource) => {
+      this.imageSource = await imageSource.createPixelMap();
+    });
+    return;
   }
 
   /*
@@ -101,7 +109,7 @@ export struct RNImage {
       ctx: this.ctx,
       tag: this.tag,
     }) {
-      Image(this.getSource())
+      Image(this.imageSource)
         .interpolation(ImageInterpolation.High)
         .width("100%")
         .height("100%")

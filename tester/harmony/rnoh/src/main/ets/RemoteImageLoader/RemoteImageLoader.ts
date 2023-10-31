@@ -15,8 +15,6 @@ export class RemoteImageLoader {
   }
 
   public async getImageSource(uri: string): Promise<image.ImageSource> {
-    const reqManager = http.createHttp()
-    const response = await reqManager.request(uri)
     if (this.memoryCache.has(uri)) {
       return this.memoryCache.get(uri)
     }
@@ -27,6 +25,8 @@ export class RemoteImageLoader {
       };
       return imageSource
     }
+    const reqManager = http.createHttp()
+    const response = await reqManager.request(uri)
     if (!(response.responseCode === http.ResponseCode.OK)) {
       throw new RemoteImageLoaderError('Failed to fetch the image');
     }
