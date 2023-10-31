@@ -159,29 +159,8 @@ export class UnhyphenatedWordWrapStrategy<
           });
         } else if (currentToken.canBreakLine) {
           if (canFitCurrentToken) {
-            const nextToken =
-              currentTokenIdx + 1 < measuredTokens.length
-                ? measuredTokens[currentTokenIdx + 1]
-                : undefined;
-            if (nextToken) {
-              const canFitCurrentAndNextToken =
-                currentLineWidth +
-                  currentToken.size.width +
-                  nextToken.size.width <=
-                containerWidth;
-              if (currentToken.canBreakLine || canFitCurrentAndNextToken) {
-                currentLineTokens.push(currentToken);
-                continue;
-              } else {
-                return this.breakLine({
-                  measuredTokens,
-                  breakingTokenIdx: currentTokenIdx,
-                });
-              }
-            } else {
-              currentLineTokens.push(currentToken);
-              continue;
-            }
+            currentLineTokens.push(currentToken);
+            continue;
           } else {
             return this.breakLine({
               measuredTokens,
@@ -233,10 +212,17 @@ export class UnhyphenatedWordWrapStrategy<
   }
 
   private extractLineInfo(lineTokens: MeasuredToken[]) {
-    const lastBreakableTokenIdxInCurrentLine = findLastIndex(
+    let lastBreakableTokenIdxInCurrentLine = findLastIndex(
       lineTokens,
       token => token.canBreakLine,
     );
+    if (lastBreakableTokenIdxInCurrentLine !== undefined) {
+      const isIgnored = lineTokens[lastBreakableTokenIdxInCurrentLine].isIgnoredIfBreaksLine;
+      // if the breaking token is not ignored, we can also break after it
+      if (!isIgnored) {
+        lastBreakableTokenIdxInCurrentLine += 1;
+      }
+    }
     const lastPlaceholderInCurrentLineTokenIdx = findLastIndex(
       lineTokens,
       token => token.fragment.type === 'placeholder',

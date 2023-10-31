@@ -280,6 +280,30 @@ describe('UnhyphenatedWordWrapStrategy', () => {
     );
   });
 
+  it('should allow breaking after character', () => {
+    const strategy = new UnhyphenatedWordWrapStrategy(
+      new FakeTextFragmentMeasurer(),
+    );
+    const TEXT = '中文试as';
+
+    result = strategy.convertFragmentsIntoLines(
+      [
+        {
+          type: 'text',
+          content: TEXT,
+          extraData: {},
+        },
+      ],
+      {width: 3},
+    );
+
+    expect(result.length).toBe(2);
+    expect(result[0].positionedFragments.length).toBe(1);
+    expect(result[0].positionedFragments[0].fragment.content).toStrictEqual('中文试');
+    expect(result[1].positionedFragments.length).toBe(1);
+    expect(result[1].positionedFragments[0].fragment.content).toStrictEqual('as');
+  });
+
   it('should preserve spaces', () => {
     const strategy = new UnhyphenatedWordWrapStrategy(
       new FakeTextFragmentMeasurer(),
