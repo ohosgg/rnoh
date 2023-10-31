@@ -8,7 +8,7 @@ struct Index {
     Scroll() {
       Column() {
         TextInput({ text: this.numberOfComponents.toString() }).onChange((value) => {
-          this.numberOfComponents = parseInt(value) || 0
+          this.numberOfComponents = Number(value) || 0
         })
         Flex({ direction: FlexDirection.Row, wrap: FlexWrap.Wrap }) {
           ForEach(new Array(this.numberOfComponents).fill(0), () => {

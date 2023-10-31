@@ -37,7 +37,7 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 - [x] Image
 - [x] ImageBackground
 - [ ] InputAccessoryView
-- [ ] KeyboardAvoidingView
+- [x] KeyboardAvoidingView
 - [ ] Modal
 - [x] Pressable
 - [x] RefreshControl
@@ -63,13 +63,13 @@ Note: native code lives in the `/tester/harmony/rnoh` directory (native code mus
 
 - [x] Alert
 - [x] Animated
-- [ ] Appearance
+- [x] Appearance
 - [x] AppRegistry
 - [x] AppState
 - [x] BackHandler (stub)
-- [ ] DeviceInfo
+- [x] DeviceInfo
 - [ ] DevSettings
-- [ ] Dimensions
+- [x] Dimensions
 - [x] Easing
 - [x] findNodeHandle
 - [x] I18nManager
@@ -170,7 +170,7 @@ You will have to install some additional SDKs:
 1. Remove `.cxx` directory from `entry` module
 1. Build and run the tester app
 1. On Mac, gatekeeper may complain about running unsigned apps. In such case disable gatekeeper completely or
-   1. Press the Cancel button 
+   1. Press the Cancel button
    1. Open Mac Settings and search for Gatekeeper
    1. Click the button that allows running the cancelled application
    1. Try building the app again, this time you should be able to click `Open` button instead of `Move to bin`

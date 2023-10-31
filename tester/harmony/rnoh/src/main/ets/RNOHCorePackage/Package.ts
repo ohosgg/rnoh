@@ -31,7 +31,6 @@ const TURBO_MODULE_CLASS_BY_NAME: Record<string, typeof TurboModule> = {
   [AppearanceTurboModule.NAME]: AppearanceTurboModule,
   [AppStateTurboModule.NAME]: AppStateTurboModule,
   [DeviceEventManagerTurboModule.NAME]: DeviceEventManagerTurboModule,
-  [DeviceInfoTurboModule.NAME]: DeviceInfoTurboModule,
   [ExceptionsManagerTurboModule.NAME]: ExceptionsManagerTurboModule,
   [ImageLoaderTurboModule.NAME]: ImageLoaderTurboModule,
   [KeyboardObserverTurboModule.NAME]: KeyboardObserverTurboModule,
@@ -45,6 +44,7 @@ const TURBO_MODULE_CLASS_BY_NAME: Record<string, typeof TurboModule> = {
 };
 
 const EAGER_TURBO_MODULE_CLASS_BY_NAME = {
+  [DeviceInfoTurboModule.NAME]: DeviceInfoTurboModule,
   [StatusBarTurboModule.NAME]: StatusBarTurboModule,
   [SafeAreaTurboModule.NAME]: SafeAreaTurboModule,
 } as const
@@ -55,8 +55,9 @@ class CoreTurboModulesFactory extends TurboModulesFactory {
   async prepareEagerTurboModules() {
     const statusBarTurboModule = new StatusBarTurboModule(this.ctx)
     this.eagerTurboModuleByName = {
-      "SafeAreaTurboModule": await SafeAreaTurboModule.create(this.ctx, statusBarTurboModule),
-      "StatusBarManager": statusBarTurboModule,
+      [SafeAreaTurboModule.NAME]: await SafeAreaTurboModule.create(this.ctx, statusBarTurboModule),
+      [StatusBarTurboModule.NAME]: statusBarTurboModule,
+      [DeviceInfoTurboModule.NAME]: await DeviceInfoTurboModule.create(this.ctx),
     }
   }
 

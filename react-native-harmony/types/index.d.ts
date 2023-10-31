@@ -12,7 +12,7 @@ export * from 'react-native/Libraries/Components/ActivityIndicator/ActivityIndic
 // export * from 'react-native/Libraries/Components/DatePicker/DatePickerIOS';
 export * from 'react-native/Libraries/Components/DrawerAndroid/DrawerLayoutAndroid';
 export * from 'react-native/Libraries/Components/Keyboard/Keyboard';
-// export * from 'react-native/Libraries/Components/Keyboard/KeyboardAvoidingView';
+export * from 'react-native/Libraries/Components/Keyboard/KeyboardAvoidingView';
 export * from 'react-native/Libraries/Components/Pressable/Pressable';
 // export * from 'react-native/Libraries/Components/ProgressBarAndroid/ProgressBarAndroid';
 // export * from 'react-native/Libraries/Components/ProgressViewIOS/ProgressViewIOS';

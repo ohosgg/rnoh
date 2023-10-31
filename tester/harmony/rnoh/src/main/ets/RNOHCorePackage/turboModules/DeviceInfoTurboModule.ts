@@ -1,5 +1,6 @@
 import display from '@ohos.display';
 import window from '@ohos.window';
+import Device from '@system.device';
 import type { TurboModuleContext } from "../../RNOH/TurboModule";
 import { TurboModule } from "../../RNOH/TurboModule";
 
@@ -38,11 +39,33 @@ const defaultDisplayMetrics: DisplayMetrics = {
 export class DeviceInfoTurboModule extends TurboModule {
   public static readonly NAME = 'DeviceInfo';
 
+  static async create(ctx: TurboModuleContext) {
+    const displayInstance = display.getDefaultDisplaySync();
+    const windowInstance = await window.getLastWindow(ctx.uiAbilityContext);
+    const windowProperties = windowInstance.getWindowProperties();
+
+    const initialDisplayMetrics = { screenPhysicalPixels: {
+      width: displayInstance.width,
+      height: displayInstance.height,
+      scale: displayInstance.densityPixels,
+      fontScale: 1,
+      densityDpi: displayInstance.densityDPI,
+    },
+      windowPhysicalPixels: {
+        width: windowProperties.windowRect.width,
+        height: windowProperties.windowRect.height,
+        scale: displayInstance.densityPixels,
+        fontScale: 1,
+        densityDpi: displayInstance.densityDPI,
+      } };
+    return new DeviceInfoTurboModule(ctx, initialDisplayMetrics)
+  }
+
   private displayMetrics?: DisplayMetrics = null;
 
-  constructor(protected ctx: TurboModuleContext) {
+  constructor(protected ctx: TurboModuleContext, initialDisplayMetrics: DisplayMetrics) {
     super(ctx);
-    this.setInitialParameters()
+    this.displayMetrics = initialDisplayMetrics;
     this.ctx.rnInstance.subscribeToLifecycleEvents("CONFIGURATION_UPDATE", () => {
       this.updateDeviceMetrics();
     });
@@ -50,7 +73,7 @@ export class DeviceInfoTurboModule extends TurboModule {
 
   getConstants() {
     if (!this.displayMetrics) {
-      this.ctx.logger.error("JS Display Metrics not set");
+      this.ctx.logger.error("DeviceInfoTurboModule::getConstants: JS Display Metrics not set");
     }
     return {
       Dimensions: {
@@ -60,28 +83,9 @@ export class DeviceInfoTurboModule extends TurboModule {
     };
   }
 
-  setInitialParameters() {
-    const displayProps = display.getDefaultDisplaySync();
-    this.displayMetrics = { screenPhysicalPixels: {
-      width: displayProps.width,
-      height: displayProps.height,
-      scale: displayProps.densityPixels,
-      fontScale: 1,
-      densityDpi: displayProps.densityDPI,
-    },
-      windowPhysicalPixels: {
-        width: displayProps.width,
-        height: displayProps.height,
-        scale: displayProps.densityPixels,
-        fontScale: 1,
-        densityDpi: displayProps.densityDPI,
-      } };
-  }
-
   async updateDeviceMetrics() {
     try {
-      const displayInstances = await display.getAllDisplays()
-      const displayInstance = displayInstances[0];
+      const displayInstance = display.getDefaultDisplaySync();
       const windowInstance = await window.getLastWindow(this.ctx.uiAbilityContext);
       const windowProperties = windowInstance.getWindowProperties();
 
@@ -101,7 +105,7 @@ export class DeviceInfoTurboModule extends TurboModule {
       }
       this.ctx.rnInstanceManager.emitDeviceEvent("didUpdateDimensions", this.displayMetrics);
     } catch (err) {
-      this.ctx.logger.error('Failed to update display size ' + JSON.stringify(err));
+      this.ctx.logger.error('DeviceInfoTurboModule::updateDeviceMetrics: Failed to update display size ' + JSON.stringify(err));
     }
   }
 }

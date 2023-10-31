@@ -27,7 +27,7 @@ export const BackHandlerTest = () => {
           <Text style={{ width: '100%', height: '100%' }}>Exit</Text>
         </TouchableOpacity>
       </TestCase>
-      <TestCase itShould="allow to add, remove eventListener and display number of back presses accordingly">
+      <TestCase itShould="allow to add, remove eventListener and display number of system back presses/gestures accordingly">
         <Text style={{ width: '100%' }}>
           Back pressed {counter} time{counter == 1 ? '' : 's'}
         </Text>

@@ -1,9 +1,9 @@
-import {Portal} from '@gorhom/portal';
-import {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Button} from '../components';
+import { Portal } from '@gorhom/portal';
+import { useState } from 'react';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { Button } from '../components';
 
-export function Modal(props: {children: any}) {
+export function Modal(props: { children: any, contentContainerStyle?: StyleProp<ViewStyle> }) {
   const [isOpen, setIsOpen] = useState(false);
 
   if (!isOpen)
@@ -30,7 +30,7 @@ export function Modal(props: {children: any}) {
           },
         ]}>
         <View
-          style={{backgroundColor: 'white', padding: 16}}
+          style={[{ backgroundColor: 'white', padding: 16 }, props.contentContainerStyle]}
           onTouchEnd={e => e.stopPropagation()}>
           {props.children}
         </View>
