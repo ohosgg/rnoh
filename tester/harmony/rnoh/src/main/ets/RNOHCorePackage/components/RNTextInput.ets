@@ -99,7 +99,7 @@ export struct RNTextInput {
     this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "onFocus", this.value)
   }
   onBlurEvent() {
-    this.ctx.rnInstanceManager.emitComponentEvent(this.descriptor.tag, "onBlur", undefined)
+    this.ctx.rnInstanceManager.emitComponentEvent(this.descriptor.tag, "onBlur", this.value)
   }
 
   aboutToAppear() {
