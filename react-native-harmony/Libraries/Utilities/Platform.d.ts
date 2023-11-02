@@ -97,6 +97,7 @@ interface PlatformWebStatic extends PlatformStatic {
 export type PlatformHarmonyConstants = PlatformConstants & {
   deviceType: "default" | "phone" | "wearable" | "liteWearable" | "tablet" | "tv" | "car" | "smartVision";
   osFullName: string;
+  Model: string;
 };
 
 export interface PlatformHarmonyStatic extends PlatformStatic {

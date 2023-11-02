@@ -47,6 +47,12 @@ export function PlatformConstantsTest() {
           expect(typeof Platform.constants.isTesting).to.be.eq('boolean');
         }}
       />
+      <TestCase
+        itShould="specify product model"
+        fn={({expect}) => {
+          expect(Platform.constants.Model).to.include('NOH');
+        }}
+      />
     </TestSuite>
   );
 }

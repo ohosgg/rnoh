@@ -6,6 +6,7 @@ export class PlatformConstantsTurboModule extends TurboModule {
 
   getConstants() {
     return {
+      Model: deviceInfo.productModel,
       deviceType: deviceInfo.deviceType,
       osFullName: deviceInfo.osFullName,
       isTesting: false,
