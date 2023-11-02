@@ -31,6 +31,7 @@ class TextInputComponentNapiBinder : public ViewComponentNapiBinder {
                 .addProperty("selectionColor", props->selectionColor)
                 .addProperty("returnKeyType", returnKeyTypeToString(props->traits.returnKeyType))
                 .addProperty("textAlign", alignment)
+                .addProperty("autoFocus", props->autoFocus)
                 .build();
         }
         return napiViewProps;

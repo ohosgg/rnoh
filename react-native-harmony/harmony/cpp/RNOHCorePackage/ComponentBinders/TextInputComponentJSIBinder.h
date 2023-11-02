@@ -17,9 +17,19 @@ class TextInputComponentJSIBinder : public ViewComponentJSIBinder {
         nativeProps.setProperty(rt, "selectionColor", "Color");
         nativeProps.setProperty(rt, "returnKeyType", "ReturnKeyType");
         nativeProps.setProperty(rt, "textAlign", "string");
+        nativeProps.setProperty(rt, "autoFocus", "boolean");
 
         return nativeProps;
     };
+    facebook::jsi::Object createDirectEventTypes(facebook::jsi::Runtime &rt) override {
+        facebook::jsi::Object events(rt);
+
+        events.setProperty(rt, "topSubmitEditing", createDirectEvent(rt, "onSubmitEditing"));
+        events.setProperty(rt, "topFocus", createDirectEvent(rt, "onFocus"));
+        events.setProperty(rt, "topBlur", createDirectEvent(rt, "onBlur"));
+
+        return events;
+    }
 };
 
 } // namespace rnoh

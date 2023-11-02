@@ -30,7 +30,7 @@ export function TextInputTest() {
         skip
         //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/403
         initialState={false}
-        arrange={({ setState }) => {
+        arrange={({setState}) => {
           return (
             <>
               <TextInputWithText
@@ -41,7 +41,7 @@ export function TextInputTest() {
             </>
           );
         }}
-        assert={({ expect, state }) => {
+        assert={({expect, state}) => {
           expect(state).to.be.true;
         }}
       />
@@ -49,7 +49,7 @@ export function TextInputTest() {
         modal
         itShould="not blur text on submit"
         skip
-      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/403
+        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/403
       >
         <TextInputWithText style={styles.textInput} blurOnSubmit={false} />
       </TestCase>
@@ -57,7 +57,7 @@ export function TextInputTest() {
         modal
         itShould="render textInput with blue underline"
         skip
-      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/404
+        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/404
       >
         <TextInputWithText
           style={styles.textInput}
@@ -85,10 +85,7 @@ export function TextInputTest() {
       <TestCase modal itShould="render textinput with green selection color">
         <TextInputWithText style={styles.textInput} selectionColor="green" />
       </TestCase>
-      <TestCase
-        modal
-        itShould="render multiline text input"
-      >
+      <TestCase modal itShould="render multiline text input">
         <TextInputWithText style={styles.textInputBigger} multiline />
       </TestCase>
       <TestCase modal itShould="render text input with maximally 10 characters">
@@ -97,17 +94,15 @@ export function TextInputTest() {
       <TestCase
         modal
         itShould="automatically focus textInput when displayed"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/405
         initialState={false}
-        arrange={({ setState }) => (
+        arrange={({setState}) => (
           <TextInputWithText
             style={styles.textInput}
             autoFocus
             onFocus={() => setState(true)}
           />
         )}
-        assert={({ expect, state }) => {
+        assert={({expect, state}) => {
           expect(state).to.be.true;
         }}
       />
@@ -115,7 +110,7 @@ export function TextInputTest() {
         modal
         itShould="toggle between different capitalization modes"
         skip
-      //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/408
+        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/408
       >
         <AutoCapitalize />
       </TestCase>
@@ -123,20 +118,17 @@ export function TextInputTest() {
         modal
         itShould="trigger onSubmitEditing event after submiting"
         initialState={false}
-        arrange={({ setState }) => (
+        arrange={({setState}) => (
           <TextInputWithText
             style={styles.textInput}
             onSubmitEditing={() => setState(true)}
           />
         )}
-        assert={({ expect, state }) => {
+        assert={({expect, state}) => {
           expect(state).to.be.true;
         }}
       />
-      <TestCase
-        modal
-        itShould="toggle between different return keys"
-      >
+      <TestCase modal itShould="toggle between different return keys">
         <ReturnKeyTypeView />
       </TestCase>
       <TestCase modal itShould="render secure text input (text obscured)">
@@ -148,14 +140,14 @@ export function TextInputTest() {
         skip
         //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/413
         initialState={''}
-        arrange={({ setState }) => (
+        arrange={({setState}) => (
           <TextInputWithText
             style={styles.textInput}
             autoFocus
             onKeyPress={event => setState(event.nativeEvent.key)}
           />
         )}
-        assert={({ expect, state }) => {
+        assert={({expect, state}) => {
           expect(state).to.be.eq('A');
         }}
       />

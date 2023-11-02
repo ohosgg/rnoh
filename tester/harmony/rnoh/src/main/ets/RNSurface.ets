@@ -1,12 +1,10 @@
 import { ComponentBuilderContext } from './RNOHCorePackage/components/RNComponentFactory';
-import { RNComponentFactory } from './RNOHCorePackage'
-import { DisplayMode, RNOHContext, Tag } from "./RNOH"
-import { Descriptor } from './RNOH'
-import { ViewBaseProps } from './RNOHCorePackage/components/RNViewBase'
-import { convertColorSegmentsToString } from './RNOH'
-import { TouchDispatcher } from './RNOH/TouchDispatcher'
-import { SurfaceHandle, SurfaceProps } from './RNOH/SurfaceHandle'
-import { RNSurfaceManager } from './RNOHCorePackage/componentManagers/RNSurfaceManager'
+import { RNComponentFactory } from './RNOHCorePackage';
+import { convertColorSegmentsToString, Descriptor, DisplayMode, RNOHContext, Tag } from './RNOH';
+import { ViewBaseProps } from './RNOHCorePackage/components/RNViewBase';
+import { TouchDispatcher } from './RNOH/TouchDispatcher';
+import { SurfaceHandle, SurfaceProps } from './RNOH/SurfaceHandle';
+import { RNSurfaceManager } from './RNOHCorePackage/componentManagers/RNSurfaceManager';
 
 export type RootDescriptor = Descriptor<"RootView", ViewBaseProps>;
 
@@ -111,14 +109,6 @@ export struct RNSurface {
 
   build() {
     Stack() {
-      // patch: solve autofocus issues
-      Button()
-        .key('fixedAutoFocus')
-        .width(0)
-        .height(0)
-        .padding(0)
-        .margin(0)
-        .defaultFocus(true)
       ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
         RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
       }, (childrenTag: Tag) => childrenTag.toString())

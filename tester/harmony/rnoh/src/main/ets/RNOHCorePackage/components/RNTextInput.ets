@@ -15,6 +15,7 @@ export interface TextInputProps extends ViewBaseProps {
   placeholderTextColor?: ColorSegments
   returnKeyType?: string
   textAlign?: string
+  autoFocus?: boolean
 }
 
 export interface TextInputRawProps {
@@ -148,6 +149,16 @@ export struct RNTextInput {
 
   build() {
     RNViewBase({ ctx: this.ctx, tag: this.tag }) {
+      // patch: solve autofocus issues
+      if (!this.descriptor.props.autoFocus) {
+        Button()
+          .key(`fixedAutoFocus${this.tag}`)
+          .width(0)
+          .height(0)
+          .padding(0)
+          .margin(0)
+          .defaultFocus(true)
+      }
       if (this.descriptor.props.multiline) {
         TextArea({ controller: this.areaController, placeholder: this.descriptor.props.placeholder, text: this.value })
           .width("100%")
