@@ -83,6 +83,14 @@ export function TextTest() {
         skip
         //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/277
       />
+      <TestCase
+        itShould="fire onLayout event after layout change"
+        initialState={{}}
+        arrange={ctx => <OnLayoutView ctx={ctx} />}
+        assert={({expect, state}) => {
+          expect(state).to.have.all.keys('x', 'y', 'width', 'height');
+        }}
+      />
       <TestSuite name="TextStyle">
         <TestCase
           skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/154
@@ -672,7 +680,36 @@ export function TextTest() {
     </TestSuite>
   );
 }
-
+const OnLayoutView = (props: {
+  ctx: {
+    state: {};
+    setState: React.Dispatch<React.SetStateAction<{}>>;
+    reset: () => void;
+  };
+}) => {
+  const [layout, setLayout] = useState('');
+  const [width, setWidth] = useState(100);
+  return (
+    <View>
+      <Text>{layout}</Text>
+      <Text
+        style={{
+          width: width,
+          height: 40,
+          borderWidth: 1,
+          fontSize: 16,
+          backgroundColor: 'rgba(100,100,255,0.5)',
+        }}
+        onLayout={event => {
+          setLayout(JSON.stringify(event.nativeEvent.layout));
+          props.ctx.setState(event.nativeEvent.layout);
+        }}
+        onPress={() => setWidth((prev: number) => (prev === 100 ? 200 : 100))}>
+        resize
+      </Text>
+    </View>
+  );
+};
 const OnTextLayoutView = (props: {
   ctx: {
     state: boolean;
