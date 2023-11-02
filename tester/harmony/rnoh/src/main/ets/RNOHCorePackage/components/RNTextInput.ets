@@ -124,7 +124,7 @@ export struct RNTextInput {
         }
         else if (command === 'setTextAndSelection') {
           const parsedArgs = parseSetTextAndSelectionCommandCallback(args);
-          if (parsedArgs.value) {
+          if (parsedArgs.value !== undefined) {
             this.value = parsedArgs.value;
           }
         }
