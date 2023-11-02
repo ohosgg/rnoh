@@ -86,7 +86,8 @@ export struct RNTextInput {
   @State descriptor: TextInputDescriptor = Object() as TextInputDescriptor
   inputController: TextInputController = new TextInputController();
   areaController: TextAreaController = new TextAreaController();
-  @State value: string = ''
+  @State value: string = '';
+  maxLength: number | undefined = undefined;
   private unregisterDescriptorChangesListener?: () => void = undefined
   private cleanupCommandCallback?: () => void = undefined
 
@@ -99,16 +100,21 @@ export struct RNTextInput {
     this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "onFocus", this.value)
   }
   onBlurEvent() {
-    this.ctx.rnInstanceManager.emitComponentEvent(this.descriptor.tag, "onBlur", this.value)
+    this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "onBlur", this.value)
+  }
+
+  onDescriptorChange(newDescriptor: TextInputDescriptor) {
+    this.value = newDescriptor.props.text ?? '';
+    this.maxLength = newDescriptor.rawProps.maxLength ?? this.maxLength;
+    this.descriptor = newDescriptor;
   }
 
   aboutToAppear() {
-    this.descriptor = this.ctx.descriptorRegistry.getDescriptor<TextInputDescriptor>(this.tag)
-    this.value = this.descriptor.props.text ?? ''
+    const newDescriptor = this.ctx.descriptorRegistry.getDescriptor<TextInputDescriptor>(this.tag);
+    this.onDescriptorChange(newDescriptor);
     this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
-        this.descriptor = (newDescriptor as TextInputDescriptor);
-        this.value = this.descriptor.props.text ?? '';
+        this.onDescriptorChange(newDescriptor as TextInputDescriptor);
       }
     )
     this.cleanupCommandCallback = this.ctx.commandDispatcher.registerCommandCallback(
@@ -150,7 +156,7 @@ export struct RNTextInput {
           .fontSize(getFontSize(this.descriptor.props.fontSize))
           .onChange((value) => this.handleChangeEvent(value))
           .enabled(this.descriptor.props.editable)
-          .maxLength(this.descriptor.rawProps.maxLength)
+          .maxLength(this.maxLength)
           .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
           .textAlign(stringToAlignment(this.descriptor.props.textAlign))
           /*
@@ -176,7 +182,7 @@ export struct RNTextInput {
           .enabled(this.descriptor.props.editable)
           .caretStyle(getCaretStyle(this.descriptor.props.caretHidden))
           .type(this.descriptor.props.secureTextEntry ? InputType.Password : undefined)
-          .maxLength(this.descriptor.rawProps.maxLength)
+          .maxLength(this.maxLength)
           .selectedBackgroundColor(convertColorSegmentsToString(this.descriptor.props.selectionColor))
           .showPasswordIcon(false)
           .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
