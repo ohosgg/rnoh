@@ -1,7 +1,14 @@
 import { TestCase, TestSuite } from '@rnoh/testerino';
 import React, {useState} from 'react';
-import {Modal, StyleSheet, Text, Pressable, View} from 'react-native';
-import { Button } from '../components';
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  Pressable,
+  View,
+  ModalProps,
+} from 'react-native';
+import {Button} from '../components';
 
 export function ModalTest() {
   return (
@@ -9,16 +16,33 @@ export function ModalTest() {
       <TestCase itShould="show modal">
         <ModalExample />
       </TestCase>
+      <TestCase
+        itShould="trigger onShow event after modal is shown"
+        initialState={false}
+        arrange={({setState}) => (
+          <ModalExample
+            onShow={() => {
+              setState(true);
+            }}
+          />
+        )}
+        assert={({state, expect}) => {
+          expect(state).to.be.true;
+        }}
+      />
     </TestSuite>
-  )
+  );
 }
 
-const ModalExample = () => {
+const ModalExample = (props: ModalProps) => {
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <View>
-      <Text style={[styles.textStyle, {color: 'black'}]}>{modalVisible ? 'shown' : 'hidden'}</Text>
+      <Text style={[styles.textStyle, {color: 'black'}]}>
+        {modalVisible ? 'shown' : 'hidden'}
+      </Text>
       <Modal
+        {...props}
         animationType="none"
         transparent={true}
         visible={modalVisible}
