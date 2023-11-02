@@ -369,6 +369,7 @@ export struct RNScrollView {
     .scrollBar(this.scrollBarState())
     .scrollBarColor(this.scrollBarColor())
     .enableScrollInteraction(this.props.scrollEnabled)
+    .nestedScroll({ scrollForward: NestedScrollMode.SELF_FIRST, scrollBackward: NestedScrollMode.SELF_FIRST })
     .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
     .onScrollFrameBegin((offset, state) => {
       this.onScroll(offset, state)
