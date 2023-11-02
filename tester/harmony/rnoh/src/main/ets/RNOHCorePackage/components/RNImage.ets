@@ -1,15 +1,24 @@
-import image from '@ohos.multimedia.image';
-import { ColorSegments, Descriptor} from '../../RNOH';
-import { getTintColorMatrix, RNOHContext } from '../../RNOH'
-import { ImageLoaderTurboModule } from '../turboModules/ImageLoaderTurboModule'
-import { ViewBaseProps } from './RNViewBase';
-import { RNViewBase } from './RNViewBase'
+import { ColorSegments, Descriptor, getTintColorMatrix, RNOHContext } from '../../RNOH';
+import { ImageLoaderTurboModule } from '../turboModules/ImageLoaderTurboModule';
+import { RNViewBase, ViewBaseProps } from './RNViewBase';
 
 export interface ImageProps extends ViewBaseProps {
   uri: string,
   resizeMode: number,
   tintColor?: ColorSegments,
   blurRadius: number
+}
+
+interface ImageOnCompleteEvent {
+  width: number;
+  height: number;
+  componentWidth: number;
+  componentHeight: number;
+  loadingStatus: number;
+  contentWidth: number;
+  contentHeight: number;
+  contentOffsetX: number;
+  contentOffsetY: number;
 }
 
 export type ImageDescriptor = Descriptor<"Image", ImageProps>
@@ -96,8 +105,18 @@ export struct RNImage {
     )
   }
 
-  getColorFilter() : number[] {
-    if (!this.descriptor.props.tintColor || this.descriptor.props.tintColor.every((element) => element === 0)){
+  onLoad(event: ImageOnCompleteEvent) {
+    if (this.imageSource !== undefined) {
+      this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "load", {
+        width: event.width,
+        height: event.height,
+        uri: this.descriptor.props.uri,
+      })
+    }
+  }
+
+  getColorFilter(): number[] {
+    if (!this.descriptor.props.tintColor || this.descriptor.props.tintColor.every((element) => element === 0)) {
       return this.defaultColorFilter;
     }
 
@@ -115,9 +134,10 @@ export struct RNImage {
         .height("100%")
         .objectFit(this.getResizeMode(this.descriptor.props.resizeMode))
         .objectRepeat(this.descriptor.props.resizeMode === 4 ?
-        ImageRepeat.XY : ImageRepeat.NoRepeat )
+        ImageRepeat.XY : ImageRepeat.NoRepeat)
         .colorFilter(this.getColorFilter())
         .blur(this.descriptor.props.blurRadius)
+        .onComplete(event => this.onLoad(event));
     }
   }
 }

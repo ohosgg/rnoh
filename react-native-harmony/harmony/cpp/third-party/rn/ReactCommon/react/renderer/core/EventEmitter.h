@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+// RNOH patch: make dispatchEvent public
 #pragma once
 
 #include <memory>
@@ -56,13 +57,11 @@ class EventEmitter {
    */
   void setEnabled(bool enabled) const;
 
- protected:
-#ifdef ANDROID
   // We need this temporarily due to lack of Java-counterparts for particular
   // subclasses.
- public:
-#endif
 
+  // RNOH patch: make dispatchEvent public
+public:
   /*
    * Initiates an event delivery process.
    * Is used by particular subclasses only.

@@ -14,6 +14,7 @@ class ImageComponentJSIBinder : public ViewComponentJSIBinder {
         facebook::jsi::Object events(rt);
 
         events.setProperty(rt, "topLoadStart", createDirectEvent(rt, "onLoadStart"));
+        events.setProperty(rt, "topLoad", createDirectEvent(rt, "onLoad"));
 
         return events;
     }
