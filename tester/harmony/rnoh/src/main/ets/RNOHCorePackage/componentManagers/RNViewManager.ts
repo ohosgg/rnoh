@@ -39,6 +39,7 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
     super();
     this.descriptorRegistry = ctx.descriptorRegistry;
     this.componentManagerRegistry = ctx.componentManagerRegistry;
+    this.parentTag = this.descriptorRegistry.getDescriptor(tag).parentTag!;
   }
 
   /**
