@@ -1,4 +1,4 @@
-import { TestCase, TestSuite } from '@rnoh/testerino';
+import {TestCase, TestSuite} from '@rnoh/testerino';
 import React, {useState} from 'react';
 import {
   Modal,

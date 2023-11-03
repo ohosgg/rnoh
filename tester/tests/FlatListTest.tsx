@@ -1,7 +1,15 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { View, FlatList, StyleSheet, Text, FlatListProps, TouchableOpacity, ViewToken } from 'react-native';
-import { TestCase, TestSuite } from '@rnoh/testerino';
-import { Button, ObjectDisplayer } from '../components';
+import React, {useCallback, useRef, useState} from 'react';
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  Text,
+  FlatListProps,
+  TouchableOpacity,
+  ViewToken,
+} from 'react-native';
+import {TestCase, TestSuite} from '@rnoh/testerino';
+import {Button, ObjectDisplayer} from '../components';
 interface ItemData {
   title: string;
   id: string;
@@ -29,9 +37,9 @@ const DATA: ItemData[] = [
   },
 ];
 
-type ItemProps = { title: string };
+type ItemProps = {title: string};
 
-const Item = ({ title }: ItemProps) => (
+const Item = ({title}: ItemProps) => (
   <View style={styles.item}>
     <Text style={styles.title}>{title}</Text>
   </View>
@@ -42,8 +50,8 @@ const commonProps = {
   },
   data: DATA,
   nestedScrollEnabled: true,
-  renderItem: ({ item }) => <Item title={item.title} />,
-  keyExtractor: (item) => item.id,
+  renderItem: ({item}) => <Item title={item.title} />,
+  keyExtractor: item => item.id,
 } satisfies FlatListProps<any>;
 
 export const FlatListTest = () => {

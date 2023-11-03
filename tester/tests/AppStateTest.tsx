@@ -1,8 +1,16 @@
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import React, {useEffect, useState} from 'react';
-import { GestureResponderEvent, ScrollView, TextInput } from 'react-native';
-import {AppState, AppStateStatus, StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
-import { Button } from '../components';
+import {GestureResponderEvent, ScrollView, TextInput} from 'react-native';
+import {
+  AppState,
+  AppStateStatus,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from 'react-native';
+import {Button} from '../components';
 
 export function AppStateTest() {
   return (
@@ -38,7 +46,12 @@ export function AppStateTest() {
             <View>
               <View style={{flexDirection: 'row'}}>
                 <Text>Number of items to add</Text>
-                <TextInput value={text} onChange={(e) => setText(e.nativeEvent.text)} style={{borderWidth: 1, width: 50, marginLeft: 10}} maxLength={6}/>
+                <TextInput
+                  value={text}
+                  onChange={e => setText(e.nativeEvent.text)}
+                  style={{borderWidth: 1, width: 50, marginLeft: 10}}
+                  maxLength={6}
+                />
               </View>
               <Text>Items: {numChildren}</Text>
               <Button onPress={run} label="Add" />
@@ -163,4 +176,3 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-

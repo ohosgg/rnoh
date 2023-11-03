@@ -98,7 +98,7 @@ function StatusBarView() {
         <View
           style={styles.button}
           onTouchEnd={() => {
-            StatusBar.setBarStyle('dark-content')
+            StatusBar.setBarStyle('dark-content');
           }}>
           <Text style={styles.buttonText}>Set dark-content</Text>
         </View>
@@ -109,9 +109,7 @@ function StatusBarView() {
           onTouchEnd={() => {
             StatusBar.setTranslucent(true);
           }}>
-          <Text style={styles.buttonText}>
-            Set translucent
-          </Text>
+          <Text style={styles.buttonText}>Set translucent</Text>
         </View>
       </TestCase>
       <TestCase

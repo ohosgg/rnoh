@@ -4,7 +4,7 @@ import {TestCase, TestSuite} from '@rnoh/testerino';
 
 export function SwitchTest() {
   const [isEnabled, setIsEnabled] = useState(false);
-  const [event, setEvent] = useState("");
+  const [event, setEvent] = useState('');
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   return (
     <TestSuite name="Switch">
@@ -13,15 +13,13 @@ export function SwitchTest() {
           <Text style={{height: 30}}>
             Switch isEnabled: {isEnabled.toString()}
           </Text>
-          <Text style={{height: 30}}>
-            OnChange event: {event}
-          </Text>
+          <Text style={{height: 30}}>OnChange event: {event}</Text>
           <Switch
             trackColor={{false: 'green', true: 'firebrick'}}
             thumbColor={'beige'}
             onValueChange={toggleSwitch}
             value={isEnabled}
-            onChange={(event) => setEvent(JSON.stringify(event.nativeEvent))}
+            onChange={event => setEvent(JSON.stringify(event.nativeEvent))}
           />
         </View>
       </TestCase>

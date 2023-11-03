@@ -6,9 +6,9 @@ import {
   TextInput,
   TextInputProps,
 } from 'react-native';
-import { TestSuite, TestCase } from '@rnoh/testerino';
-import { useState } from 'react';
-import { Button } from '../components';
+import {TestSuite, TestCase} from '@rnoh/testerino';
+import {useState} from 'react';
+import {Button} from '../components';
 
 export function TextInputTest() {
   return (
