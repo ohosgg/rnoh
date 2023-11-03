@@ -1,16 +1,14 @@
-import type {MeasureOptions} from '@ohos.measure';
+import type { MeasureOptions } from '@ohos.measure';
 import TextMeasurer from '@ohos.measure';
-import type {Tag} from './DescriptorBase';
-import type {Size} from './types'
+import type { Tag } from './DescriptorBase';
+import type { Size } from './types'
 import type {
   Fragment as ParagraphMeasurerFragment,
   TextFragmentMeasurer,
   TextFragment,
-  PlaceholderFragment} from '../ParagraphMeasurer';
-import {
-  ParagraphMeasurer,
-  UnhyphenatedWordWrapStrategy
+  PlaceholderFragment
 } from '../ParagraphMeasurer';
+import { ParagraphMeasurer, UnhyphenatedWordWrapStrategy } from '../ParagraphMeasurer';
 
 export const PLACEHOLDER_SYMBOL = '￼' as const;
 
@@ -83,11 +81,12 @@ export function measureParagraph(
   paragraphAttributes: ParagraphAttributes,
   layoutConstraints: LayoutConstrains,
 ): ParagraphMeasurement {
-  return createTextLayoutManager(attributedString.fragments).measureParagraph(
+  const result = createTextLayoutManager(attributedString.fragments).measureParagraph(
     attributedString,
     paragraphAttributes,
     layoutConstraints,
   );
+  return result;
 }
 
 function createTextLayoutManager(fragments: Fragment[]): TextLayoutManager {
@@ -101,6 +100,7 @@ function createTextLayoutManager(fragments: Fragment[]): TextLayoutManager {
   );
 }
 
+
 class SimpleTextLayoutManager implements TextLayoutManager {
   public measureParagraph(
     attributedString: AttributedString,
@@ -108,7 +108,7 @@ class SimpleTextLayoutManager implements TextLayoutManager {
     layoutConstraints: LayoutConstrains,
   ): ParagraphMeasurement {
     if (attributedString.fragments.length === 0) {
-      return {size: {width: 0, height: 0}, attachmentLayouts: []};
+      return { size: { width: 0, height: 0 }, attachmentLayouts: [] };
     }
     if (attributedString.fragments.length > 1) {
       throw new Error('SimpleTextLayoutManager supports only one fragment');
@@ -118,16 +118,16 @@ class SimpleTextLayoutManager implements TextLayoutManager {
       textContent: fragment.string,
       fontSize: fragment.textAttributes.fontSize,
       lineHeight:
-        fragment.textAttributes.lineHeight ||
+      fragment.textAttributes.lineHeight ||
         fragment.textAttributes.fontSize * (1 + DEFAULT_LINE_SPACING),
       fontWeight: fragment.textAttributes.fontWeight,
       maxLines: paragraphAttributes.maximumNumberOfLines || undefined,
       letterSpacing: fragment.textAttributes.letterSpacing || undefined,
     };
     let textSize = TextMeasurer.measureTextSize(measureOptions) as Size;
-    textSize = {width: px2vp(textSize.width), height: px2vp(textSize.height)};
+    textSize = { width: px2vp(textSize.width), height: px2vp(textSize.height) };
     if (textSize.width < layoutConstraints.maximumSize.width) {
-      return {size: textSize, attachmentLayouts: []};
+      return { size: textSize, attachmentLayouts: [] };
     }
     /**
      * Measuring text twice, because if constraintWidth is provided, and text is smaller than that width,
@@ -137,8 +137,8 @@ class SimpleTextLayoutManager implements TextLayoutManager {
       ...measureOptions,
       constraintWidth: layoutConstraints.maximumSize.width,
     }) as Size;
-    textSize = {width: px2vp(textSize.width), height: px2vp(textSize.height)};
-    return {size: textSize, attachmentLayouts: []};
+    textSize = { width: px2vp(textSize.width), height: px2vp(textSize.height) };
+    return { size: textSize, attachmentLayouts: [] };
   }
 }
 
@@ -146,7 +146,8 @@ class AdvancedTextLayoutManager implements TextLayoutManager {
   constructor(
     private paragraphMeasurer: ParagraphMeasurer,
     private textFragmentMeasurer: TextFragmentMeasurer<OHOSMeasurerTextFragmentExtraData>,
-  ) {}
+  ) {
+  }
 
   public measureParagraph(
     attributedString: AttributedString,
@@ -157,13 +158,13 @@ class AdvancedTextLayoutManager implements TextLayoutManager {
       attributedString.fragments,
     );
     const measuredParagraph = this.paragraphMeasurer.measureParagraph(
-      {fragments},
+      { fragments },
       {
         wordWrapStrategy: new UnhyphenatedWordWrapStrategy(
           this.textFragmentMeasurer,
         ),
         containerConfig: {
-          width: layoutConstraints.maximumSize.width,
+          width: layoutConstraints.maximumSize.width + 0.1,
           maxNumberOfLines: paragraphAttributes.maximumNumberOfLines,
         },
       },
@@ -180,11 +181,11 @@ class AdvancedTextLayoutManager implements TextLayoutManager {
               },
               positionRelativeToContainer: {
                 x:
-                  positionedFragment.positionRelativeToLine.x +
-                  line.positionRelativeToParagraph.x,
+                positionedFragment.positionRelativeToLine.x +
+                line.positionRelativeToParagraph.x,
                 y:
-                  positionedFragment.positionRelativeToLine.y +
-                  line.positionRelativeToParagraph.y,
+                positionedFragment.positionRelativeToLine.y +
+                line.positionRelativeToParagraph.y,
               },
             };
             return [attachmentLayout];
@@ -192,7 +193,7 @@ class AdvancedTextLayoutManager implements TextLayoutManager {
           .flat();
       })
       .flat();
-    return {size: measuredParagraph.size, attachmentLayouts};
+    return { size: measuredParagraph.size, attachmentLayouts };
   }
 
   private mapRNFragmentsToParagraphMeasurerFragments(
@@ -203,10 +204,10 @@ class AdvancedTextLayoutManager implements TextLayoutManager {
         const placeholderFragment: PlaceholderFragment = {
           type: 'placeholder',
           width:
-            fragment?.parentShadowView?.layoutMetrics?.frame?.size?.width ?? 0,
+          fragment?.parentShadowView?.layoutMetrics?.frame?.size?.width ?? 0,
           height:
-            fragment?.parentShadowView?.layoutMetrics?.frame?.size?.height ?? 0,
-          extraData: {tag: fragment?.parentShadowView?.tag},
+          fragment?.parentShadowView?.layoutMetrics?.frame?.size?.height ?? 0,
+          extraData: { tag: fragment?.parentShadowView?.tag },
         };
         return placeholderFragment;
       }
@@ -216,7 +217,7 @@ class AdvancedTextLayoutManager implements TextLayoutManager {
         extraData: {
           fontSize: fragment.textAttributes.fontSize,
           lineHeight:
-            fragment.textAttributes.lineHeight ||
+          fragment.textAttributes.lineHeight ||
             fragment.textAttributes.fontSize * (1 + DEFAULT_LINE_SPACING),
           fontWeight: fragment.textAttributes.fontWeight,
           letterSpacing: fragment.textAttributes.letterSpacing || undefined,
@@ -234,8 +235,7 @@ export type OHOSMeasurerTextFragmentExtraData = {
 };
 
 export class OHOSTextFragmentMeasurer
-  implements TextFragmentMeasurer<OHOSMeasurerTextFragmentExtraData>
-{
+implements TextFragmentMeasurer<OHOSMeasurerTextFragmentExtraData> {
   private sizeByMeasuredTextFragmentHash = new Map<string, Size>()
 
   public measureTextFragment(
@@ -252,7 +252,7 @@ export class OHOSTextFragmentMeasurer
       fontWeight: textFragment.extraData.fontWeight,
       letterSpacing: textFragment.extraData.letterSpacing,
     }) as Size;
-    size = {width: px2vp(size.width), height: px2vp(size.height)};
+    size = { width: px2vp(size.width), height: px2vp(size.height) };
     this.updateCache(textFragment, size)
     return size;
   }

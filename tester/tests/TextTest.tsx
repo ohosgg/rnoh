@@ -15,6 +15,11 @@ export function TextTest() {
           </Text>
         </View>
       </TestCase>
+      <TestCase itShould="render text in one line">
+        <View style={{flexDirection: 'row'}}>
+          <Text style={{fontSize: 10}}>/ {'100'}</Text>
+        </View>
+      </TestCase>
       <TestCase
         itShould="show 3 texts each with a different line break startegy"
         skip
