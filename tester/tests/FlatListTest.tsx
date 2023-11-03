@@ -81,23 +81,7 @@ export const FlatListTest = () => {
       <TestCase modal itShould="display an array of fully visible items">
         <ObjectDisplayer
           renderContent={setObject => {
-            return (
-              <View style={{height: 300}}>
-                <FlatList
-                  {...commonProps}
-                  viewabilityConfig={{viewAreaCoveragePercentThreshold: 100}}
-                  onViewableItemsChanged={useCallback(
-                    (item: {
-                      viewableItems: Array<ViewToken>;
-                      changed: Array<ViewToken>;
-                    }) => {
-                      setObject(item.viewableItems.map(i => i.item));
-                    },
-                    [],
-                  )}
-                />
-              </View>
-            );
+            return <ViewabilityConfigTest setObject={setObject} />;
           }}
         />
       </TestCase>
@@ -185,6 +169,27 @@ function InitialNumToRenderTestCase() {
         keyExtractor={item => item.id}
         initialNumToRender={2}
         windowSize={1}
+      />
+    </View>
+  );
+}
+function ViewabilityConfigTest({
+  setObject,
+}: {
+  setObject: (obj: Object) => void;
+}) {
+  const viewabilityConfig = {viewAreaCoveragePercentThreshold: 100};
+  const onViewableItemsChanged = useRef(
+    (item: {viewableItems: Array<ViewToken>; changed: Array<ViewToken>}) => {
+      setObject(item.viewableItems.map(i => i.item));
+    },
+  );
+  return (
+    <View style={{height: 300}}>
+      <FlatList
+        {...commonProps}
+        viewabilityConfig={viewabilityConfig}
+        onViewableItemsChanged={onViewableItemsChanged.current}
       />
     </View>
   );
