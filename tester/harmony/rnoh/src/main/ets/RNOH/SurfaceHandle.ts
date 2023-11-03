@@ -9,6 +9,8 @@ export class SurfaceHandle {
   private destroyed: boolean = false;
   private displayMode: DisplayMode = DisplayMode.Suspended;
   private props: SurfaceProps
+  private startingPromise: Promise<unknown> | undefined = undefined
+  private isRunning: boolean = false
 
   constructor(
     private rnInstance: RNInstance,
@@ -26,12 +28,12 @@ export class SurfaceHandle {
     return this.tag;
   }
 
-  public start(ctx: SurfaceContext, props: SurfaceProps) {
+  public async start(ctx: SurfaceContext, props: SurfaceProps) {
     if (this.destroyed) {
       throw new Error("start called on a destroyed surface");
     }
     this.props = { ...this.defaultProps, ...props };
-    this.napiBridge.startSurface(
+    this.startingPromise = this.napiBridge.startSurface(
       this.rnInstance.getId(),
       this.tag,
       ctx.width,
@@ -39,13 +41,24 @@ export class SurfaceHandle {
       ctx.surfaceOffsetX,
       ctx.surfaceOffsetY,
       this.props);
+    this.startingPromise.then(() => {
+      this.isRunning = true
+    })
+    return this.startingPromise
   }
 
   public async stop() {
     if (this.destroyed) {
       throw new Error("stop called on a destroyed surface");
     }
-    return this.napiBridge.stopSurface(this.rnInstance.getId(), this.tag);
+    if (this.startingPromise) {
+      await this.startingPromise
+    }
+    const promise = this.napiBridge.stopSurface(this.rnInstance.getId(), this.tag);
+    promise.then(() => {
+      this.isRunning = false
+    })
+    return promise
   }
 
   public updateConstraints(
@@ -93,7 +106,11 @@ export class SurfaceHandle {
     if (this.destroyed) {
       throw new Error("destroy called on a destroyed surface");
     }
+    if (this.isRunning) {
+      throw new Error("Surface must be stopped before can be destroyed")
+    }
     await this.napiBridge.destroySurface(this.rnInstance.getId(), this.tag);
+    this.destroyed = true
     this.rnInstance.descriptorRegistry.deleteRootDescriptor(this.tag);
   }
 }

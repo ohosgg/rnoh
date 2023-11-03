@@ -38,7 +38,7 @@ export class NapiBridge {
     })
   }
 
-  startSurface(
+  async startSurface(
     instanceId: number,
     surfaceTag: number,
     initialSurfaceWidth: number,
@@ -46,15 +46,18 @@ export class NapiBridge {
     surfaceOffsetX: number,
     surfaceOffsetY: number,
     initialProps: any) {
-    this.libRNOHApp?.startSurface(
-      instanceId,
-      surfaceTag,
-      initialSurfaceWidth,
-      initialSurfaceHeight,
-      surfaceOffsetX,
-      surfaceOffsetY,
-      initialProps,
-    );
+    return new Promise(resolve => {
+      this.libRNOHApp?.startSurface(
+        instanceId,
+        surfaceTag,
+        initialSurfaceWidth,
+        initialSurfaceHeight,
+        surfaceOffsetX,
+        surfaceOffsetY,
+        initialProps,
+        () => resolve(undefined)
+      );
+    })
   }
 
   updateSurfaceConstraints(

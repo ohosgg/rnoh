@@ -11,7 +11,7 @@ NapiTaskRunner::NapiTaskRunner(napi_env env) : env(env) {
     // NOTE: let's hope the JS runtime doesn't move between system threads...
     threadId = std::this_thread::get_id();
     auto loop = getLoop();
-    asyncHandle.data = static_cast<void*>(this);
+    asyncHandle.data = static_cast<void *>(this);
     uv_async_init(loop, &asyncHandle, [](auto handle) {
         auto runner = static_cast<NapiTaskRunner *>(handle->data);
 
@@ -60,7 +60,6 @@ void NapiTaskRunner::runSyncTask(Task &&task) {
         task();
         return;
     }
-    
     std::condition_variable cv;
     std::unique_lock<std::mutex> lock(tasksMutex);
     std::atomic_bool done{false};

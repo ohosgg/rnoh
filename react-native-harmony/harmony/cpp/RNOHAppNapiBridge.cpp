@@ -112,13 +112,19 @@ static napi_value startSurface(napi_env env, napi_callback_info info) {
     size_t instanceId = arkJs.getDouble(args[0]);
     auto &rnInstance = rnInstanceById.at(instanceId);
     facebook::react::Tag surfaceId = arkJs.getDouble(args[1]);
+    auto onFinishRef = arkJs.createReference(args[7]);
     LOG(INFO) << "startSurface: surfaceId=" << surfaceId << "\n";
     rnInstance->startSurface(surfaceId,
                              arkJs.getDouble(args[2]),
                              arkJs.getDouble(args[3]),
                              arkJs.getDouble(args[4]),
                              arkJs.getDouble(args[5]),
-                             arkJs.getDynamic(args[6]));
+                             arkJs.getDynamic(args[6]), [env, onFinishRef]() {
+                                 ArkJS arkJs(env);
+                                 auto listener = arkJs.getReferenceValue(onFinishRef);
+                                 arkJs.call<0>(listener, {});
+                                 arkJs.deleteReference(onFinishRef);
+                             });
     return arkJs.getUndefined();
 }
 

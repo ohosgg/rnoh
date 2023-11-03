@@ -90,9 +90,11 @@ export struct RNSurface {
           surfaceOffsetX: this.surfaceOffsetX,
           surfaceOffsetY: this.surfaceOffsetY,
         },
-        this.initialProps)
+        this.initialProps).then(() => {
+        this.surfaceHandle.setDisplayMode(DisplayMode.Visible)
+      })
       this.shouldStartSurface = false
-      this.surfaceHandle.setDisplayMode(DisplayMode.Visible);
+
     } else {
       this.surfaceHandle.updateConstraints({
         width: this.surfaceWidth,

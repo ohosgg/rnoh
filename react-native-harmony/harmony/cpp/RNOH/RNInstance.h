@@ -72,7 +72,7 @@ class RNInstance : public facebook::react::LayoutAnimationStatusDelegate {
     void loadScript(std::vector<uint8_t> &&bundle, std::string const sourceURL, std::function<void(const std::string)> &&onFinish);
     void createSurface(facebook::react::Tag surfaceId, std::string const &moduleName);
     void updateSurfaceConstraints(facebook::react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY);
-    void startSurface(facebook::react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY, folly::dynamic &&initialProps);
+    void startSurface(facebook::react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY, folly::dynamic &&initialProps, std::function<void()> &&onFinish);
     void setSurfaceProps(facebook::react::Tag surfaceId, folly::dynamic &&props);
     void stopSurface(facebook::react::Tag surfaceId, std::function<void()> &&onFinish);
     void destroySurface(facebook::react::Tag surfaceId, std::function<void()> &&onFinish);
