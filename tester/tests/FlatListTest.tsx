@@ -47,23 +47,24 @@ const commonProps = {
 } satisfies FlatListProps<any>;
 
 export const FlatListTest = () => {
-
   return (
     <TestSuite name="FlatList">
       <TestCase itShould="display items in the FlatList (data, renderItem)">
-        <FlatList
-          {...commonProps}
-        />
+        <FlatList {...commonProps} />
       </TestCase>
       <TestCase itShould="display items with separator between them in the FlatList">
         <FlatList
           {...commonProps}
-          ItemSeparatorComponent={() => (<View style={{
-            height: 2,
-            alignSelf: 'center',
-            width: '90%',
-            backgroundColor: 'black',
-          }} />)}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                height: 2,
+                alignSelf: 'center',
+                width: '90%',
+                backgroundColor: 'black',
+              }}
+            />
+          )}
         />
       </TestCase>
       <TestCase modal itShould="render only the first two items">
@@ -73,16 +74,19 @@ export const FlatListTest = () => {
         <ObjectDisplayer
           renderContent={setObject => {
             return (
-              <View style={{ height: 300 }}>
+              <View style={{height: 300}}>
                 <FlatList
                   {...commonProps}
-                  viewabilityConfig={{ viewAreaCoveragePercentThreshold: 100 }}
-                  onViewableItemsChanged={useCallback((item: {
-                    viewableItems: Array<ViewToken>;
-                    changed: Array<ViewToken>;
-                  }) => {
-                    setObject(item.viewableItems.map(i => i.item));
-                  }, [])}
+                  viewabilityConfig={{viewAreaCoveragePercentThreshold: 100}}
+                  onViewableItemsChanged={useCallback(
+                    (item: {
+                      viewableItems: Array<ViewToken>;
+                      changed: Array<ViewToken>;
+                    }) => {
+                      setObject(item.viewableItems.map(i => i.item));
+                    },
+                    [],
+                  )}
                 />
               </View>
             );
@@ -92,37 +96,46 @@ export const FlatListTest = () => {
       <TestCase modal itShould="turn the items red on press (extraData)">
         <ExtraDataTestCase />
       </TestCase>
-      <TestCase modal itShould="the left list should render the added items one by one, while the right list should render almost all at once (maxToRenderPerBatch)">
+      <TestCase
+        modal
+        itShould="the left list should render the added items one by one, while the right list should render almost all at once (maxToRenderPerBatch)">
         <MaxToRenderPerBatchTestCase />
       </TestCase>
       <TestCase itShould="display empty list with a text saying that the list is empty ">
-        <View style={{ height: 40 }}>
+        <View style={{height: 40}}>
           <FlatList
             data={[]}
             nestedScrollEnabled
-            renderItem={({ item }) => null}
-            ListEmptyComponent={(<Text style={{ textAlign: 'center' }}>This list is empty</Text>)}
+            renderItem={({item}) => null}
+            ListEmptyComponent={
+              <Text style={{textAlign: 'center'}}>This list is empty</Text>
+            }
           />
         </View>
       </TestCase>
-      <TestCase skip itShould="scroll to the third item at the middle (scrollToIndex)">
+      <TestCase
+        skip
+        itShould="scroll to the third item at the middle (scrollToIndex)">
         <ScrollToIndexTestCase />
       </TestCase>
       <TestCase itShould="scroll to the third item at the middle (scrollToOffset)">
         <ScrollToOffsetTestCase />
       </TestCase>
+      <TestCase modal itShould="scroll to the third item (scrollToItem)">
+        <ScrollToItemTestCase />
+      </TestCase>
       <TestCase modal itShould="support sticky headers">
-        <View style={{ height: 100, backgroundColor: '#fff' }}>
+        <View style={{height: 100, backgroundColor: '#fff'}}>
           <FlatList
             data={DATA}
-            renderItem={({ item }) => (
+            renderItem={({item}) => (
               <View
                 style={{
                   padding: 20,
                   borderBottomWidth: 1,
                   borderBottomColor: '#ccc',
                 }}>
-                <Text style={{ fontSize: 16 }}>{item.title}</Text>
+                <Text style={{fontSize: 16}}>{item.title}</Text>
               </View>
             )}
             keyExtractor={item => item.id}
@@ -134,7 +147,7 @@ export const FlatListTest = () => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+                <Text style={{fontSize: 18, fontWeight: 'bold'}}>
                   Sticky Header
                 </Text>
               </View>
@@ -148,39 +161,37 @@ export const FlatListTest = () => {
 };
 function InitialNumToRenderTestCase() {
   return (
-    <View style={{
-      height: 120,
-    }}>
+    <View
+      style={{
+        height: 120,
+      }}>
       <FlatList
         style={{
           height: 120,
         }}
         data={DATA}
         nestedScrollEnabled
-        renderItem={({ item }) => {
-          return <Item title={item.title} />
+        renderItem={({item}) => {
+          return <Item title={item.title} />;
         }}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         initialNumToRender={2}
         windowSize={1}
       />
     </View>
   );
-
 }
 
 function MaxToRenderPerBatchTestCase() {
   const [data, setData] = useState<string[]>([]);
 
-  const renderItem = ({ item, index }: { item: string, index: number }) => {
-    return (
-      <Text style={{ height: 20 }}>{item}</Text>
-    );
+  const renderItem = ({item, index}: {item: string; index: number}) => {
+    return <Text style={{height: 20}}>{item}</Text>;
   };
 
   return (
-    <View style={{ height: 500 }}>
-      <View style={{ flexDirection: 'row' }}>
+    <View style={{height: 500}}>
+      <View style={{flexDirection: 'row'}}>
         <FlatList
           data={data}
           renderItem={renderItem}
@@ -197,7 +208,10 @@ function MaxToRenderPerBatchTestCase() {
       <Button
         label="Add 60 items"
         onPress={() => {
-          setData(prevData => [...prevData, ...Array.from({ length: 60 }, (_, i) => `New item ${i + 1}`)]);
+          setData(prevData => [
+            ...prevData,
+            ...Array.from({length: 60}, (_, i) => `New item ${i + 1}`),
+          ]);
         }}
       />
     </View>
@@ -217,18 +231,16 @@ class SelectableListItem extends React.PureComponent<SelectableListItemProps> {
   };
 
   render() {
-    const textColor = this.props.selected ? "red" : "black";
+    const textColor = this.props.selected ? 'red' : 'black';
     return (
       <TouchableOpacity onPress={this._onPress}>
         <View>
-          <Text style={{ color: textColor }}>{this.props.title}</Text>
+          <Text style={{color: textColor}}>{this.props.title}</Text>
         </View>
       </TouchableOpacity>
     );
   }
 }
-
-
 
 interface MultiSelectListState {
   selected: Map<string, boolean>;
@@ -242,14 +254,14 @@ class ExtraDataTestCase extends React.PureComponent<{}, MultiSelectListState> {
   _keyExtractor = (item: ItemData, index: number) => item.id;
 
   _onPressItem = (id: string) => {
-    this.setState((state) => {
+    this.setState(state => {
       const selected = new Map(state.selected);
       selected.set(id, !selected.get(id));
-      return { selected };
+      return {selected};
     });
   };
 
-  _renderItem = ({ item }: { item: ItemData }) => (
+  _renderItem = ({item}: {item: ItemData}) => (
     <SelectableListItem
       id={item.id}
       onPressItem={this._onPressItem}
@@ -260,7 +272,7 @@ class ExtraDataTestCase extends React.PureComponent<{}, MultiSelectListState> {
 
   render() {
     return (
-      <View style={{ height: 200 }}>
+      <View style={{height: 200}}>
         <FlatList
           data={DATA}
           extraData={this.state}
@@ -272,42 +284,67 @@ class ExtraDataTestCase extends React.PureComponent<{}, MultiSelectListState> {
   }
 }
 
-
-
 function ScrollToIndexTestCase() {
   const flatlistRef = useRef<FlatList>(null);
-
-  return (<>
-    <Button
-      label={'Scroll to the 3rd item at the middle'}
-      onPress={() => {
-        flatlistRef.current?.scrollToIndex({
-          animated: true,
-          index: 2,
-          viewPosition: 0.5
-        })
-      }}
-    />
-    <FlatList {...commonProps} ref={flatlistRef} />
-  </>
-  )
+  const [error, setError] = useState('');
+  return (
+    <>
+      <Button
+        label={'Scroll to the 3rd item at the middle'}
+        onPress={() => {
+          flatlistRef.current?.scrollToIndex({
+            animated: true,
+            index: 2,
+            viewPosition: 0.5,
+          });
+        }}
+      />
+      <FlatList
+        {...commonProps}
+        ref={flatlistRef}
+        onScrollToIndexFailed={info => {
+          setError('Scroll to index failed ' + JSON.stringify(info));
+        }}
+      />
+      <Text>{error}</Text>
+    </>
+  );
 }
 function ScrollToOffsetTestCase() {
   const flatlistRef = useRef<FlatList>(null);
 
-  return (<>
-    <Button
-      label={'Scroll to the 3rd item at top'}
-      onPress={() => {
-        flatlistRef.current?.scrollToOffset({
-          animated: true,
-          offset: 200
-        })
-      }}
-    />
-    <FlatList {...commonProps} ref={flatlistRef} />
-  </>
-  )
+  return (
+    <>
+      <Button
+        label={'Scroll to the 3rd item at top'}
+        onPress={() => {
+          flatlistRef.current?.scrollToOffset({
+            animated: true,
+            offset: 200,
+          });
+        }}
+      />
+      <FlatList {...commonProps} ref={flatlistRef} />
+    </>
+  );
+}
+function ScrollToItemTestCase() {
+  const flatlistRef = useRef<FlatList>(null);
+
+  return (
+    <>
+      <Button
+        label={'Scroll to the 3rd item'}
+        onPress={() => {
+          flatlistRef.current?.scrollToItem({
+            animated: true,
+            item: DATA[2],
+          });
+        }}
+      />
+      <FlatList {...commonProps} ref={flatlistRef} />
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
