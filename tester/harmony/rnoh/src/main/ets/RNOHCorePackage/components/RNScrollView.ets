@@ -75,7 +75,6 @@ export struct RNScrollView {
   @State contentSize: Size = {} as Size
   @State childrenTags: Tag[] = []
   @State descriptor: ScrollViewDescriptor = Object() as ScrollViewDescriptor
-  @State shouldPreventScrolling: boolean = false
   state: ScrollViewState = {} as ScrollViewState
   private parentTag: Tag | undefined = undefined
   private scroller = new Scroller()
@@ -84,6 +83,7 @@ export struct RNScrollView {
   private componentManager!: _RNScrollViewManager
   private lastScrollDispatchTime: number = 0
   private allowNextScrollEvent: boolean = false
+  private shouldPreventScrolling: boolean = false
 
   aboutToAppear() {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag)
@@ -159,7 +159,6 @@ export struct RNScrollView {
   }
 
   scrollDirection(): ScrollDirection {
-    if (this.shouldPreventScrolling) return ScrollDirection.None
     return this.props.flexDirection === 2 ? ScrollDirection.Horizontal : ScrollDirection.Vertical;
   }
 
@@ -195,7 +194,7 @@ export struct RNScrollView {
     }
   }
 
-  getScrollSnap(): ScrollSnapOptions | undefined{
+  getScrollSnap(): ScrollSnapOptions | undefined {
     const snapToOffsets = this.descriptor.rawProps.snapToOffsets
     if (snapToOffsets && snapToOffsets.length > 0) {
       return {
@@ -372,6 +371,9 @@ export struct RNScrollView {
     .nestedScroll({ scrollForward: NestedScrollMode.SELF_FIRST, scrollBackward: NestedScrollMode.SELF_FIRST })
     .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
     .onScrollFrameBegin((offset, state) => {
+      if (this.shouldPreventScrolling) {
+        return { offsetRemain: 0 }
+      }
       this.onScroll(offset, state)
       return { offsetRemain: offset }
     })
