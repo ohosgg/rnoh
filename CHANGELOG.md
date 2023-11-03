@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.72.10
+- breaking change: SurfaceHandle::start is now async
+- added basic support for KeyboardAvoidingView
+- added Model to Platform.constants
+- added Image::onLoad support
+- added basic TextInput::autoFocus support
+- fixed loading remote images when urls is redirected
+- fixed presses for views with translations animated with native driver
+- fixed text wrapping after characters
+- fixed onBlur crashing the app
+- fixed empty values in TextInputs
+- fixed maxLength in TextInput
+- fixed nested scroll views
+- fixed RNViewManager::parentTag incorrectly returning undefined
+- fixed Text's onLayout
+- fixed deadlock caused by creating/updating/destroying surfaces
+- fixed unnecessary text wrapping
+- fixed locking scroll from component manager
+
 ## v0.72.9
 - breaking change: SurfaceHandle::stop and SurfaceHandle::destroy are now async
 - added hitSlop support
@@ -19,7 +38,7 @@
 - fixed not working props for multiline TextInput
 - fixed Animated.Value callback timing issue
 - fixed deadlock caused when creating/destroying surfaces
-i
+
 ## v0.72.8
 - added layout animations support
 - added ellipsis support when text components are nested or text component inside another text component
