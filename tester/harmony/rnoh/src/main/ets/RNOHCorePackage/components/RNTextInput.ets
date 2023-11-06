@@ -124,13 +124,13 @@ export struct RNTextInput {
   }
 
   onDescriptorChange(newDescriptor: TextInputDescriptor) {
-    this.value = newDescriptor.props.text ?? '';
     this.maxLength = newDescriptor.rawProps.maxLength ?? this.maxLength;
     this.descriptor = newDescriptor;
   }
 
   aboutToAppear() {
     const newDescriptor = this.ctx.descriptorRegistry.getDescriptor<TextInputDescriptor>(this.tag);
+    this.value = newDescriptor.props.text ?? '';
     this.onDescriptorChange(newDescriptor);
     this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
