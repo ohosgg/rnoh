@@ -1,12 +1,12 @@
 import type { MeasureOptions } from '@ohos.measure';
 import TextMeasurer from '@ohos.measure';
 import type { Tag } from './DescriptorBase';
-import type { Size } from './types'
+import type { Size } from './types';
 import type {
   Fragment as ParagraphMeasurerFragment,
-  TextFragmentMeasurer,
+  PlaceholderFragment,
   TextFragment,
-  PlaceholderFragment
+  TextFragmentMeasurer
 } from '../ParagraphMeasurer';
 import { ParagraphMeasurer, UnhyphenatedWordWrapStrategy } from '../ParagraphMeasurer';
 
@@ -86,7 +86,22 @@ export function measureParagraph(
     paragraphAttributes,
     layoutConstraints,
   );
-  return result;
+
+  /**
+   * RN operates on floats while JS numbers are doubles and that causes loss of precision.
+   * After text measuring the value passed to the RN sometimes becomes smaller than the actual measured value.
+   * This causes views to render with smaller size values than measured in JS and
+   * makes them misaligned in respect to other components. It also causes some unnecessary text wrapping.
+   * To prevent that we round up the measured values to ensure that the containing view will not be smaller
+   * than its children.
+   *
+   */
+
+  const roundedResult: ParagraphMeasurement = {
+    size: { height: Math.ceil(result.size.height), width: Math.ceil(result.size.width) },
+    attachmentLayouts: result.attachmentLayouts
+  }
+  return roundedResult;
 }
 
 function createTextLayoutManager(fragments: Fragment[]): TextLayoutManager {

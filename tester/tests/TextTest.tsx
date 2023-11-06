@@ -361,6 +361,16 @@ export function TextTest() {
             </Text>
           </View>
         </TestCase>
+        <TestCase itShould="text should not exceed green background">
+          <View style={{backgroundColor: 'green', marginHorizontal: 20}}>
+            <Text style={{fontSize: 20}}>asdg</Text>
+          </View>
+          <View style={{backgroundColor: 'green', marginHorizontal: 20}}>
+            <Text style={{fontSize: 20}}>
+              faaj'<Text>asdg</Text>
+            </Text>
+          </View>
+        </TestCase>
         <TestSuite name="views in text">
           <TestCase itShould="wrap first and second paragraph in the same way">
             <View style={{width: 200, backgroundColor: 'silver'}}>

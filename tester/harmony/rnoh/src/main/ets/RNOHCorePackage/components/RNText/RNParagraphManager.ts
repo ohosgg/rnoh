@@ -1,28 +1,15 @@
-import type {
-  PlaceholderFragment,
-  MeasuredParagraph,
-  Fragment as MeasurerFragment} from '../../../ParagraphMeasurer';
+import type { MeasuredParagraph, Fragment as MeasurerFragment, PlaceholderFragment } from '../../../ParagraphMeasurer';
+import { ParagraphMeasurer, TailEllipsisInserter, UnhyphenatedWordWrapStrategy } from '../../../ParagraphMeasurer';
 import {
-  ParagraphMeasurer,
-  UnhyphenatedWordWrapStrategy,
-  TailEllipsisInserter
-} from '../../../ParagraphMeasurer';
-import type { RNOHContext } from '../../../RNOH';
-import { convertColorSegmentsToString, OHOSTextFragmentMeasurer, PLACEHOLDER_SYMBOL } from '../../../RNOH';
+  convertColorSegmentsToString,
+  DEFAULT_LINE_SPACING,
+  OHOSTextFragmentMeasurer,
+  PLACEHOLDER_SYMBOL,
+  RNOHContext
+} from '../../../RNOH';
 import type { Tag } from '../../../RNOH/DescriptorBase';
 import { RNViewManager } from '../../componentManagers/RNViewManager';
 import type { AttributedFragment, TextDescriptor, TextFragmentExtraData } from './types';
-
-/**
- * AdvancedTextLayoutManager is executed twice per paragraph. For the first time, when RN measures the bounding box of
- * the paragraph and attachment positions, the second time when RNParagraph is rendered to handle wrapping.
- * The difference between the two measurements is containerWidth. First containerWidth is equal to the parent's width.
- * The second containerWidth receives the width from the measured bounding box. However, these two values aren't always
- * equal. The second containerWidth may be smaller because of precision lost. RN operates on float's and JS numbers are
- * doubles. In such situations, unnecessary wrapping happens. To prevent that, this constant is added to the container
- * width.
- */
-const ACCEPTABLE_SIZE_OF_TEXT_EXCEEDING_CONTAINER = 0.01
 
 export class RNParagraphManager extends RNViewManager {
   constructor(
@@ -57,7 +44,7 @@ export class RNParagraphManager extends RNViewManager {
           textDecorationLine: attributedFragment.textDecorationLine,
           fontWeight: attributedFragment.fontWeight,
           letterSpacing: attributedFragment.letterSpacing || undefined,
-          lineHeight: attributedFragment.lineHeight || undefined,
+          lineHeight: attributedFragment.lineHeight || (attributedFragment.fontSize ?? 16) * (1 + DEFAULT_LINE_SPACING),
           textTransform: attributedFragment.textTransform,
           textShadowProps: attributedFragment.textShadowProps,
         }
@@ -71,7 +58,7 @@ export class RNParagraphManager extends RNViewManager {
     const textFragmentMeasurer = new OHOSTextFragmentMeasurer()
     return paragraphMeasurer.measureParagraph({ fragments }, {
       containerConfig: {
-        width: textDescriptor.layoutMetrics.frame.size.width + ACCEPTABLE_SIZE_OF_TEXT_EXCEEDING_CONTAINER,
+        width: textDescriptor.layoutMetrics.frame.size.width,
         horizontalAlignment: ({
           left: 'start',
           center: 'center',
