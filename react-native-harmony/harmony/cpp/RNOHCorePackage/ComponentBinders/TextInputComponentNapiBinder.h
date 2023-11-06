@@ -32,6 +32,7 @@ class TextInputComponentNapiBinder : public ViewComponentNapiBinder {
                 .addProperty("returnKeyType", returnKeyTypeToString(props->traits.returnKeyType))
                 .addProperty("textAlign", alignment)
                 .addProperty("autoFocus", props->autoFocus)
+                .addProperty("keyboardType", keyboardTypeToString(props->traits.keyboardType))
                 .build();
         }
         return napiViewProps;
@@ -69,6 +70,23 @@ class TextInputComponentNapiBinder : public ViewComponentNapiBinder {
             return "justified";
         }
     };
+
+    std::string keyboardTypeToString(facebook::react::KeyboardType keyboardType) {
+        switch (keyboardType) {
+        case facebook::react::KeyboardType::EmailAddress:
+            return "emailAddress";
+        case facebook::react::KeyboardType::Numeric:
+            return "numeric";
+        case facebook::react::KeyboardType::PhonePad:
+            return "phonePad";
+        case facebook::react::KeyboardType::NumberPad:
+            return "numberPad";
+        case facebook::react::KeyboardType::DecimalPad:
+            return "decimalPad";
+        default:
+            return "default";
+        }
+    }
 };
 
 } // namespace rnoh

@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   TextInputProps,
+  View,
 } from 'react-native';
 import {TestSuite, TestCase} from '@rnoh/testerino';
 import {useState} from 'react';
@@ -178,10 +179,33 @@ export function TextInputTest() {
           expect(state).to.include.all.keys('width', 'height', 'x', 'y');
         }}
       />
+      <TestCase
+        modal
+        itShould="render textinputs with different keyboard types">
+        <View>
+          <TextInputKeyboardType keyboardType="default" />
+          <TextInputKeyboardType keyboardType="number-pad" />
+          <TextInputKeyboardType keyboardType="decimal-pad" />
+          <TextInputKeyboardType keyboardType="numeric" />
+          <TextInputKeyboardType keyboardType="email-address" />
+          <TextInputKeyboardType keyboardType="phone-pad" />
+          <TextInputKeyboardType keyboardType="url" />
+        </View>
+      </TestCase>
     </TestSuite>
   );
 }
-
+const TextInputKeyboardType = (props: TextInputProps) => {
+  return (
+    <>
+      <Text>{props.keyboardType}</Text>
+      <TextInput
+        style={{...styles.textInputSmall, marginBottom: 10}}
+        keyboardType={props.keyboardType}
+      />
+    </>
+  );
+};
 const TextInputWithText = (props: TextInputProps) => {
   const [text, onChangeText] = useState('');
   return (
@@ -257,6 +281,13 @@ const styles = StyleSheet.create({
   text: {
     width: '100%',
     height: 40,
+  },
+  textInputSmall: {
+    height: 20, // hack
+    fontSize: 8,
+    color: 'black',
+    backgroundColor: 'rgb(245, 240, 211)',
+    borderRadius: 20,
   },
   textInput: {
     height: 40, // hack

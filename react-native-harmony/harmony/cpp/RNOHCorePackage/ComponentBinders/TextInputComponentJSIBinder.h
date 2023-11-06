@@ -18,6 +18,7 @@ class TextInputComponentJSIBinder : public ViewComponentJSIBinder {
         nativeProps.setProperty(rt, "returnKeyType", "ReturnKeyType");
         nativeProps.setProperty(rt, "textAlign", "string");
         nativeProps.setProperty(rt, "autoFocus", "boolean");
+        nativeProps.setProperty(rt, "keyboardType", "KeyboardType");
 
         return nativeProps;
     };

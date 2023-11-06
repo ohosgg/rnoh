@@ -36,7 +36,7 @@ function App() {
               key={testSuiteName}
               name={`TESTS: ${testSuiteName.replace('Test', '')}`}>
               <Tester>
-                <ScrollView>
+                <ScrollView style={{marginBottom: 100}}>
                   <TestSuite key={testSuiteName} />
                 </ScrollView>
               </Tester>

@@ -16,6 +16,7 @@ export interface TextInputProps extends ViewBaseProps {
   returnKeyType?: string
   textAlign?: string
   autoFocus?: boolean
+  keyboardType?: string
 }
 
 export interface TextInputRawProps {
@@ -73,6 +74,24 @@ function stringToEnterKeyType(enterKeyType: string): EnterKeyType {
       return EnterKeyType.Send
     default:
       return EnterKeyType.Done // Default value on ArkUI. If we would set undefined, then ArkUI would keep the value that was set earlier.
+  }
+}
+
+function getInputType(keyboardType: string, secureTextEntry?: boolean): InputType {
+  if (secureTextEntry) {
+    return InputType.Password;
+  }
+  switch (keyboardType) {
+    case "numberPad":
+    case "decimalPad":
+    case "numeric":
+      return InputType.Number;
+    case "phonePad":
+      return InputType.PhoneNumber;
+    case "emailAddress":
+      return InputType.Email;
+    default:
+      return InputType.Normal
   }
 }
 
@@ -192,7 +211,7 @@ export struct RNTextInput {
           .onChange((event) => this.handleChangeEvent(event))
           .enabled(this.descriptor.props.editable)
           .caretStyle(getCaretStyle(this.descriptor.props.caretHidden))
-          .type(this.descriptor.props.secureTextEntry ? InputType.Password : undefined)
+          .type(getInputType(this.descriptor.props.keyboardType, this.descriptor.props.secureTextEntry))
           .maxLength(this.maxLength)
           .selectedBackgroundColor(convertColorSegmentsToString(this.descriptor.props.selectionColor))
           .showPasswordIcon(false)
