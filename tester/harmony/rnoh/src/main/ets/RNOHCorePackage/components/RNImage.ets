@@ -1,3 +1,4 @@
+import { RemoteImageLoaderError } from '../../RemoteImageLoader/RemoteImageLoaderError';
 import { ColorSegments, Descriptor, getTintColorMatrix, RNOHContext } from '../../RNOH';
 import { ImageLoaderTurboModule } from '../turboModules/ImageLoaderTurboModule';
 import { RNViewBase, ViewBaseProps } from './RNViewBase';
@@ -19,6 +20,12 @@ interface ImageOnCompleteEvent {
   contentHeight: number;
   contentOffsetX: number;
   contentOffsetY: number;
+}
+
+interface ImageOnErrorEvent {
+  componentWidth: number;
+  componentHeight: number;
+  message?: string;
 }
 
 export type ImageDescriptor = Descriptor<"Image", ImageProps>
@@ -68,7 +75,9 @@ export struct RNImage {
     this.imageSource = undefined;
     imageLoader.getImageSource(uri).then(async (imageSource) => {
       this.imageSource = await imageSource.createPixelMap();
-    });
+    }).catch((error: RemoteImageLoaderError) => {
+      this.dispatchOnError(error.message)
+    })
     return;
   }
 
@@ -115,6 +124,11 @@ export struct RNImage {
     }
   }
 
+  dispatchOnError(message: string) {
+    const errorMessage = message ? message : "Failed to load the image";
+    this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "error", errorMessage)
+  }
+
   getColorFilter(): number[] {
     if (!this.descriptor.props.tintColor || this.descriptor.props.tintColor.every((element) => element === 0)) {
       return this.defaultColorFilter;
@@ -137,7 +151,12 @@ export struct RNImage {
         ImageRepeat.XY : ImageRepeat.NoRepeat)
         .colorFilter(this.getColorFilter())
         .blur(this.descriptor.props.blurRadius)
-        .onComplete(event => this.onLoad(event));
+        .onComplete(event => this.onLoad(event))
+        .onError((event: ImageOnErrorEvent) => {
+          if (this.imageSource !== undefined) {
+            this.dispatchOnError(event.message)
+          }
+        })
     }
   }
 }

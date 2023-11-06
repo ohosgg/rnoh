@@ -110,6 +110,46 @@ export const ImageTest = () => {
           expect(state).to.contain.all.keys('width', 'height', 'uri');
         }}
       />
+      <TestCase
+        itShould="call onError (local)"
+        initialState={null}
+        arrange={({setState, state}) => {
+          return (
+            <View>
+              <Text>{JSON.stringify(state)}</Text>
+              <Image
+                source={require('../assets/fonts/DancingScript-Regular.ttf')}
+                onError={event => {
+                  setState(event.nativeEvent.error);
+                }}
+              />
+            </View>
+          );
+        }}
+        assert={({expect, state}) => {
+          expect(state).to.be.not.null;
+        }}
+      />
+      <TestCase
+        itShould="call onError (remote)"
+        initialState={null}
+        arrange={({setState, state}) => {
+          return (
+            <View>
+              <Text>{JSON.stringify(state)}</Text>
+              <Image
+                source={{uri: 'https://www.google.com/image'}}
+                onError={event => {
+                  setState(event.nativeEvent.error);
+                }}
+              />
+            </View>
+          );
+        }}
+        assert={({expect, state}) => {
+          expect(state).to.be.not.null;
+        }}
+      />
       <TestSuite
         name="resizeMode" // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/245
       >

@@ -1,6 +1,11 @@
 import type { TurboModuleContext } from '../../RNOH/TurboModule';
 import { TurboModule } from '../../RNOH/TurboModule';
-import { RemoteImageLoader, RemoteImageMemoryCache, RemoteImageDiskCache } from "../../RemoteImageLoader"
+import {
+  RemoteImageDiskCache,
+  RemoteImageLoader,
+  RemoteImageLoaderError,
+  RemoteImageMemoryCache
+} from '../../RemoteImageLoader';
 import image from '@ohos.multimedia.image';
 
 export class ImageLoaderTurboModule extends TurboModule {
@@ -50,7 +55,17 @@ export class ImageLoaderTurboModule extends TurboModule {
     return this.imageLoader.getImageFromCache(uri)
   }
 
-  public getImageSource(uri:string): Promise<image.ImageSource> {
-    return this.imageLoader.getImageSource(uri);
+  public async getImageSource(uri: string): Promise<image.ImageSource> {
+    try {
+      const imageSource = await this.imageLoader.getImageSource(uri);
+      return imageSource
+    }
+    catch (e) {
+      if (!(e instanceof RemoteImageLoaderError) && e instanceof Object && e.message) {
+        throw new RemoteImageLoaderError(`Failed to load the image: ${e.message}`)
+      }
+      throw new RemoteImageLoaderError(`Failed to load the image.`)
+
+    }
   }
 }

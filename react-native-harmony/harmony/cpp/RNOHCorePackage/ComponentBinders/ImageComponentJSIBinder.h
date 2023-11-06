@@ -15,6 +15,7 @@ class ImageComponentJSIBinder : public ViewComponentJSIBinder {
 
         events.setProperty(rt, "topLoadStart", createDirectEvent(rt, "onLoadStart"));
         events.setProperty(rt, "topLoad", createDirectEvent(rt, "onLoad"));
+        events.setProperty(rt, "topError", createDirectEvent(rt, "onError"));
 
         return events;
     }
