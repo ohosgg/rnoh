@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {TestSuite, TestCase} from '@rnoh/testerino';
 import {useState} from 'react';
-import {Button} from '../components';
+import {Button, Effect, StateKeeper} from '../components';
 
 export function TextInputTest() {
   return (
@@ -89,8 +89,29 @@ export function TextInputTest() {
       <TestCase modal itShould="render multiline text input">
         <TextInputWithText style={styles.textInputBigger} multiline />
       </TestCase>
-      <TestCase modal itShould="render text input with maximally 10 characters">
-        <TextInputWithText style={styles.textInput} maxLength={10} />
+      <TestCase modal itShould="toggle between rendering 10 and 5 characters">
+        <StateKeeper
+          initialValue={10}
+          renderContent={(maxLength, setMaxLength) => {
+            return (
+              <Effect
+                onMount={() => {
+                  const interval = setInterval(() => {
+                    setMaxLength(prev => (prev === 10 ? 5 : 10));
+                  }, 1000);
+                  return () => {
+                    clearInterval(interval);
+                  };
+                }}>
+                <TextInputWithText
+                  style={styles.textInput}
+                  maxLength={maxLength}
+                  value="1234567890"
+                />
+              </Effect>
+            );
+          }}
+        />
       </TestCase>
       <TestCase
         modal

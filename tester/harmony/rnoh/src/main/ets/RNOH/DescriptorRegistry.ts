@@ -184,6 +184,7 @@ export class DescriptorRegistry {
         ...currentDescriptor,
         ...mutation.descriptor,
         props: { ...currentDescriptor?.props, ...mutation.descriptor.props },
+        rawProps: { ...currentDescriptor?.rawProps, ...mutation.descriptor.rawProps },
         childrenTags: children,
       };
       this.descriptorByTag.set(mutation.descriptor.tag, newDescriptor);

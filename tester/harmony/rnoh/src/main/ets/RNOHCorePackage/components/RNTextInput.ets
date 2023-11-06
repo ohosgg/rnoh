@@ -107,7 +107,6 @@ export struct RNTextInput {
   inputController: TextInputController = new TextInputController();
   areaController: TextAreaController = new TextAreaController();
   @State value: string = '';
-  maxLength: number | undefined = undefined;
   private unregisterDescriptorChangesListener?: () => void = undefined
   private cleanupCommandCallback?: () => void = undefined
 
@@ -124,7 +123,6 @@ export struct RNTextInput {
   }
 
   onDescriptorChange(newDescriptor: TextInputDescriptor) {
-    this.maxLength = newDescriptor.rawProps.maxLength ?? this.maxLength;
     this.descriptor = newDescriptor;
   }
 
@@ -186,7 +184,7 @@ export struct RNTextInput {
           .fontSize(getFontSize(this.descriptor.props.fontSize))
           .onChange((value) => this.handleChangeEvent(value))
           .enabled(this.descriptor.props.editable)
-          .maxLength(this.maxLength)
+          .maxLength(this.descriptor.rawProps.maxLength)
           .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
           .textAlign(stringToAlignment(this.descriptor.props.textAlign))
           /*
@@ -212,7 +210,7 @@ export struct RNTextInput {
           .enabled(this.descriptor.props.editable)
           .caretStyle(getCaretStyle(this.descriptor.props.caretHidden))
           .type(getInputType(this.descriptor.props.keyboardType, this.descriptor.props.secureTextEntry))
-          .maxLength(this.maxLength)
+          .maxLength(this.descriptor.rawProps.maxLength)
           .selectedBackgroundColor(convertColorSegmentsToString(this.descriptor.props.selectionColor))
           .showPasswordIcon(false)
           .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
