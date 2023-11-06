@@ -203,7 +203,7 @@ export class UnhyphenatedWordWrapStrategy<
         } else {
           return this.breakLine({
             measuredTokens,
-            breakingTokenIdx: currentTokenIdx + 1,
+            breakingTokenIdx: currentTokenIdx,
           });
         }
       }
@@ -217,7 +217,8 @@ export class UnhyphenatedWordWrapStrategy<
       token => token.canBreakLine,
     );
     if (lastBreakableTokenIdxInCurrentLine !== undefined) {
-      const isIgnored = lineTokens[lastBreakableTokenIdxInCurrentLine].isIgnoredIfBreaksLine;
+      const isIgnored =
+        lineTokens[lastBreakableTokenIdxInCurrentLine].isIgnoredIfBreaksLine;
       // if the breaking token is not ignored, we can also break after it
       if (!isIgnored) {
         lastBreakableTokenIdxInCurrentLine += 1;

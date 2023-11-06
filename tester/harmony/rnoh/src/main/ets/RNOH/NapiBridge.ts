@@ -14,7 +14,12 @@ export class NapiBridge {
       instanceId,
       turboModuleProvider,
       (attributedString: AttributedString, paragraphAttributes: ParagraphAttributes, layoutConstraints: LayoutConstrains) => {
+        try {
         return measureParagraph(attributedString, paragraphAttributes, layoutConstraints)
+        } catch(err) {
+          console.error(err)
+          throw err
+        }
       });
   }
 

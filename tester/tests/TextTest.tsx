@@ -372,6 +372,18 @@ export function TextTest() {
           </View>
         </TestCase>
         <TestSuite name="views in text">
+          <TestCase itShould="not crash when a view is trimmed by number of lines (#1)">
+            <Text numberOfLines={1}>
+              '中文测试中文测试中文测试中文测试中文测试中文测试中文测试中文测试'
+              {<View style={{width: 64, height: 64, backgroundColor: 'red'}} />}
+            </Text>
+          </TestCase>
+          <TestCase itShould="not crash when a view is trimmed by number of lines (#2)">
+            <Text numberOfLines={1}>
+              {'中文测试中文测试'}
+              {<View style={{width: 308, height: 5, backgroundColor: 'red'}} />}
+            </Text>
+          </TestCase>
           <TestCase itShould="wrap first and second paragraph in the same way">
             <View style={{width: 200, backgroundColor: 'silver'}}>
               <Text>

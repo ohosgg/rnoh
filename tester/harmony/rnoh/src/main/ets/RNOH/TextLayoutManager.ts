@@ -172,6 +172,7 @@ class AdvancedTextLayoutManager implements TextLayoutManager {
     const fragments = this.mapRNFragmentsToParagraphMeasurerFragments(
       attributedString.fragments,
     );
+    const expectedAttachmentCount = fragments.filter(fragment => fragment.type === "placeholder").length
     const measuredParagraph = this.paragraphMeasurer.measureParagraph(
       { fragments },
       {
@@ -208,6 +209,10 @@ class AdvancedTextLayoutManager implements TextLayoutManager {
           .flat();
       })
       .flat();
+    const visibleAttachmentLayoutCount = attachmentLayouts.length
+    for (let i = 0; i < expectedAttachmentCount - visibleAttachmentLayoutCount; i++) {
+      attachmentLayouts.push({ size: { width: 0, height: 0 }, positionRelativeToContainer: { x: 0, y: 0 } })
+    }
     return { size: measuredParagraph.size, attachmentLayouts };
   }
 
