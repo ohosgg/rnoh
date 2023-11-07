@@ -1,19 +1,19 @@
 import display from '@ohos.display';
-import { Size } from '../../RNOH'
-import { Descriptor } from '../../RNOH/DescriptorBase';
+import { Size} from '../../RNOH'
+import { Descriptor} from '../../RNOH/DescriptorBase';
 import { Tag } from '../../RNOH/DescriptorBase'
 import { RNOHContext } from '../../RNOH/RNOHContext'
 import { ViewBaseProps } from './RNViewBase'
 import { TouchDispatcher } from '../../RNOH/TouchDispatcher'
 import { RNModalHostViewManager } from '../componentManagers/RNModalHostViewManager';
 import { CustomComponentBuilder } from './RNComponentFactory'
+import { RNComponentFactory } from './RNComponentFactory'
 
 interface ModalHostViewProps extends ViewBaseProps {
   transparent: boolean;
   visible: boolean;
   identifier: number;
 };
-
 interface ModalHostViewState {
   screenSize: Size
 };
@@ -28,11 +28,11 @@ struct ModalHostViewDialog {
   public ctx!: RNOHContext
   public tag!: Tag
   @BuilderParam public buildCustomComponent!: CustomComponentBuilder
+
   @State descriptor: ModalHostViewDescriptor = Object() as ModalHostViewDescriptor
   controller: CustomDialogController
   @State showContent: boolean = false
-  unsubscribeFromDescriptorChanges: () => void | undefined = () => {
-  }
+  unsubscribeFromDescriptorChanges: () => void | undefined = () => {}
   touchDispatcher!: TouchDispatcher;
   componentManager!: RNModalHostViewManager;
 
@@ -69,10 +69,7 @@ struct ModalHostViewDialog {
     if (this.showContent) {
       Stack() {
         ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
-          this.buildCustomComponent({
-            rnohContext: this.ctx,
-            descriptor: this.ctx.descriptorRegistry.getDescriptor(childrenTag)
-          })
+          RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
         }, (childrenTag: Tag) => childrenTag.toString())
       }.onTouch((touchEvent) => this.touchDispatcher.handleTouchEvent(touchEvent))
     }
@@ -81,7 +78,6 @@ struct ModalHostViewDialog {
 
 @Component
 export struct RNModalHostView {
-  public static readonly NAME = "ModalHostView"
   public ctx!: RNOHContext
   public tag: number = 0
   @BuilderParam public buildCustomComponent!: CustomComponentBuilder

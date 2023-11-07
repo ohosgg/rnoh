@@ -1,7 +1,6 @@
 import { ColorSegments, convertColorSegmentsToString, Descriptor, RNOHContext } from '../../RNOH';
 import { RNViewBase, ViewBaseProps } from './RNViewBase';
 import { RNOHEventEmitRequestHandlerName } from './../RNOHEventEmitRequestHandler';
-import { CustomComponentBuilder } from "./RNComponentFactory"
 
 export interface TextInputProps extends ViewBaseProps {
   fontColor?: ColorSegments
@@ -102,11 +101,8 @@ function getFontSize(fontSize: number): number | undefined {
 
 @Component
 export struct RNTextInput {
-  public static readonly NAME = "TextInput"
-  public ctx!: RNOHContext
-  public tag: number = 0
-  @BuilderParam public buildCustomComponent!: CustomComponentBuilder
-
+  ctx!: RNOHContext
+  tag: number = 0
   @State descriptor: TextInputDescriptor = Object() as TextInputDescriptor
   inputController: TextInputController = new TextInputController();
   areaController: TextAreaController = new TextAreaController();

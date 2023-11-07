@@ -6,7 +6,6 @@ import { CustomComponentBuilder } from '../RNComponentFactory'
 
 @Component
 export struct RNText {
-  public static readonly NAME = "Paragraph"
   public ctx!: RNOHContext
   public tag: number = 0
   @BuilderParam public buildCustomComponent!: CustomComponentBuilder

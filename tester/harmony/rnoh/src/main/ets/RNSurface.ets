@@ -1,4 +1,5 @@
 import { ComponentBuilderContext } from './RNOHCorePackage/components/RNComponentFactory';
+import { RNComponentFactory } from './RNOHCorePackage';
 import { convertColorSegmentsToString, Descriptor, DisplayMode, RNOHContext, Tag } from './RNOH';
 import { ViewBaseProps } from './RNOHCorePackage/components/RNViewBase';
 import { TouchDispatcher } from './RNOH/TouchDispatcher';
@@ -111,10 +112,7 @@ export struct RNSurface {
   build() {
     Stack() {
       ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
-        this.buildCustomComponent({
-          rnohContext: this.ctx,
-          descriptor: this.ctx.descriptorRegistry.getDescriptor<Descriptor>(childrenTag)
-        })
+        RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
       }, (childrenTag: Tag) => childrenTag.toString())
     }
     .width("100%")
