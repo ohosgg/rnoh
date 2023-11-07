@@ -1,5 +1,4 @@
-import { Descriptor, ComponentBuilderContext, ViewDynamicProps2, Tag } from 'rnoh';
-import { RNComponentFactory, RNOHContext, RNViewBase } from 'rnoh'
+import { Descriptor, ComponentBuilderContext, ViewDynamicProps2, RNOHContext, RNViewBase, Tag } from 'rnoh';
 
 export const SAMPLE_VIEW_TYPE: string = "SampleView"
 
@@ -31,7 +30,10 @@ export struct SampleView {
     RNViewBase({ ctx: this.ctx, tag: this.tag }) {
       Text(JSON.stringify(this.descriptor.childrenTags)).fontColor("white").fontSize(12)
       ForEach(this.descriptor.childrenTags, (tag: Tag) => {
-        RNComponentFactory({ ctx: this.ctx, tag: tag, buildCustomComponent: this.buildCustomComponent })
+        this.buildCustomComponent({
+          rnohContext: this.ctx,
+          descriptor: this.ctx.descriptorRegistry.getDescriptor(tag)
+        })
       }, (tag: Tag) => tag.toString())
     }
   }

@@ -2,6 +2,7 @@ import { RemoteImageLoaderError } from '../../RemoteImageLoader/RemoteImageLoade
 import { ColorSegments, Descriptor, getTintColorMatrix, RNOHContext } from '../../RNOH';
 import { ImageLoaderTurboModule } from '../turboModules/ImageLoaderTurboModule';
 import { RNViewBase, ViewBaseProps } from './RNViewBase';
+import { CustomComponentBuilder } from "./RNComponentFactory"
 
 export interface ImageProps extends ViewBaseProps {
   uri: string,
@@ -32,8 +33,11 @@ export type ImageDescriptor = Descriptor<"Image", ImageProps>
 
 @Component
 export struct RNImage {
-  ctx!: RNOHContext
-  tag: number = 0
+  public static readonly NAME = "Image"
+  public ctx!: RNOHContext
+  public tag: number = 0
+  @BuilderParam public buildCustomComponent!: CustomComponentBuilder
+
   @State descriptor: ImageDescriptor = Object() as ImageDescriptor
   @State imageSource: Resource | PixelMap | undefined = undefined
   defaultColorFilter: number[] = [

@@ -1,21 +1,41 @@
-import { ComponentBuilderContext } from 'rnoh';
-import { RNApp, RNAbility, AnyJSBundleProvider, MetroJSBundleProvider, ResourceJSBundleProvider } from 'rnoh'
+import {
+  RNApp,
+  RNAbility,
+  AnyJSBundleProvider,
+  MetroJSBundleProvider,
+  ResourceJSBundleProvider,
+  ComponentBuilderContext,
+  RNView,
+  RNText,
+  RNScrollView,
+  RNComponentFactory
+} from 'rnoh'
 import { SampleView, SAMPLE_VIEW_TYPE, PropsDisplayer } from "rnoh-sample-package"
 import { createRNPackages } from '../RNPackagesFactory'
 
 @Builder
 function CustomComponentBuilder(ctx: ComponentBuilderContext) {
-  if (ctx.descriptor.type === SAMPLE_VIEW_TYPE) {
-    SampleView({
-      ctx: ctx.rnohContext,
-      tag: ctx.descriptor.tag,
-      buildCustomComponent: CustomComponentBuilder
-    })
+  /**
+   * You can specify RN components here, if you want to eliminate usage of a ArkUI custom component - RNComponentFactory,
+   * or to replace some native component. It was reported, that custom ArkUI components have a negative impact on the
+   * rendering performance.
+   */
+  if (ctx.descriptor.type === RNView.NAME) {
+    RNView({ ctx: ctx.rnohContext, tag: ctx.descriptor.tag, buildCustomComponent: CustomComponentBuilder })
+  } else if (ctx.descriptor.type === RNText.NAME) {
+    RNText({ ctx: ctx.rnohContext, tag: ctx.descriptor.tag, buildCustomComponent: CustomComponentBuilder })
+  } else if (ctx.descriptor.type === RNScrollView.NAME) {
+    RNScrollView({ ctx: ctx.rnohContext, tag: ctx.descriptor.tag, buildCustomComponent: CustomComponentBuilder })
+  }
+  // BEGIN: custom components for testing purposes
+  else if (ctx.descriptor.type === SAMPLE_VIEW_TYPE) {
+    SampleView({ ctx: ctx.rnohContext, tag: ctx.descriptor.tag, buildCustomComponent: CustomComponentBuilder })
   } else if (ctx.descriptor.type === PropsDisplayer.NAME) {
-    PropsDisplayer({
-      ctx: ctx.rnohContext,
-      tag: ctx.descriptor.tag
-    })
+    PropsDisplayer({ ctx: ctx.rnohContext, tag: ctx.descriptor.tag })
+  }
+  // END
+  else {
+    RNComponentFactory({ ctx: ctx.rnohContext, tag: ctx.descriptor.tag, buildCustomComponent: CustomComponentBuilder })
   }
 }
 

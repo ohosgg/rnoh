@@ -2,6 +2,7 @@ import { ColorSegments, Descriptor} from '../../RNOH';
 import { convertColorSegmentsToString, RNOHContext } from '../../RNOH'
 import { ViewBaseProps} from './RNViewBase';
 import { RNViewBase } from './RNViewBase'
+import { CustomComponentBuilder } from './RNComponentFactory'
 
 export interface ActivityIndicatorProps extends ViewBaseProps {
   animating?: boolean,
@@ -12,8 +13,10 @@ export type ActivityIndicatorDescriptor = Descriptor<"ActivityIndicatorView", Ac
 
 @Component
 export struct RNActivityIndicator {
-  ctx!: RNOHContext
-  tag: number = 0
+  public static readonly NAME = "ActivityIndicatorView"
+  public ctx!: RNOHContext
+  public tag: number = 0
+  @BuilderParam public buildCustomComponent!: CustomComponentBuilder
   @State private descriptor: ActivityIndicatorDescriptor = Object() as ActivityIndicatorDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined
 

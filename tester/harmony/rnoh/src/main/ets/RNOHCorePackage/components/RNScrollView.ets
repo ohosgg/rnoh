@@ -1,8 +1,8 @@
 import { Descriptor, RNOHContext, Size, Tag } from '../../RNOH';
 import { _RNScrollViewManager } from '../componentManagers/RNScrollViewManager';
 import { RNViewBase, ViewBaseProps } from './RNViewBase';
-import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from './RNPullToRefreshView';
-import { CustomComponentBuilder, RNComponentFactory } from './RNComponentFactory';
+import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshViewCore } from './RNPullToRefreshViewCore';
+import { CustomComponentBuilder } from './RNComponentFactory';
 
 export interface ScrollViewProps extends ViewBaseProps {
   scrollEnabled?: boolean
@@ -68,6 +68,8 @@ export type ScrollViewDescriptor = Descriptor<"ScrollView", ScrollViewProps, Scr
 
 @Component
 export struct RNScrollView {
+  static readonly NAME = "ScrollView"
+
   ctx!: RNOHContext
   tag: number = 0
   @BuilderParam public buildCustomComponent!: CustomComponentBuilder
@@ -353,7 +355,10 @@ export struct RNScrollView {
     Scroll(this.scroller) {
       Stack() {
         ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
-          RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
+          this.buildCustomComponent({
+            rnohContext: this.ctx,
+            descriptor: this.ctx.descriptorRegistry.getDescriptor(childrenTag)
+          })
         }, (childrenTag: Tag) => childrenTag.toString())
       }
       .width(this.contentSize.width)
@@ -396,7 +401,7 @@ export struct RNScrollView {
   build() {
     if (this.shouldWrapWithPullToRefresh()) {
       RNViewBase({ ctx: this.ctx, tag: this.parentTag }) {
-        RNPullToRefreshView({ ctx: this.ctx, tag: this.parentTag }) {
+        RNPullToRefreshViewCore({ ctx: this.ctx, tag: this.parentTag }) {
           this.buildScrollCore()
         }
       }

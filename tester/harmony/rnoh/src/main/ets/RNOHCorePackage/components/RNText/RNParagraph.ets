@@ -4,7 +4,6 @@ import { PositionedFragment} from '../../../ParagraphMeasurer';
 import { PositionedLine, Size, } from '../../../ParagraphMeasurer'
 import { RNParagraphManager } from './RNParagraphManager'
 import { CustomComponentBuilder } from '../RNComponentFactory'
-import { RNComponentFactory } from '../RNComponentFactory'
 import { TextDescriptor, TextFragmentExtraData } from './types'
 import {
   capitalizeTextIfNecessary,
@@ -98,7 +97,10 @@ export struct RNParagraph {
           }
         })
         ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
-          RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
+          this.buildCustomComponent({
+            rnohContext: this.ctx,
+            descriptor: this.ctx.descriptorRegistry.getDescriptor(childrenTag)
+          })
         }, (childrenTag: Tag) => childrenTag.toString())
       })
     }
