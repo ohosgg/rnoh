@@ -1,11 +1,12 @@
 import { RNOHContext, Tag } from '../../RNOH'
 import { RNViewBase, ViewBaseDescriptor } from './RNViewBase'
-import { RNComponentFactory, ComponentBuilderContext } from './RNComponentFactory'
+import { ComponentBuilderContext } from './RNComponentFactory'
 
 @Component
 export struct RNView {
-  ctx!: RNOHContext
-  tag: number = 0
+  public static readonly NAME = "View"
+  public ctx!: RNOHContext
+  public tag: number = 0
   @BuilderParam public buildCustomComponent: (ctx: ComponentBuilderContext) => void
 
   @State private childrenTags: Tag[] = []
@@ -34,7 +35,10 @@ export struct RNView {
       tag: this.tag,
     }) {
       ForEach(this.childrenTags, (childrenTag: Tag) => {
-        RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
+        this.buildCustomComponent({
+          rnohContext: this.ctx,
+          descriptor: this.ctx.descriptorRegistry.getDescriptor(childrenTag)
+        })
       }, (childrenTag: Tag) => childrenTag.toString())
     }
   }

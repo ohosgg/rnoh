@@ -18,13 +18,15 @@ export interface LayoutProps {
   left: number;
   width: number;
   height: number;
-};
+}
+;
 
 export enum LayoutDirectionRN {
   Undefined = 0,
   LeftToRight = 1,
   RightToLeft = 2,
-};
+}
+;
 
 export type LayoutMetrics = {
   frame: {
@@ -44,11 +46,17 @@ export enum OverflowMode {
   VISIBLE = 0,
   HIDDEN = 1,
   SCROLL = 2,
-};
+}
+;
+
+export interface DescriptorEssence<TType = string> {
+  tag: Tag,
+  type: TType
+}
 
 export interface Descriptor<TType = string,
 TProps extends Object = Object,
-TState = {}, TRawProps extends Object = {}> {
+TState = {}, TRawProps extends Object = {}> extends DescriptorEssence<TType> {
   type: TType;
   tag: Tag;
   parentTag?: Tag;
@@ -58,7 +66,8 @@ TState = {}, TRawProps extends Object = {}> {
   childrenTags: Tag[];
   layoutMetrics: LayoutMetrics;
   isDynamicBinder: boolean;
-};
+}
+;
 
 export type BorderMetrics = {
   borderWidth?: number;
@@ -66,7 +75,6 @@ export type BorderMetrics = {
   borderTopWidth?: number;
   borderRightWidth?: number;
   borderBottomWidth?: number;
-
   borderColor?: number;
   borderLeftColor?: number;
   borderTopColor?: number;
@@ -74,12 +82,10 @@ export type BorderMetrics = {
   borderBottomColor?: number;
   borderStartColor?: number;
   borderEndColor?: number;
-
   borderRadius?: number;
   borderTopLeftRadius?: number;
   borderTopRightRadius?: number;
   borderBottomLeftRadius?: number;
   borderBottomRightRadius?: number;
-
   borderStyle?: string;
 }
