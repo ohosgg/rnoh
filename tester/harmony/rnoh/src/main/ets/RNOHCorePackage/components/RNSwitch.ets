@@ -2,7 +2,6 @@ import { ColorSegments, Descriptor} from '../../RNOH';
 import { convertColorSegmentsToString, RNOHContext } from '../../RNOH'
 import { ViewBaseProps} from './RNViewBase';
 import { RNViewBase } from './RNViewBase'
-import { CustomComponentBuilder } from './RNComponentFactory'
 
 export interface SwitchProps extends ViewBaseProps {
   trackColor?: ColorSegments
@@ -15,11 +14,8 @@ export type SwitchDescriptor = Descriptor<"Switch", SwitchProps>
 
 @Component
 export struct RNSwitch {
-  public static readonly NAME = "Switch"
-  public ctx!: RNOHContext
-  public tag: number = 0
-  @BuilderParam public buildCustomComponent!: CustomComponentBuilder
-
+  ctx!: RNOHContext
+  tag: number = 0
   @State private descriptor: SwitchDescriptor = Object() as SwitchDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined
 
