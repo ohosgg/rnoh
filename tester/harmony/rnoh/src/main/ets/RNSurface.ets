@@ -38,7 +38,7 @@ export struct RNSurface {
   private componentManager!: RNSurfaceManager;
 
   aboutToAppear() {
-    if (Object.keys(this.surfaceConfig).includes("this.surfaceConfig")) {
+    if (Object.keys(this.surfaceConfig).includes("surfaceConfig")) {
       this.surfaceHandle = (this.surfaceConfig as SurfaceConfig1).surfaceHandle;
       this.surfaceHandle.setDisplayMode(DisplayMode.Visible);
     } else {
