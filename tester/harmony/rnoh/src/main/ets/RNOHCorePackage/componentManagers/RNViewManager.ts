@@ -31,6 +31,8 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
   protected descriptorRegistry: DescriptorRegistry;
   protected componentManagerRegistry: ComponentManagerRegistry;
   protected parentTag: Tag;
+  private cleanUpCallbacks: (() => void)[] = []
+  private isBoundingBoxDirty = true
 
   constructor(
     protected tag: Tag,
@@ -40,7 +42,28 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
     this.descriptorRegistry = ctx.descriptorRegistry;
     this.componentManagerRegistry = ctx.componentManagerRegistry;
     this.parentTag = this.descriptorRegistry.getDescriptor(tag).parentTag!;
+    this.cleanUpCallbacks.push(this.descriptorRegistry.subscribeToDescriptorChanges(this.tag, (descriptor) => {
+      this.onDescriptorChange(descriptor)
+    }))
   }
+
+  public onDestroy() {
+    super.onDestroy()
+    this.cleanUpCallbacks.forEach(cb => cb())
+  }
+
+  protected onDescriptorChange(descriptor: Descriptor) {
+    this.markBoundingBoxAsDirty()
+  }
+
+  public markBoundingBoxAsDirty() {
+    this.isBoundingBoxDirty = true
+    const parentComponentManager = this.componentManagerRegistry.getComponentManager(this.parentTag);
+    if (parentComponentManager && parentComponentManager instanceof RNViewManager) {
+      return parentComponentManager.markBoundingBoxAsDirty();
+    }
+  }
+
 
   /**
    * Check if the touch is within a view
@@ -58,7 +81,7 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
   }
 
   private getHitSlop(): HitSlop {
-    return this.getDescriptor().rawProps["hitSlop"] ?? {top: 0, left:0, right: 0, bottom: 0}
+    return this.getDescriptor().rawProps["hitSlop"] ?? { top: 0, left: 0, right: 0, bottom: 0 }
   }
 
   public isPointInBoundingBox({x, y}: Point): boolean {
@@ -94,17 +117,22 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
   }
 
   /**
+   * @deprecated. Do not call this method.
+   * Make sure that onDestroy is called though. This method should be protected.
    * should calculate a new bounding box for the view,
    * and call this method on its parent view if the bounding box changed.
    */
   public updateBoundingBox(): void {
+    this.markBoundingBoxAsDirty()
+  }
+
+  protected calculateBoundingBox() {
     const descriptor = this.getDescriptor();
     if (!descriptor) {
-      this.boundingBox = { left: 0, right: 0, top: 0, bottom: 0 };
-      return;
+      return { left: 0, right: 0, top: 0, bottom: 0 };
     }
     const {origin, size} = descriptor.layoutMetrics.frame;
-    let newBoundingBox = {
+    let newBoundingBox: BoundingBox = {
       left: origin.x,
       right: origin.x + size.width,
       top: origin.y,
@@ -140,29 +168,20 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
         bottom: Math.max(top, bottom),
       }
     }
-
-    const oldBoundingBox = this.getBoundingBox();
-
-    const boundingBoxChanged =
-      newBoundingBox.left !== oldBoundingBox.left
-        || newBoundingBox.top !== oldBoundingBox.top
-        || newBoundingBox.right !== oldBoundingBox.right
-        || newBoundingBox.bottom !== oldBoundingBox.bottom;
-
-    this.boundingBox = newBoundingBox;
-    if (boundingBoxChanged) {
-      const parentComponentManager = this.componentManagerRegistry.getComponentManager(descriptor.parentTag);
-      if (parentComponentManager instanceof RNViewManager) {
-        return void parentComponentManager?.updateBoundingBox();
-      }
-    }
+    return newBoundingBox
   }
+
+
 
   /**
    * @returns the bounding box of the view, taking into account any children
    * which might overflow the frame of the view
    */
   public getBoundingBox(): BoundingBox {
+    if (this.isBoundingBoxDirty) {
+      this.boundingBox = this.calculateBoundingBox()
+      this.isBoundingBoxDirty = false
+    }
     return this.boundingBox;
   }
 

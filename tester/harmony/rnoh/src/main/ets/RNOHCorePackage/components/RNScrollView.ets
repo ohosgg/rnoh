@@ -85,6 +85,7 @@ export struct RNScrollView {
   private allowNextScrollEvent: boolean = false
   private shouldPreventScrolling: boolean = false
 
+
   aboutToAppear() {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag)
     this.onDescriptorUpdate(descriptor)
@@ -102,6 +103,9 @@ export struct RNScrollView {
         }
       }));
     this.componentManager = new _RNScrollViewManager(this.tag, this.ctx, this.scroller)
+    this.cleanUpCallbacks.push(() => {
+      this.componentManager.onDestroy()
+    })
     this.cleanUpCallbacks.push(this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager));
     this.cleanUpCallbacks.push(this.componentManager.subscribe("LOCK_SCROLLING", () => {
       this.shouldPreventScrolling = true

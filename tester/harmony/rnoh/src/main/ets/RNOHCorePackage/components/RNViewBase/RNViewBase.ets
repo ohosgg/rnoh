@@ -74,11 +74,13 @@ export struct RNViewBase {
   @State private descriptor: ViewBaseDescriptor = {} as ViewBaseDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined
   private unregisterComponentManager?: () => void = undefined
+  private isResponsibleForDestroyingComponentManager: boolean = false
 
   aboutToAppear() {
     let descriptor = this.ctx.descriptorRegistry.getDescriptor<ViewBaseDescriptor | ViewDynamicDescriptor>(this.tag)
     if (!this.componentManager) {
       this.componentManager = new RNViewManager(this.tag, this.ctx)
+      this.isResponsibleForDestroyingComponentManager = true
     }
     this.unregisterComponentManager = this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager)
     this.setDescriptor(descriptor)
@@ -93,10 +95,12 @@ export struct RNViewBase {
 
   private setDescriptor(descriptor: ViewBaseDescriptor | ViewDynamicDescriptor) {
     this.descriptor = convertViewDynamicDescriptor(descriptor)
-    this.componentManager.updateBoundingBox();
   }
 
   aboutToDisappear() {
+    if (this.isResponsibleForDestroyingComponentManager) {
+      this.componentManager.onDestroy()
+    }
     this.unregisterDescriptorChangesListener?.()
     this.unregisterComponentManager?.()
   }

@@ -1,1 +1,3 @@
-export abstract class ComponentManager {}
+export abstract class ComponentManager {
+  onDestroy() {}
+}

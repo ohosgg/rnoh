@@ -31,7 +31,7 @@ export struct RNSurface {
   @State descriptor: RootDescriptor = Object() as RootDescriptor;
   @State private shouldStartSurface: boolean = false;
   private surfaceHandle!: SurfaceHandle;
-  private cleanup?: () => void = undefined;
+  private cleanUpCallbacks: (() => void)[] = [];
   private touchDispatcher!: TouchDispatcher;
   private shouldStopSurface: boolean = false;
   private initialProps!: SurfaceProps;
@@ -49,17 +49,21 @@ export struct RNSurface {
     }
     const tag = this.surfaceHandle.getTag();
     this.componentManager = new RNSurfaceManager(tag, this.ctx);
+    this.cleanUpCallbacks.push(() => {
+      this.componentManager.onDestroy()
+    })
+
     this.descriptor = this.ctx.rnInstance.descriptorRegistry.getDescriptor(tag)
     this.touchDispatcher = new TouchDispatcher(tag, this.ctx.rnInstance, this.ctx.logger)
     this.ctx.componentManagerRegistry.registerComponentManager(tag, this.componentManager);
-    this.cleanup = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
+    this.cleanUpCallbacks.push(this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
       tag,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
-    )
+    ))
   }
 
   aboutToDisappear() {
-    this.cleanup?.();
+    this.cleanUpCallbacks.forEach(cb => cb())
     if (this.shouldStopSurface) {
       this.surfaceHandle.stop().then(() => {
         this.surfaceHandle.destroy();

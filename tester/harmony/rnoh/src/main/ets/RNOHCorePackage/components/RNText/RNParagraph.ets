@@ -24,24 +24,25 @@ export struct RNParagraph {
   @State descriptor: TextDescriptor = {} as TextDescriptor
   @State positionedLines: PositionedLine<TextFragmentExtraData>[] = []
   @State paragraphSize: Size = { width: 0, height: 0 }
-  private unregisterDescriptorChangesListener?: () => void = undefined
-  private unregisterComponentManager?: () => void = undefined
   private componentManager!: RNParagraphManager
+  private cleanUpCallbacks: (() => void)[] = []
 
   aboutToAppear() {
     this.componentManager = new RNParagraphManager(this.tag, this.ctx)
-    this.unregisterComponentManager = this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager);
     this.onDescriptorChange(this.ctx.descriptorRegistry.getDescriptor<TextDescriptor>(this.tag))
-    this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
+    this.cleanUpCallbacks.push(() => {
+      this.componentManager.onDestroy()
+    })
+    this.cleanUpCallbacks.push(this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager));
+    this.cleanUpCallbacks.push(this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
         this.onDescriptorChange(newDescriptor as TextDescriptor)
       }
-    )
+    ))
   }
 
   aboutToDisappear() {
-    this.unregisterDescriptorChangesListener?.()
-    this.unregisterComponentManager?.();
+    this.cleanUpCallbacks.forEach((cb) => cb())
   }
 
   onDescriptorChange(newDescriptor: TextDescriptor) {
@@ -71,6 +72,7 @@ export struct RNParagraph {
     RNViewBase({
       ctx: this.ctx,
       tag: this.tag,
+      componentManager: this.componentManager,
     }) {
       ForEach(this.positionedLines, (line: PositionedLine) => {
         ForEach(line.positionedFragments, (positionedFragment: PositionedFragment<TextFragmentExtraData>) => {
