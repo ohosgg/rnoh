@@ -180,7 +180,7 @@ class AdvancedTextLayoutManager implements TextLayoutManager {
           this.textFragmentMeasurer,
         ),
         containerConfig: {
-          width: layoutConstraints.maximumSize.width + 0.1,
+          width: layoutConstraints.maximumSize.width,
           maxNumberOfLines: paragraphAttributes.maximumNumberOfLines,
         },
       },
