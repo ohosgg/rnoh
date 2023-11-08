@@ -198,5 +198,6 @@ export struct RNViewBase {
     .clip(this.getClip())
     .hitTestBehavior(this.getHitTestMode())
     .shadow(this.getShadow())
+    .id(this.tag.toString())
   }
 }
