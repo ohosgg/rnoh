@@ -432,6 +432,7 @@ target_link_libraries(rnoh PUBLIC
     libace_napi.z.so
     libhilog_ndk.z.so
     libnative_vsync.so
+    libnative_drawing.so
     uv
     Boost::context
     reactnative

@@ -334,15 +334,25 @@ export function TextTest() {
       </TestSuite>
       <TestSuite name="text measuring">
         <TestCase itShould="display: 'FOO''BAR' next to each other">
-          <View
-            style={{height: 32, alignSelf: 'flex-start', flexDirection: 'row'}}>
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
             <Text style={{height: '100%', backgroundColor: 'pink'}}>FOO</Text>
-            <Text style={{height: '100%', backgroundColor: 'pink'}}>BAR</Text>
+            <Text style={{height: '100%', backgroundColor: 'cyan'}}>BAR</Text>
+          </View>
+        </TestCase>
+        <TestCase itShould="display: 'FOO''BAR' in two lines">
+          <View
+            style={{
+              width: 32,
+              flexDirection: 'row',
+              borderWidth: 1,
+            }}>
+            <Text style={{height: '100%', backgroundColor: 'pink'}}>
+              FOO BAR
+            </Text>
           </View>
         </TestCase>
         <TestCase itShould="display: 'FOO''BAR' next to each other with different letterSpacing">
-          <View
-            style={{height: 32, alignSelf: 'flex-start', flexDirection: 'row'}}>
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
             <Text
               style={{
                 height: '100%',
@@ -354,20 +364,66 @@ export function TextTest() {
             <Text
               style={{
                 height: '100%',
-                backgroundColor: 'pink',
+                backgroundColor: 'cyan',
                 letterSpacing: 4,
               }}>
               BAR
             </Text>
           </View>
         </TestCase>
-        <TestCase itShould="text should not exceed green background">
-          <View style={{backgroundColor: 'green', marginHorizontal: 20}}>
-            <Text style={{fontSize: 20}}>asdg</Text>
+        <TestCase
+          tags={['dev']}
+          itShould="text should not exceed cyan background">
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text style={{backgroundColor: 'silver'}}>FONT SIZE</Text>
           </View>
-          <View style={{backgroundColor: 'green', marginHorizontal: 20}}>
-            <Text style={{fontSize: 20}}>
-              faaj'<Text>asdg</Text>
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text style={{fontSize: 20, backgroundColor: 'cyan'}}>
+              FONT SIZE
+            </Text>
+          </View>
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text style={{backgroundColor: 'cyan'}}>FONT SIZE</Text>
+          </View>
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text style={{backgroundColor: 'silver'}}>FONT WEIGHT</Text>
+          </View>
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text style={{fontWeight: 'bold', backgroundColor: 'cyan'}}>
+              FONT WEIGHT
+            </Text>
+          </View>
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text style={{backgroundColor: 'silver'}}>LETTER SPACING!</Text>
+          </View>
+          {/* On Android letter spacing may cause the bounding box to be full width (remove !) */}
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text style={{letterSpacing: 1, backgroundColor: 'cyan'}}>
+              LETTER SPACING!
+            </Text>
+          </View>
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text style={{backgroundColor: 'silver'}}>
+              NUMBER OF LINES @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @
+              @ @ @
+            </Text>
+          </View>
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text
+              style={{width: 256, backgroundColor: 'cyan'}}
+              numberOfLines={1}>
+              NUMBER OF LINES @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @
+              @ @ @
+            </Text>
+          </View>
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text style={{backgroundColor: 'silver'}}>LINE HEIGHT</Text>
+          </View>
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text
+              style={{lineHeight: 32, backgroundColor: 'cyan'}}
+              numberOfLines={1}>
+              LINE HEIGHT
             </Text>
           </View>
         </TestCase>
