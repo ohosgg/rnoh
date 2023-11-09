@@ -1,8 +1,10 @@
 import { Descriptor, RNOHContext, Size, Tag } from '../../RNOH';
 import { _RNScrollViewManager } from '../componentManagers/RNScrollViewManager';
-import { RNViewBase, ViewBaseProps } from './RNViewBase';
+import { RNViewBase, ViewBaseProps, ViewDescriptorWrapperBase, ViewRawProps } from './RNViewBase';
 import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from './RNPullToRefreshView';
 import { CustomComponentBuilder, RNComponentFactory } from './RNComponentFactory';
+
+
 
 export interface ScrollViewProps extends ViewBaseProps {
   scrollEnabled?: boolean
@@ -18,7 +20,7 @@ export interface ScrollViewProps extends ViewBaseProps {
   scrollEventThrottle: number
 }
 
-export interface ScrollViewRawProps {
+export interface ScrollViewRawProps extends ViewRawProps {
   snapToInterval?: number
   snapToOffsets?: number[]
 }
@@ -28,6 +30,10 @@ export interface ScrollViewState {
   contentOffsetY: number
   contentSizeWidth: number
   contentSizeHeight: number
+}
+
+class ScrollViewDescriptorWrapper extends ViewDescriptorWrapperBase<"ScrollView", ScrollViewProps, ScrollViewState, ScrollViewRawProps> {
+
 }
 
 enum IndicatorStyle {
@@ -75,6 +81,7 @@ export struct RNScrollView {
   @State contentSize: Size = {} as Size
   @State childrenTags: Tag[] = []
   @State descriptor: ScrollViewDescriptor = Object() as ScrollViewDescriptor
+  @State descriptorWrapper: ScrollViewDescriptorWrapper | undefined = undefined
   state: ScrollViewState = {} as ScrollViewState
   private parentTag: Tag | undefined = undefined
   private scroller = new Scroller()
@@ -123,6 +130,7 @@ export struct RNScrollView {
     const oldProps = this.props
     this.props = newDescriptor.props
     this.descriptor = newDescriptor
+    this.descriptorWrapper = new ScrollViewDescriptorWrapper(newDescriptor)
     this.contentSize = {
       width: newDescriptor.state.contentSizeWidth,
       height: newDescriptor.state.contentSizeHeight
@@ -363,7 +371,7 @@ export struct RNScrollView {
       .width(this.contentSize.width)
       .height(this.contentSize.height)
       .backgroundColor(Color.Transparent)
-      .margin({ top: -Number(this.props.borderWidth?.top), left: -Number(this.props.borderWidth?.left) })
+      .margin({ top: -Number(this.descriptorWrapper?.borderWidth.top ?? 0), left: -Number(this.descriptorWrapper?.borderWidth.left ?? 0) })
     }
     .width("100%")
     .height("100%")

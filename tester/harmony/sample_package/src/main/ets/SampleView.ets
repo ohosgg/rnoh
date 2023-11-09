@@ -1,9 +1,13 @@
-import { Descriptor, ComponentBuilderContext, ViewDynamicProps2, Tag } from 'rnoh';
-import { RNComponentFactory, RNOHContext, RNViewBase } from 'rnoh'
+import { Descriptor, ComponentBuilderContext, ViewDynamicProps, Tag, RNComponentFactory, RNOHContext, RNViewBase } from 'rnoh';
+
 
 export const SAMPLE_VIEW_TYPE: string = "SampleView"
 
-export type SampleViewDescriptor = Descriptor<"SampleView", ViewDynamicProps2>
+interface SampleViewProps extends ViewDynamicProps {
+  size: number
+}
+
+export type SampleViewDescriptor = Descriptor<"SampleView", SampleViewProps>
 
 
 @Component

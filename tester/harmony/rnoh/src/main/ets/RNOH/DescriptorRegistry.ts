@@ -51,6 +51,9 @@ export class DescriptorRegistry {
     return results.reverse();
   }
 
+  /**
+   * Called by NativeAnimatedTurboModule. This method needs to be encapsulated.
+   */
   public setProps<TProps extends Object>(tag: Tag, props: TProps): void {
     let descriptor = this.getDescriptor<Descriptor<string, TProps>>(tag);
 
@@ -59,6 +62,7 @@ export class DescriptorRegistry {
     }
 
     descriptor.props = { ...descriptor.props, ...props };
+    descriptor.rawProps = { ...descriptor.rawProps, ...props };
     const updatedDescriptor = { ...descriptor };
     this.descriptorByTag.set(tag, updatedDescriptor);
 
@@ -166,7 +170,7 @@ export class DescriptorRegistry {
 
   private applyMutation(mutation: Mutation): Tag[] {
     if (mutation.type === MutationType.CREATE) {
-      this.descriptorByTag.set(mutation.descriptor.tag, mutation.descriptor);
+      this.descriptorByTag.set(mutation.descriptor.tag, this.maybeOverwriteProps(mutation.descriptor));
       return [];
     } else if (mutation.type === MutationType.INSERT) {
       const childDescriptor = this.descriptorByTag.get(mutation.childTag)!;
@@ -180,11 +184,12 @@ export class DescriptorRegistry {
     } else if (mutation.type === MutationType.UPDATE) {
       const currentDescriptor = this.descriptorByTag.get(mutation.descriptor.tag);
       const children = currentDescriptor!.childrenTags;
+      const mutationDescriptor = this.maybeOverwriteProps(mutation.descriptor)
       const newDescriptor = {
         ...currentDescriptor,
         ...mutation.descriptor,
-        props: { ...currentDescriptor?.props, ...mutation.descriptor.props },
-        rawProps: { ...currentDescriptor?.rawProps, ...mutation.descriptor.rawProps },
+        props: { ...currentDescriptor!.props, ...mutationDescriptor.props },
+        rawProps: { ...currentDescriptor!.rawProps, ...mutationDescriptor.rawProps },
         childrenTags: children,
       };
       this.descriptorByTag.set(mutation.descriptor.tag, newDescriptor);
@@ -205,6 +210,17 @@ export class DescriptorRegistry {
       return [];
     }
     return [];
+  }
+
+  private maybeOverwriteProps(descriptor: Descriptor) {
+    /**
+     * This is done to avoid creating breaking changes. Previously isDynamicBinder indicated that a third party package
+     * didn't provided explicit NapiBinder and props were generated from rawProps. Currently, however descriptors have
+     * rawProps property which can be used instead. `isDynamicBinder` and this change is going to be removed in the
+     * future.
+     */
+    const props = descriptor.isDynamicBinder ? descriptor.rawProps : descriptor.props
+    return {...descriptor, props}
   }
 
   public createRootDescriptor(tag: Tag) {

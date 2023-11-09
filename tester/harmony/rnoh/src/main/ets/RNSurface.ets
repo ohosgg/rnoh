@@ -1,12 +1,14 @@
 import { ComponentBuilderContext } from './RNOHCorePackage/components/RNComponentFactory';
 import { RNComponentFactory } from './RNOHCorePackage';
-import { convertColorSegmentsToString, Descriptor, DisplayMode, RNOHContext, Tag } from './RNOH';
-import { ViewBaseProps } from './RNOHCorePackage/components/RNViewBase';
+import { Descriptor, DisplayMode, RNOHContext, Tag } from './RNOH';
+import { ViewBaseProps, ViewDescriptorWrapperBase, ViewRawProps, ViewDescriptorWrapper } from './RNOHCorePackage/components/RNViewBase';
 import { TouchDispatcher } from './RNOH/TouchDispatcher';
 import { SurfaceHandle, SurfaceProps } from './RNOH/SurfaceHandle';
 import { RNSurfaceManager } from './RNOHCorePackage/componentManagers/RNSurfaceManager';
 
-export type RootDescriptor = Descriptor<"RootView", ViewBaseProps>;
+interface RootViewState {}
+
+export type RootDescriptor = Descriptor<"RootView", ViewBaseProps, RootViewState, ViewRawProps>;
 
 interface SurfaceConfig1 {
   surfaceHandle: SurfaceHandle
@@ -29,6 +31,7 @@ export struct RNSurface {
   surfaceOffsetX: number = 0;
   surfaceOffsetY: number = 0;
   @State descriptor: RootDescriptor = Object() as RootDescriptor;
+  @State descriptorWrapper: ViewDescriptorWrapperBase | undefined = undefined
   @State private shouldStartSurface: boolean = false;
   private surfaceHandle!: SurfaceHandle;
   private cleanUpCallbacks: (() => void)[] = [];
@@ -52,8 +55,7 @@ export struct RNSurface {
     this.cleanUpCallbacks.push(() => {
       this.componentManager.onDestroy()
     })
-
-    this.descriptor = this.ctx.rnInstance.descriptorRegistry.getDescriptor(tag)
+    this.onUpdateComponent(this.ctx.rnInstance.descriptorRegistry.getDescriptor(tag))
     this.touchDispatcher = new TouchDispatcher(tag, this.ctx.rnInstance, this.ctx.logger)
     this.ctx.componentManagerRegistry.registerComponentManager(tag, this.componentManager);
     this.cleanUpCallbacks.push(this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
@@ -75,6 +77,7 @@ export struct RNSurface {
 
   onUpdateComponent(newDescriptor: Descriptor) {
     this.descriptor = newDescriptor as RootDescriptor
+    this.descriptorWrapper = new ViewDescriptorWrapper(newDescriptor)
   }
 
   handleAreaChange(_oldValue: Area, newValue: Area) {
@@ -121,7 +124,7 @@ export struct RNSurface {
     }
     .width("100%")
     .height("100%")
-    .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
+    .backgroundColor(this.descriptorWrapper?.backgroundColor)
     .onAreaChange((oldArea, newArea) => this.handleAreaChange(oldArea, newArea))
     .onTouch((e) => this.handleTouch(e))
   }

@@ -3,44 +3,33 @@ import type {
   ColorSegments,
   TransformMatrix,
   OverflowMode,
-  BorderMetrics,
+  PointerEvents,
+  ViewStyle
 } from '../../../RNOH'
-import type { PointerEvents } from '../../componentManagers/RNViewManager'
 
 export type BackfaceVisibility = "visible" | "hidden"
 
-export interface ViewBaseProps extends LayoutProps {
-  backgroundColor?: ColorSegments
-  borderWidth?: BorderWidths
-  borderColor?: BorderColors
-  borderRadius?: BorderRadii
-  borderStyle?: string
-  opacity?: number
+
+export interface ViewBaseProps {
   transform?: TransformMatrix,
-  pointerEvents?: PointerEvents
-  shadowColor?: ColorSegments,
-  shadowOffset?: {
-    width: number,
-    height: number
-  },
-  shadowOpacity?: number,
-  shadowRadius?: number,
-  overflow?: OverflowMode,
-  backfaceVisibility?: BackfaceVisibility,
 }
 
-export type ViewDynamicProps = BorderMetrics & {
-  backgroundColor?: number,
-  width?: number,
-  height?: number,
-  justifyContent?: string,
-  opacity?: number,
-  alignItems?: string,
+
+export interface HitSlop {
+  top?: number,
+  left?: number,
+  bottom?: number,
+  right?: number
 }
 
-export type ViewDynamicProps2 = ViewDynamicProps & {
-  size: number
+export type ViewRawProps = ViewStyle & {
+  hitSlop?: HitSlop
 }
+
+/**
+ * @deprecated: Use ViewRawProps
+ */
+export type ViewDynamicProps = ViewRawProps
 
 export type BorderRadii = {
   topLeft?: number

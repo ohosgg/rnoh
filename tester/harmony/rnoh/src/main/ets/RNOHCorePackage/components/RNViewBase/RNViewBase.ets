@@ -1,83 +1,39 @@
 import {
-  BorderMetrics,
-  convertColorSegmentsToString,
-  convertColorValueToColorSegments,
-  convertMatrixArrayToMatrix4,
+
   Descriptor,
-  getTransformedVector,
-  LayoutDirectionRN,
-  OverflowMode,
-  resolveBorderMetrics,
   RNOHContext
 } from '../../../RNOH';
-import { ViewBaseProps, ViewDynamicProps } from './types';
+import { ViewBaseProps, ViewRawProps } from './types';
+import { ViewDescriptorWrapper } from "./ViewDescriptorWrapper"
 import { RNViewManager } from '../../componentManagers';
 
-export type ViewBaseDescriptor = Descriptor<string, ViewBaseProps>;
+export interface ViewBaseState {}
 
-export type ViewDynamicDescriptor = Descriptor<string, ViewDynamicProps>
+export type ViewBaseDescriptor<TType = string,
+TProps extends ViewBaseProps = ViewBaseProps,
+TState extends ViewBaseState = ViewBaseState,
+TRawProps extends ViewRawProps = ViewRawProps
+> = Descriptor<TType, TProps, TState, TRawProps>;
 
-function convertViewDynamicDescriptor(descriptor: ViewBaseDescriptor | ViewDynamicDescriptor): ViewBaseDescriptor {
-  if (!descriptor.isDynamicBinder) {
-    return descriptor as ViewBaseDescriptor
-  }
-  const dynamicDescriptor = descriptor as ViewDynamicDescriptor
-  const p = dynamicDescriptor.props
-  const isRTL = dynamicDescriptor.layoutMetrics.layoutDirection === LayoutDirectionRN.RightToLeft
-  const borderMetrics = resolveBorderMetrics(p as BorderMetrics, isRTL)
-
-  return {
-    isDynamicBinder: false,
-    childrenTags: dynamicDescriptor.childrenTags,
-    tag: dynamicDescriptor.tag,
-    type: dynamicDescriptor.type,
-    parentTag: dynamicDescriptor.parentTag,
-    state: dynamicDescriptor.state,
-    rawProps: dynamicDescriptor.rawProps,
-    layoutMetrics: dynamicDescriptor.layoutMetrics,
-    props: {
-      top: 0,
-      left: 0,
-      height: 0,
-      width: 0,
-      backgroundColor: convertColorValueToColorSegments(p.backgroundColor),
-      borderWidth: {
-        left: borderMetrics.borderLeftWidth,
-        top: borderMetrics.borderTopWidth,
-        right: borderMetrics.borderRightWidth,
-        bottom: borderMetrics.borderBottomWidth,
-      },
-      borderColor: {
-        left: convertColorValueToColorSegments(borderMetrics.borderLeftColor),
-        top: convertColorValueToColorSegments(borderMetrics.borderTopColor),
-        right: convertColorValueToColorSegments(borderMetrics.borderRightColor),
-        bottom: convertColorValueToColorSegments(borderMetrics.borderBottomColor),
-      },
-      borderRadius: {
-        topLeft: borderMetrics.borderTopLeftRadius,
-        topRight: borderMetrics.borderTopRightRadius,
-        bottomLeft: borderMetrics.borderBottomLeftRadius,
-        bottomRight: borderMetrics.borderBottomRightRadius,
-      },
-      borderStyle: borderMetrics.borderStyle,
-      opacity: p.opacity,
-    }
-  }
-}
+/**
+ * @deprecated: Use ViewBaseDescriptor instead.
+ */
+export type ViewDynamicDescriptor = Descriptor<string, ViewRawProps>
 
 @Component
 export struct RNViewBase {
-  ctx!: RNOHContext
-  tag: number = 0
-  @BuilderParam renderChildren: () => void
+  public ctx!: RNOHContext
+  public tag: number = 0
   public componentManager!: RNViewManager;
-  @State private descriptor: ViewBaseDescriptor = {} as ViewBaseDescriptor
+  @BuilderParam public renderChildren: () => void
+
+  @State private descriptorWrapper: ViewDescriptorWrapper | undefined = undefined
   private unregisterDescriptorChangesListener?: () => void = undefined
   private unregisterComponentManager?: () => void = undefined
   private isResponsibleForDestroyingComponentManager: boolean = false
 
   aboutToAppear() {
-    let descriptor = this.ctx.descriptorRegistry.getDescriptor<ViewBaseDescriptor | ViewDynamicDescriptor>(this.tag)
+    let descriptor = this.ctx.descriptorRegistry.getDescriptor<ViewBaseDescriptor>(this.tag)
     if (!this.componentManager) {
       this.componentManager = new RNViewManager(this.tag, this.ctx)
       this.isResponsibleForDestroyingComponentManager = true
@@ -93,8 +49,8 @@ export struct RNViewBase {
     )
   }
 
-  private setDescriptor(descriptor: ViewBaseDescriptor | ViewDynamicDescriptor) {
-    this.descriptor = convertViewDynamicDescriptor(descriptor)
+  private setDescriptor(descriptor: ViewBaseDescriptor) {
+    this.descriptorWrapper = new ViewDescriptorWrapper(descriptor)
   }
 
   aboutToDisappear() {
@@ -106,7 +62,7 @@ export struct RNViewBase {
   }
 
   getHitTestMode() {
-    switch (this.descriptor.props.pointerEvents) {
+    switch (this.descriptorWrapper?.pointerEvents) {
       case "none":
         return HitTestMode.None
       case "box-none":
@@ -118,24 +74,8 @@ export struct RNViewBase {
     }
   }
 
-  getShadow(): ShadowOptions | undefined {
-    const shadowRadius = this.descriptor.props.shadowRadius
-    if (shadowRadius === undefined || shadowRadius === 0)
-      return undefined
-
-    const props = this.descriptor.props
-    const colorSegments = props.shadowColor ?? [0, 0, 0, 1]
-    colorSegments[3] *= (props.shadowOpacity ?? 1)
-    return {
-      radius: shadowRadius,
-      color: convertColorSegmentsToString(colorSegments),
-      offsetX: props.shadowOffset?.width,
-      offsetY: props.shadowOffset?.height,
-    }
-  }
-
-  getBorderStyle(): BorderStyle{
-    switch (this.descriptor.props.borderStyle) {
+  getBorderStyle(): BorderStyle {
+    switch (this.descriptorWrapper?.borderStyle) {
       case "dashed":
         return BorderStyle.Dashed
       case "dotted":
@@ -145,59 +85,23 @@ export struct RNViewBase {
     }
   }
 
-  getClip(): boolean {
-    return this.descriptor.props.overflow === OverflowMode.HIDDEN || this.descriptor.props.overflow === OverflowMode.SCROLL
-  }
-  
-  getOpacity(): number | undefined {
-    /**
-     * When backfaceVisibility is set to 'hidden' we need to determine whether the
-     * front face or the back face of the view is shown - and make it invisible in
-     * the latter case by setting opacity to 0. We determine it by transforming
-     * an unit vector with z coordinate equal to 1 (using the transform matrix
-     * provided in props) and checking whether such transformation makes it point
-     * in the opposite direction. Since it is not possible to set scale on the
-     * z coordinate in RN then the sign of the z coordinate is determined directly
-     * by the component's rotation and as such provides the necessary information.
-     * */
-    const backfaceVisibility = this.descriptor.props.backfaceVisibility;
-    const matrix = this.descriptor.props.transform
-
-    if (backfaceVisibility !== "hidden" || !matrix) {
-      return this.descriptor.props.opacity;
-    }
-    const unitVector = [0, 0, 1, 0]
-    const resultVector = getTransformedVector(matrix, unitVector)
-    if (resultVector[2] < 0) {
-      return 0;
-    }
-
-    return this.descriptor.props.opacity;
-  }
-
   build() {
     Stack() {
       this.renderChildren()
     }
-    .width(this.descriptor.layoutMetrics.frame.size.width)
-    .height(this.descriptor.layoutMetrics.frame.size.height)
-    .backgroundColor(convertColorSegmentsToString(this.descriptor.props.backgroundColor))
-    .position({ y: this.descriptor.layoutMetrics.frame.origin.y, x: this.descriptor.layoutMetrics.frame.origin.x })
-    .borderWidth(this.descriptor.props.borderWidth)
-    .borderColor({
-      left: convertColorSegmentsToString(this.descriptor.props.borderColor?.left),
-      top: convertColorSegmentsToString(this.descriptor.props.borderColor?.top),
-      right: convertColorSegmentsToString(this.descriptor.props.borderColor?.right),
-      bottom: convertColorSegmentsToString(this.descriptor.props.borderColor?.bottom),
-    }
-    )
-    .borderRadius(this.descriptor.props.borderRadius)
+    .width(this.descriptorWrapper?.width)
+    .height(this.descriptorWrapper?.height)
+    .backgroundColor(this.descriptorWrapper?.backgroundColor)
+    .position(this.descriptorWrapper?.positionRelativeToParent)
+    .borderWidth(this.descriptorWrapper?.borderWidth)
+    .borderColor(this.descriptorWrapper?.borderColor)
+    .borderRadius(this.descriptorWrapper?.borderRadius)
     .borderStyle(this.getBorderStyle())
-    .opacity(this.getOpacity())
-    .transform(this.descriptor.props.transform != undefined ? convertMatrixArrayToMatrix4(this.descriptor.props.transform) : undefined)
-    .clip(this.getClip())
+    .opacity(this.descriptorWrapper?.opacity)
+    .transform(this.descriptorWrapper?.transformationMatrix)
+    .clip(this.descriptorWrapper?.isClipping)
     .hitTestBehavior(this.getHitTestMode())
-    .shadow(this.getShadow())
+    .shadow(this.descriptorWrapper?.shadow)
     .id(this.tag.toString())
   }
 }

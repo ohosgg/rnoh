@@ -24,7 +24,11 @@ export struct PropsDisplayer {
 
   build() {
     RNViewBase({ ctx: this.ctx, tag: this.tag }) {
-      Text(JSON.stringify(this.descriptor?.props ?? {})).width("100%").height("100%").fontSize(12).fontColor("#AAA")
+      Text(JSON.stringify(this.descriptor ?? {}, null, 2))
+        .width("100%")
+        .height("100%")
+        .fontSize(12)
+        .fontColor("#AAA")
     }
   }
 }

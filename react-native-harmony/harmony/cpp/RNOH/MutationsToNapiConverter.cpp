@@ -1,5 +1,6 @@
 #include "RNOH/ArkJS.h"
 #include "RNOH/MutationsToNapiConverter.h"
+#include "RNOH/BaseComponentNapiBinder.h"
 #include "MutationsToNapiConverter.h"
 
 using namespace facebook;
@@ -64,9 +65,10 @@ napi_value MutationsToNapiConverter::convertShadowView(napi_env env, react::Shad
             .addProperty("props", componentNapiBinder->createProps(env, shadowView))
             .addProperty("state", componentNapiBinder->createState(env, shadowView));
     } else {
+        BaseComponentNapiBinder baseNapiBinder;
         descriptorBuilder
             .addProperty("isDynamicBinder", arkJs.createBoolean(true))
-            .addProperty("props", arkJs.createFromDynamic(shadowView.props->rawProps))
+            .addProperty("props", baseNapiBinder.createProps(env, shadowView))
             .addProperty("state", arkJs.createObjectBuilder().build());
     }
     descriptorBuilder

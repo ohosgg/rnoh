@@ -20,3 +20,4 @@ export * from "./ComponentManagerRegistry"
 export * from './EventEmitter'
 export * from './types'
 export * from './TouchTargetHelper'
+export * from "./RNTypes"

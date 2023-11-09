@@ -1,12 +1,14 @@
 import {TestSuite, TestCase} from '@rnoh/testerino';
 import React from 'react';
 import {useState} from 'react';
-import {View, registerViewConfig} from 'react-native';
+import {
+  View,
+  registerViewConfig,
+  ReactNativeViewAttributes,
+} from 'react-native';
 import {Button} from '../components';
-//@ts-ignore
-import ReactNativeViewAttributes from 'react-native/Libraries/Components/View/ReactNativeViewAttributes';
 
-const PropsDisplayer = registerViewConfig('PropsDisplayer', () => {
+const PropsDisplayer: typeof View = registerViewConfig('PropsDisplayer', () => {
   return {
     uiViewClassName: 'PropsDisplayer',
     bubblingEventTypes: {},
@@ -50,10 +52,23 @@ export function RenderingTest() {
               <PropsDisplayer
                 style={{
                   backgroundColor: refreshColor % 2 ? 'red' : 'blue',
+                  opacity: 0.9,
                   borderWidth: 4,
+                  borderTopWidth: 4,
                   borderColor: 'orange',
+                  borderTopColor: 'red',
+                  borderRadius: 4,
+                  borderBottomRightRadius: 8,
+                  transform: [{translateX: 1}],
+                  pointerEvents: 'auto',
+                  shadowOffset: {width: 0, height: 0},
+                  shadowOpacity: 0.9,
+                  shadowRadius: 9,
+                  flexDirection: 'row',
+                  overflow: 'hidden',
+                  backfaceVisibility: 'visible',
                   width: '100%',
-                  height: 64,
+                  height: 2000,
                 }}
               />
             );

@@ -1,4 +1,3 @@
-import matrix4 from '@ohos.matrix4';
 import type {
   BoundingBox,
   ComponentManagerRegistry,
@@ -7,19 +6,12 @@ import type {
   Point,
   RNOHContext,
   Tag,
-  TouchTargetHelperDelegate
+  TouchTargetHelperDelegate,
+  Edges,
 } from '../../RNOH';
-import { ComponentManager, OverflowMode } from '../../RNOH';
+import { ComponentManager } from '../../RNOH';
+import { ViewDescriptorWrapperBase } from "../components/RNViewBase/ViewDescriptorWrapper"
 
-
-export type PointerEvents = "auto" | "none" | "box-none" | "box-only"
-
-export interface HitSlop {
-  top: number,
-  left: number,
-  bottom: number,
-  right: number
-}
 
 export class RNViewManager extends ComponentManager implements TouchTargetHelperDelegate {
   protected boundingBox: BoundingBox = {
@@ -72,16 +64,17 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
    * @returns whether the touch is within the view
    */
   public isPointInView({x, y}: Point): boolean {
-    const descriptor = this.getDescriptor();
-    const size = descriptor.layoutMetrics.frame.size;
+    const descriptorWrapper = this.getDescriptorWrapper()!;
+    const width = descriptorWrapper.width
+    const height = descriptorWrapper.height
     const hitSlop = this.getHitSlop()
-    const withinX = x >= -hitSlop.left && x <= (size.width + hitSlop.right);
-    const withinY = y >= -hitSlop.top && y <= (size.height + hitSlop.bottom);
+    const withinX = x >= -hitSlop.left && x <= (width + hitSlop.right);
+    const withinY = y >= -hitSlop.top && y <= (height + hitSlop.bottom);
     return withinX && withinY;
   }
 
-  private getHitSlop(): HitSlop {
-    return this.getDescriptor().rawProps["hitSlop"] ?? { top: 0, left: 0, right: 0, bottom: 0 }
+  private getHitSlop(): Edges<number> {
+    return this.getDescriptorWrapper()!.hitSlop
   }
 
   public isPointInBoundingBox({x, y}: Point): boolean {
@@ -93,19 +86,14 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
 
   public computeChildPoint({x, y}: Point, childTag: Tag): Point {
     const descriptor = this.descriptorRegistry.getDescriptor(childTag);
-    const offset = descriptor.layoutMetrics.frame.origin;
+    const descriptorWrapper = new ViewDescriptorWrapperBase(descriptor);
+    const offset = descriptorWrapper.positionRelativeToParent;
     let localX = x - offset.x;
     let localY = y - offset.y;
-
-    if ("transform" in descriptor.props) {
-      const transformArray = (descriptor.props["transform"] as any)
-      const transform = matrix4.init(transformArray);
-      const inverse = transform.invert();
-      const transformedLocal = inverse.transformPoint([localX, localY]);
-      localX = transformedLocal[0];
-      localY = transformedLocal[1];
-    }
-
+    const inverse = descriptorWrapper.transformationMatrix.invert();
+    const transformedLocal = inverse.transformPoint([localX, localY]);
+    localX = transformedLocal[0];
+    localY = transformedLocal[1];
     return { x: localX, y: localY };
   }
 
@@ -127,21 +115,20 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
   }
 
   protected calculateBoundingBox() {
-    const descriptor = this.getDescriptor();
-    if (!descriptor) {
+    const descriptorWrapper = this.getDescriptorWrapper();
+    if (!descriptorWrapper) {
       return { left: 0, right: 0, top: 0, bottom: 0 };
     }
-    const {origin, size} = descriptor.layoutMetrics.frame;
+    const origin = descriptorWrapper.positionRelativeToParent;
     let newBoundingBox: BoundingBox = {
       left: origin.x,
-      right: origin.x + size.width,
+      right: origin.x + descriptorWrapper.width,
       top: origin.y,
-      bottom: origin.y + size.height
+      bottom: origin.y + descriptorWrapper.height
     };
 
-    // if the view has overflow, take children into account:
-    if ('overflow' in descriptor.props && descriptor.props['overflow'] === OverflowMode.VISIBLE) {
-      for (const childTag of descriptor.childrenTags) {
+    if (!descriptorWrapper.isClipping) {
+      for (const childTag of descriptorWrapper.childrenTags) {
         const childDescriptor = this.descriptorRegistry.getDescriptor(childTag);
         const childManager = this.componentManagerRegistry.getComponentManager(childTag);
 
@@ -156,21 +143,17 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
       }
     }
 
-    // apply the transform to the view's bounding box
-    if ('transform' in descriptor.props) {
-      const transformMatrix = matrix4.init(descriptor.props['transform'] as any);
-      const [left, top] = transformMatrix.transformPoint([newBoundingBox.left, newBoundingBox.top]);
-      const [right, bottom] = transformMatrix.transformPoint([newBoundingBox.right, newBoundingBox.bottom]);
-      newBoundingBox = {
-        left: Math.min(left, right),
-        right: Math.max(left, right),
-        top: Math.min(top, bottom),
-        bottom: Math.max(top, bottom),
-      }
+    const transformationMatrix = descriptorWrapper.transformationMatrix;
+    const [left, top] = transformationMatrix.transformPoint([newBoundingBox.left, newBoundingBox.top]);
+    const [right, bottom] = transformationMatrix.transformPoint([newBoundingBox.right, newBoundingBox.bottom]);
+    newBoundingBox = {
+      left: Math.min(left, right),
+      right: Math.max(left, right),
+      top: Math.min(top, bottom),
+      bottom: Math.max(top, bottom),
     }
     return newBoundingBox
   }
-
 
 
   /**
@@ -195,23 +178,26 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
     return descriptor
   }
 
-  public canChildrenHandleTouch(): boolean {
+  protected getDescriptorWrapper(): ViewDescriptorWrapperBase | null {
     const descriptor = this.getDescriptor()
-    const pointerEvents = descriptor.props["pointerEvents"] ?? "auto" as PointerEvents
-    return ["auto", "box-none"].includes(pointerEvents)
+    if (!descriptor) {
+      return null
+    }
+    return new ViewDescriptorWrapperBase(descriptor)
+  }
+
+  public canChildrenHandleTouch(): boolean {
+    const descriptorWrapper = this.getDescriptorWrapper()
+    return descriptorWrapper?.pointerEvents == "auto" || descriptorWrapper?.pointerEvents == "box-none"
   }
 
   public canHandleTouch(): boolean {
-    const descriptor = this.getDescriptor()
-    const pointerEvents = descriptor.props["pointerEvents"] ?? "auto" as PointerEvents
-    return ["auto", "box-only"].includes(pointerEvents)
+    const descriptorWrapper = this.getDescriptorWrapper()
+    return descriptorWrapper?.pointerEvents == "auto" || descriptorWrapper?.pointerEvents == "box-only"
   }
 
   public isClippingChildren(): boolean {
-    const descriptor = this.getDescriptor()
-    const overflow = descriptor.props['overflow'];
-    return overflow === OverflowMode.HIDDEN ||
-      overflow === OverflowMode.SCROLL
+    return this.getDescriptorWrapper()?.isClipping ?? false
   }
 
   public setParentTag(parentTag: Tag): void {

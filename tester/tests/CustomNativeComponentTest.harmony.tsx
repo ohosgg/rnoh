@@ -1,14 +1,11 @@
 import {TestCase, TestSuite} from '@rnoh/testerino';
-//@ts-ignore
-import {register} from 'react-native/Libraries/Renderer/shims/ReactNativeViewConfigRegistry';
-//@ts-ignore
-import ReactNativeViewAttributes from 'react-native/Libraries/Components/View/ReactNativeViewAttributes';
-import {useEffect, useState} from 'react';
+import {registerViewConfig, ReactNativeViewAttributes} from 'react-native';
+import {useState} from 'react';
 import React from 'react';
+import {StyleProp, ViewStyle} from 'react-native';
 import {Button} from '../components';
-import {StyleProp, View, ViewStyle} from 'react-native';
 
-const SampleView = register('SampleView', () => {
+const SampleView = registerViewConfig('SampleView', () => {
   return {
     uiViewClassName: 'SampleView',
     bubblingEventTypes: {},
@@ -20,7 +17,7 @@ const SampleView = register('SampleView', () => {
   };
 });
 
-function NativeComponent({
+function SampleViewWrapper({
   children,
   backgroundColor,
   size,
@@ -49,19 +46,19 @@ export function CustomNativeComponentTest() {
   return (
     <TestSuite name="Custom Native Component">
       <TestCase itShould="render red rectangle">
-        <NativeComponent backgroundColor="red" size={64} />
+        <SampleViewWrapper backgroundColor="red" size={64} />
       </TestCase>
       <TestCase itShould="render green rectangle inside red rectangle">
-        <NativeComponent backgroundColor="red" size={64}>
-          <NativeComponent backgroundColor="green" size={32} />
-        </NativeComponent>
+        <SampleViewWrapper backgroundColor="red" size={64}>
+          <SampleViewWrapper backgroundColor="green" size={32} />
+        </SampleViewWrapper>
       </TestCase>
       <TestCase itShould="show/hide blue rectangle">
-        <NativeComponent backgroundColor="red" size={64}>
+        <SampleViewWrapper backgroundColor="red" size={64}>
           <Blinker>
-            <NativeComponent backgroundColor="blue" size={32} />
+            <SampleViewWrapper backgroundColor="blue" size={32} />
           </Blinker>
-        </NativeComponent>
+        </SampleViewWrapper>
       </TestCase>
     </TestSuite>
   );

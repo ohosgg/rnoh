@@ -15,3 +15,18 @@ export interface Size {
   height: number;
 }
 
+export type Edges<T> = {
+  top: T,
+  left: T,
+  right: T,
+  bottom: T
+}
+
+export type Corners<T> = {
+  topLeft: T,
+  topRight: T,
+  bottomLeft: T,
+  bottomRight: T,
+}
+
+export type PointerEvents = "auto" | "none" | "box-none" | "box-only"

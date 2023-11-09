@@ -9,5 +9,7 @@ class SamplePackage : public Package {
     std::vector<facebook::react::ComponentDescriptorProvider> createComponentDescriptorProviders() override;
 
     std::unique_ptr<TurboModuleFactoryDelegate> createTurboModuleFactoryDelegate() override;
+
+    ComponentNapiBinderByString createComponentNapiBinderByName() override;
 };
 } // namespace rnoh
