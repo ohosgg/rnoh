@@ -1,7 +1,13 @@
+import { RNViewBase } from './RNOHCorePackage/components/RNViewBase';
 import { ComponentBuilderContext } from './RNOHCorePackage/components/RNComponentFactory';
 import { RNComponentFactory } from './RNOHCorePackage';
 import { Descriptor, DisplayMode, RNOHContext, Tag } from './RNOH';
-import { ViewBaseProps, ViewDescriptorWrapperBase, ViewRawProps, ViewDescriptorWrapper } from './RNOHCorePackage/components/RNViewBase';
+import {
+  ViewBaseProps,
+  ViewDescriptorWrapperBase,
+  ViewRawProps,
+  ViewDescriptorWrapper
+} from './RNOHCorePackage/components/RNViewBase';
 import { TouchDispatcher } from './RNOH/TouchDispatcher';
 import { SurfaceHandle, SurfaceProps } from './RNOH/SurfaceHandle';
 import { RNSurfaceManager } from './RNOHCorePackage/componentManagers/RNSurfaceManager';
@@ -38,7 +44,7 @@ export struct RNSurface {
   private touchDispatcher!: TouchDispatcher;
   private shouldStopSurface: boolean = false;
   private initialProps!: SurfaceProps;
-  private componentManager!: RNSurfaceManager;
+  private surfaceManager!: RNSurfaceManager;
 
   aboutToAppear() {
     if (Object.keys(this.surfaceConfig).includes("surfaceHandle")) {
@@ -51,13 +57,13 @@ export struct RNSurface {
       this.shouldStopSurface = true;
     }
     const tag = this.surfaceHandle.getTag();
-    this.componentManager = new RNSurfaceManager(tag, this.ctx);
+    this.surfaceManager = new RNSurfaceManager(tag, this.ctx);
     this.cleanUpCallbacks.push(() => {
-      this.componentManager.onDestroy()
+      this.surfaceManager.onDestroy()
     })
     this.onUpdateComponent(this.ctx.rnInstance.descriptorRegistry.getDescriptor(tag))
     this.touchDispatcher = new TouchDispatcher(tag, this.ctx.rnInstance, this.ctx.logger)
-    this.ctx.componentManagerRegistry.registerComponentManager(tag, this.componentManager);
+    this.ctx.componentManagerRegistry.registerComponentManager(tag, this.surfaceManager);
     this.cleanUpCallbacks.push(this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
       tag,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
@@ -118,13 +124,14 @@ export struct RNSurface {
 
   build() {
     Stack() {
-      ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
-        RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
-      }, (childrenTag: Tag) => childrenTag.toString())
+      RNComponentFactory({
+        ctx: this.ctx,
+        tag: this.surfaceHandle.getTag(),
+        buildCustomComponent: this.buildCustomComponent
+      })
     }
     .width("100%")
     .height("100%")
-    .backgroundColor(this.descriptorWrapper?.backgroundColor)
     .onAreaChange((oldArea, newArea) => this.handleAreaChange(oldArea, newArea))
     .onTouch((e) => this.handleTouch(e))
   }

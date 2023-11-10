@@ -33,6 +33,10 @@ export struct RNApp {
    * Builds a custom fabric component.
    */
   @BuilderParam public buildCustomComponent!: CustomComponentBuilder
+  /**
+   * Called before a surface is visible, and rnInstance is available.
+   */
+  public onSetUp: (rnInstance: RNInstance) => Promise<void> | void = () => Promise.resolve()
   // -------------------------------------------------------------------------------------------------------------------
   @StorageLink('RNAbility') private rnAbility: RNAbility = {} as RNAbility
   private rnInstance!: RNInstance
@@ -41,25 +45,27 @@ export struct RNApp {
   private cleanUpCallbacks: (() => void)[] = []
 
   aboutToAppear() {
-    this.getOrCreateRNInstance().then(rnInstance => {
-      this.rnInstance = rnInstance
-      const jsBundleExecutionStatus = this.rnInstance.getBundleExecutionStatus(this.jsBundleProvider?.getURL())
-      if (this.jsBundleProvider && jsBundleExecutionStatus === undefined) {
-        this.rnInstance.runJSBundle(this.jsBundleProvider).then(() => {
+    try {
+      (async () => {
+        this.rnInstance = await this.getOrCreateRNInstance()
+        await this.onSetUp(this.rnInstance)
+        const jsBundleExecutionStatus = this.rnInstance.getBundleExecutionStatus(this.jsBundleProvider?.getURL())
+        if (this.jsBundleProvider && jsBundleExecutionStatus === undefined) {
+          await this.rnInstance.runJSBundle(this.jsBundleProvider)
           this.shouldShow = true
-        })
-        return;
-      }
-      if (jsBundleExecutionStatus !== "DONE") {
-        this.cleanUpCallbacks.push(this.rnInstance.subscribeToLifecycleEvents("JS_BUNDLE_EXECUTION_FINISH", (args) => {
-          if (args.appKeys.includes(this.appKey)) {
-            this.shouldShow = true
-          }
-        }))
-      } else {
-        this.shouldShow = true
-      }
-    }).catch((reason: string | Error) => {
+          return;
+        }
+        if (jsBundleExecutionStatus !== "DONE") {
+          this.cleanUpCallbacks.push(this.rnInstance.subscribeToLifecycleEvents("JS_BUNDLE_EXECUTION_FINISH", (args) => {
+            if (args.appKeys.includes(this.appKey)) {
+              this.shouldShow = true
+            }
+          }))
+        } else {
+          this.shouldShow = true
+        }
+      })()
+    } catch(reason) {
       if (typeof reason === "string")
         this.rnAbility.getLogger().error(reason)
       else if (reason instanceof Error) {
@@ -67,7 +73,7 @@ export struct RNApp {
       } else {
         this.rnAbility.getLogger().error("Fatal exception")
       }
-    })
+    }
   }
 
   aboutToDisappear() {

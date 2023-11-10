@@ -47,7 +47,7 @@ const rootDescriptor = {
   tag: 1,
   childrenTags: [],
   rawProps: {},
-  props: { top: 0, left: 0, width: 0, height: 0 },
+  props: {},
   state: {},
   layoutMetrics: {
     frame: {
@@ -93,6 +93,10 @@ export interface RNInstance {
   updateState(componentName: string, tag: Tag, state: unknown): void;
 
   getId(): number;
+
+  bindComponentNameToDescriptorType(componentName: string, descriptorType: string);
+
+  getComponentNameFromDescriptorType(descriptorType: string): string
 }
 
 /**
@@ -113,6 +117,7 @@ export class RNInstanceImpl implements RNInstance {
   public commandDispatcher: CommandDispatcher;
   public componentManagerRegistry: ComponentManagerRegistry;
   private lifecycleEventEmitter = new EventEmitter<LifecycleEventArgsByEventName>()
+  private componentNameByDescriptorType = new Map<string, string>()
 
   constructor(
     private id: number,
@@ -248,4 +253,17 @@ export class RNInstanceImpl implements RNInstance {
   public shouldUIBeUpdated(): boolean {
     return this.lifecycleState === LifecycleState.READY
   }
+
+  public bindComponentNameToDescriptorType(componentName: string, descriptorType: string): void {
+    this.componentNameByDescriptorType.set(descriptorType, componentName)
+  }
+
+  public getComponentNameFromDescriptorType(descriptorType: string): string {
+    if (this.componentNameByDescriptorType.has(descriptorType)) {
+      return this.componentNameByDescriptorType.get(descriptorType)!
+    }
+    return descriptorType
+  }
 }
+
+

@@ -11,7 +11,12 @@ import { RNActivityIndicator } from './RNActivityIndicator'
 
 export interface ComponentBuilderContext {
   rnohContext: RNOHContext
+  /**
+   * @deprecated: Use tag and componentName instead
+   */
   descriptor: DescriptorEssence
+  tag: Tag
+  componentName: string
 }
 
 interface DescriptorEssence {
@@ -26,7 +31,7 @@ export struct RNComponentFactory {
   public ctx!: RNOHContext
   public tag: number = 0
   @BuilderParam public buildCustomComponent!: CustomComponentBuilder
-  @State private descriptorType: string = ''
+  @State private componentName: string = ''
   @State private childrenTags: Tag[] = []
   private cleanupCallback?: () => void = undefined
 
@@ -46,24 +51,24 @@ export struct RNComponentFactory {
   }
 
   setDescriptor(newDescriptor: Descriptor) {
-    this.descriptorType = newDescriptor.type
+    this.componentName = this.ctx.rnInstance.getComponentNameFromDescriptorType(newDescriptor.type)
     this.childrenTags = newDescriptor.childrenTags
   }
 
   build() {
-    if (this.descriptorType === "View") {
+    if (this.componentName === "View" || this.componentName === "RootView") {
       RNView({
         ctx: this.ctx,
         tag: this.tag,
         buildCustomComponent: this.buildCustomComponent
       })
-    } else if (this.descriptorType === "Image") {
+    } else if (this.componentName === "Image") {
       RNImage({ ctx: this.ctx, tag: this.tag })
-    } else if (this.descriptorType === "TextInput") {
+    } else if (this.componentName === "TextInput") {
       RNTextInput({ ctx: this.ctx, tag: this.tag })
-    } else if (this.descriptorType === "Paragraph") {
+    } else if (this.componentName === "Paragraph") {
       RNText({ ctx: this.ctx, tag: this.tag, buildCustomComponent: this.buildCustomComponent })
-    } else if (this.descriptorType === "PullToRefreshView") {
+    } else if (this.componentName === "PullToRefreshView") {
       /**
        * RNScrollView displays Refresh component if PullToRefreshView is its direct parent.
        * Native Refresh component works correctly, only when a native Scroll is its direct child.
@@ -74,32 +79,34 @@ export struct RNComponentFactory {
         buildCustomComponent: this.buildCustomComponent
       })
     }
-    else if (this.descriptorType === "ScrollView") {
+    else if (this.componentName === "ScrollView") {
       RNScrollView({
         ctx: this.ctx,
         tag: this.tag,
         buildCustomComponent: this.buildCustomComponent
       })
-    } else if (this.descriptorType === "Switch") {
+    } else if (this.componentName === "Switch") {
       RNSwitch({
         ctx: this.ctx,
         tag: this.tag,
       })
-    } else if (this.descriptorType === "ModalHostView") {
+    } else if (this.componentName === "ModalHostView") {
       RNModalHostView({
         ctx: this.ctx,
         tag: this.tag,
         buildCustomComponent: this.buildCustomComponent
       })
-    } else if (this.descriptorType === "ActivityIndicatorView") {
+    } else if (this.componentName === "ActivityIndicatorView") {
       RNActivityIndicator({
         ctx: this.ctx,
         tag: this.tag,
       })
-    } else if (this.descriptorType !== '') {
+    } else if (this.componentName !== '') {
       this.buildCustomComponent({
         rnohContext: this.ctx,
-        descriptor: this.ctx.descriptorRegistry.getDescriptor<Descriptor>(this.tag) as DescriptorEssence
+        descriptor: this.ctx.descriptorRegistry.getDescriptor<Descriptor>(this.tag) as DescriptorEssence,
+        tag: this.tag,
+        componentName: this.componentName
       })
     }
   }

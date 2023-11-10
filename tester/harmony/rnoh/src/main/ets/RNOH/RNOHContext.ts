@@ -1,5 +1,4 @@
 import type common from '@ohos.app.ability.common';
-import window from '@ohos.window'
 import type { DescriptorRegistry } from './DescriptorRegistry';
 import type { CommandDispatcher } from './CommandDispatcher';
 import type { RNOHLogger } from "./RNOHLogger";
