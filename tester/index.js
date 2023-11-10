@@ -17,6 +17,7 @@ import {
   StickyHeadersExample,
   TesterExample,
   TextScrollExample,
+  TextTestsExample,
   TogglingComponentExample,
 } from './examples';
 
@@ -50,6 +51,7 @@ AppRegistry.registerComponent(appName, () => App);
 
 AppRegistry.registerComponent('tester', () => TesterExample);
 AppRegistry.registerComponent('animations', () => AnimationsExample);
+AppRegistry.registerComponent('text_tests', () => TextTestsExample);
 AppRegistry.registerComponent('checkerboard', () => CheckerboardExample);
 AppRegistry.registerComponent('chessboard', () => ChessboardExample);
 AppRegistry.registerComponent('cursor', () => CursorExample);

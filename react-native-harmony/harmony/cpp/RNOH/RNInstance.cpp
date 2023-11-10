@@ -132,13 +132,15 @@ void rnoh::RNInstance::createSurface(react::Tag surfaceId, std::string const &ap
         return;
     }
     auto surfaceHandler = std::make_shared<react::SurfaceHandler>(appKey, surfaceId);
-    scheduler->registerSurface(*surfaceHandler);
+    this->taskExecutor->runTask(TaskThread::MAIN, [surfaceHandler, this]() {
+        this->scheduler->registerSurface(*surfaceHandler);
+    });
     surfaceHandlers.insert({surfaceId, std::move(surfaceHandler)});
 }
 
 void RNInstance::startSurface(react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY, folly::dynamic &&initialProps, std::function<void()> &&onFinish) {
     try {
-        this->taskExecutor->runTask(TaskThread::MAIN, [this, surfaceId, initialProps, width, height, viewportOffsetX, viewportOffsetY, onFinish]() {
+        this->taskExecutor->runTask(TaskThread::MAIN, [=]() {
             auto it = surfaceHandlers.find(surfaceId);
             if (it == surfaceHandlers.end()) {
                 LOG(ERROR) << "startSurface: No surface with id " << surfaceId;
@@ -156,10 +158,20 @@ void RNInstance::startSurface(react::Tag surfaceId, float width, float height, f
             surfaceHandler->setDisplayMode(react::DisplayMode::Suspended);
             layoutContext.viewportOffset = {viewportOffsetX, viewportOffsetY};
             surfaceHandler->constraintLayout(layoutConstraints, layoutContext);
-            surfaceHandler->start();
-            auto mountingCoordinator = surfaceHandler->getMountingCoordinator();
-            mountingCoordinator->setMountingOverrideDelegate(m_animationDriver);
-            onFinish();
+            LOG(INFO) << "startSurface::starting: surfaceId=" << surfaceId;
+            /**
+             * Running on BACKGROUND thread prevents deadlock when text is measured on the main thread.
+             * It should be safe to remove once we text measurement is moved on the background thread.
+             */
+            this->taskExecutor->runTask(TaskThread::BACKGROUND, [this, surfaceHandler, surfaceId, onFinish]() {
+                surfaceHandler->start();
+                LOG(INFO) << "startSurface::started surfaceId=" << surfaceId;
+                this->taskExecutor->runTask(TaskThread::MAIN, [this, surfaceHandler, onFinish]() {
+                    auto mountingCoordinator = surfaceHandler->getMountingCoordinator();
+                    mountingCoordinator->setMountingOverrideDelegate(m_animationDriver);
+                    onFinish();
+                });
+            });
         });
     } catch (const std::exception &e) {
         LOG(ERROR) << "startSurface: " << e.what() << "\n";
@@ -238,13 +250,15 @@ void RNInstance::updateSurfaceConstraints(react::Tag surfaceId, float width, flo
             LOG(ERROR) << "updateSurfaceConstraints: No surface with id " << surfaceId;
             return;
         }
-        auto layoutConstraints = surfaceHandlers[surfaceId]->getLayoutConstraints();
-        layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
-            .width = width,
-            .height = height};
-        auto layoutContext = surfaceHandlers[surfaceId]->getLayoutContext();
-        layoutContext.viewportOffset = {viewportOffsetX, viewportOffsetY};
-        surfaceHandlers[surfaceId]->constraintLayout(layoutConstraints, layoutContext);
+        taskExecutor->runTask(TaskThread::MAIN, [this, surfaceId, width, height, viewportOffsetX, viewportOffsetY]() {
+            auto layoutConstraints = surfaceHandlers[surfaceId]->getLayoutConstraints();
+            layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
+                .width = width,
+                .height = height};
+            auto layoutContext = surfaceHandlers[surfaceId]->getLayoutContext();
+            layoutContext.viewportOffset = {viewportOffsetX, viewportOffsetY};
+            surfaceHandlers[surfaceId]->constraintLayout(layoutConstraints, layoutContext);
+        });
     } catch (const std::exception &e) {
         LOG(ERROR) << "updateSurfaceConstraints: " << e.what() << "\n";
         throw e;
