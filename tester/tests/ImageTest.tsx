@@ -4,6 +4,7 @@ import {TestCase, TestSuite} from '@rnoh/testerino';
 const LOCAL_IMAGE_ASSET_ID = require('../assets/pravatar-131.jpg');
 const REMOTE_IMAGE_URL = 'https://i.pravatar.cc/100?img=31';
 const REMOTE_REDIRECT_IMAGE_URL = 'http://placeholder.com/350x150';
+const REMOTE_GIF_URL = 'https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif';
 
 export const ImageTest = () => {
   return (
@@ -25,6 +26,12 @@ export const ImageTest = () => {
         <Image
           style={{borderRadius: 8, borderWidth: 1, height: 150}}
           source={{uri: REMOTE_REDIRECT_IMAGE_URL}}
+        />
+      </TestCase>
+      <TestCase itShould="support loading remote animated gifs">
+        <Image
+          style={{borderRadius: 8, borderWidth: 1, height: 400}}
+          source={{uri: REMOTE_GIF_URL}}
         />
       </TestCase>
       <TestCase

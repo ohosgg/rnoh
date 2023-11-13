@@ -30,12 +30,21 @@ interface ImageOnErrorEvent {
 
 export type ImageDescriptor = Descriptor<"Image", ImageProps>
 
+class ImageSourceHolder {
+  public source: string | Resource | PixelMap
+
+  constructor(source: string | Resource | PixelMap) {
+    this.source = source
+  }
+}
+
 @Component
 export struct RNImage {
   ctx!: RNOHContext
   tag: number = 0
   @State descriptor: ImageDescriptor = Object() as ImageDescriptor
-  @State imageSource: Resource | PixelMap | undefined = undefined
+  // workaround: `@State` fields cannot be unions of primitive (`string`) and object (`Resource`, `PixelMap`) types
+  @State imageSource: ImageSourceHolder | undefined = undefined
   defaultColorFilter: number[] = [
     1, 0, 0, 0, 0,
     0, 1, 0, 0, 0,
@@ -68,13 +77,20 @@ export struct RNImage {
   updateImageSource() {
     const uri = this.descriptor.props.uri;
     if (uri.startsWith("asset://")) {
-      this.imageSource = $rawfile(uri.replace("asset://", "assets/"));
+      this.imageSource = new ImageSourceHolder($rawfile(uri.replace("asset://", "assets/")));
       return;
     }
     const imageLoader = this.ctx.rnInstance.getTurboModule<ImageLoaderTurboModule>("ImageLoader");
     this.imageSource = undefined;
     imageLoader.getImageSource(uri).then(async (imageSource) => {
-      this.imageSource = await imageSource.createPixelMap();
+      const frameCounter = await imageSource.getFrameCount();
+      if (frameCounter === 1) {
+        // use the downloaded or cached image source
+        this.imageSource = new ImageSourceHolder(await imageSource.createPixelMap());
+      } else {
+        // an animated GIF
+        this.imageSource = new ImageSourceHolder(imageSource['location'] ?? uri)
+      }
     }).catch((error: RemoteImageLoaderError) => {
       this.dispatchOnError(error.message)
     })
@@ -142,7 +158,7 @@ export struct RNImage {
       ctx: this.ctx,
       tag: this.tag,
     }) {
-      Image(this.imageSource)
+      Image(this.imageSource?.source)
         .interpolation(ImageInterpolation.High)
         .width("100%")
         .height("100%")

@@ -36,6 +36,12 @@ export class RemoteImageLoader {
         throw new RemoteImageLoaderError("Couldn't create ImageSource")
       }
       this.memoryCache.set(uri, imageSource)
+      // NOTE: workaround for `Image` component not supporting redirects or ImageSource sources.
+      // If the image is an animated GIF, we cannot convert it to a PixelMap
+      // since that would display a single frame only.
+      // Instead, when redirected, we attach the `location` url to the imageSource object
+      // and use it as the source parameter for `Image`
+      imageSource['location'] = response.header['location']
       return imageSource
     } else {
       throw new RemoteImageLoaderError("Unsupported response result type: " + response.resultType)
