@@ -58,9 +58,6 @@ export struct RNSurface {
     }
     const tag = this.surfaceHandle.getTag();
     this.surfaceManager = new RNSurfaceManager(tag, this.ctx);
-    this.cleanUpCallbacks.push(() => {
-      this.surfaceManager.onDestroy()
-    })
     this.onUpdateComponent(this.ctx.rnInstance.descriptorRegistry.getDescriptor(tag))
     this.touchDispatcher = new TouchDispatcher(tag, this.ctx.rnInstance, this.ctx.logger)
     this.ctx.componentManagerRegistry.registerComponentManager(tag, this.surfaceManager);

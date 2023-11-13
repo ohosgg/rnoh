@@ -110,9 +110,6 @@ export struct RNScrollView {
         }
       }));
     this.componentManager = new _RNScrollViewManager(this.tag, this.ctx, this.scroller)
-    this.cleanUpCallbacks.push(() => {
-      this.componentManager.onDestroy()
-    })
     this.cleanUpCallbacks.push(this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager));
     this.cleanUpCallbacks.push(this.componentManager.subscribe("LOCK_SCROLLING", () => {
       this.shouldPreventScrolling = true

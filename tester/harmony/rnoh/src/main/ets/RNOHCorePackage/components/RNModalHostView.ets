@@ -44,9 +44,6 @@ struct ModalHostViewDialog {
   aboutToAppear() {
     this.emitComponentEvent("onShow")
     this.componentManager = new RNModalHostViewManager(this.tag, this.ctx);
-    this.cleanUpCallbacks.push(() => {
-      this.componentManager.onDestroy()
-    })
     this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager);
     this.descriptor = this.ctx.descriptorRegistry.getDescriptor<ModalHostViewDescriptor>(this.tag)
     this.unsubscribeFromDescriptorChanges = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag, (descriptor) => {

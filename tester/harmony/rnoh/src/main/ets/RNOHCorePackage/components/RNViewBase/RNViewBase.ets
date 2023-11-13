@@ -30,13 +30,11 @@ export struct RNViewBase {
   @State private descriptorWrapper: ViewDescriptorWrapper | undefined = undefined
   private unregisterDescriptorChangesListener?: () => void = undefined
   private unregisterComponentManager?: () => void = undefined
-  private isResponsibleForDestroyingComponentManager: boolean = false
 
   aboutToAppear() {
     let descriptor = this.ctx.descriptorRegistry.getDescriptor<ViewBaseDescriptor>(this.tag)
     if (!this.componentManager) {
       this.componentManager = new RNViewManager(this.tag, this.ctx)
-      this.isResponsibleForDestroyingComponentManager = true
     }
     this.unregisterComponentManager = this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager)
     this.setDescriptor(descriptor)
@@ -54,9 +52,6 @@ export struct RNViewBase {
   }
 
   aboutToDisappear() {
-    if (this.isResponsibleForDestroyingComponentManager) {
-      this.componentManager.onDestroy()
-    }
     this.unregisterDescriptorChangesListener?.()
     this.unregisterComponentManager?.()
   }

@@ -13,9 +13,23 @@ export class ComponentManagerRegistry {
   }
 
   public registerComponentManager(tag: Tag, manager: ComponentManager) {
+    const alreadyRegisteredManager = this.componentManagerByTag.get(tag)
+    if (alreadyRegisteredManager) {
+      alreadyRegisteredManager.onDestroy()
+    }
     this.componentManagerByTag.set(tag, manager);
     return () => {
-      this.componentManagerByTag.delete(tag);
+      const componentManager = this.componentManagerByTag.get(tag)
+      if (componentManager === manager) {
+        /**
+         * RN may quickly remove and create a component with the same tag. In such situations,
+         * OldComponent::aboutToDisappear is called after NewComponent::aboutToAppear, thus removing
+         * a component manager for a new component.
+         */
+        componentManager.onDestroy()
+        this.componentManagerByTag.delete(tag);
+      }
+
     }
   }
 
