@@ -2,8 +2,12 @@
   "migIndex": 1,
   "data": [
     {
-      "path": "assets/fonts/DancingScript-Regular.ttf",
-      "sha1": "b52e869bd47b6e98fd907ae00b1828916451b3b0"
+      "path": "assets/fonts/Pacifico-Regular.ttf",
+      "sha1": "baca1fca7fe74b61cb33aa0da48ec1a3a77bcf49"
+    },
+    {
+      "path": "assets/fonts/StintUltraCondensed-Regular.ttf",
+      "sha1": "d973393719e515e9cdc3090685d6173df1233700"
     }
   ]
 }

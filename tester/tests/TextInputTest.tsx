@@ -22,6 +22,11 @@ export function TextInputTest() {
       <TestCase modal itShould="render non-editable textInput">
         <TextInputWithText style={styles.textInput} editable={false} />
       </TestCase>
+      <TestCase modal itShould="render textInput with Pacifico Regular font">
+        <TextInputWithText
+          style={[styles.textInput, {fontFamily: 'Pacifico-Regular'}]}
+        />
+      </TestCase>
       <TestCase modal itShould="render textInput with caret hidden">
         <TextInputWithText style={styles.textInput} caretHidden />
       </TestCase>
@@ -88,6 +93,17 @@ export function TextInputTest() {
       </TestCase>
       <TestCase modal itShould="render multiline text input">
         <TextInputWithText style={styles.textInputBigger} multiline />
+      </TestCase>
+      <TestCase
+        modal
+        itShould="render multiline text input with Pacifico Regular font">
+        <TextInputWithText
+          style={[styles.textInputBigger, {fontFamily: 'Pacifico-Regular'}]}
+          multiline
+        />
+      </TestCase>
+      <TestCase modal itShould="render text input with maximally 10 characters">
+        <TextInputWithText style={styles.textInput} maxLength={10} />
       </TestCase>
       <TestCase modal itShould="toggle between rendering 10 and 5 characters">
         <StateKeeper

@@ -66,6 +66,7 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                 fragmentObjBuilder
                     .addProperty("text", fragment.string)
                     .addProperty("fontColor", textAttributes.foregroundColor)
+                    .addProperty("fontFamily", textAttributes.fontFamily)
                     .addProperty("lineHeight", textAttributes.lineHeight)
                     .addProperty("backgroundColor", textAttributes.backgroundColor)
                     .addProperty("fontSize", textAttributes.fontSize)

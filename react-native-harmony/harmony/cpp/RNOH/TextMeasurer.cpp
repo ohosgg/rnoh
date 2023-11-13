@@ -39,6 +39,9 @@ react::TextMeasurement TextMeasurer::measure(react::AttributedString attributedS
                 auto textAttributesBuilder = arkJs.createObjectBuilder();
                 textAttributesBuilder.addProperty("fontSize", fragment.textAttributes.fontSize);
                 textAttributesBuilder.addProperty("lineHeight", fragment.textAttributes.lineHeight);
+                if(!fragment.textAttributes.fontFamily.empty()){
+                    textAttributesBuilder.addProperty("fontFamily", fragment.textAttributes.fontFamily);
+                }
                 textAttributesBuilder.addProperty("letterSpacing", fragment.textAttributes.letterSpacing);
                 if (fragment.textAttributes.fontWeight.has_value()) {
                     textAttributesBuilder.addProperty("fontWeight", int(fragment.textAttributes.fontWeight.value()));

@@ -16,6 +16,7 @@ export type Fragment = {
   string: string;
   textAttributes: {
     fontSize: number;
+    fontFamily?: string;
     lineHeight: null | number;
     letterSpacing: null | number;
     fontWeight?: number;
@@ -132,6 +133,7 @@ class SimpleTextLayoutManager implements TextLayoutManager {
     const measureOptions: MeasureOptions = {
       textContent: fragment.string,
       fontSize: fragment.textAttributes.fontSize,
+      fontFamily: fragment.textAttributes.fontFamily,
       lineHeight:
       fragment.textAttributes.lineHeight ||
         fragment.textAttributes.fontSize * (1 + DEFAULT_LINE_SPACING),
@@ -236,6 +238,7 @@ class AdvancedTextLayoutManager implements TextLayoutManager {
         content: fragment.string,
         extraData: {
           fontSize: fragment.textAttributes.fontSize,
+          fontFamily: fragment.textAttributes.fontFamily,
           lineHeight:
           fragment.textAttributes.lineHeight ||
             fragment.textAttributes.fontSize * (1 + DEFAULT_LINE_SPACING),
@@ -249,6 +252,7 @@ class AdvancedTextLayoutManager implements TextLayoutManager {
 
 export type OHOSMeasurerTextFragmentExtraData = {
   fontSize: number;
+  fontFamily?: string;
   letterSpacing?: number;
   fontWeight?: number;
   lineHeight?: number;
@@ -268,6 +272,7 @@ implements TextFragmentMeasurer<OHOSMeasurerTextFragmentExtraData> {
     let size = TextMeasurer.measureTextSize({
       textContent: textFragment.content,
       fontSize: textFragment.extraData.fontSize,
+      fontFamily: textFragment.extraData.fontFamily,
       lineHeight: textFragment.extraData.lineHeight,
       fontWeight: textFragment.extraData.fontWeight,
       letterSpacing: textFragment.extraData.letterSpacing,
@@ -286,6 +291,7 @@ implements TextFragmentMeasurer<OHOSMeasurerTextFragmentExtraData> {
     hash += textFragment.extraData.letterSpacing ?? '-'
     hash += textFragment.extraData.fontWeight ?? '-'
     hash += textFragment.extraData.lineHeight ?? '-'
+    hash += textFragment.extraData.fontFamily ?? '-'
     return hash
   }
 

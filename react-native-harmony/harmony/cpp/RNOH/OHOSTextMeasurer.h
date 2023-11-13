@@ -22,6 +22,7 @@ class OHOSTextMeasurer {
         double fontSize;
         int fontWeight;
         float lineHeight;
+        std::string fontFamily;
         int maximumNumberOfLines;
     };
 
@@ -42,6 +43,10 @@ class OHOSTextMeasurer {
         auto textStyle = OH_Drawing_CreateTextStyle();
         if (config.fontSize) {
             OH_Drawing_SetTextStyleFontSize(textStyle, config.fontSize);
+        }
+        if (!config.fontFamily.empty()){
+            const char *fontFamilies[] = {config.fontFamily.c_str()};
+            OH_Drawing_SetTextStyleFontFamilies(textStyle, 1, fontFamilies);
         }
         if (config.fontWeight) {
             OH_Drawing_SetTextStyleFontWeight(textStyle, this->mapValueToFontWeight(config.fontWeight));

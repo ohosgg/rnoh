@@ -5,6 +5,7 @@ import type { ViewBaseProps } from '../RNViewBase/types'
 export type AttributedFragment = {
   text?: string
   fontColor?: ColorSegments
+  fontFamily?: string
   fontWeight?: number
   fontSize?: number
   fontStyle?: string

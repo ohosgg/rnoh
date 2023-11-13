@@ -4,6 +4,7 @@ import { RNOHEventEmitRequestHandlerName } from './../RNOHEventEmitRequestHandle
 
 export interface TextInputProps extends ViewBaseProps {
   fontColor?: ColorSegments
+  fontFamily?: string
   fontSize?: number
   text?: string
   multiline?: boolean
@@ -181,6 +182,7 @@ export struct RNTextInput {
           .width("100%")
           .height("100%")
           .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
+          .fontFamily(this.descriptor.props.fontFamily)
           .fontSize(getFontSize(this.descriptor.props.fontSize))
           .onChange((value) => this.handleChangeEvent(value))
           .enabled(this.descriptor.props.editable)
@@ -205,6 +207,7 @@ export struct RNTextInput {
           .width("100%")
           .height("100%")
           .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
+          .fontFamily(this.descriptor.props.fontFamily)
           .fontSize(getFontSize(this.descriptor.props.fontSize))
           .onChange((event) => this.handleChangeEvent(event))
           .enabled(this.descriptor.props.editable)

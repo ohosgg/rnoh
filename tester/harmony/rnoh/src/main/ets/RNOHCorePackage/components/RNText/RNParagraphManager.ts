@@ -38,6 +38,7 @@ export class RNParagraphManager extends RNViewManager {
         extraData: {
           backgroundColor: convertColorSegmentsToString(attributedFragment.backgroundColor),
           fontColor: convertColorSegmentsToString(attributedFragment.fontColor),
+          fontFamily: attributedFragment.fontFamily,
           fontSize: attributedFragment.fontSize,
           fontStyle: attributedFragment.fontStyle,
           textDecorationColor: attributedFragment.textDecorationColor,

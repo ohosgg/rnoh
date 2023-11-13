@@ -12,7 +12,7 @@ import {
   getTextShadow,
   capitalizeTextIfNecessary
 } from './conversions'
-import { AttributedFragment} from './types';
+import { AttributedFragment } from './types';
 import { TextProps, EllipsizeMode, TextDescriptor } from './types'
 
 @Component
@@ -44,6 +44,7 @@ export struct RNSimpleText {
         ForEach(this.descriptor.props.fragments, (fragment: AttributedFragment) => {
           Span(capitalizeTextIfNecessary(fragment.text, fragment.textTransform))
             .fontColor(convertColorSegmentsToString(fragment.fontColor))
+            .fontFamily(fragment.fontFamily)
             .fontWeight(fragment.fontWeight)
             .fontSize(fragment.fontSize)
             .fontStyle(stringToFontStyle(fragment.fontStyle))

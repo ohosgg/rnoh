@@ -118,7 +118,7 @@ export const ImageTest = () => {
             <View>
               <Text>{JSON.stringify(state)}</Text>
               <Image
-                source={require('../assets/fonts/DancingScript-Regular.ttf')}
+                source={require('../assets/fonts/Pacifico-Regular.ttf')}
                 onError={event => {
                   setState(event.nativeEvent.error);
                 }}

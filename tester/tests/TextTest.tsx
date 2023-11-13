@@ -97,14 +97,12 @@ export function TextTest() {
         }}
       />
       <TestSuite name="TextStyle">
-        <TestCase
-          skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/154
-          itShould="show text with the dancing script font">
+        <TestCase itShould="show text with the Pacifico Regular font">
           <View style={{height: 30, width: '100%'}}>
             <Text
               style={{
                 ...styles.blackText,
-                fontFamily: 'DancingScript-Regular',
+                fontFamily: 'Pacifico-Regular',
                 padding: 5,
               }}>
               Lorem ipsum dolor sit amet
@@ -351,6 +349,27 @@ export function TextTest() {
             </Text>
           </View>
         </TestCase>
+        <TestCase itShould="display: 'FOO''BAR' next to each other with different fonts">
+          <View
+            style={{height: 32, alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text
+              style={{
+                height: '100%',
+                backgroundColor: 'pink',
+                fontFamily: 'StintUltraCondensed-Regular',
+              }}>
+              FOO
+            </Text>
+            <Text
+              style={{
+                height: '100%',
+                backgroundColor: 'pink',
+                fontFamily: 'Pacifico-Regular',
+              }}>
+              BAR
+            </Text>
+          </View>
+        </TestCase>
         <TestCase itShould="display: 'FOO''BAR' next to each other with different letterSpacing">
           <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
             <Text
@@ -543,6 +562,11 @@ export function TextTest() {
         <TestCase itShould="show a long text without a space below or above">
           <Text>{SAMPLE_PARAGRAPH_TEXT}</Text>
         </TestCase>
+        <TestCase itShould="show a long text without a space below or above (fontFamily)">
+          <Text style={{fontFamily: 'StintUltraCondensed-Regular'}}>
+            {SAMPLE_PARAGRAPH_TEXT}
+          </Text>
+        </TestCase>
         <TestCase itShould="show a long text without a space below or above (font size)">
           <Text style={{fontSize: 8}}>{SAMPLE_PARAGRAPH_TEXT}</Text>
         </TestCase>
@@ -559,6 +583,26 @@ export function TextTest() {
               adipisicing magna reprehenderit Lorem.
             </Text>
             <Text style={{fontSize: 24}}>
+              Do ullamco excepteur quis labore Lorem mollit tempor ex minim.
+            </Text>
+            <Text>
+              Excepteur consequat officia ut incididunt consectetur qui
+              reprehenderit quis quis ut cillum ad.
+            </Text>
+          </Text>
+        </TestCase>
+        <TestCase
+          itShould="show text without a space below or above (fragments with different fonts)"
+          skip
+          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/564
+          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/565
+        >
+          <Text>
+            <Text style={{fontFamily: 'StintUltraCondensed-Regular'}}>
+              Nostrud irure ex sunt dolor [\n]{'\n'}cillum irure laboris ex ut
+              adipisicing magna reprehenderit Lorem.
+            </Text>
+            <Text style={{fontSize: 24, fontFamily: 'Pacifico-Regular'}}>
               Do ullamco excepteur quis labore Lorem mollit tempor ex minim.
             </Text>
             <Text>

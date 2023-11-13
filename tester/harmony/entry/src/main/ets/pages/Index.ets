@@ -1,6 +1,7 @@
 import { ComponentBuilderContext } from 'rnoh';
 import { RNApp, RNAbility, AnyJSBundleProvider, MetroJSBundleProvider, ResourceJSBundleProvider } from 'rnoh'
 import { SampleView, SAMPLE_VIEW_TYPE, PropsDisplayer } from "rnoh-sample-package"
+import font from '@ohos.font';
 import { createRNPackages } from '../RNPackagesFactory'
 
 @Builder
@@ -19,6 +20,21 @@ function CustomComponentBuilder(ctx: ComponentBuilderContext) {
   }
 }
 
+/**
+ * If you want to use custom fonts, you need to register them here.
+ * We should support react-native-asset to handle registering fonts automatically.
+ */
+const fonts: font.FontOptions[] = [
+  {
+    familyName: 'Pacifico-Regular',
+    familySrc: '/assets/fonts/Pacifico-Regular.ttf'
+  },
+  {
+    familyName: 'StintUltraCondensed-Regular',
+    familySrc: '/assets/fonts/StintUltraCondensed-Regular.ttf'
+  }
+]
+
 @Entry
 @Component
 struct Index {
@@ -26,6 +42,9 @@ struct Index {
   @State shouldShow: boolean = false
 
   aboutToAppear() {
+    for (const customFont of fonts) {
+      font.registerFont(customFont)
+    }
     setTimeout(() => {
       // Debugger don't work from the get-go, hence this artificial delay.
       this.shouldShow = true

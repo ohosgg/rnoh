@@ -1,6 +1,6 @@
 import { RNOHContext, convertColorSegmentsToString, Tag } from '../../../RNOH'
 import { RNViewBase } from '../RNViewBase'
-import { PositionedFragment} from '../../../ParagraphMeasurer';
+import { PositionedFragment } from '../../../ParagraphMeasurer';
 import { PositionedLine, Size, } from '../../../ParagraphMeasurer'
 import { RNParagraphManager } from './RNParagraphManager'
 import { CustomComponentBuilder } from '../RNComponentFactory'
@@ -76,6 +76,7 @@ export struct RNParagraph {
           if (positionedFragment.fragment.type === "text") {
             Text(capitalizeTextIfNecessary(positionedFragment.fragment.content, positionedFragment.fragment.extraData.textTransform))
               .fontColor(positionedFragment.fragment.extraData.fontColor)
+              .fontFamily(positionedFragment.fragment.extraData.fontFamily)
               .fontWeight(positionedFragment.fragment.extraData.fontWeight)
               .fontSize(positionedFragment.fragment.extraData.fontSize)
               .fontStyle(stringToFontStyle(positionedFragment.fragment.extraData.fontStyle))
