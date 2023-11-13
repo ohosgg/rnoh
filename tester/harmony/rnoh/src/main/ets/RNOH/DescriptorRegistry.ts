@@ -76,8 +76,7 @@ export class DescriptorRegistry {
       return;
     }
 
-    // we don't update the local state, since Fabric will
-    // supply it in a mutation
+    descriptor.state = state;
     this.setNativeStateFn(descriptor.type, tag, state);
   }
 
