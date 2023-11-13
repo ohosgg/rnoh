@@ -1,6 +1,31 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import {Text, View, VirtualizedList} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
+import {Button} from '../components';
+
+type OnScrollToIndexFailed = {
+  index: number;
+  highestMeasuredFrameIndex: number;
+  averageItemLength: number;
+};
+
+type ItemData = {
+  id: string;
+  title: string;
+};
+
+const getItem = (_data: unknown, index: number): ItemData => ({
+  id: index.toString(),
+  title: `Item ${index}`,
+});
+
+const getItemCountVirtualized = (_data: unknown): number => 50;
+
+const Item = ({title}: {title: string}) => (
+  <View style={{height: 48, padding: 16}}>
+    <Text style={{width: '100%', height: 24}}>{title}</Text>
+  </View>
+);
 
 export function VirtualizedListTest() {
   return (
@@ -16,6 +41,7 @@ export function VirtualizedListTest() {
               <Text style={{width: '100%', height: 24}}>{item}</Text>
             </View>
           )}
+          keyExtractor={(_, index) => index}
         />
       </TestCase>
       <TestCase
@@ -48,6 +74,56 @@ export function VirtualizedListTest() {
         }}
         assert={({state, expect}) => {
           expect(state).to.be.lessThanOrEqual(100);
+        }}
+      />
+      <TestCase
+        modal
+        itShould="display event sent to by onScrollToIndexFailed when pressing the button before scrolling"
+        initialState={undefined}
+        arrange={({state, setState}) => {
+          const ref = useRef<VirtualizedList<ItemData>>(null);
+
+          const handleOnPress = () => {
+            if (ref.current) {
+              ref.current.scrollToIndex({index: 20, animated: true});
+            }
+          };
+
+          return (
+            <>
+              <Button
+                label="Scroll to NOT_EXISTING index"
+                onPress={handleOnPress}
+              />
+              <View style={{height: 50, backgroundColor: 'lightblue'}}>
+                <Text>{state ? JSON.stringify(state) : ''}</Text>
+              </View>
+              <VirtualizedList<number[]>
+                initialNumToRender={5}
+                windowSize={5}
+                ref={ref}
+                style={{height: 128}}
+                getItem={getItem}
+                getItemCount={getItemCountVirtualized}
+                renderItem={({item}: {item: ItemData}) => (
+                  <Item title={item.title} />
+                )}
+                keyExtractor={(item: ItemData) => item.id}
+                onScrollToIndexFailed={(failInfo: OnScrollToIndexFailed) => {
+                  // @ts-ignore
+                  setState(failInfo);
+                }}
+              />
+            </>
+          );
+        }}
+        assert={({state, expect}) => {
+          expect(state).to.be.not.undefined;
+          expect(state).to.have.all.keys([
+            'index',
+            'highestMeasuredFrameIndex',
+            'averageItemLength',
+          ]);
         }}
       />
     </TestSuite>
