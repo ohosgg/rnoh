@@ -211,18 +211,25 @@ export function TextTest() {
           </View>
         </TestCase>
         <TestCase
-          itShould="show lined-through text with text decoration color"
+          itShould="show lined-through text with text decoration color or font color"
           skip
           //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/271
         >
-          <View style={styles.smallContainer}>
+          <View style={styles.container}>
             <Text
               style={{
                 ...styles.smallText,
                 textDecorationLine: 'line-through',
                 textDecorationColor: 'blue',
               }}>
-              line-trough blue
+              line-through blue
+            </Text>
+            <Text
+              style={{
+                ...styles.smallText,
+                textDecorationLine: 'line-through',
+              }}>
+              line-through white
             </Text>
           </View>
         </TestCase>
