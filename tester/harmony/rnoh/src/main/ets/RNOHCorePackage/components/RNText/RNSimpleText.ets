@@ -50,7 +50,7 @@ export struct RNSimpleText {
             .fontStyle(stringToFontStyle(fragment.fontStyle))
             .decoration({
               type: getTextDecorationLine(fragment.textDecorationLine),
-              color: convertColorSegmentsToString(fragment.textDecorationColor)
+              color: convertColorSegmentsToString(fragment.textDecorationColor ?? fragment.fontColor)
             })
             .lineHeight(fragment.lineHeight || (fragment.fontSize ?? 16) * (DEFAULT_LINE_SPACING + 1))
             .backgroundColor(convertColorSegmentsToString(fragment.backgroundColor))// not supported

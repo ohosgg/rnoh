@@ -82,7 +82,9 @@ export struct RNParagraph {
               .fontStyle(stringToFontStyle(positionedFragment.fragment.extraData.fontStyle))
               .decoration({
                 type: getTextDecorationLine(positionedFragment.fragment.extraData.textDecorationLine),
-                color: convertColorSegmentsToString(positionedFragment.fragment.extraData.textDecorationColor)
+                color: positionedFragment.fragment.extraData.textDecorationColor
+                  ? convertColorSegmentsToString(positionedFragment.fragment.extraData.textDecorationColor)
+                  : positionedFragment.fragment.extraData.fontColor
               })
               .backgroundColor(positionedFragment.fragment.extraData.backgroundColor)
               .letterSpacing(getLetterSpacing(positionedFragment.fragment.extraData.letterSpacing))
