@@ -5,7 +5,6 @@ import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from './RNPullToRef
 import { CustomComponentBuilder, RNComponentFactory } from './RNComponentFactory';
 
 
-
 export interface ScrollViewProps extends ViewBaseProps {
   scrollEnabled?: boolean
   contentOffsetX: number
@@ -103,7 +102,7 @@ export struct RNScrollView {
         if (command === 'scrollTo') {
           this.scrollTo(args[0], args[1], args[2]);
         } else if (command === 'scrollToEnd') {
-          this.scrollToEnd(args[0], args[1]);
+          this.scrollToEnd(args[0]);
         }
       }));
     this.componentManager = new _RNScrollViewManager(this.tag, this.ctx, this.scroller)
@@ -154,11 +153,15 @@ export struct RNScrollView {
     )
   }
 
-  scrollToEnd(animated: number, duration: number) {
-    const animation: Animation | undefined = animated ? { duration: duration || 1000, curve: Curve.Smooth } : undefined;
-    const xOffset = this.props.flexDirection === 2 ? this.contentSize.width - this.descriptor.layoutMetrics.frame.size.width : 0;
-    const yOffset = this.props.flexDirection === 2 ? 0 : this.contentSize.height - this.descriptor.layoutMetrics.frame.size.height;
-    this.scroller.scrollTo({ xOffset, yOffset, animation })
+  scrollToEnd(animated: number) {
+    if (animated) {
+      this.scroller.scrollEdge(Edge.End);
+    }
+    else {
+      const xOffset = this.props.flexDirection === 2 ? this.contentSize.width - this.descriptor.layoutMetrics.frame.size.width : 0;
+      const yOffset = this.props.flexDirection === 2 ? 0 : this.contentSize.height - this.descriptor.layoutMetrics.frame.size.height;
+      this.scroller.scrollTo({ xOffset, yOffset, animation: false })
+    }
     this.ctx.rnInstance.emitComponentEvent(
       this.tag,
       "onScroll",
