@@ -82,7 +82,6 @@ export struct RNScrollView {
   @State childrenTags: Tag[] = []
   @State descriptor: ScrollViewDescriptor = Object() as ScrollViewDescriptor
   @State descriptorWrapper: ScrollViewDescriptorWrapper | undefined = undefined
-  state: ScrollViewState = {} as ScrollViewState
   private parentTag: Tag | undefined = undefined
   private scroller = new Scroller()
   private cleanUpCallbacks: (() => void)[] = []
@@ -92,11 +91,9 @@ export struct RNScrollView {
   private allowNextScrollEvent: boolean = false
   private shouldPreventScrolling: boolean = false
 
-
   aboutToAppear() {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag)
     this.onDescriptorUpdate(descriptor)
-    this.state = descriptor.state
     this.cleanUpCallbacks.push(this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (descriptor) => this.onDescriptorUpdate(descriptor as ScrollViewDescriptor)
     ))
@@ -325,6 +322,11 @@ export struct RNScrollView {
   }
 
   onScrollEnd() {
+    const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag);
+    if (!descriptor) {
+      return;
+    }
+
     this.componentManager.setScrolling(false);
 
     // fire an additional event after the scrolling has ended
@@ -340,9 +342,9 @@ export struct RNScrollView {
     this.scrollState = ScrollState.Idle;
 
     const currentOffset: CurrentOffset = this.scroller.currentOffset();
-    this.state.contentOffsetX = currentOffset.xOffset;
-    this.state.contentOffsetY = currentOffset.yOffset;
-    this.ctx.descriptorRegistry.setState<ScrollViewState>(this.tag, this.state);
+    descriptor.state.contentOffsetX = currentOffset.xOffset;
+    descriptor.state.contentOffsetY = currentOffset.yOffset;
+    this.ctx.descriptorRegistry.setState<ScrollViewState>(this.tag, descriptor.state);
   }
 
   private shouldWrapWithPullToRefresh() {

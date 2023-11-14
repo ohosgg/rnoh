@@ -76,7 +76,6 @@ export class DescriptorRegistry {
       return;
     }
 
-    descriptor.state = state;
     this.setNativeStateFn(descriptor.type, tag, state);
   }
 
