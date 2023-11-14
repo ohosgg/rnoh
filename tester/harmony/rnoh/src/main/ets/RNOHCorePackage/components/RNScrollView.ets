@@ -88,7 +88,7 @@ export struct RNScrollView {
   private componentManager!: _RNScrollViewManager
   private lastScrollDispatchTime: number = 0
   private allowNextScrollEvent: boolean = false
-  private shouldPreventScrolling: boolean = false
+  @State shouldPreventScrolling: boolean = false
 
   aboutToAppear() {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag)
@@ -375,7 +375,10 @@ export struct RNScrollView {
       .width(this.contentSize.width)
       .height(this.contentSize.height)
       .backgroundColor(Color.Transparent)
-      .margin({ top: -Number(this.descriptorWrapper?.borderWidth.top ?? 0), left: -Number(this.descriptorWrapper?.borderWidth.left ?? 0) })
+      .margin({
+        top: -Number(this.descriptorWrapper?.borderWidth.top ?? 0),
+        left: -Number(this.descriptorWrapper?.borderWidth.left ?? 0)
+      })
     }
     .width("100%")
     .height("100%")
@@ -383,13 +386,10 @@ export struct RNScrollView {
     .scrollable(this.scrollDirection())
     .scrollBar(this.scrollBarState())
     .scrollBarColor(this.scrollBarColor())
-    .enableScrollInteraction(this.props.scrollEnabled)
+    .enableScrollInteraction(this.props.scrollEnabled && !this.shouldPreventScrolling)
     .nestedScroll({ scrollForward: NestedScrollMode.SELF_FIRST, scrollBackward: NestedScrollMode.SELF_FIRST })
     .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
     .onScrollFrameBegin((offset, state) => {
-      if (this.shouldPreventScrolling) {
-        return { offsetRemain: 0 }
-      }
       this.onScroll(offset, state)
       return { offsetRemain: offset }
     })

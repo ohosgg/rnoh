@@ -1,20 +1,21 @@
 import type UIAbility from '@ohos.app.ability.UIAbility'
 import type common from '@ohos.app.ability.common'
-import { CommandDispatcher } from "./CommandDispatcher"
-import { DescriptorRegistry } from "./DescriptorRegistry"
+import { CommandDispatcher } from './CommandDispatcher'
+import { DescriptorRegistry } from './DescriptorRegistry'
 import { ComponentManagerRegistry } from './ComponentManagerRegistry'
 import { SurfaceHandle } from './SurfaceHandle'
 import { TurboModuleProvider } from './TurboModuleProvider'
 import { EventEmitter } from './EventEmitter'
-import type { RNOHLogger } from "./RNOHLogger"
+import type { RNOHLogger } from './RNOHLogger'
 import type { NapiBridge } from './NapiBridge'
 import type { RNOHContext } from './RNOHContext'
 import { RNOHCorePackage } from '../RNOHCorePackage/ts'
+import type { JSBundleProvider } from './JSBundleProvider'
 import { JSBundleProviderError } from './JSBundleProvider'
 import type { Tag } from './DescriptorBase'
-import type { RNPackage, RNPackageContext } from "./RNPackage"
-import type { TurboModule } from "./TurboModule"
-import type { JSBundleProvider } from "./JSBundleProvider"
+import type { RNPackage, RNPackageContext } from './RNPackage'
+import type { TurboModule } from './TurboModule'
+import { RNScrollLocker } from './RNScrollLocker'
 
 export type SurfaceContext = {
   width: number
@@ -68,6 +69,7 @@ export interface RNInstance {
   commandDispatcher: CommandDispatcher;
   componentManagerRegistry: ComponentManagerRegistry;
   abilityContext: common.UIAbilityContext;
+  scrollLocker: RNScrollLocker;
 
   getLifecycleState(): LifecycleState;
 
@@ -118,6 +120,7 @@ export class RNInstanceImpl implements RNInstance {
   public componentManagerRegistry: ComponentManagerRegistry;
   private lifecycleEventEmitter = new EventEmitter<LifecycleEventArgsByEventName>()
   private componentNameByDescriptorType = new Map<string, string>()
+  public scrollLocker: RNScrollLocker;
 
   constructor(
     private id: number,
@@ -136,6 +139,7 @@ export class RNInstanceImpl implements RNInstance {
       this
     );
     this.commandDispatcher = new CommandDispatcher();
+    this.scrollLocker = new RNScrollLocker(this.componentManagerRegistry)
   }
 
   public getId(): number {

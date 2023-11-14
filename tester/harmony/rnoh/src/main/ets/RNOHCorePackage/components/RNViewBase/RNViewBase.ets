@@ -1,6 +1,6 @@
 import { Descriptor, RNOHContext, TransformMatrix } from '../../../RNOH';
 import { ViewBaseProps, ViewRawProps } from './types';
-import { ViewDescriptorWrapper } from "./ViewDescriptorWrapper"
+import { ViewDescriptorWrapper } from './ViewDescriptorWrapper';
 import { RNViewManager } from '../../componentManagers';
 import matrix4 from '@ohos.matrix4'
 
@@ -25,6 +25,9 @@ export struct RNViewBase {
   @State private descriptorWrapper: ViewDescriptorWrapper | undefined = undefined
   private unregisterDescriptorChangesListener?: () => void = undefined
   private unregisterComponentManager?: () => void = undefined
+  private unregisterCommandCallback?: () => void = undefined
+  private isResponsibleForDestroyingComponentManager: boolean = false
+  private unlockScrolling?: () => void = undefined
 
   aboutToAppear() {
     let descriptor = this.ctx.descriptorRegistry.getDescriptor<ViewBaseDescriptor>(this.tag)
@@ -40,6 +43,15 @@ export struct RNViewBase {
         this.setDescriptor(newDescriptor)
       }
     )
+    this.unregisterCommandCallback = this.ctx.commandDispatcher.registerCommandCallback(
+      this.tag,
+      (command, args: [number, number, number]) => {
+        if (command === 'lockScrolling') {
+          this.unlockScrolling = this.ctx.scrollLocker.lockScrollContainingViewTag(this.tag);
+        } else if (command === 'unlockScrolling') {
+          this.unlockScrolling?.()
+        }
+      });
   }
 
   private setDescriptor(descriptor: ViewBaseDescriptor) {
@@ -49,6 +61,7 @@ export struct RNViewBase {
   aboutToDisappear() {
     this.unregisterDescriptorChangesListener?.()
     this.unregisterComponentManager?.()
+    this.unregisterCommandCallback?.()
   }
 
   getHitTestMode() {

@@ -29,9 +29,13 @@ class SchedulerDelegate : public facebook::react::SchedulerDelegate {
     }
 
     void schedulerDidSetIsJSResponder(
-        facebook::react::ShadowView const &shadowView, bool isJSResponder, bool blockNativeResponder) override {}
-
-
+        facebook::react::ShadowView const &shadowView, bool isJSResponder, bool blockNativeResponder) override {
+        if (isJSResponder && blockNativeResponder) {
+            mountingManager.dispatchCommand(shadowView.tag, "lockScrolling", {});
+        } else {
+            mountingManager.dispatchCommand(shadowView.tag, "unlockScrolling", {});
+        }
+    }
     MountingManager mountingManager;
 };
 
