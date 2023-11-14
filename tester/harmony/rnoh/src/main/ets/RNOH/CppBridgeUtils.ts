@@ -112,15 +112,24 @@ export type TransformMatrix = [
   number
 ];
 
-export function convertMatrixArrayToMatrix4(transform: TransformMatrix) {
-  if (transform.length < 16)
-    return matrix4.identity();
-  transform = transform.slice() as TransformMatrix;
-  transform[12] = vp2px(transform[12]);
-  transform[13] = vp2px(transform[13]);
-  transform[14] = vp2px(transform[14]);
-  return matrix4.init(transform);
-}
+export type ReadonlyTransformationMatrix = readonly [
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number
+]
 
 export enum BorderEdgePropsType {
   COLOR = "Color",
@@ -168,7 +177,7 @@ export function resolveBorderEdgeProps(props: BorderMetrics, type: BorderEdgePro
   return resolvedProps;
 }
 
-export function getTransformedVector(transformMatrix: TransformMatrix, vector: Array<number>): Array<number>{
+export function getTransformedVector(transformMatrix: ReadonlyTransformationMatrix, vector: Array<number>): Array<number>{
   const resultVector = [0, 0, 0, 0]
   for (let i = 0; i < 4; ++i) {
     for (let j = 0; j < 4; ++j) {

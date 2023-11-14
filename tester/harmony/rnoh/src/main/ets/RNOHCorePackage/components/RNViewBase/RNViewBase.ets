@@ -1,19 +1,15 @@
-import {
-
-  Descriptor,
-  RNOHContext
-} from '../../../RNOH';
+import { Descriptor, RNOHContext, TransformMatrix } from '../../../RNOH';
 import { ViewBaseProps, ViewRawProps } from './types';
 import { ViewDescriptorWrapper } from "./ViewDescriptorWrapper"
 import { RNViewManager } from '../../componentManagers';
+import matrix4 from '@ohos.matrix4'
 
 export interface ViewBaseState {}
 
 export type ViewBaseDescriptor<TType = string,
 TProps extends ViewBaseProps = ViewBaseProps,
 TState extends ViewBaseState = ViewBaseState,
-TRawProps extends ViewRawProps = ViewRawProps
-> = Descriptor<TType, TProps, TState, TRawProps>;
+TRawProps extends ViewRawProps = ViewRawProps> = Descriptor<TType, TProps, TState, TRawProps>;
 
 /**
  * @deprecated: Use ViewBaseDescriptor instead.
@@ -26,7 +22,6 @@ export struct RNViewBase {
   public tag: number = 0
   public componentManager!: RNViewManager;
   @BuilderParam public renderChildren: () => void
-
   @State private descriptorWrapper: ViewDescriptorWrapper | undefined = undefined
   private unregisterDescriptorChangesListener?: () => void = undefined
   private unregisterComponentManager?: () => void = undefined
@@ -80,6 +75,18 @@ export struct RNViewBase {
     }
   }
 
+  getTransform(): undefined | matrix4.Matrix4Transit {
+    const descriptorWrapper = this.descriptorWrapper
+    if (!descriptorWrapper) {
+      return undefined
+    }
+    const rawTransformationMatrix = descriptorWrapper.rawTransformationMatrix.slice()
+    rawTransformationMatrix[12] = vp2px(rawTransformationMatrix[12]);
+    rawTransformationMatrix[13] = vp2px(rawTransformationMatrix[13]);
+    rawTransformationMatrix[14] = vp2px(rawTransformationMatrix[14]);
+    return matrix4.init(rawTransformationMatrix as TransformMatrix)
+  }
+
   build() {
     Stack() {
       this.renderChildren()
@@ -93,7 +100,7 @@ export struct RNViewBase {
     .borderRadius(this.descriptorWrapper?.borderRadius)
     .borderStyle(this.getBorderStyle())
     .opacity(this.descriptorWrapper?.opacity)
-    .transform(this.descriptorWrapper?.transformationMatrix)
+    .transform(this.getTransform())
     .clip(this.descriptorWrapper?.isClipping)
     .hitTestBehavior(this.getHitTestMode())
     .shadow(this.descriptorWrapper?.shadow)

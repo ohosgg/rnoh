@@ -2,7 +2,8 @@ import {
   convertColorValueToHex,
   convertColorValueToColorSegments,
   convertColorSegmentsToString,
-  convertMatrixArrayToMatrix4,
+  ReadonlyTransformationMatrix,
+  TransformMatrix,
   Descriptor,
   BorderStyle,
   PointerEvents,
@@ -115,11 +116,18 @@ export class ViewDescriptorWrapperBase<TType extends string = string, TProps ext
     return this.rawProps.borderStyle ?? "solid"
   }
 
-  public get transformationMatrix(): matrix4.Matrix4Transit {
+  public get rawTransformationMatrix(): ReadonlyTransformationMatrix {
     if (!('transform' in this.props)) {
-      return matrix4.identity()
+      return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
     }
-    return convertMatrixArrayToMatrix4(this.props.transform)
+    if (this.props.transform.length != 16) {
+      throw new Error("Transformation matrix must have a size of 16")
+    }
+    return this.props.transform.slice() as TransformMatrix
+  }
+
+  public get transformationMatrix(): matrix4.Matrix4Transit {
+    return matrix4.init(this.rawTransformationMatrix as TransformMatrix);
   }
 
   public get pointerEvents(): PointerEvents {
@@ -172,7 +180,7 @@ export class ViewDescriptorWrapperBase<TType extends string = string, TProps ext
      * z coordinate in RN then the sign of the z coordinate is determined directly
      * by the component's rotation and as such provides the necessary information.
      * */
-    const matrix = 'transform' in this.props ? this.props.transform : undefined
+    const matrix = this.rawTransformationMatrix
     if (this.backfaceVisibility !== "hidden" || !matrix) {
       return this.rawProps.opacity;
     }

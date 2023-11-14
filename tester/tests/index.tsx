@@ -38,6 +38,7 @@ export * from './TextInputTest';
 export * from './TextTest';
 export * from './TransformTest';
 export * from './TimerTest';
+export * from './TouchHandlingTest';
 export * from './TouchableOpacityTest';
 export * from './TouchablesTest';
 export * from './TurboModuleTest';
