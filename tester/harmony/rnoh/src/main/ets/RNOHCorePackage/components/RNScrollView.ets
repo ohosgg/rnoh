@@ -132,11 +132,13 @@ export struct RNScrollView {
     this.childrenTags = newDescriptor.childrenTags
     this.parentTag = newDescriptor.parentTag
     if (newDescriptor.props.contentOffsetX !== oldProps.contentOffsetX || newDescriptor.props.contentOffsetY !== oldProps.contentOffsetY) {
-      this.scrollToContentOffset();
+      this.scrollToPropsContentOffset();
+    } else {
+      this.scroller.scrollTo({ xOffset: this.descriptor.state.contentOffsetX, yOffset: this.descriptor.state.contentOffsetY });
     }
   }
 
-  scrollToContentOffset() {
+  scrollToPropsContentOffset() {
     const xOffset = this.props.contentOffsetX;
     const yOffset = this.props.contentOffsetY;
     this.scroller.scrollTo({ xOffset, yOffset });
@@ -398,7 +400,7 @@ export struct RNScrollView {
       this.onScrollEnd()
     })
     .onAppear(() => {
-      this.scrollToContentOffset()
+      this.scrollToPropsContentOffset()
     })
     .friction(this.getFriction())
     .scrollSnap(this.getScrollSnap())

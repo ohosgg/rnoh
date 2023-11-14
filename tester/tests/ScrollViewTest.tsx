@@ -24,7 +24,7 @@ const commonProps = {
 };
 export function ScrollViewTest() {
   return (
-    <TestSuite name="Scrollview">
+    <TestSuite name="ScrollView">
       <TestSuite name="styles">
         <TestCase
           modal

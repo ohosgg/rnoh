@@ -12,6 +12,7 @@ import {
   TogglingComponentExample,
   StickyHeadersExample,
   TesterExample,
+  TabsAndScrollViewExample,
 } from './examples';
 import {NavigationContainer, Page} from './components';
 import {Benchmarker, DeepTree, SierpinskiTriangle} from './benchmarks';
@@ -120,6 +121,9 @@ function App() {
         </Page>
         <Page name="EXAMPLE: STICKY HEADERS (example doesn't work on Android)">
           <StickyHeadersExample />
+        </Page>
+        <Page name="EXAMPLE: TABS AND SCROLL VIEW">
+          <TabsAndScrollViewExample />
         </Page>
         <View
           style={[

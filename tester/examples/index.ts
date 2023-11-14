@@ -10,3 +10,4 @@ export * from './LargeImageScrollExample';
 export * from './TogglingComponentExample';
 export * from './StickyHeadersExample';
 export * from './TestTextsExample';
+export * from './TabsAndScrollViewExample';
