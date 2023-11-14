@@ -8,6 +8,12 @@ export const ButtonTest = () => {
       <TestCase itShould="render a button with a title ">
         <ButtonView />
       </TestCase>
+      <TestCase 
+        itShould="button with touchSoundDisabled" 
+        skip // prop doesnt exist on native side https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/476
+      >
+        <ButtonTouchSoundDisabled />
+      </TestCase>
     </TestSuite>
   );
 };
@@ -30,10 +36,50 @@ function ButtonView() {
     </View>
   );
 }
+
+function ButtonTouchSoundDisabled() {
+  const [pressCounter, setPressCounter] = React.useState(0);
+  const [touchSoundDisabled, setTouchSoundDisabled] = React.useState(false);
+
+  const incrementPressCounter = () => {
+    setPressCounter(count => count + 1);
+  };
+
+  const toggle = () => {
+    setTouchSoundDisabled(!touchSoundDisabled);
+  };
+
+  return (
+    <View>
+      <View style={styles.buttonsContainer}>
+        <Button
+          title={'Press me! ' + (touchSoundDisabled ? '(no sound)' : '')}
+          color="#FF0000"
+          onPress={incrementPressCounter}
+          touchSoundDisabled={touchSoundDisabled}
+        />
+        <Button
+          title={touchSoundDisabled ? 'Enable Touch Sound' : 'Disable Touch Sound'}
+          color="#A4A4A4"
+          onPress={toggle}
+          touchSoundDisabled={false}
+        />
+      </View>
+      <Text style={styles.text}>Pressed {pressCounter} times</Text>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   buttonContainer: {
     width: 80,
     height: 80,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
   },
   text: {
     height: 20,
