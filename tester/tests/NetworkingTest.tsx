@@ -83,8 +83,6 @@ export const NetworkingTest = () => {
           const result = await response.arrayBuffer();
           expect(result.byteLength).to.be.eq(458);
         }}
-        // TODO: download data to an ArrayBuffer
-        skip
       />
       <TestCase
         itShould="download data to a blob"
