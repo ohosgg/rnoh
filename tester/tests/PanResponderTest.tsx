@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     width: 300,
   },
   scrollview: {
-    borderWidth: ,
+    borderWidth: 2,
     borderColor: 'black',
     height: 400,
     width: 300,
