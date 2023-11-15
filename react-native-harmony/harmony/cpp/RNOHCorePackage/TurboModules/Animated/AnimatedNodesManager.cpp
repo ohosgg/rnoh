@@ -10,6 +10,7 @@
 #include "Nodes/TransformAnimatedNode.h"
 #include "Nodes/InterpolationAnimatedNode.h"
 #include "Nodes/AssociativeOperationNode.h"
+#include "Nodes/DiffClampAnimatedNode.h"
 
 #include "Drivers/EventAnimationDriver.h"
 #include "Drivers/FrameBasedAnimationDriver.h"
@@ -47,6 +48,8 @@ void AnimatedNodesManager::createNode(facebook::react::Tag tag, folly::dynamic c
         node = std::make_unique<MultiplicationAnimatedNode>(config, *this);
     } else if (type == "division") {
         node = std::make_unique<DivisionAnimatedNode>(config, *this);
+    } else if (type == "diffclamp") {
+        node = std::make_unique<DiffClampAnimatedNode>(config, *this);
     } else {
         throw std::runtime_error("Unsupported animated node type: " + type);
     }

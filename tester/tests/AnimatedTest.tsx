@@ -39,6 +39,9 @@ export function AnimatedTest() {
       <TestCase itShould="move squares with different initial velocity and deceleration values">
         <Decay />
       </TestCase>
+      <TestCase itShould="move square immediately after pressing button">
+        <DiffClamp />
+      </TestCase>
       <TestCase itShould="move grey square 2x further horizontally than red">
         <Multiply />
       </TestCase>
@@ -509,6 +512,43 @@ const Multiply = () => {
     </Pressable>
   );
 };
+
+const DiffClamp = () => {
+  const square1Anim = useRef(new Animated.Value(0)).current;
+  const clamped = Animated.diffClamp(square1Anim, 0, 50);
+  const [direction, setDirection] = useState('left');
+
+  const animation = React.useRef<Animated.CompositeAnimation>();
+
+  const handleAnimation = () => {
+    animation.current?.stop();
+    animation.current = Animated.timing(square1Anim, {
+      toValue: direction === 'left' ? 400 : 0,
+      duration: 4000,
+      useNativeDriver: true,
+    });
+    setDirection(direction === 'left' ? 'right' : 'left');
+    animation.current.start();
+  };
+
+  return (
+    <Pressable style={{width: '100%'}} onPress={handleAnimation}>
+      <Animated.View
+        style={{
+          height: 50,
+          width: 50,
+          backgroundColor: 'red',
+          transform: [
+            {
+              translateX: clamped,
+            },
+          ],
+        }}
+      />
+      <Text style={{height: 20}}>Press me to start animation</Text>
+    </Pressable>
+  );
+}
 
 const ValueXY = () => {
   const square1Anim = useRef(new Animated.ValueXY({x: 50, y: 50})).current;
