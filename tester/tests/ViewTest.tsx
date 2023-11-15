@@ -1,4 +1,4 @@
-import {Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {TestSuite, TestCase} from '@rnoh/testerino';
 import React, {useState} from 'react';
 import {Button} from '../components';
@@ -47,6 +47,71 @@ export function ViewTest() {
               borderBottomEndRadius: 30,
               borderBottomStartRadius: 40,
             }}
+          />
+        </View>
+      </TestCase>
+      <TestCase itShould="render squares with borderTopStartRadius and borderTopEndRadius">
+        <View style={styles.squaresContainer}>
+          <View style={[styles.square, {borderTopStartRadius: 24}]}>
+            <Text style={styles.squareContent}>borderTopStartRadius</Text>
+          </View>
+          <View style={[styles.square, {borderTopEndRadius: 24}]}>
+            <Text style={styles.squareContent}>borderTopEndRadius</Text>
+          </View>
+          <View
+            style={[
+              styles.square,
+              {borderTopEndRadius: 24, borderTopStartRadius: 20},
+            ]}>
+            <Text style={styles.squareContent}>
+              borderTopEndRadius + borderTopStartRadius
+            </Text>
+          </View>
+        </View>
+      </TestCase>
+      <TestCase itShould="render squares with borderBottomStartRadius + borderBottomEndRadius">
+        <View style={styles.squaresContainer}>
+          <View style={[styles.square, {borderBottomStartRadius: 24}]}>
+            <Text style={styles.squareContent}>borderBottomStartRadius</Text>
+          </View>
+          <View style={[styles.square, {borderBottomEndRadius: 24}]}>
+            <Text style={styles.squareContent}>borderBottomEndRadius</Text>
+          </View>
+          <View
+            style={[
+              styles.square,
+              {borderBottomEndRadius: 24, borderBottomStartRadius: 24},
+            ]}>
+            <Text style={styles.squareContent}>
+              borderBottomStartRadius + borderBottomEndRadius
+            </Text>
+          </View>
+        </View>
+      </TestCase>
+      <TestCase itShould="render circles">
+        <View style={styles.squaresContainer}>
+          <View style={[styles.square, {borderRadius: 50}]} />
+          <View
+            style={[
+              styles.square,
+              {
+                borderBottomStartRadius: 50,
+                borderBottomEndRadius: 50,
+                borderTopStartRadius: 50,
+                borderTopEndRadius: 50,
+              },
+            ]}
+          />
+          <View
+            style={[
+              styles.square,
+              {
+                borderBottomLeftRadius: 50,
+                borderBottomRightRadius: 50,
+                borderTopLeftRadius: 50,
+                borderTopRightRadius: 50,
+              },
+            ]}
           />
         </View>
       </TestCase>
@@ -506,3 +571,23 @@ function PointerEventsView(props: {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  squaresContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'gray',
+  },
+  square: {
+    width: 100,
+    height: 100,
+    backgroundColor: 'lightblue',
+    margin: 4,
+  },
+  squareContent: {
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    height: '100%',
+  },
+});
