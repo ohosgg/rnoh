@@ -80,6 +80,10 @@ export struct RNImage {
       this.imageSource = new ImageSourceHolder($rawfile(uri.replace("asset://", "assets/")));
       return;
     }
+    if (uri.startsWith("data:")) {
+      this.imageSource = new ImageSourceHolder(uri);
+      return;
+    }
     const imageLoader = this.ctx.rnInstance.getTurboModule<ImageLoaderTurboModule>("ImageLoader");
     this.imageSource = undefined;
     imageLoader.getImageSource(uri).then(async (imageSource) => {
