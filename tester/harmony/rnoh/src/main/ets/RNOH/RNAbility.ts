@@ -59,7 +59,7 @@ export abstract class RNAbility extends UIAbility {
 
   onWindowStageCreate(windowStage: window.WindowStage) {
     this.onWindowSetup(windowStage.getMainWindowSync()).then(() => {
-      windowStage.loadContent(this.getPagePath(), this.storage, (err, data) => {
+      windowStage.loadContent(this.getPagePath(), (err, data) => {
         if (err.code) {
           hilog.error(0x0000, 'RNOH', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
           return;

@@ -26,6 +26,7 @@
 #include "RNOHCorePackage/TurboModules/WebSocketTurboModule.h"
 #include "RNOHCorePackage/TurboModules/SafeAreaTurboModule.h"
 #include "RNOHCorePackage/TurboModules/Animated/NativeAnimatedTurboModule.h"
+#include "RNOHCorePackage/TurboModules/I18nManagerTurboModule.h"
 #include "RNOHCorePackage/ComponentBinders/ViewComponentJSIBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ViewComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ImageComponentJSIBinder.h"
@@ -90,6 +91,8 @@ class RNOHCoreTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
             return std::make_shared<WebSocketTurboModule>(ctx, name);
         } else if (name == "SafeAreaTurboModule") {
             return std::make_shared<SafeAreaTurboModule>(ctx, name);
+        } else if (name == "I18nManager") {
+            return std::make_shared<I18nManagerTurboModule>(ctx, name);
         }
         return nullptr;
     };
