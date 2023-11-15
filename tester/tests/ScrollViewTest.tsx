@@ -244,6 +244,13 @@ export function ScrollViewTest() {
             </ScrollView>
           </View>
         </TestCase>
+        <TestCase itShould="[Is Laggy] support sticky headers, hidden on scroll (component 1 and 4 should stick) (stickyHeaderHiddenOnScroll)">
+          <View style={styles.wrapperView}>
+            <ScrollView stickyHeaderIndices={[0, 3]} nestedScrollEnabled stickyHeaderHiddenOnScroll>
+              {getScrollViewContent({})}
+            </ScrollView>
+          </View>
+        </TestCase>
         <TestCase
           skip
           itShould="[FAILS on Android/Harmony] support inverted sticky headers (component 13 and 20 should stick) (invertStickyHeaders)"
