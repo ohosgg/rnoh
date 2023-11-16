@@ -96,7 +96,7 @@ export struct RNScrollView {
     this.cleanUpCallbacks.push(this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (descriptor) => this.onDescriptorUpdate(descriptor as ScrollViewDescriptor)
     ))
-    this.cleanUpCallbacks.push(this.ctx.commandDispatcher.registerCommandCallback(
+    this.cleanUpCallbacks.push(this.ctx.componentCommandReceiver.registerCommandCallback(
       this.tag,
       (command, args: [number, number, number]) => {
         if (command === 'scrollTo') {

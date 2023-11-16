@@ -26,7 +26,6 @@ export struct RNViewBase {
   private unregisterDescriptorChangesListener?: () => void = undefined
   private unregisterComponentManager?: () => void = undefined
   private unregisterCommandCallback?: () => void = undefined
-  private isResponsibleForDestroyingComponentManager: boolean = false
   private unlockScrolling?: () => void = undefined
 
   aboutToAppear() {
@@ -43,7 +42,7 @@ export struct RNViewBase {
         this.setDescriptor(newDescriptor)
       }
     )
-    this.unregisterCommandCallback = this.ctx.commandDispatcher.registerCommandCallback(
+    this.unregisterCommandCallback = this.ctx.componentCommandReceiver.registerCommandCallback(
       this.tag,
       (command, args: [number, number, number]) => {
         if (command === 'lockScrolling') {

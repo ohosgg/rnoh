@@ -1,4 +1,4 @@
-export * from "./CommandDispatcher"
+export * from "./RNComponentCommandHub"
 export * from "./CppBridgeUtils"
 export * from "./DescriptorBase"
 export * from "./DescriptorRegistry"

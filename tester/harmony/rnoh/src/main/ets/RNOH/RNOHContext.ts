@@ -1,8 +1,8 @@
 import type common from '@ohos.app.ability.common';
 import type { DescriptorRegistry } from './DescriptorRegistry';
-import type { CommandDispatcher } from './CommandDispatcher';
+import type { RNComponentCommandHub, RNComponentCommandReceiver } from './RNComponentCommandHub';
 import type { RNOHLogger } from './RNOHLogger';
-import type { RNInstance } from './RNInstance';
+import type { RNInstance, RNInstanceImpl } from './RNInstance';
 import type { ComponentManagerRegistry } from './ComponentManagerRegistry';
 import { RNScrollLocker } from './RNScrollLocker';
 
@@ -11,16 +11,23 @@ export class RNOHContext {
     return this.rnInstance.descriptorRegistry;
   }
 
-  public get commandDispatcher(): CommandDispatcher {
-    return this.rnInstance.commandDispatcher;
+  /**
+   * @deprecated: Use componentCommandReceiver instead.
+   */
+  public get commandDispatcher(): RNComponentCommandHub {
+    return this.rnInstanceImpl.componentCommandHub;
+  }
+
+  public get componentCommandReceiver(): RNComponentCommandReceiver {
+    return this.rnInstanceImpl.componentCommandHub;
   }
 
   public get uiAbilityContext(): common.UIAbilityContext {
-    return this.rnInstance.abilityContext
+    return this.rnInstance.abilityContext;
   }
 
   public get componentManagerRegistry(): ComponentManagerRegistry {
-    return this.rnInstance.componentManagerRegistry
+    return this.rnInstance.componentManagerRegistry;
   }
 
   public get scrollLocker(): RNScrollLocker {
@@ -31,11 +38,17 @@ export class RNOHContext {
    * @deprecated Use `rnInstance` instead.
    */
   public get rnInstanceManager(): RNInstance {
-    return this.rnInstance
+    return this.rnInstance;
   }
 
-  constructor(public reactNativeVersion: string,
-              public rnInstance: RNInstance,
-              public logger: RNOHLogger
-  ) {}
+  public get rnInstance(): RNInstance {
+    return this.rnInstanceImpl
+  }
+
+  constructor(
+    public reactNativeVersion: string,
+    private rnInstanceImpl: RNInstanceImpl,
+    public logger: RNOHLogger,
+  ) {
+  }
 }

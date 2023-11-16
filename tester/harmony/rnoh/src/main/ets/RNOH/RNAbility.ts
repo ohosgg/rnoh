@@ -7,7 +7,7 @@ import hilog from '@ohos.hilog';
 import type { TurboModuleProvider } from "./TurboModuleProvider"
 import libRNOHApp from 'librnoh_app.so'
 import { RNInstanceRegistry } from './RNInstanceRegistry';
-import type { RNInstance, RNInstanceOptions } from './RNInstance';
+import { RNInstance, RNInstanceOptions, RNInstanceImpl } from './RNInstance';
 import { RNOHContext } from "./RNOHContext"
 
 export abstract class RNAbility extends UIAbility {
@@ -41,7 +41,10 @@ export abstract class RNAbility extends UIAbility {
     this.rnInstanceRegistry.deleteInstance(rnInstance.getId())
   }
 
-  public createRNOHContext({rnInstance}: Pick<RNOHContext, "rnInstance">) {
+  public createRNOHContext({rnInstance}: { rnInstance: RNInstance }) {
+    if (!(rnInstance instanceof RNInstanceImpl)) {
+      throw new Error("RNInstance must extends RNInstanceImpl")
+    }
     return new RNOHContext("0.0.0", rnInstance, this.logger)
   }
 

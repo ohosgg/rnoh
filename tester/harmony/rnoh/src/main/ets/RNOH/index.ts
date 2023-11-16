@@ -1,4 +1,4 @@
-export * from "./CommandDispatcher"
+export * from "./RNComponentCommandHub"
 export * from "./CppBridgeUtils"
 export * from "./DescriptorBase"
 export * from "./DescriptorRegistry"
@@ -20,4 +20,3 @@ export * from "./ComponentManagerRegistry"
 export * from './EventEmitter'
 export * from './types'
 export * from './TouchTargetHelper'
-export * from "./RNTypes"

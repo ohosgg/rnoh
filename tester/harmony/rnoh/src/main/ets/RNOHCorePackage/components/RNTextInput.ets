@@ -136,7 +136,7 @@ export struct RNTextInput {
         this.onDescriptorChange(newDescriptor as TextInputDescriptor);
       }
     )
-    this.cleanupCommandCallback = this.ctx.commandDispatcher.registerCommandCallback(
+    this.cleanupCommandCallback = this.ctx.componentCommandReceiver.registerCommandCallback(
       this.tag,
       (command, args: Object[]) => {
         if (command === 'blur') {

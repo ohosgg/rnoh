@@ -1,6 +1,6 @@
 import type UIAbility from '@ohos.app.ability.UIAbility'
 import type common from '@ohos.app.ability.common'
-import { CommandDispatcher } from './CommandDispatcher'
+import { CommandDispatcher, RNComponentCommandHub } from './RNComponentCommandHub'
 import { DescriptorRegistry } from './DescriptorRegistry'
 import { ComponentManagerRegistry } from './ComponentManagerRegistry'
 import { SurfaceHandle } from './SurfaceHandle'
@@ -66,6 +66,9 @@ const rootDescriptor = {
 
 export interface RNInstance {
   descriptorRegistry: DescriptorRegistry;
+  /**
+   * @deprecated Use RNOHContext::componentCommandReceiver
+   */
   commandDispatcher: CommandDispatcher;
   componentManagerRegistry: ComponentManagerRegistry;
   abilityContext: common.UIAbilityContext;
@@ -116,11 +119,18 @@ export class RNInstanceImpl implements RNInstance {
   private lifecycleState: LifecycleState = LifecycleState.BEFORE_CREATE
   private bundleExecutionStatusByBundleURL: Map<string, BundleExecutionStatus> = new Map()
   public descriptorRegistry: DescriptorRegistry;
-  public commandDispatcher: CommandDispatcher;
+  public componentCommandHub: CommandDispatcher;
   public componentManagerRegistry: ComponentManagerRegistry;
   private lifecycleEventEmitter = new EventEmitter<LifecycleEventArgsByEventName>()
   private componentNameByDescriptorType = new Map<string, string>()
   public scrollLocker: RNScrollLocker;
+
+  /**
+   * @deprecated
+   */
+  public get commandDispatcher() {
+    return this.componentCommandHub
+  }
 
   constructor(
     private id: number,
@@ -138,7 +148,7 @@ export class RNInstanceImpl implements RNInstance {
       this.updateState.bind(this),
       this
     );
-    this.commandDispatcher = new CommandDispatcher();
+    this.componentCommandHub = new RNComponentCommandHub();
     this.scrollLocker = new RNScrollLocker(this.componentManagerRegistry)
   }
 
@@ -152,7 +162,7 @@ export class RNInstanceImpl implements RNInstance {
     this.napiBridge.subscribeToShadowTreeChanges(this.id, (mutations) => {
       this.descriptorRegistry.applyMutations(mutations)
     }, (tag, commandName, args) => {
-      this.commandDispatcher.dispatchCommand(tag, commandName, args)
+      this.componentCommandHub.dispatchCommand(tag, commandName, args)
     })
   }
 
@@ -269,5 +279,4 @@ export class RNInstanceImpl implements RNInstance {
     return descriptorType
   }
 }
-
 
