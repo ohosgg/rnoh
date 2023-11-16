@@ -1,12 +1,23 @@
 import { Descriptor} from '../../RNOH';
 import { RNOHContext } from '../../RNOH'
 
-export interface PullToRefreshProps {
+export interface PullToRefreshProps {}
+
+export interface PullToRefreshRawProps {
   refreshing?: boolean
+  progressViewOffset?: number
+  tintColor?: string
+}
+
+export interface PullToRefreshState {}
+
+export interface RefreshLoadingProgressBuilderParams {
+  progressOffsetView?: number
+  tintColor?: ResourceColor
 }
 
 export const RN_PULL_TO_REFRESH_VIEW_NAME: string = "PullToRefreshView"
-export type PullToRefreshDescriptor = Descriptor<"PullToRefreshView", PullToRefreshProps>
+export type PullToRefreshDescriptor = Descriptor<"PullToRefreshView", PullToRefreshProps, PullToRefreshState, PullToRefreshRawProps>
 
 @Component
 export struct RNPullToRefreshView {
@@ -33,7 +44,7 @@ export struct RNPullToRefreshView {
 
   onDescriptorChange(descriptor: PullToRefreshDescriptor) {
     this.descriptor = descriptor
-    this.isRefreshing = !!this.descriptor.props.refreshing
+    this.isRefreshing = !!this.descriptor.rawProps.refreshing
   }
 
   handleRefresh() {
@@ -53,15 +64,28 @@ export struct RNPullToRefreshView {
      * that second change is ignored.
      */
     setTimeout(() => {
-      if (!this.descriptor.props.refreshing) {
+      if (!this.descriptor.rawProps.refreshing) {
         this.isRefreshing = false
       }
     }, 500)
   }
 
+  @Builder
+  RefreshLoadingProgress(params: RefreshLoadingProgressBuilderParams) {
+    LoadingProgress()
+      .width('112px')
+      .height('112px')
+      .color(params.tintColor)
+      .margin({ top: `${params.progressOffsetView}px` ?? 0 })
+  }
+
   build() {
     Refresh({
-      refreshing: $$this.isRefreshing
+      refreshing: $$this.isRefreshing,
+      builder: this.RefreshLoadingProgress({
+        progressOffsetView: this.descriptor.rawProps.progressViewOffset,
+        tintColor: this.descriptor.rawProps.tintColor,
+      }),
     }) {
       this.renderDescriptors();
     }

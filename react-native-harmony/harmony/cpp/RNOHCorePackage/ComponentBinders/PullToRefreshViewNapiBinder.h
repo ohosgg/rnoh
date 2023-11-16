@@ -17,7 +17,6 @@ class PullToRefreshViewNapiBinder : public ViewComponentNapiBinder {
         napi_value napiBaseProps = ViewComponentNapiBinder::createProps(env, shadowView);
         auto propsBuilder = arkJs.getObjectBuilder(napiBaseProps);
 
-        propsBuilder.addProperty("refreshing", pullToRefreshViewProps->refreshing);
         return propsBuilder.build();
     };
 };

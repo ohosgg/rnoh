@@ -24,7 +24,7 @@ export function stringToVerticalAlign(textAlignVertical: string) {
     case "center":
       return Alignment.Start
     default:
-      return undefined
+      return Alignment.TopStart
   }
 }
 
