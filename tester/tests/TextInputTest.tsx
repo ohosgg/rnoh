@@ -232,6 +232,10 @@ export function TextInputTest() {
           <TextInputKeyboardType keyboardType="url" />
         </View>
       </TestCase>
+      <TestCase modal itShould="render textinput with readonly">
+        {/* @ts-ignore */}
+        <TextInputWithText style={styles.textInput} readOnly />
+      </TestCase>
     </TestSuite>
   );
 }
