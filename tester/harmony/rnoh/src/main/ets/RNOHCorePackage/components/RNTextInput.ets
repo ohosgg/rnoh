@@ -22,6 +22,7 @@ export interface TextInputProps extends ViewBaseProps {
 
 export interface TextInputRawProps {
   maxLength?: number
+  focusable?: boolean
 }
 
 interface TextInputState {}
@@ -165,6 +166,10 @@ export struct RNTextInput {
     this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "onSubmitEditing", this.value)
   }
 
+  isFocusable(): boolean {
+    return this.descriptor.rawProps.focusable ?? false
+  }
+
   build() {
     RNViewBase({ ctx: this.ctx, tag: this.tag }) {
       // patch: solve autofocus issues
@@ -198,6 +203,7 @@ export struct RNTextInput {
           .backgroundColor(Color.Transparent)
           .onFocus(() => this.onFocusEvent())
           .onBlur(() => this.onBlurEvent())
+          .focusable(this.isFocusable())
       } else {
         TextInput({
           controller: this.inputController,
@@ -229,6 +235,7 @@ export struct RNTextInput {
           .onSubmit(() => this.onSubmitEditing())
           .onFocus(() => this.onFocusEvent())
           .onBlur(() => this.onBlurEvent())
+          .focusable(this.isFocusable())
       }
     }
   }

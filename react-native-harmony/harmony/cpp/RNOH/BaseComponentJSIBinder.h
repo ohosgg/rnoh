@@ -21,6 +21,7 @@ class BaseComponentJSIBinder : public ComponentJSIBinder {
         nativeProps.setProperty(rt, "onLayout", true);
         nativeProps.setProperty(rt, "pointerEvents", "string");
         nativeProps.setProperty(rt, "collapsable", "boolean");
+        nativeProps.setProperty(rt, "focusable", "boolean");
         return nativeProps;
     }
 

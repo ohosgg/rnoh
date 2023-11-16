@@ -9,19 +9,23 @@ export struct RNView {
   @BuilderParam public buildCustomComponent: (ctx: ComponentBuilderContext) => void
 
   @State private childrenTags: Tag[] = []
+  @State private isFocusable: boolean = false
   private cleanupCallback?: () => void = undefined
 
   aboutToAppear() {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ViewBaseDescriptor>(this.tag)
     if (descriptor) {
-      this.childrenTags = descriptor.childrenTags
+      this.updateDescriptor(descriptor)
     }
     this.cleanupCallback = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(
       this.tag,
-      (newDescriptor) => {
-        this.childrenTags = newDescriptor.childrenTags
-      }
+      (newDescriptor) => this.updateDescriptor(newDescriptor)
     )
+  }
+
+  updateDescriptor(descriptor: ViewBaseDescriptor) {
+    this.childrenTags = descriptor.childrenTags;
+    this.isFocusable = descriptor.rawProps.focusable ?? false;
   }
 
   aboutToDisappear() {
@@ -32,6 +36,7 @@ export struct RNView {
     RNViewBase({
       ctx: this.ctx,
       tag: this.tag,
+      isFocusable: this.isFocusable,
     }) {
       ForEach(this.childrenTags, (childrenTag: Tag) => {
         RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })

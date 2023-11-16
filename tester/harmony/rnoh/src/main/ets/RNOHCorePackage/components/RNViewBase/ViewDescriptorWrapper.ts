@@ -7,7 +7,6 @@ import {
   Descriptor,
   BorderStyle,
   PointerEvents,
-  ShadowStyleIOS,
   getTransformedVector,
   DescriptorWrapper,
   Edges,
@@ -15,7 +14,7 @@ import {
 } from "../../../RNOH"
 import { ViewBaseProps, ViewRawProps } from "./types"
 import matrix4 from '@ohos.matrix4'
-
+import { ShadowStyleIOS } from '../../../RNOH/RNTypes'
 
 
 function mapEdge<T, R>(edges: Edges<T>, cb: (value: T, key: keyof Edges<T>) => R): Edges<R> {
@@ -203,6 +202,10 @@ export class ViewDescriptorWrapperBase<TType extends string = string, TProps ext
       right: this.rawProps.hitSlop?.right ?? 0,
       bottom: this.rawProps.hitSlop?.bottom ?? 0,
     }
+  }
+
+  public get focusable(): boolean {
+    return this.rawProps.focusable ?? false
   }
 }
 

@@ -22,6 +22,7 @@ export struct RNViewBase {
   public tag: number = 0
   public componentManager!: RNViewManager;
   @BuilderParam public renderChildren: () => void
+  @Prop public isFocusable: boolean = false
   @State private descriptorWrapper: ViewDescriptorWrapper | undefined = undefined
   private unregisterDescriptorChangesListener?: () => void = undefined
   private unregisterComponentManager?: () => void = undefined
@@ -117,5 +118,6 @@ export struct RNViewBase {
     .hitTestBehavior(this.getHitTestMode())
     .shadow(this.descriptorWrapper?.shadow)
     .id(this.tag.toString())
+    .focusable(this.isFocusable)
   }
 }

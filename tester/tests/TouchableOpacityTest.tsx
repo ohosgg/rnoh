@@ -7,8 +7,13 @@ export const TouchableOpacityTest = () => {
   const [onLayoutTestText, setOnLayoutTestText] = useState('');
   return (
     <TestSuite name="TouchableOpacity">
-      <TestCase itShould="make the text less visible on press">
-        <TouchableOpacity onPress={() => {}}>
+    <TestCase itShould="make the text less visible on press">
+      <TouchableOpacity onPress={() => {}}>
+        <PressMe />
+      </TouchableOpacity>
+    </TestCase>
+      <TestCase itShould="make the text slightly less visible on press (activeOpacity)">
+        <TouchableOpacity activeOpacity={0.5} onPress={() => {}}>
           <PressMe />
         </TouchableOpacity>
       </TestCase>

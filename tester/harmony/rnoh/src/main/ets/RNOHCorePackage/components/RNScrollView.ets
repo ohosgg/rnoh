@@ -417,6 +417,7 @@ export struct RNScrollView {
     })
     .friction(this.getFriction())
     .scrollSnap(this.getScrollSnap())
+    .focusable(this.descriptor.rawProps.focusable ?? false)
   }
 
   build() {

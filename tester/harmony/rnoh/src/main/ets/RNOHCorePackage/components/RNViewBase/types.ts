@@ -1,11 +1,8 @@
 import type {
-  LayoutProps,
   ColorSegments,
   TransformMatrix,
-  OverflowMode,
-  PointerEvents,
-  ViewStyle
 } from '../../../RNOH'
+import { ViewStyle } from '../../../RNOH/RNTypes'
 
 export type BackfaceVisibility = "visible" | "hidden"
 
@@ -24,6 +21,7 @@ export interface HitSlop {
 
 export type ViewRawProps = ViewStyle & {
   hitSlop?: HitSlop
+  focusable?: boolean
 }
 
 /**

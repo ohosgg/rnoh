@@ -1,6 +1,6 @@
 import { ColorSegments, Descriptor} from '../../RNOH';
 import { convertColorSegmentsToString, RNOHContext } from '../../RNOH'
-import { ViewBaseProps} from './RNViewBase';
+import { ViewBaseProps, ViewRawProps } from './RNViewBase';
 import { RNViewBase } from './RNViewBase'
 
 export interface SwitchProps extends ViewBaseProps {
@@ -10,7 +10,7 @@ export interface SwitchProps extends ViewBaseProps {
   disabled?: boolean
 }
 
-export type SwitchDescriptor = Descriptor<"Switch", SwitchProps>
+export type SwitchDescriptor = Descriptor<"Switch", SwitchProps, object, ViewRawProps>
 
 @Component
 export struct RNSwitch {
@@ -56,6 +56,7 @@ export struct RNSwitch {
         .switchPointColor(convertColorSegmentsToString(this.descriptor.props.thumbColor))
         .onChange((isOn) => { this.onChange(isOn) })
         .enabled(!this.descriptor.props.disabled)
+        .focusable(this.descriptor.rawProps.focusable ?? false)
     }
   }
 }
