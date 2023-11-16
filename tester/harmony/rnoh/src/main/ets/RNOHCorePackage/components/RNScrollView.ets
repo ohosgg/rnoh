@@ -1,4 +1,4 @@
-import { Descriptor, RNOHContext, Size, Tag } from '../../RNOH';
+import { Descriptor, RNOHContext, Size, Tag, Position } from '../../RNOH';
 import { _RNScrollViewManager } from '../componentManagers/RNScrollViewManager';
 import { RNViewBase, ViewBaseProps, ViewDescriptorWrapperBase, ViewRawProps } from './RNViewBase';
 import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from './RNPullToRefreshView';
@@ -32,7 +32,6 @@ export interface ScrollViewState {
 }
 
 class ScrollViewDescriptorWrapper extends ViewDescriptorWrapperBase<"ScrollView", ScrollViewProps, ScrollViewState, ScrollViewRawProps> {
-
 }
 
 enum IndicatorStyle {
@@ -88,6 +87,7 @@ export struct RNScrollView {
   private componentManager!: _RNScrollViewManager
   private lastScrollDispatchTime: number = 0
   private allowNextScrollEvent: boolean = false
+  private contentOffset: Position = { x: 0, y: 0 }
   @State shouldPreventScrolling: boolean = false
 
   aboutToAppear() {
@@ -120,7 +120,8 @@ export struct RNScrollView {
   }
 
   onDescriptorUpdate(newDescriptor: ScrollViewDescriptor) {
-    const oldProps = this.props
+    const prevState = this.descriptor.state
+    const prevProps = this.props
     this.props = newDescriptor.props
     this.descriptor = newDescriptor
     this.descriptorWrapper = new ScrollViewDescriptorWrapper(newDescriptor)
@@ -130,10 +131,18 @@ export struct RNScrollView {
     }
     this.childrenTags = newDescriptor.childrenTags
     this.parentTag = newDescriptor.parentTag
-    if (newDescriptor.props.contentOffsetX !== oldProps.contentOffsetX || newDescriptor.props.contentOffsetY !== oldProps.contentOffsetY) {
+    if (newDescriptor.props.contentOffsetX !== prevProps.contentOffsetX || newDescriptor.props.contentOffsetY !== prevProps.contentOffsetY) {
       this.scrollToPropsContentOffset();
-    } else {
-      this.scroller.scrollTo({ xOffset: this.descriptor.state.contentOffsetX, yOffset: this.descriptor.state.contentOffsetY });
+    } else if (this.descriptor.state.contentSizeWidth !== prevState.contentSizeWidth || this.descriptor.state.contentSizeHeight !== prevState.contentSizeHeight) {
+      /**
+       * When a scroll content is removed, and it appears again without scrolling, scroll should remain in the original position.
+       * This behavior was observed on Android. Local contentOffset is used, to use the most recent position.
+       * The contentOffset in the descriptor's state might be delayed.
+       */
+      this.scroller.scrollTo({
+        xOffset: this.contentOffset.x,
+        yOffset: this.contentOffset.y
+      });
     }
   }
 
@@ -349,6 +358,7 @@ export struct RNScrollView {
     const currentOffset: CurrentOffset = this.scroller.currentOffset();
     descriptor.state.contentOffsetX = currentOffset.xOffset;
     descriptor.state.contentOffsetY = currentOffset.yOffset;
+    this.contentOffset = { x: currentOffset.xOffset, y: currentOffset.yOffset }
     this.ctx.descriptorRegistry.setState<ScrollViewState>(this.tag, descriptor.state);
   }
 

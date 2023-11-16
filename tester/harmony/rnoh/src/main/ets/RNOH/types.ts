@@ -3,6 +3,11 @@ export type Point = {
   y: number,
 }
 
+export type Position = {
+  x: number,
+  y: number,
+}
+
 export type BoundingBox = {
   left: number,
   right: number,
