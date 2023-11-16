@@ -1,6 +1,5 @@
 bundle.harmony.js
 package-lock.json
-harmony/entry/src/main/ets/assets/
 *.hbc
 
 # ---
