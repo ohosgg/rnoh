@@ -17,8 +17,10 @@ export class I18nManagerTurboModule extends TurboModule {
   }
 
   getConstants() {
+    const isRTL = I18n.isRTL(AppStorage.get<string>("languageCode"))
     return {
-      isRTL: I18n.isRTL(AppStorage.get<string>("languageCode"))
+      isRTL: isRTL,
+      doLeftAndRightSwapInRTL: true // e.g. should swap OK and CANCEL buttons
     };
   }
 }
