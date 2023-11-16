@@ -22,6 +22,9 @@ export function TextInputTest() {
       <TestCase modal itShould="render non-editable textInput">
         <TextInputWithText style={styles.textInput} editable={false} />
       </TestCase>
+      <TestCase modal itShould="render unfocusable text input">
+        <TextInputWithText style={styles.textInput} focusable={false} />
+      </TestCase>
       <TestCase modal itShould="render textInput with Pacifico Regular font">
         <TextInputWithText
           style={[styles.textInput, {fontFamily: 'Pacifico-Regular'}]}
