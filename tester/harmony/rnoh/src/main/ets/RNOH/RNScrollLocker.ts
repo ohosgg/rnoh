@@ -1,4 +1,6 @@
-import { ComponentManagerRegistry, RNScrollViewManager, RNViewManager, Tag } from 'rnoh/ts'
+import { ComponentManagerRegistry } from './ComponentManagerRegistry';
+import { Tag } from './DescriptorBase';
+import { RNScrollViewManager, RNViewManager } from '../RNOHCorePackage/ts';
 
 export class RNScrollLocker {
   public constructor(private componentManagerRegistry: ComponentManagerRegistry) {
