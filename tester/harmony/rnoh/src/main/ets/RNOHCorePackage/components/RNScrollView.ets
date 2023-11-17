@@ -155,11 +155,7 @@ export struct RNScrollView {
   scrollTo(xOffset: number, yOffset: number, animated: number) {
     const animation: Animation | undefined = animated ? { duration: 1000, curve: Curve.Smooth } : undefined;
     this.scroller.scrollTo({ xOffset, yOffset, animation })
-    this.ctx.rnInstance.emitComponentEvent(
-      this.tag,
-      "onScroll",
-      this.createScrollEvent()
-    )
+    this.contentOffset = {x: xOffset, y: yOffset};
   }
 
   scrollToEnd(animated: number) {
@@ -171,11 +167,6 @@ export struct RNScrollView {
       const yOffset = this.props.flexDirection === 2 ? 0 : this.contentSize.height - this.descriptor.layoutMetrics.frame.size.height;
       this.scroller.scrollTo({ xOffset, yOffset, animation: false })
     }
-    this.ctx.rnInstance.emitComponentEvent(
-      this.tag,
-      "onScroll",
-      this.createScrollEvent()
-    )
   }
 
   scrollDirection(): ScrollDirection {
