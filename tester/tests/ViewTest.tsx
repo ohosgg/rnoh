@@ -519,6 +519,11 @@ export function ViewTest() {
           }}
         />
       </TestCase>
+      <TestCase itShould="render a view with role">
+        <View role="alert">
+          <Text>Alert</Text>
+        </View>
+      </TestCase>
     </TestSuite>
   );
 }

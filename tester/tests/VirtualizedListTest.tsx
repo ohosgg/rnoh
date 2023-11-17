@@ -16,13 +16,13 @@ type ItemData = {
 
 const getItem = (_data: unknown, index: number): ItemData => ({
   id: index.toString(),
-  title: `Item ${index}`,
+  title: `Item ${index + 1}`,
 });
 
 const getItemCountVirtualized = (_data: unknown): number => 50;
 
 const Item = ({title}: {title: string}) => (
-  <View style={{height: 48, padding: 16}}>
+  <View style={{height: 48, padding: 16, borderBottomWidth: 1}}>
     <Text style={{width: '100%', height: 24}}>{title}</Text>
   </View>
 );
@@ -41,7 +41,7 @@ export function VirtualizedListTest() {
               <Text style={{width: '100%', height: 24}}>{item}</Text>
             </View>
           )}
-          keyExtractor={(_, index) => index}
+          keyExtractor={(_, index) => String(index)}
         />
       </TestCase>
       <TestCase
@@ -98,7 +98,7 @@ export function VirtualizedListTest() {
               <View style={{height: 50, backgroundColor: 'lightblue'}}>
                 <Text>{state ? JSON.stringify(state) : ''}</Text>
               </View>
-              <VirtualizedList<number[]>
+              <VirtualizedList
                 initialNumToRender={5}
                 windowSize={5}
                 ref={ref}
@@ -126,6 +126,71 @@ export function VirtualizedListTest() {
           ]);
         }}
       />
+      <TestCase modal itShould="scrollToIndex">
+        <VirtualizedListScrollToIndexTest />
+      </TestCase>
+      <TestCase modal itShould="scrollToItem">
+        <VirtualizedListScrollToItemTest />
+      </TestCase>
     </TestSuite>
+  );
+}
+
+const GENERATED_DATA = Array.from({length: 100}, (_, index) => ({
+  id: String(index),
+  title: `Item ${index + 1}`,
+}));
+
+function VirtualizedListScrollToIndexTest() {
+  const ref = useRef<VirtualizedList<ItemData>>(null);
+
+  const handleOnPress = () => {
+    if (ref.current) {
+      ref.current?.scrollToIndex({index: 10, animated: true});
+    }
+  };
+
+  return (
+    <>
+      <Button label="Scroll to index = 10" onPress={handleOnPress} />
+      <VirtualizedList
+        ref={ref}
+        style={{height: 128}}
+        getItem={(_, index: number) => GENERATED_DATA[index]}
+        getItemCount={() => GENERATED_DATA.length}
+        renderItem={({item}: {item: ItemData}) => <Item title={item.title} />}
+        keyExtractor={(item: ItemData) => item.id}
+      />
+    </>
+  );
+}
+
+function VirtualizedListScrollToItemTest() {
+  const ref = useRef<VirtualizedList<ItemData>>(null);
+
+  const handleOnPress = () => {
+    if (ref.current) {
+      ref.current.scrollToItem({item: GENERATED_DATA[2], animated: true});
+    }
+  };
+
+  return (
+    <>
+      <Button label="Scroll to item = 3" onPress={handleOnPress} />
+      <VirtualizedList
+        ref={ref}
+        style={{height: 256}}
+        data={GENERATED_DATA}
+        getItem={(_, index: number) => GENERATED_DATA[index]}
+        getItemCount={() => GENERATED_DATA.length}
+        getItemLayout={(_, index: number) => ({
+          length: 48,
+          offset: 48 * index,
+          index,
+        })}
+        renderItem={({item}: {item: ItemData}) => <Item title={item.title} />}
+        keyExtractor={(item: ItemData) => item.id}
+      />
+    </>
   );
 }
