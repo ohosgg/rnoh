@@ -66,6 +66,7 @@ const rootDescriptor = {
 
 export interface RNInstance {
   descriptorRegistry: DescriptorRegistry;
+
   /**
    * @deprecated Use RNOHContext::componentCommandReceiver
    */
@@ -158,12 +159,16 @@ export class RNInstanceImpl implements RNInstance {
 
   public async initialize(packages: RNPackage[]) {
     this.turboModuleProvider = (await this.processPackages(packages)).turboModuleProvider
-    this.napiBridge.initializeReactNative(this.id, this.turboModuleProvider)
-    this.napiBridge.subscribeToShadowTreeChanges(this.id, (mutations) => {
-      this.descriptorRegistry.applyMutations(mutations)
-    }, (tag, commandName, args) => {
-      this.componentCommandHub.dispatchCommand(tag, commandName, args)
-    })
+    this.napiBridge.createReactNativeInstance(
+      this.id,
+      this.turboModuleProvider,
+      (mutations) => {
+        this.descriptorRegistry.applyMutations(mutations)
+      },
+      (tag, commandName, args) => {
+        this.componentCommandHub.dispatchCommand(tag, commandName, args)
+      },
+    )
   }
 
   private async processPackages(packages: RNPackage[]) {

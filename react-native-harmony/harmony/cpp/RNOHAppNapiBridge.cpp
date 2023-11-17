@@ -17,30 +17,20 @@ using namespace rnoh;
 std::unordered_map<size_t, std::unique_ptr<RNInstance>> rnInstanceById;
 auto uiTicker = std::make_shared<UITicker>();
 
-static napi_value initializeReactNative(napi_env env, napi_callback_info info) {
+static napi_value createReactNativeInstance(napi_env env, napi_callback_info info) {
     LogSink::initializeLogging();
-    LOG(INFO) << "initializeReactNative"
-              << "\n";
+    LOG(INFO) << "createReactNativeInstance";
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 3);
+    auto args = arkJs.getCallbackArgs(info, 5);
     size_t instanceId = arkJs.getDouble(args[0]);
     auto arkTsTurboModuleProviderRef = arkJs.createReference(args[1]);
-    auto measureTextFnRef = arkJs.createReference(args[2]);
-    auto rnInstance = createRNInstance(instanceId, env, arkTsTurboModuleProviderRef, measureTextFnRef, uiTicker);
-    auto [it, inserted] = rnInstanceById.insert_or_assign(instanceId, std::move(rnInstance));
-    it->second->start();
-    return arkJs.getUndefined();
-}
-
-static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info info) {
-    LOG(INFO) << "subscribeToShadowTreeChanges\n";
-    ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 3);
-    size_t instanceId = arkJs.getDouble(args[0]);
-    auto &rnInstance = rnInstanceById.at(instanceId);
-    auto listener_ref = arkJs.createReference(args[1]);
-    auto commandDispatcherRef = arkJs.createReference(args[2]);
-    rnInstance->registerSurface(
+    auto listener_ref = arkJs.createReference(args[2]);
+    auto commandDispatcherRef = arkJs.createReference(args[3]);
+    auto measureTextFnRef = arkJs.createReference(args[4]);
+    auto rnInstance = createRNInstance(
+        instanceId,
+        env,
+        arkTsTurboModuleProviderRef,
         [env, listener_ref](MutationsToNapiConverter mutationsToNapiConverter, auto const &mutations) {
             ArkJS arkJs(env);
             auto napiMutations = mutationsToNapiConverter.convert(env, mutations);
@@ -54,13 +44,20 @@ static napi_value subscribeToShadowTreeChanges(napi_env env, napi_callback_info 
             std::array<napi_value, 3> napiArgsArray = {arkJs.createDouble(tag), arkJs.createString(commandName), napiArgs};
             auto commandDispatcher = arkJs.getReferenceValue(commandDispatcherRef);
             arkJs.call<3>(commandDispatcher, napiArgsArray);
-        });
+        },
+        measureTextFnRef,
+        uiTicker);
+
+    if (rnInstanceById.find(instanceId) != rnInstanceById.end()) {
+        throw std::invalid_argument("RNInstance with the following id " + std::to_string(instanceId) + " has been already created");
+    }
+    auto [it, _inserted] = rnInstanceById.emplace(instanceId, std::move(rnInstance));
+    it->second->start();
     return arkJs.getUndefined();
 }
 
 static napi_value loadScript(napi_env env, napi_callback_info info) {
-    LOG(INFO) << "loadScript"
-              << "\n";
+    LOG(INFO) << "loadScript";
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 4);
     size_t instanceId = arkJs.getDouble(args[0]);
@@ -237,8 +234,7 @@ static napi_value updateState(napi_env env, napi_callback_info info) {
 EXTERN_C_START
 static napi_value Init(napi_env env, napi_value exports) {
     napi_property_descriptor desc[] = {
-        {"subscribeToShadowTreeChanges", nullptr, subscribeToShadowTreeChanges, nullptr, nullptr, nullptr, napi_default, nullptr},
-        {"initializeReactNative", nullptr, initializeReactNative, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"createReactNativeInstance", nullptr, createReactNativeInstance, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"loadScript", nullptr, loadScript, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"startSurface", nullptr, startSurface, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"stopSurface", nullptr, stopSurface, nullptr, nullptr, nullptr, napi_default, nullptr},

@@ -24,7 +24,13 @@
 
 using namespace rnoh;
 
-std::unique_ptr<RNInstance> createRNInstance(int id, napi_env env, napi_ref arkTsTurboModuleProviderRef, napi_ref measureTextFnRef, UITicker::Shared uiTicker) {
+std::unique_ptr<RNInstance> createRNInstance(int id,
+                                             napi_env env,
+                                             napi_ref arkTsTurboModuleProviderRef,
+                                             MutationsListener &&mutationsListener,
+                                             MountingManager::CommandDispatcher &&commandDispatcher,
+                                             napi_ref measureTextFnRef,
+                                             UITicker::Shared uiTicker) {
     static std::shared_ptr<TaskExecutor> taskExecutor = nullptr;
     if (taskExecutor == nullptr) {
         taskExecutor = std::make_shared<TaskExecutor>(env);
@@ -75,5 +81,7 @@ std::unique_ptr<RNInstance> createRNInstance(int id, napi_env env, napi_ref arkT
                                         componentDescriptorProviderRegistry,
                                         MutationsToNapiConverter(std::move(componentNapiBinderByName)),
                                         eventEmitRequestHandlers,
+                                        std::move(mutationsListener),
+                                        std::move(commandDispatcher),
                                         uiTicker);
 }

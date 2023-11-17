@@ -9,14 +9,21 @@ export class NapiBridge {
   constructor(private libRNOHApp: any) {
   }
 
-  initializeReactNative(instanceId: number, turboModuleProvider: TurboModuleProvider) {
-    this.libRNOHApp?.initializeReactNative(
+  createReactNativeInstance(instanceId: number,
+                        turboModuleProvider: TurboModuleProvider,
+                        mutationsListener: (mutations: Mutation[]) => void,
+                        componentCommandsListener: (tag: Tag,
+                                                     commandName: string,
+                                                     args: unknown) => void) {
+    this.libRNOHApp?.createReactNativeInstance(
       instanceId,
       turboModuleProvider,
+      mutationsListener,
+      componentCommandsListener,
       (attributedString: AttributedString, paragraphAttributes: ParagraphAttributes, layoutConstraints: LayoutConstrains) => {
         try {
-        return measureParagraph(attributedString, paragraphAttributes, layoutConstraints)
-        } catch(err) {
+          return measureParagraph(attributedString, paragraphAttributes, layoutConstraints)
+        } catch (err) {
           console.error(err)
           throw err
         }
@@ -25,14 +32,6 @@ export class NapiBridge {
 
   emitComponentEvent(instanceId: number, tag: Tag, eventEmitRequestHandlerName: string, payload: any) {
     this.libRNOHApp?.emitComponentEvent(instanceId, tag, eventEmitRequestHandlerName, payload);
-  }
-
-  subscribeToShadowTreeChanges(
-    instanceId: number,
-    mutationsListener: (mutations: Mutation[]) => void,
-    dispatchedCommandsListener: (tag: Tag, commandName: string, args: unknown) => void
-  ) {
-    this.libRNOHApp?.subscribeToShadowTreeChanges(instanceId, mutationsListener, dispatchedCommandsListener);
   }
 
   loadScript(instanceId: number, bundle: ArrayBuffer, sourceURL: string): Promise<void> {

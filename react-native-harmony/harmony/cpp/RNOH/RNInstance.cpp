@@ -15,13 +15,6 @@
 using namespace facebook;
 using namespace rnoh;
 
-void RNInstance::registerSurface(
-    RNInstance::MutationsListener &&mutationsListener,
-    MountingManager::CommandDispatcher &&commandDispatcher) {
-    this->mutationsListener = std::move(mutationsListener);
-    this->commandDispatcher = std::move(commandDispatcher);
-}
-
 void RNInstance::start() {
     this->initialize();
     this->initializeScheduler();
@@ -86,11 +79,11 @@ void RNInstance::initializeScheduler() {
         taskExecutor,
         shadowViewRegistry,
         [this](react::ShadowViewMutationList mutations) {
-            this->mutationsListener(this->m_mutationsToNapiConverter, mutations);
+            this->m_mutationsListener(this->m_mutationsToNapiConverter, mutations);
         },
         [this](auto tag, auto commandName, auto args) {
             this->taskExecutor->runTask(TaskThread::MAIN, [this, tag, commandName = std::move(commandName), args = std::move(args)]() {
-                this->commandDispatcher(tag, commandName, args);
+                this->m_commandDispatcher(tag, commandName, args);
             });
         }));
     m_animationDriver = std::make_shared<react::LayoutAnimationDriver>(

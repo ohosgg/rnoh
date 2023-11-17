@@ -28,10 +28,10 @@
 #include "RNOH/TaskExecutor/TaskExecutor.h"
 #include "RNOH/UITicker.h"
 namespace rnoh {
+using MutationsListener = std::function<void(MutationsToNapiConverter, facebook::react::ShadowViewMutationList const &mutations)>;
+
 class RNInstance : public facebook::react::LayoutAnimationStatusDelegate {
   public:
-    using MutationsListener = std::function<void(MutationsToNapiConverter, facebook::react::ShadowViewMutationList const &mutations)>;
-
     RNInstance(int id,
                std::shared_ptr<facebook::react::ContextContainer> contextContainer,
                TurboModuleFactory &&turboModuleFactory,
@@ -39,6 +39,8 @@ class RNInstance : public facebook::react::LayoutAnimationStatusDelegate {
                std::shared_ptr<facebook::react::ComponentDescriptorProviderRegistry> componentDescriptorProviderRegistry,
                MutationsToNapiConverter mutationsToNapiConverter,
                EventEmitRequestHandlers eventEmitRequestHandlers,
+               MutationsListener &&mutationsListener,
+               MountingManager::CommandDispatcher &&commandDispatcher,
                UITicker::Shared uiTicker)
         : m_id(id),
           instance(std::make_shared<facebook::react::Instance>()),
@@ -51,6 +53,8 @@ class RNInstance : public facebook::react::LayoutAnimationStatusDelegate {
           m_mutationsToNapiConverter(mutationsToNapiConverter),
           m_eventEmitRequestHandlers(eventEmitRequestHandlers),
           m_shouldRelayUITick(false),
+          m_mutationsListener(mutationsListener),
+          m_commandDispatcher(commandDispatcher),
           m_uiTicker(uiTicker) {
         this->unsubscribeUITickListener = this->m_uiTicker->subscribe(m_id, [this]() {
             this->taskExecutor->runTask(TaskThread::MAIN, [this]() {
@@ -65,9 +69,6 @@ class RNInstance : public facebook::react::LayoutAnimationStatusDelegate {
         }
     }
 
-    void registerSurface(
-        MutationsListener &&,
-        MountingManager::CommandDispatcher &&);
     void start();
     void loadScript(std::vector<uint8_t> &&bundle, std::string const sourceURL, std::function<void(const std::string)> &&onFinish);
     void createSurface(facebook::react::Tag surfaceId, std::string const &moduleName);
@@ -89,8 +90,8 @@ class RNInstance : public facebook::react::LayoutAnimationStatusDelegate {
     facebook::react::ContextContainer::Shared m_contextContainer;
     std::shared_ptr<facebook::react::Instance> instance;
     std::map<facebook::react::Tag, std::shared_ptr<facebook::react::SurfaceHandler>> surfaceHandlers;
-    std::function<void(MutationsToNapiConverter, facebook::react::ShadowViewMutationList const &mutations)> mutationsListener;
-    MountingManager::CommandDispatcher commandDispatcher;
+    MutationsListener m_mutationsListener;
+    MountingManager::CommandDispatcher m_commandDispatcher;
     std::unique_ptr<facebook::react::Scheduler> scheduler;
     std::unique_ptr<SchedulerDelegate> schedulerDelegate;
     std::shared_ptr<facebook::react::ComponentDescriptorProviderRegistry> m_componentDescriptorProviderRegistry;
