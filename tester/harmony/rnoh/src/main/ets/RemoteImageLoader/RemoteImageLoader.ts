@@ -26,7 +26,12 @@ export class RemoteImageLoader {
       return imageSource
     }
     const reqManager = http.createHttp()
-    const response = await reqManager.request(uri)
+    let response;
+    try {
+      response = await reqManager.request(uri)
+    } catch (e) {
+      throw new RemoteImageLoaderError(e.message ?? "Failed to fetch the image")
+    }
     if (!(response.responseCode === http.ResponseCode.OK)) {
       throw new RemoteImageLoaderError('Failed to fetch the image');
     }

@@ -96,7 +96,8 @@ export struct RNImage {
         this.imageSource = new ImageSourceHolder(imageSource['location'] ?? uri)
       }
     }).catch((error: RemoteImageLoaderError) => {
-      this.dispatchOnError(error.message)
+      // fallback to passing uri to the Image component
+      this.imageSource = new ImageSourceHolder(uri);
     })
     return;
   }
