@@ -277,6 +277,11 @@ implements TextFragmentMeasurer<OHOSMeasurerTextFragmentExtraData> {
       fontWeight: textFragment.extraData.fontWeight,
       letterSpacing: textFragment.extraData.letterSpacing,
     }) as Size;
+    // BEGIN: hack
+    if (textFragment.content === ":") {
+      size.width += 1
+    }
+    // END: hack
     size = { width: px2vp(size.width), height: px2vp(size.height) };
     this.updateCache(textFragment, size)
     return size;

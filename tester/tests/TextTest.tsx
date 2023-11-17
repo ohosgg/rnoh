@@ -338,6 +338,32 @@ export function TextTest() {
         </TestCase>
       </TestSuite>
       <TestSuite name="text measuring">
+        <TestCase itShould="display all texts in one line">
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text style={{backgroundColor: 'cyan'}}>
+              {'0:12'}
+              {'场'}
+            </Text>
+          </View>
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text style={{backgroundColor: 'pink'}}>
+              {'0;12'}
+              {'场'}
+            </Text>
+          </View>
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text style={{backgroundColor: 'cyan'}}>
+              {'0.12'}
+              {'场'}
+            </Text>
+          </View>
+          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
+            <Text style={{backgroundColor: 'pink'}}>
+              {'0,12'}
+              {'场'}
+            </Text>
+          </View>
+        </TestCase>
         <TestCase itShould="display: 'FOO''BAR' next to each other">
           <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
             <Text style={{height: '100%', backgroundColor: 'pink'}}>FOO</Text>
@@ -397,9 +423,7 @@ export function TextTest() {
             </Text>
           </View>
         </TestCase>
-        <TestCase
-          tags={['dev']}
-          itShould="text should not exceed cyan background">
+        <TestCase itShould="text should not exceed cyan background">
           <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
             <Text style={{backgroundColor: 'silver'}}>FONT SIZE</Text>
           </View>
