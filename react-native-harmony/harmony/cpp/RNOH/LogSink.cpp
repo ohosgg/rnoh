@@ -2,7 +2,7 @@
 #include "RNOH/LogSink.h"
 
 #define LOG_DOMAIN 0xBEEF
-#define LOG_TAG "RNOH"
+#define LOG_TAG "#RNOH_CPP"
 
 LogSink *LogSink::instance = nullptr;
 

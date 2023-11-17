@@ -380,6 +380,7 @@ add_library(rnoh SHARED
     "${RNOH_CPP_DIR}/RNOH/MessageQueueThread.cpp"
     "${RNOH_CPP_DIR}/RNOH/MutationsToNapiConverter.cpp"
     "${RNOH_CPP_DIR}/RNOH/LogSink.cpp"
+    "${RNOH_CPP_DIR}/RNOH/NativeLogger.cpp"
     "${RNOH_CPP_DIR}/RNOH/ArkJS.cpp"
     "${RNOH_CPP_DIR}/RNOH/MountingManager.cpp"
     "${RNOH_CPP_DIR}/RNOH/ShadowViewRegistry.cpp"

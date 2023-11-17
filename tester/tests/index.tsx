@@ -8,6 +8,7 @@ export * from './AppRegistryTest';
 export * from './AppStateTest';
 export * from './BackHandlerTest';
 export * from './ButtonTest';
+export * from './ConsoleTest';
 export * from './CustomNativeComponentTest';
 export * from './DimensionsTest';
 export * from './FlatListTest';

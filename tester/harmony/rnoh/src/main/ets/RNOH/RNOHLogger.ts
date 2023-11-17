@@ -14,7 +14,7 @@ export interface RNOHLogger {
 
 export class StandardRNOHLogger implements RNOHLogger {
   private domain: number = 0xBEEF;
-  private tag: string = 'RNOH';
+  private tag: string = '#RNOH_ARK';
 
   public info(format: string, ...args: any[]): void {
     hilog.info(this.domain, this.tag, "[RNOH] " + format, ...args);

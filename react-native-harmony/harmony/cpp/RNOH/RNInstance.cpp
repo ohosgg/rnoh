@@ -7,10 +7,12 @@
 #include "RNOH/EventBeat.h"
 #include "hermes/executor/HermesExecutorFactory.h"
 #include <react/renderer/componentregistry/ComponentDescriptorProvider.h>
+#include <jsireact/JSIExecutor.h>
 #include "RNOH/ShadowViewRegistry.h"
 #include "RNOH/TurboModuleProvider.h"
 #include "RNOH/TurboModuleFactory.h"
 #include "RNInstance.h"
+#include "NativeLogger.h"
 
 using namespace facebook;
 using namespace rnoh;
@@ -30,7 +32,8 @@ void RNInstance::initialize() {
         // is first initialized and provides access to the runtime
         // before the JS code is executed
         [](facebook::jsi::Runtime &rt) {
-            return;
+            // install `console.log` (etc.) implementation
+            react::bindNativeLogger(rt, nativeLogger);
         });
     auto jsQueue = std::make_shared<MessageQueueThread>(this->taskExecutor);
     auto moduleRegistry = std::make_shared<react::ModuleRegistry>(std::move(modules));
@@ -274,7 +277,7 @@ void rnoh::RNInstance::emitComponentEvent(napi_env env, react::Tag tag, std::str
     for (auto &eventEmitRequestHandler : m_eventEmitRequestHandlers) {
         eventEmitRequestHandler->handleEvent(ctx);
     }
-}
+                }
 
 void rnoh::RNInstance::onMemoryLevel(size_t memoryLevel) {
     // Android memory levels are 5, 10, 15, while Ark's are 0, 1, 2
