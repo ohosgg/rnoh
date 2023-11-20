@@ -34,5 +34,5 @@ facebook::jsi::Value UIManagerModule::getConstantsForViewManager(facebook::jsi::
         return componentJSIBinder->createBindings(rt);
     }
     LOG(ERROR) << "Couldn't find ComponentJSIBinder for: " << name;
-    return BaseComponentJSIBinder().createBindings(rt);
+    return jsi::Value::null();
 }
