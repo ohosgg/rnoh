@@ -22,6 +22,8 @@ class NapiTaskRunner : public AbstractTaskRunner  {
     void runAsyncTask(Task &&task) override;
     void runSyncTask(Task &&task) override;
 
+    bool isOnCurrentThread() const override;
+
   private:
     napi_env env;
     uv_loop_t *getLoop() const;

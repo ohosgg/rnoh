@@ -25,6 +25,8 @@ class TaskExecutor {
     void runTask(TaskThread thread, Task &&task);
     void runSyncTask(TaskThread thread, Task &&task);
 
+    bool isOnTaskThread(TaskThread thread) const;
+
   private:
     std::array<std::unique_ptr<AbstractTaskRunner>, TaskThread::BACKGROUND + 1> m_taskRunners;
 };

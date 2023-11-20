@@ -64,7 +64,7 @@ public:
 
     std::function<void(facebook::react::Tag, folly::dynamic)> m_setNativePropsFn;
 private:
-    void updateNodes(std::vector<facebook::react::Tag> nodes);
+    void updateNodes();
     void stopAnimationsForNode(facebook::react::Tag tag);
     void maybeStartAnimations();
 

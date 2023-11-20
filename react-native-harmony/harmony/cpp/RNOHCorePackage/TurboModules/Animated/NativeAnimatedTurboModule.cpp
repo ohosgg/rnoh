@@ -246,7 +246,13 @@ NativeAnimatedTurboModule::NativeAnimatedTurboModule(const ArkTSTurboModule::Con
           [this] {
               m_ctx.taskExecutor->runTask(TaskThread::MAIN, [this] { m_vsyncHandle.requestFrame(rnoh::scheduleUpdate, this); });
           },
-          [this](auto tag, auto props) { m_ctx.taskExecutor->runTask(TaskThread::MAIN, [this, tag, props] {this->setNativeProps(tag, props);}); }) {
+          [this](auto tag, auto props) {
+              if (m_ctx.taskExecutor->isOnTaskThread(TaskThread::MAIN)) {
+                this->setNativeProps(tag, props);
+              } else {
+                m_ctx.taskExecutor->runTask(TaskThread::MAIN, [this, tag, props] { this->setNativeProps(tag, props); });
+              }
+          }) {
     methodMap_ = {
         {"startOperationBatch", {0, rnoh::startOperationBatch}},
         {"finishOperationBatch", {0, rnoh::finishOperationBatch}},

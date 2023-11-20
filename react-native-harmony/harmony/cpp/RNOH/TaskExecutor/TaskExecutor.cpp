@@ -22,4 +22,8 @@ void TaskExecutor::runSyncTask(TaskThread thread, Task &&task) {
     m_taskRunners[thread]->runSyncTask(std::move(task));
 }
 
+bool TaskExecutor::isOnTaskThread(TaskThread thread) const {
+    return m_taskRunners[thread]->isOnCurrentThread();
+}
+
 } // namespace rnoh

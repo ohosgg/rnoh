@@ -9,5 +9,7 @@ public:
     virtual void runAsyncTask(Task &&task) = 0;
     virtual void runSyncTask(Task &&task) = 0;
 
+    virtual bool isOnCurrentThread() const = 0;
+
     virtual ~AbstractTaskRunner() = default;
 };

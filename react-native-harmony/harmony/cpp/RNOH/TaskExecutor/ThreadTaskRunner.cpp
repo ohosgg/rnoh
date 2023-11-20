@@ -34,7 +34,7 @@ void ThreadTaskRunner::runAsyncTask(Task &&task) {
 }
 
 void ThreadTaskRunner::runSyncTask(Task &&task) {
-    if (std::this_thread::get_id() == thread.get_id()) {
+    if (isOnCurrentThread()) {
         task();
         return;
     }
@@ -46,6 +46,10 @@ void ThreadTaskRunner::runSyncTask(Task &&task) {
     });
     cv.notify_one();
     cv.wait(lock, [this, &done] { return done.load(); });
+}
+
+bool ThreadTaskRunner::isOnCurrentThread() const {
+    return std::this_thread::get_id() == thread.get_id();
 }
 
 void ThreadTaskRunner::runLoop() {

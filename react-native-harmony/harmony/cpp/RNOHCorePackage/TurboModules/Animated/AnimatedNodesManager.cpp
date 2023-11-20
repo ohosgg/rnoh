@@ -128,8 +128,9 @@ void AnimatedNodesManager::handleEvent(facebook::react::Tag targetTag, std::stri
         }
     }
 
-    if (someDriverNeedsUpdate && !m_isRunningAnimations) {
-        maybeStartAnimations();
+    if (someDriverNeedsUpdate) {
+        // NOTE: we don't update frame-based drivers here, only the newly-dirty ones from the event
+        updateNodes();
     }
 }
 
@@ -207,10 +208,7 @@ void AnimatedNodesManager::runUpdates(uint64_t frameTimeNanos) {
         }
     }
 
-    std::vector<facebook::react::Tag> updatedNodesList(m_nodeTagsToUpdate.begin(), m_nodeTagsToUpdate.end());
-    m_nodeTagsToUpdate.clear();
-
-    updateNodes(std::move(updatedNodesList));
+    updateNodes();
 
     for (auto animationId : finishedAnimations) {
         m_animationById.at(animationId)->endCallback_(true);
@@ -229,7 +227,10 @@ void AnimatedNodesManager::setNeedsUpdate(facebook::react::Tag nodeTag) {
     m_nodeTagsToUpdate.insert(nodeTag);
 }
 
-void AnimatedNodesManager::updateNodes(std::vector<facebook::react::Tag> nodeTags) {
+void AnimatedNodesManager::updateNodes() {
+    std::vector<facebook::react::Tag> nodeTags(m_nodeTagsToUpdate.begin(), m_nodeTagsToUpdate.end());
+    m_nodeTagsToUpdate.clear();
+
     uint64_t activeNodesCount = 0;
     uint64_t updatedNodesCount = 0;
 

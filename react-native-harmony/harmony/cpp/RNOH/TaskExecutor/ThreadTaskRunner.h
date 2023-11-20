@@ -19,6 +19,8 @@ class ThreadTaskRunner : public AbstractTaskRunner {
     void runAsyncTask(Task &&task) override;
     void runSyncTask(Task &&task) override;
 
+    bool isOnCurrentThread() const override;
+
   private:
     void runLoop();
 

@@ -237,14 +237,14 @@ export function ScrollViewTest() {
         </TestCase>
       </TestSuite>
       <TestSuite name="sticky headers">
-        <TestCase itShould="[Is Laggy] support sticky headers (component 1 and 4 should stick) (stickyHeaderIndices)">
+        <TestCase itShould="support sticky headers (component 1 and 4 should stick) (stickyHeaderIndices)">
           <View style={styles.wrapperView}>
             <ScrollView stickyHeaderIndices={[0, 3]} nestedScrollEnabled>
               {getScrollViewContent({})}
             </ScrollView>
           </View>
         </TestCase>
-        <TestCase itShould="[Is Laggy] support sticky headers, hidden on scroll (component 1 and 4 should stick) (stickyHeaderHiddenOnScroll)">
+        <TestCase itShould="support sticky headers, hidden on scroll (component 1 and 4 should stick) (stickyHeaderHiddenOnScroll)">
           <View style={styles.wrapperView}>
             <ScrollView stickyHeaderIndices={[0, 3]} nestedScrollEnabled stickyHeaderHiddenOnScroll>
               {getScrollViewContent({})}

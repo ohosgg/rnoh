@@ -56,7 +56,7 @@ void NapiTaskRunner::runAsyncTask(Task &&task) {
 }
 
 void NapiTaskRunner::runSyncTask(Task &&task) {
-    if (threadId == std::this_thread::get_id()) {
+    if (isOnCurrentThread()) {
         task();
         return;
     }
@@ -70,6 +70,10 @@ void NapiTaskRunner::runSyncTask(Task &&task) {
     });
     uv_async_send(&asyncHandle);
     cv.wait(lock, [&done] { return done.load(); });
+}
+
+bool NapiTaskRunner::isOnCurrentThread() const {
+    return threadId == std::this_thread::get_id();
 }
 
 uv_loop_t *NapiTaskRunner::getLoop() const {
