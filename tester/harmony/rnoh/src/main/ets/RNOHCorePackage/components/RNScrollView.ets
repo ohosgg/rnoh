@@ -1,4 +1,4 @@
-import { Descriptor, RNOHContext, Size, Tag, Position } from '../../RNOH';
+import { Descriptor, Position, RNOHContext, Size, Tag } from '../../RNOH';
 import { _RNScrollViewManager } from '../componentManagers/RNScrollViewManager';
 import { RNViewBase, ViewBaseProps, ViewDescriptorWrapperBase, ViewRawProps } from './RNViewBase';
 import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from './RNPullToRefreshView';
@@ -155,7 +155,7 @@ export struct RNScrollView {
   scrollTo(xOffset: number, yOffset: number, animated: number) {
     const animation: Animation | undefined = animated ? { duration: 1000, curve: Curve.Smooth } : undefined;
     this.scroller.scrollTo({ xOffset, yOffset, animation })
-    this.contentOffset = {x: xOffset, y: yOffset};
+    this.contentOffset = { x: xOffset, y: yOffset };
   }
 
   scrollToEnd(animated: number) {
@@ -387,7 +387,7 @@ export struct RNScrollView {
     .scrollable(this.scrollDirection())
     .scrollBar(this.scrollBarState())
     .scrollBarColor(this.scrollBarColor())
-    .enableScrollInteraction(this.props.scrollEnabled && !this.shouldPreventScrolling)
+    .enableScrollInteraction((this.props.scrollEnabled && !this.shouldPreventScrolling) ?? true)
     .nestedScroll({ scrollForward: NestedScrollMode.SELF_FIRST, scrollBackward: NestedScrollMode.SELF_FIRST })
     .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
     .onScrollFrameBegin((offset, state) => {

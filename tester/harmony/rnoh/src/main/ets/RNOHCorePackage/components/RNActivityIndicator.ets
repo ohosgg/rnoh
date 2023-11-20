@@ -37,7 +37,7 @@ export struct RNActivityIndicator {
     }) {
       LoadingProgress()
         .color(convertColorSegmentsToString(this.descriptor.props.color))
-        .enableLoading(this.descriptor.props.animating)
+        .enableLoading(this.descriptor.props.animating ?? true)
     }
   }
 }

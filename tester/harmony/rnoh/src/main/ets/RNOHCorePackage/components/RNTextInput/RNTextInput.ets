@@ -1,38 +1,13 @@
-import { ColorSegments, convertColorSegmentsToString, Descriptor, RNOHContext } from '../../RNOH';
-import { RNViewBase, ViewBaseProps } from './RNViewBase';
-import { RNOHEventEmitRequestHandlerName } from './../RNOHEventEmitRequestHandler';
-import {stringToFontStyle} from './RNText/conversions';
-
-export interface TextInputProps extends ViewBaseProps {
-  fontColor?: ColorSegments
-  fontFamily?: string
-  fontSize?: number
-  text?: string
-  multiline?: boolean
-  editable?: boolean
-  caretHidden?: boolean
-  selectionColor?: ColorSegments
-  secureTextEntry?: boolean
-  placeholder?: string
-  placeholderTextColor?: ColorSegments
-  returnKeyType?: string
-  textAlign?: string
-  autoFocus?: boolean
-  keyboardType?: string
-  fontWeight?: number
-  fontStyle?: string
-}
-
-export interface TextInputRawProps {
-  maxLength?: number
-  focusable?: boolean
-}
-
-interface TextInputState {}
+import { convertColorSegmentsToString, Descriptor, RNOHContext } from '../../../RNOH';
+import { RNViewBase } from '../RNViewBase';
+import { RNOHEventEmitRequestHandlerName } from '../../RNOHEventEmitRequestHandler';
+import { TextInputProps, TextInputRawProps, TextInputState } from './types';
+import { TextInputDescriptorWrapper } from './TextInputDescriptorWrapper';
+import { stringToFontStyle } from '../RNText/conversions';
 
 export type TextInputDescriptor = Descriptor<"TextInput", TextInputProps, TextInputState, TextInputRawProps>
 
-function getCaretStyle(caretHidden: boolean): CaretStyle | undefined {
+function getCaretStyle(caretHidden: boolean | undefined): CaretStyle | undefined {
   return caretHidden ? { width: 0 } : undefined;
 }
 
@@ -100,15 +75,12 @@ function getInputType(keyboardType: string, secureTextEntry?: boolean): InputTyp
   }
 }
 
-function getFontSize(fontSize: number): number | undefined {
-  return Number.isNaN(fontSize) ? undefined : fontSize;
-}
-
 @Component
 export struct RNTextInput {
   ctx!: RNOHContext
   tag: number = 0
   @State descriptor: TextInputDescriptor = Object() as TextInputDescriptor
+  @State private descriptorWrapper: TextInputDescriptorWrapper | undefined = undefined
   inputController: TextInputController = new TextInputController();
   areaController: TextAreaController = new TextAreaController();
   @State value: string = '';
@@ -123,12 +95,14 @@ export struct RNTextInput {
   onFocusEvent() {
     this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "onFocus", this.value)
   }
+
   onBlurEvent() {
     this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "onBlur", this.value)
   }
 
   onDescriptorChange(newDescriptor: TextInputDescriptor) {
     this.descriptor = newDescriptor;
+    this.descriptorWrapper = new TextInputDescriptorWrapper(this.descriptor)
   }
 
   aboutToAppear() {
@@ -150,8 +124,7 @@ export struct RNTextInput {
           else {
             this.inputController.stopEditing();
           }
-        }
-        else if (command === 'setTextAndSelection') {
+        } else if (command === 'setTextAndSelection') {
           const parsedArgs = parseSetTextAndSelectionCommandCallback(args);
           if (parsedArgs.value !== undefined) {
             this.value = parsedArgs.value;
@@ -170,7 +143,7 @@ export struct RNTextInput {
   }
 
   isFocusable(): boolean {
-    return this.descriptor.rawProps.focusable ?? false
+    return this.descriptorWrapper?.focusable ?? false
   }
 
   build() {
@@ -187,19 +160,22 @@ export struct RNTextInput {
       }
       if (this.descriptor.props.multiline) {
         TextArea({ controller: this.areaController, placeholder: this.descriptor.props.placeholder, text: this.value })
-          .width("100%")
-          .height("100%")
-          .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
-          .fontFamily(this.descriptor.props.fontFamily)
-          .fontSize(getFontSize(this.descriptor.props.fontSize))
+          .fontColor(this.descriptorWrapper?.fontColor)
+          .fontFamily(this.descriptorWrapper?.fontFamily)
+          .fontSize(this.descriptorWrapper?.fontSize)
+          .fontWeight(this.descriptorWrapper?.fontWeight)
+          .fontStyle(stringToFontStyle(this.descriptorWrapper?.fontStyle))
           .onChange((value) => this.handleChangeEvent(value))
-          .enabled(this.descriptor.props.editable)
+          .enabled(this.descriptor.props.editable ?? true)
           .maxLength(this.descriptor.rawProps.maxLength)
-          .placeholderFont({size: this.descriptor.props.fontSize,  weight: this.descriptor.props.fontWeight,
-            family: this.descriptor.props.fontFamily, style: stringToFontStyle(this.descriptor.props.fontStyle)})
           .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
-          .textAlign(stringToAlignment(this.descriptor.props.textAlign))
-          /*
+          .placeholderFont({
+            size: this.descriptorWrapper?.fontSize,
+            family: this.descriptorWrapper?.fontFamily ?? "HarmonyOS Sans",
+            weight: this.descriptorWrapper?.fontWeight ?? FontWeight.Normal,
+            style: stringToFontStyle(this.descriptorWrapper?.fontStyle)
+          })
+          .textAlign(stringToAlignment(this.descriptor.props.textAlign))/*
            * We set the below props to 0/Transparent because RNViewBase should handle them.
            * We don't want default values set only on the native side, as they break the layout.
            */
@@ -207,7 +183,18 @@ export struct RNTextInput {
           .borderRadius(0)
           .backgroundColor(Color.Transparent)
           .onFocus(() => this.onFocusEvent())
-          .onBlur(() => this.onBlurEvent())
+          .onBlur(() => this.onBlurEvent())/*
+           * We need to handle padding manually as TextArea does not handle padding correctly
+           * - it does not respect percentage padding and the scroll area size is to big */
+          .position({ x: this.descriptorWrapper?.position.x, y: this.descriptorWrapper?.position.y })
+          .width(this.descriptorWrapper?.contentWidth)
+          .height(this.descriptorWrapper?.contentHeight)
+          .responseRegion({
+            x: -(this.descriptorWrapper?.position.x ?? 0),
+            y: -(this.descriptorWrapper?.position.y ?? 0),
+            width: this.descriptorWrapper?.width,
+            height: this.descriptorWrapper?.height
+          })
           .focusable(this.isFocusable())
       } else {
         TextInput({
@@ -215,24 +202,27 @@ export struct RNTextInput {
           placeholder: this.descriptor.props.placeholder,
           text: this.value
         })
-          .width("100%")
-          .height("100%")
-          .fontColor(convertColorSegmentsToString(this.descriptor.props.fontColor))
-          .fontFamily(this.descriptor.props.fontFamily)
-          .fontSize(getFontSize(this.descriptor.props.fontSize))
+          .fontColor(this.descriptorWrapper?.fontColor)
+          .fontFamily(this.descriptorWrapper?.fontFamily)
+          .fontSize(this.descriptorWrapper?.fontSize)
+          .fontWeight(this.descriptorWrapper?.fontWeight)
+          .fontStyle(stringToFontStyle(this.descriptorWrapper?.fontStyle))
           .onChange((event) => this.handleChangeEvent(event))
-          .enabled(this.descriptor.props.editable)
+          .enabled(this.descriptor.props.editable ?? true)
           .caretStyle(getCaretStyle(this.descriptor.props.caretHidden))
           .type(getInputType(this.descriptor.props.keyboardType, this.descriptor.props.secureTextEntry))
           .maxLength(this.descriptor.rawProps.maxLength)
           .selectedBackgroundColor(convertColorSegmentsToString(this.descriptor.props.selectionColor))
           .showPasswordIcon(false)
-          .placeholderFont({size: this.descriptor.props.fontSize,  weight: this.descriptor.props.fontWeight,
-              family: this.descriptor.props.fontFamily, style: stringToFontStyle(this.descriptor.props.fontStyle)})
           .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
+          .placeholderFont({
+            size: this.descriptorWrapper?.fontSize,
+            family: this.descriptorWrapper?.fontFamily ?? "HarmonyOS Sans",
+            weight: this.descriptorWrapper?.fontWeight ?? FontWeight.Normal,
+            style: stringToFontStyle(this.descriptorWrapper?.fontStyle)
+          })
           .enterKeyType(stringToEnterKeyType(this.descriptor.props.returnKeyType))
-          .textAlign(stringToAlignment(this.descriptor.props.textAlign))
-          /*
+          .textAlign(stringToAlignment(this.descriptor.props.textAlign))/*
            * We set the below props to 0/Transparent because RNViewBase should handle them.
            * We don't want default values set only on the native side, as they break the layout.
            */
@@ -241,7 +231,18 @@ export struct RNTextInput {
           .backgroundColor(Color.Transparent)
           .onSubmit(() => this.onSubmitEditing())
           .onFocus(() => this.onFocusEvent())
-          .onBlur(() => this.onBlurEvent())
+          .onBlur(() => this.onBlurEvent())/*
+           * We need to handle padding manually as TextInput does not handle padding correctly
+           * - the text is always centered. */
+          .position({ x: this.descriptorWrapper?.position.x, y: this.descriptorWrapper?.position.y })
+          .width(this.descriptorWrapper?.contentWidth)
+          .height(this.descriptorWrapper?.contentHeight)
+          .responseRegion({
+            x: -(this.descriptorWrapper?.position.x ?? 0),
+            y: -(this.descriptorWrapper?.position.y ?? 0),
+            width: this.descriptorWrapper?.width,
+            height: this.descriptorWrapper?.height
+          })
           .focusable(this.isFocusable())
       }
     }

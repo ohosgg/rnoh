@@ -232,6 +232,34 @@ export function TextInputTest() {
           <TextInputKeyboardType keyboardType="url" />
         </View>
       </TestCase>
+      <TestCase itShould="show textInput with padding" modal>
+        <View style={{width: 300, height: 200}}>
+          <TextInputWithText
+            style={{
+              paddingLeft: 10,
+              paddingTop: 20,
+              paddingRight: 30,
+              paddingBottom: 40,
+              backgroundColor: 'red',
+            }}
+          />
+        </View>
+      </TestCase>
+      <TestCase itShould="show textInput multiline with padding" modal>
+        <View style={{width: 300, height: 200}}>
+          <TextInputWithText
+            style={{
+              paddingLeft: 10,
+              paddingTop: 20,
+              paddingRight: 30,
+              paddingBottom: 40,
+              backgroundColor: 'red',
+              height: 100,
+            }}
+            multiline
+          />
+        </View>
+      </TestCase>
       <TestCase modal itShould="render textinput with readonly">
         {/* @ts-ignore */}
         <TextInputWithText style={styles.textInput} readOnly />
