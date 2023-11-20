@@ -1,5 +1,6 @@
-import {PixelRatio} from 'react-native';
+import {PixelRatio, Text} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
+import {ObjectDisplayer} from '../components';
 
 export const PixelRatioTest = () => {
   return (
@@ -36,6 +37,21 @@ export const PixelRatioTest = () => {
           expect(PixelRatio.roundToNearestPixel(8.4)).to.be.equal(nearestPixel);
         }}
       />
+      <TestCase itShould="display PixelRatio results">
+        <Text>
+          {JSON.stringify(
+            {
+              get: PixelRatio.get(),
+              getFontScale: PixelRatio.getFontScale(),
+              getPixelSizeForLayoutSize:
+                PixelRatio.getPixelSizeForLayoutSize(10),
+              roundToNearestPixel: PixelRatio.roundToNearestPixel(16.5),
+            },
+            null,
+            2,
+          )}
+        </Text>
+      </TestCase>
     </TestSuite>
   );
 };

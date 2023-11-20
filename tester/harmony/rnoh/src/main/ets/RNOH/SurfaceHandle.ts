@@ -40,6 +40,7 @@ export class SurfaceHandle {
       ctx.height,
       ctx.surfaceOffsetX,
       ctx.surfaceOffsetY,
+      ctx.pixelRatio,
       this.props);
     this.startingPromise.then(() => {
       this.isRunning = true
@@ -66,7 +67,8 @@ export class SurfaceHandle {
       width,
       height,
       surfaceOffsetX,
-      surfaceOffsetY
+      surfaceOffsetY,
+      pixelRatio
     }: SurfaceContext
   ) {
     if (this.destroyed) {
@@ -78,7 +80,8 @@ export class SurfaceHandle {
       width,
       height,
       surfaceOffsetX,
-      surfaceOffsetY
+      surfaceOffsetY,
+      pixelRatio
     );
   }
 

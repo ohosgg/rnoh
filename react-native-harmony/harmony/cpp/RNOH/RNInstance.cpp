@@ -134,7 +134,14 @@ void rnoh::RNInstance::createSurface(react::Tag surfaceId, std::string const &ap
     surfaceHandlers.insert({surfaceId, std::move(surfaceHandler)});
 }
 
-void RNInstance::startSurface(react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY, folly::dynamic &&initialProps, std::function<void()> &&onFinish) {
+void RNInstance::startSurface(react::Tag surfaceId,
+                              float width,
+                              float height,
+                              float viewportOffsetX,
+                              float viewportOffsetY,
+                              float pixelRatio,
+                              folly::dynamic &&initialProps,
+                              std::function<void()> &&onFinish) {
     try {
         this->taskExecutor->runTask(TaskThread::MAIN, [=]() {
             auto it = surfaceHandlers.find(surfaceId);
@@ -153,6 +160,7 @@ void RNInstance::startSurface(react::Tag surfaceId, float width, float height, f
             auto layoutContext = surfaceHandler->getLayoutContext();
             surfaceHandler->setDisplayMode(react::DisplayMode::Suspended);
             layoutContext.viewportOffset = {viewportOffsetX, viewportOffsetY};
+            layoutContext.pointScaleFactor = pixelRatio;
             surfaceHandler->constraintLayout(layoutConstraints, layoutContext);
             LOG(INFO) << "startSurface::starting: surfaceId=" << surfaceId;
             /**
@@ -240,19 +248,20 @@ void rnoh::RNInstance::setSurfaceDisplayMode(facebook::react::Tag surfaceId, fac
     }
 }
 
-void RNInstance::updateSurfaceConstraints(react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY) {
+void RNInstance::updateSurfaceConstraints(react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY, float pixelRatio) {
     try {
         if (surfaceHandlers.count(surfaceId) == 0) {
             LOG(ERROR) << "updateSurfaceConstraints: No surface with id " << surfaceId;
             return;
         }
-        taskExecutor->runTask(TaskThread::MAIN, [this, surfaceId, width, height, viewportOffsetX, viewportOffsetY]() {
+        taskExecutor->runTask(TaskThread::MAIN, [this, surfaceId, width, height, viewportOffsetX, viewportOffsetY, pixelRatio]() {
             auto layoutConstraints = surfaceHandlers[surfaceId]->getLayoutConstraints();
             layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
                 .width = width,
                 .height = height};
             auto layoutContext = surfaceHandlers[surfaceId]->getLayoutContext();
             layoutContext.viewportOffset = {viewportOffsetX, viewportOffsetY};
+            layoutContext.pointScaleFactor = pixelRatio;
             surfaceHandlers[surfaceId]->constraintLayout(layoutConstraints, layoutContext);
         });
     } catch (const std::exception &e) {

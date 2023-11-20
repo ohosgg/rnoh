@@ -61,8 +61,6 @@ export function DimensionsTest() {
 }
 const styles = StyleSheet.create({
   text: {
-    height: 30,
-    width: 350,
     fontSize: 14,
   },
 });

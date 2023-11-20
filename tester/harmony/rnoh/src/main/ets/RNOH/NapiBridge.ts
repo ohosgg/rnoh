@@ -49,6 +49,7 @@ export class NapiBridge {
     initialSurfaceHeight: number,
     surfaceOffsetX: number,
     surfaceOffsetY: number,
+    pixelRatio: number,
     initialProps: any) {
     return new Promise(resolve => {
       this.libRNOHApp?.startSurface(
@@ -58,6 +59,7 @@ export class NapiBridge {
         initialSurfaceHeight,
         surfaceOffsetX,
         surfaceOffsetY,
+        pixelRatio,
         initialProps,
         () => resolve(undefined)
       );
@@ -71,6 +73,7 @@ export class NapiBridge {
     surfaceHeight: number,
     surfaceOffsetX: number,
     surfaceOffsetY: number,
+    pixelRatio: number,
   ) {
     this.libRNOHApp?.updateSurfaceConstraints(
       instanceId,
@@ -78,7 +81,8 @@ export class NapiBridge {
       surfaceWidth,
       surfaceHeight,
       surfaceOffsetX,
-      surfaceOffsetY
+      surfaceOffsetY,
+      pixelRatio
     );
   }
 

@@ -22,6 +22,7 @@ export type SurfaceContext = {
   height: number
   surfaceOffsetX: number
   surfaceOffsetY: number
+  pixelRatio: number
 }
 
 export enum LifecycleState {

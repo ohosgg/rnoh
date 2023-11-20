@@ -99,6 +99,7 @@ export struct RNSurface {
           height: this.surfaceHeight,
           surfaceOffsetX: this.surfaceOffsetX,
           surfaceOffsetY: this.surfaceOffsetY,
+          pixelRatio: vp2px(1)
         },
         this.initialProps).then(() => {
         this.surfaceHandle.setDisplayMode(DisplayMode.Visible)
@@ -111,6 +112,7 @@ export struct RNSurface {
         height: this.surfaceHeight,
         surfaceOffsetX: this.surfaceOffsetX,
         surfaceOffsetY: this.surfaceOffsetY,
+        pixelRatio: vp2px(1),
       });
     }
   }
