@@ -6,6 +6,7 @@ class ImageComponentJSIBinder : public ViewComponentJSIBinder {
     facebook::jsi::Object createNativeProps(facebook::jsi::Runtime &rt) override {
         auto object = ViewComponentJSIBinder::createNativeProps(rt);
         object.setProperty(rt, "source", "array");
+        object.setProperty(rt, "alt", "string");
         object.setProperty(rt, "resizeMode", "string");
         object.setProperty(rt, "blurRadius", "number");
         return object;

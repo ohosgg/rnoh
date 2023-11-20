@@ -1,13 +1,17 @@
 import { RemoteImageLoaderError } from '../../RemoteImageLoader/RemoteImageLoaderError';
 import { ColorSegments, Descriptor, getTintColorMatrix, RNOHContext } from '../../RNOH';
 import { ImageLoaderTurboModule } from '../turboModules/ImageLoaderTurboModule';
-import { RNViewBase, ViewBaseProps } from './RNViewBase';
+import { RNViewBase, ViewBaseProps, ViewDescriptorWrapperBase, ViewRawProps } from './RNViewBase';
 
 export interface ImageProps extends ViewBaseProps {
   uri: string,
   resizeMode: number,
   tintColor?: ColorSegments,
   blurRadius: number
+}
+
+interface ImageRawProps extends ViewRawProps{
+  alt: string
 }
 
 interface ImageOnCompleteEvent {
@@ -28,7 +32,12 @@ interface ImageOnErrorEvent {
   message?: string;
 }
 
-export type ImageDescriptor = Descriptor<"Image", ImageProps>
+export interface ImageState {}
+
+
+export type ImageDescriptor = Descriptor<"Image", ImageProps, ImageState, ImageRawProps>;
+class ImageDescriptorWrapper extends ViewDescriptorWrapperBase<"Image", ImageProps, ImageState, ImageRawProps> {
+}
 
 class ImageSourceHolder {
   public source: string | Resource | PixelMap
@@ -43,6 +52,8 @@ export struct RNImage {
   ctx!: RNOHContext
   tag: number = 0
   @State descriptor: ImageDescriptor = Object() as ImageDescriptor
+  @State descriptorWrapper: ImageDescriptorWrapper | undefined = undefined
+
   // workaround: `@State` fields cannot be unions of primitive (`string`) and object (`Resource`, `PixelMap`) types
   @State imageSource: ImageSourceHolder | undefined = undefined
   defaultColorFilter: number[] = [
@@ -55,6 +66,7 @@ export struct RNImage {
 
   aboutToAppear() {
     this.descriptor = this.ctx.descriptorRegistry.getDescriptor<ImageDescriptor>(this.tag)
+    this.descriptorWrapper = new ImageDescriptorWrapper(this.descriptor)
     this.onLoadStart();
     this.updateImageSource();
     this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
@@ -164,6 +176,7 @@ export struct RNImage {
       tag: this.tag,
     }) {
       Image(this.imageSource?.source)
+        .accessibilityText(this.descriptor.rawProps.alt)
         .interpolation(ImageInterpolation.High)
         .width("100%")
         .height("100%")

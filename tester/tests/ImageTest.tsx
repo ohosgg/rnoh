@@ -4,8 +4,10 @@ import {TestCase, TestSuite} from '@rnoh/testerino';
 const LOCAL_IMAGE_ASSET_ID = require('../assets/pravatar-131.jpg');
 const REMOTE_IMAGE_URL = 'https://i.pravatar.cc/100?img=31';
 const REMOTE_REDIRECT_IMAGE_URL = 'http://placeholder.com/350x150';
-const REMOTE_GIF_URL = 'https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif';
-const DATA_URI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
+const REMOTE_GIF_URL =
+  'https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif';
+const DATA_URI =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
 
 export const ImageTest = () => {
   return (
@@ -40,6 +42,14 @@ export const ImageTest = () => {
           style={{borderRadius: 8, borderWidth: 1, height: 400}}
           source={{uri: REMOTE_GIF_URL}}
         />
+      </TestCase>
+      <TestCase itShould="display alt when the image doesn't load">
+        <View>
+          <Image
+            source={require('../assets/fonts/Pacifico-Regular.ttf')}
+            alt="This image could not be loaded!"
+          />
+        </View>
       </TestCase>
       <TestCase
         itShould="retrieve remote image size"
