@@ -17,8 +17,7 @@ class TextInputComponentNapiBinder : public ViewComponentNapiBinder {
             if (textAlign.has_value()) {
                 alignment = textAlignmentToString(textAlign.value());
             }
-            return ArkJS(env)
-                .getObjectBuilder(napiViewProps)
+            auto propsObjBuilder = ArkJS(env).getObjectBuilder(napiViewProps)
                 .addProperty("text", props->text)
                 .addProperty("fontColor", props->textAttributes.foregroundColor)
                 .addProperty("fontFamily", props->textAttributes.fontFamily)
@@ -34,7 +33,12 @@ class TextInputComponentNapiBinder : public ViewComponentNapiBinder {
                 .addProperty("textAlign", alignment)
                 .addProperty("autoFocus", props->autoFocus)
                 .addProperty("keyboardType", keyboardTypeToString(props->traits.keyboardType))
-                .build();
+                .addProperty("fontStyle", props->textAttributes.fontStyle == facebook::react::FontStyle::Italic ? "italic" : "normal");
+
+            if (props->textAttributes.fontWeight.has_value()) {
+                propsObjBuilder.addProperty("fontWeight", static_cast<int>(props->textAttributes.fontWeight.value()));
+            }
+            return propsObjBuilder.build();
         }
         return napiViewProps;
     };

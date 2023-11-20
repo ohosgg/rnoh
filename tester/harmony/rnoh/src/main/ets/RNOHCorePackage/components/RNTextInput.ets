@@ -1,6 +1,7 @@
 import { ColorSegments, convertColorSegmentsToString, Descriptor, RNOHContext } from '../../RNOH';
 import { RNViewBase, ViewBaseProps } from './RNViewBase';
 import { RNOHEventEmitRequestHandlerName } from './../RNOHEventEmitRequestHandler';
+import {stringToFontStyle} from './RNText/conversions';
 
 export interface TextInputProps extends ViewBaseProps {
   fontColor?: ColorSegments
@@ -18,6 +19,8 @@ export interface TextInputProps extends ViewBaseProps {
   textAlign?: string
   autoFocus?: boolean
   keyboardType?: string
+  fontWeight?: number
+  fontStyle?: string
 }
 
 export interface TextInputRawProps {
@@ -192,6 +195,8 @@ export struct RNTextInput {
           .onChange((value) => this.handleChangeEvent(value))
           .enabled(this.descriptor.props.editable)
           .maxLength(this.descriptor.rawProps.maxLength)
+          .placeholderFont({size: this.descriptor.props.fontSize,  weight: this.descriptor.props.fontWeight,
+            family: this.descriptor.props.fontFamily, style: stringToFontStyle(this.descriptor.props.fontStyle)})
           .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
           .textAlign(stringToAlignment(this.descriptor.props.textAlign))
           /*
@@ -222,6 +227,8 @@ export struct RNTextInput {
           .maxLength(this.descriptor.rawProps.maxLength)
           .selectedBackgroundColor(convertColorSegmentsToString(this.descriptor.props.selectionColor))
           .showPasswordIcon(false)
+          .placeholderFont({size: this.descriptor.props.fontSize,  weight: this.descriptor.props.fontWeight,
+              family: this.descriptor.props.fontFamily, style: stringToFontStyle(this.descriptor.props.fontStyle)})
           .placeholderColor(convertColorSegmentsToString(this.descriptor.props.placeholderTextColor))
           .enterKeyType(stringToEnterKeyType(this.descriptor.props.returnKeyType))
           .textAlign(stringToAlignment(this.descriptor.props.textAlign))

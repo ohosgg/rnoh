@@ -236,6 +236,19 @@ export function TextInputTest() {
         {/* @ts-ignore */}
         <TextInputWithText style={styles.textInput} readOnly />
       </TestCase>
+      <TestCase
+        modal
+        itShould="display bold, italic, large placeholder with a custom font">
+        <TextInput
+          style={{
+            fontFamily: 'StintUltraCondensed-Regular',
+            fontWeight: 'bold',
+            fontSize: 24,
+            fontStyle: 'italic',
+          }}
+          placeholder="placeholder"
+        />
+      </TestCase>
     </TestSuite>
   );
 }
