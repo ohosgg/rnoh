@@ -260,9 +260,7 @@ export function TextTest() {
           </View>
         </TestCase>
         <TestCase
-          itShould="show text with text transformed"
-          skip
-          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/279
+          itShould="show text with correct textTransform"
           //  123 1one is added to the end of text to see if the code correctly handles number
         >
           <View style={styles.bigContainer}>
