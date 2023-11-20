@@ -33,6 +33,9 @@ export class RNScrollViewManager extends RNViewManager {
     return this.isScrolling;
   }
 
+  /**
+   * @deprecated
+   */
   public lockScrolling(): () => void {
     this.scrollLockCount++
     this.eventEmitter.emit("LOCK_SCROLLING")

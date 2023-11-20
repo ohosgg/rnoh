@@ -27,7 +27,6 @@ export struct RNViewBase {
   private unregisterDescriptorChangesListener?: () => void = undefined
   private unregisterComponentManager?: () => void = undefined
   private unregisterCommandCallback?: () => void = undefined
-  private unlockScrolling?: () => void = undefined
 
   aboutToAppear() {
     let descriptor = this.ctx.descriptorRegistry.getDescriptor<ViewBaseDescriptor>(this.tag)
@@ -43,15 +42,6 @@ export struct RNViewBase {
         this.setDescriptor(newDescriptor)
       }
     )
-    this.unregisterCommandCallback = this.ctx.componentCommandReceiver.registerCommandCallback(
-      this.tag,
-      (command, args: [number, number, number]) => {
-        if (command === 'lockScrolling') {
-          this.unlockScrolling = this.ctx.scrollLocker.lockScrollContainingViewTag(this.tag);
-        } else if (command === 'unlockScrolling') {
-          this.unlockScrolling?.()
-        }
-      });
   }
 
   private setDescriptor(descriptor: ViewBaseDescriptor) {

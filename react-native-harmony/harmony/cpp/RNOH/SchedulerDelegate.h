@@ -1,14 +1,17 @@
 #pragma once
 #include <react/renderer/scheduler/SchedulerDelegate.h>
+#include <folly/dynamic.h>
 
 #include "RNOH/MountingManager.h"
+#include "RNOH/ArkTSChannel.h"
 
 namespace rnoh {
 
 class SchedulerDelegate : public facebook::react::SchedulerDelegate {
   public:
-    SchedulerDelegate(MountingManager mountingManager)
-        : mountingManager(std::move(mountingManager)){};
+    SchedulerDelegate(MountingManager mountingManager, ArkTSChannel::Shared arkTsChannel)
+        : mountingManager(std::move(mountingManager)),
+          m_arkTsChannel(arkTsChannel){};
 
     ~SchedulerDelegate() = default;
 
@@ -30,13 +33,16 @@ class SchedulerDelegate : public facebook::react::SchedulerDelegate {
 
     void schedulerDidSetIsJSResponder(
         facebook::react::ShadowView const &shadowView, bool isJSResponder, bool blockNativeResponder) override {
-        if (isJSResponder && blockNativeResponder) {
-            mountingManager.dispatchCommand(shadowView.tag, "lockScrolling", {});
-        } else {
-            mountingManager.dispatchCommand(shadowView.tag, "unlockScrolling", {});
-        }
+        folly::dynamic payload = folly::dynamic::object;
+        payload["tag"] = shadowView.tag;
+        payload["isJSResponder"] = isJSResponder;
+        payload["blockNativeResponder"] = blockNativeResponder;
+        m_arkTsChannel->postMessage("SCHEDULER_DID_SET_IS_JS_RESPONDER", payload);
     }
+
+  private:
     MountingManager mountingManager;
+    ArkTSChannel::Shared m_arkTsChannel;
 };
 
 } // namespace rnoh

@@ -4,7 +4,6 @@ import type { RNComponentCommandHub, RNComponentCommandReceiver } from './RNComp
 import type { RNOHLogger } from './RNOHLogger';
 import type { RNInstance, RNInstanceImpl } from './RNInstance';
 import type { ComponentManagerRegistry } from './ComponentManagerRegistry';
-import { RNScrollLocker } from './RNScrollLocker';
 
 export class RNOHContext {
   public get descriptorRegistry(): DescriptorRegistry {
@@ -28,10 +27,6 @@ export class RNOHContext {
 
   public get componentManagerRegistry(): ComponentManagerRegistry {
     return this.rnInstance.componentManagerRegistry;
-  }
-
-  public get scrollLocker(): RNScrollLocker {
-    return this.rnInstance.scrollLocker;
   }
 
   /**

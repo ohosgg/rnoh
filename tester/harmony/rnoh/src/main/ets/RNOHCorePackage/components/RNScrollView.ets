@@ -1,4 +1,4 @@
-import { Descriptor, Position, RNOHContext, Size, Tag } from '../../RNOH';
+import { Descriptor, Position, RNOHContext, Size, Tag, RNOHComponentCommand } from '../../RNOH';
 import { _RNScrollViewManager } from '../componentManagers/RNScrollViewManager';
 import { RNViewBase, ViewBaseProps, ViewDescriptorWrapperBase, ViewRawProps } from './RNViewBase';
 import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from './RNPullToRefreshView';
@@ -103,6 +103,10 @@ export struct RNScrollView {
           this.scrollTo(args[0], args[1], args[2]);
         } else if (command === 'scrollToEnd') {
           this.scrollToEnd(args[0]);
+        } else if (command === RNOHComponentCommand.BLOCK_NATIVE_RESPONDER) {
+          this.shouldPreventScrolling = true
+        } else if (command === RNOHComponentCommand.UNBLOCK_NATIVE_RESPONDER) {
+          this.shouldPreventScrolling = false
         }
       }));
     this.componentManager = new _RNScrollViewManager(this.tag, this.ctx, this.scroller)

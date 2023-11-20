@@ -21,21 +21,22 @@ static napi_value createReactNativeInstance(napi_env env, napi_callback_info inf
     LogSink::initializeLogging();
     LOG(INFO) << "createReactNativeInstance";
     ArkJS arkJs(env);
-    auto args = arkJs.getCallbackArgs(info, 5);
+    auto args = arkJs.getCallbackArgs(info, 6);
     size_t instanceId = arkJs.getDouble(args[0]);
     auto arkTsTurboModuleProviderRef = arkJs.createReference(args[1]);
-    auto listener_ref = arkJs.createReference(args[2]);
+    auto mutationsListenerRef = arkJs.createReference(args[2]);
     auto commandDispatcherRef = arkJs.createReference(args[3]);
-    auto measureTextFnRef = arkJs.createReference(args[4]);
+    auto eventDispatcherRef = arkJs.createReference(args[4]);
+    auto measureTextFnRef = arkJs.createReference(args[5]);
     auto rnInstance = createRNInstance(
         instanceId,
         env,
         arkTsTurboModuleProviderRef,
-        [env, listener_ref](MutationsToNapiConverter mutationsToNapiConverter, auto const &mutations) {
+        [env, mutationsListenerRef](MutationsToNapiConverter mutationsToNapiConverter, auto const &mutations) {
             ArkJS arkJs(env);
             auto napiMutations = mutationsToNapiConverter.convert(env, mutations);
             std::array<napi_value, 1> args = {napiMutations};
-            auto listener = arkJs.getReferenceValue(listener_ref);
+            auto listener = arkJs.getReferenceValue(mutationsListenerRef);
             arkJs.call<1>(listener, args);
         },
         [env, commandDispatcherRef](auto tag, auto const &commandName, auto args) {
@@ -46,6 +47,7 @@ static napi_value createReactNativeInstance(napi_env env, napi_callback_info inf
             arkJs.call<3>(commandDispatcher, napiArgsArray);
         },
         measureTextFnRef,
+        eventDispatcherRef,
         uiTicker);
 
     if (rnInstanceById.find(instanceId) != rnInstanceById.end()) {

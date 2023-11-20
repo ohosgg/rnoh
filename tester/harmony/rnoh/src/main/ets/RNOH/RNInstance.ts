@@ -15,7 +15,6 @@ import { JSBundleProviderError } from './JSBundleProvider'
 import type { Tag } from './DescriptorBase'
 import type { RNPackage, RNPackageContext } from './RNPackage'
 import type { TurboModule } from './TurboModule'
-import { RNScrollLocker } from './RNScrollLocker'
 
 export type SurfaceContext = {
   width: number
@@ -74,7 +73,6 @@ export interface RNInstance {
   commandDispatcher: CommandDispatcher;
   componentManagerRegistry: ComponentManagerRegistry;
   abilityContext: common.UIAbilityContext;
-  scrollLocker: RNScrollLocker;
 
   getLifecycleState(): LifecycleState;
 
@@ -115,17 +113,21 @@ export type RNInstanceOptions = {
   createRNPackages: (ctx: RNPackageContext) => RNPackage[]
 }
 
+export enum RNOHComponentCommand {
+  BLOCK_NATIVE_RESPONDER = "RNOH::BLOCK_NATIVE_RESPONDER",
+  UNBLOCK_NATIVE_RESPONDER = "RNOH::UNBLOCK_NATIVE_RESPONDER",
+}
+
 export class RNInstanceImpl implements RNInstance {
   private turboModuleProvider: TurboModuleProvider
   private surfaceCounter = 0;
   private lifecycleState: LifecycleState = LifecycleState.BEFORE_CREATE
   private bundleExecutionStatusByBundleURL: Map<string, BundleExecutionStatus> = new Map()
   public descriptorRegistry: DescriptorRegistry;
-  public componentCommandHub: CommandDispatcher;
+  public componentCommandHub: RNComponentCommandHub;
   public componentManagerRegistry: ComponentManagerRegistry;
   private lifecycleEventEmitter = new EventEmitter<LifecycleEventArgsByEventName>()
   private componentNameByDescriptorType = new Map<string, string>()
-  public scrollLocker: RNScrollLocker;
 
   /**
    * @deprecated
@@ -151,7 +153,6 @@ export class RNInstanceImpl implements RNInstance {
       this
     );
     this.componentCommandHub = new RNComponentCommandHub();
-    this.scrollLocker = new RNScrollLocker(this.componentManagerRegistry)
   }
 
   public getId(): number {
@@ -169,7 +170,37 @@ export class RNInstanceImpl implements RNInstance {
       (tag, commandName, args) => {
         this.componentCommandHub.dispatchCommand(tag, commandName, args)
       },
+      (type, payload) => {
+        this.onCppMessage(type, payload)
+      }
     )
+  }
+
+  private onCppMessage(type: string, payload: any) {
+    switch (type) {
+      case "SCHEDULER_DID_SET_IS_JS_RESPONDER":
+        if (payload.blockNativeResponder) {
+          this.onBlockNativeResponder(payload.tag)
+        } else {
+          this.onUnblockNativeResponder(payload.tag)
+        }
+      default:
+        this.logger.error(`Unknown action: ${type}`)
+    }
+  }
+
+  private onBlockNativeResponder(tag: Tag) {
+    const tags = this.descriptorRegistry.getDescriptorLineage(tag).map(d => d.tag)
+    tags.forEach((tag) => {
+      this.componentCommandHub.dispatchCommand(tag, RNOHComponentCommand.BLOCK_NATIVE_RESPONDER, undefined)
+    })
+  }
+
+  private onUnblockNativeResponder(tag: Tag) {
+    const tags = this.descriptorRegistry.getDescriptorLineage(tag).map(d => d.tag)
+    tags.forEach((tag) => {
+      this.componentCommandHub.dispatchCommand(tag, RNOHComponentCommand.UNBLOCK_NATIVE_RESPONDER, undefined)
+    })
   }
 
   private async processPackages(packages: RNPackage[]) {

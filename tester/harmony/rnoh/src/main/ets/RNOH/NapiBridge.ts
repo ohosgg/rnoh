@@ -10,16 +10,20 @@ export class NapiBridge {
   }
 
   createReactNativeInstance(instanceId: number,
-                        turboModuleProvider: TurboModuleProvider,
-                        mutationsListener: (mutations: Mutation[]) => void,
-                        componentCommandsListener: (tag: Tag,
-                                                     commandName: string,
-                                                     args: unknown) => void) {
+                            turboModuleProvider: TurboModuleProvider,
+                            mutationsListener: (mutations: Mutation[]) => void,
+                            componentCommandsListener: (tag: Tag,
+                                                        commandName: string,
+                                                        args: unknown) => void,
+                            onCppMessage: (type: string, payload: any) => void
+                          )
+  {
     this.libRNOHApp?.createReactNativeInstance(
       instanceId,
       turboModuleProvider,
       mutationsListener,
       componentCommandsListener,
+      onCppMessage,
       (attributedString: AttributedString, paragraphAttributes: ParagraphAttributes, layoutConstraints: LayoutConstrains) => {
         try {
           return measureParagraph(attributedString, paragraphAttributes, layoutConstraints)

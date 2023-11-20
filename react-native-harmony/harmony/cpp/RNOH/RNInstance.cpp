@@ -79,16 +79,17 @@ void RNInstance::initializeScheduler() {
     };
 
     this->schedulerDelegate = std::make_unique<SchedulerDelegate>(MountingManager(
-        taskExecutor,
-        shadowViewRegistry,
-        [this](react::ShadowViewMutationList mutations) {
-            this->m_mutationsListener(this->m_mutationsToNapiConverter, mutations);
-        },
-        [this](auto tag, auto commandName, auto args) {
-            this->taskExecutor->runTask(TaskThread::MAIN, [this, tag, commandName = std::move(commandName), args = std::move(args)]() {
-                this->m_commandDispatcher(tag, commandName, args);
-            });
-        }));
+                                                                      taskExecutor,
+                                                                      shadowViewRegistry,
+                                                                      [this](react::ShadowViewMutationList mutations) {
+                                                                          this->m_mutationsListener(this->m_mutationsToNapiConverter, mutations);
+                                                                      },
+                                                                      [this](auto tag, auto commandName, auto args) {
+                                                                          this->taskExecutor->runTask(TaskThread::MAIN, [this, tag, commandName = std::move(commandName), args = std::move(args)]() {
+                                                                              this->m_commandDispatcher(tag, commandName, args);
+                                                                          });
+                                                                      }),
+                                                                  m_arkTsChannel);
     m_animationDriver = std::make_shared<react::LayoutAnimationDriver>(
         this->instance->getRuntimeExecutor(), m_contextContainer, this);
     this->scheduler = std::make_unique<react::Scheduler>(schedulerToolbox, m_animationDriver.get(), schedulerDelegate.get());

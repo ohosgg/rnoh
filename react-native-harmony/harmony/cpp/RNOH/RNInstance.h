@@ -27,6 +27,7 @@
 #include "RNOH/EventEmitRequestHandler.h"
 #include "RNOH/TaskExecutor/TaskExecutor.h"
 #include "RNOH/UITicker.h"
+#include "RNOH/ArkTSChannel.h"
 namespace rnoh {
 using MutationsListener = std::function<void(MutationsToNapiConverter, facebook::react::ShadowViewMutationList const &mutations)>;
 
@@ -41,6 +42,7 @@ class RNInstance : public facebook::react::LayoutAnimationStatusDelegate {
                EventEmitRequestHandlers eventEmitRequestHandlers,
                MutationsListener &&mutationsListener,
                MountingManager::CommandDispatcher &&commandDispatcher,
+               ArkTSChannel::Shared arkTsChannel,
                UITicker::Shared uiTicker)
         : m_id(id),
           instance(std::make_shared<facebook::react::Instance>()),
@@ -55,6 +57,7 @@ class RNInstance : public facebook::react::LayoutAnimationStatusDelegate {
           m_shouldRelayUITick(false),
           m_mutationsListener(mutationsListener),
           m_commandDispatcher(commandDispatcher),
+          m_arkTsChannel(arkTsChannel),
           m_uiTicker(uiTicker) {
         this->unsubscribeUITickListener = this->m_uiTicker->subscribe(m_id, [this]() {
             this->taskExecutor->runTask(TaskThread::MAIN, [this]() {
@@ -104,6 +107,7 @@ class RNInstance : public facebook::react::LayoutAnimationStatusDelegate {
     UITicker::Shared m_uiTicker;
     std::function<void()> unsubscribeUITickListener = nullptr;
     std::atomic<bool> m_shouldRelayUITick;
+    ArkTSChannel::Shared m_arkTsChannel;
 
     void initialize();
     void initializeScheduler();
