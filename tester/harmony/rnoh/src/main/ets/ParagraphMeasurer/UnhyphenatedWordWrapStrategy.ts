@@ -249,7 +249,9 @@ export class UnhyphenatedWordWrapStrategy<
     const breakingToken = measuredTokens[breakingTokenIdx];
     const newLineStartIdx =
       breakingTokenIdx + (breakingToken.isIgnoredIfBreaksLine ? 1 : 0);
-    const nextLine = measuredTokens.slice(0, breakingTokenIdx);
+    // don't omit the only character in the line, even if it's "breaking"
+    const nextLineLength = (breakingTokenIdx === 0 && newLineStartIdx === 1) ? 1 : breakingTokenIdx;
+    const nextLine = measuredTokens.slice(0, nextLineLength);
     const remainingTokens = measuredTokens.slice(newLineStartIdx) ?? [];
     return {
       nextLine,

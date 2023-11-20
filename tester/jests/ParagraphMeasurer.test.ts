@@ -280,6 +280,33 @@ describe('UnhyphenatedWordWrapStrategy', () => {
     );
   });
 
+  it('should allow empty lines', () => {
+    const strategy = new UnhyphenatedWordWrapStrategy(
+      new FakeTextFragmentMeasurer(),
+    );
+    const TEXT = 'foo\n\nbar';
+
+    result = strategy.convertFragmentsIntoLines(
+      [
+        {
+          type: 'text',
+          content: TEXT,
+          extraData: {},
+        },
+      ],
+      {width: undefined},
+    );
+
+    expect(result.length).toBe(3);
+    expect(result[0].positionedFragments.length).toBe(1);
+    expect(result[0].positionedFragments[0].size.width).toBe('foo'.length);
+    expect(result[1].size.height).not.toBeLessThanOrEqual(0);
+    expect(result[2].positionedFragments.length).toBe(1);
+    expect(result[2].positionedFragments[0].size.width).toBe(
+      'bar'.length,
+    );
+  });
+
   it('should allow breaking after character', () => {
     const strategy = new UnhyphenatedWordWrapStrategy(
       new FakeTextFragmentMeasurer(),
