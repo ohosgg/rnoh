@@ -12,7 +12,6 @@ export interface TextInputProps extends ViewBaseProps {
   placeholderTextColor?: ColorSegments
   returnKeyType?: string
   textAlign?: string
-  autoFocus?: boolean
   keyboardType?: string
 }
 
@@ -23,7 +22,7 @@ export interface TextInputRawProps extends ViewRawProps {
   fontFamily?: string
   fontSize?: number
   fontStyle?: string
-  focusable?: boolean
+  autoFocus?: boolean
 }
 
 export interface TextInputState {}

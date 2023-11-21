@@ -57,8 +57,8 @@ export class TextInputDescriptorWrapper extends ViewDescriptorWrapperBase<string
     return this.rawProps.fontStyle;
   }
 
-  public get focusable(): boolean {
-    return this.rawProps.focusable;
+  public get autoFocus(): boolean {
+    return this.rawProps.autoFocus ?? false;
   }
 
   private getValueDecreasedByPadding(value: number | undefined, paddingBefore: DimensionValue, paddingAfter: DimensionValue): number {

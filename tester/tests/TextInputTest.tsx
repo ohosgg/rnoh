@@ -33,35 +33,62 @@ export function TextInputTest() {
       <TestCase modal itShould="render textInput with caret hidden">
         <TextInputWithText style={styles.textInput} caretHidden />
       </TestCase>
-      <TestCase
-        modal
-        itShould="blur text on submit"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/403
-        initialState={false}
-        arrange={({setState}) => {
-          return (
-            <>
-              <TextInputWithText
-                style={styles.textInput}
-                blurOnSubmit
-                onBlur={() => setState(true)}
-              />
-            </>
-          );
-        }}
-        assert={({expect, state}) => {
-          expect(state).to.be.true;
-        }}
-      />
-      <TestCase
-        modal
-        itShould="not blur text on submit"
-        skip
-        //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/403
-      >
-        <TextInputWithText style={styles.textInput} blurOnSubmit={false} />
-      </TestCase>
+      <TestSuite name="blur">
+        <TestCase
+          modal
+          itShould="blur text on submit (singleline)"
+          initialState={false}
+          arrange={({setState}) => {
+            return (
+              <>
+                <TextInputWithText
+                  style={styles.textInput}
+                  blurOnSubmit
+                  onBlur={() => setState(true)}
+                />
+              </>
+            );
+          }}
+          assert={({expect, state}) => {
+            expect(state).to.be.true;
+          }}
+        />
+        <TestCase
+          modal
+          itShould="blur text after switching to another textinput"
+          initialState={false}
+          arrange={({setState}) => {
+            return (
+              <>
+                <TextInputWithText
+                  style={styles.textInput}
+                  onBlur={() => setState(true)}
+                />
+                <TextInputWithText
+                  style={styles.textInput}
+                  onBlur={() => setState(true)}
+                />
+              </>
+            );
+          }}
+          assert={({expect, state}) => {
+            expect(state).to.be.true;
+          }}
+        />
+        <TestCase
+          modal
+          itShould="not blur text on submit"
+          skip
+          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/403
+        >
+          <TextInputWithText style={styles.textInput} blurOnSubmit={false} />
+          <TextInputWithText
+            style={styles.textInput}
+            blurOnSubmit={false}
+            multiline
+          />
+        </TestCase>
+      </TestSuite>
       <TestCase
         modal
         itShould="render textInput with blue underline"

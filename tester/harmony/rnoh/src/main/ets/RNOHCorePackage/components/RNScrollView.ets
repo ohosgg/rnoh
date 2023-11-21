@@ -1,4 +1,4 @@
-import { Descriptor, Position, RNOHContext, Size, Tag, RNOHComponentCommand } from '../../RNOH';
+import { Descriptor, Position, RNOHComponentCommand, RNOHContext, Size, Tag } from '../../RNOH';
 import { _RNScrollViewManager } from '../componentManagers/RNScrollViewManager';
 import { RNViewBase, ViewBaseProps, ViewDescriptorWrapperBase, ViewRawProps } from './RNViewBase';
 import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from './RNPullToRefreshView';
@@ -418,7 +418,6 @@ export struct RNScrollView {
     })
     .friction(this.getFriction())
     .scrollSnap(this.getScrollSnap())
-    .focusable(this.descriptor.rawProps.focusable ?? false)
   }
 
   build() {

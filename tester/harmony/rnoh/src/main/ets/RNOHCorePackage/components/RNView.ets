@@ -1,6 +1,6 @@
 import { RNOHContext, Tag } from '../../RNOH'
 import { RNViewBase, ViewBaseDescriptor } from './RNViewBase'
-import { RNComponentFactory, ComponentBuilderContext } from './RNComponentFactory'
+import { ComponentBuilderContext, RNComponentFactory } from './RNComponentFactory'
 
 @Component
 export struct RNView {
@@ -9,7 +9,6 @@ export struct RNView {
   @BuilderParam public buildCustomComponent: (ctx: ComponentBuilderContext) => void
 
   @State private childrenTags: Tag[] = []
-  @State private isFocusable: boolean = false
   private cleanupCallback?: () => void = undefined
 
   aboutToAppear() {
@@ -25,7 +24,6 @@ export struct RNView {
 
   updateDescriptor(descriptor: ViewBaseDescriptor) {
     this.childrenTags = descriptor.childrenTags;
-    this.isFocusable = descriptor.rawProps.focusable ?? false;
   }
 
   aboutToDisappear() {
@@ -36,7 +34,6 @@ export struct RNView {
     RNViewBase({
       ctx: this.ctx,
       tag: this.tag,
-      isFocusable: this.isFocusable,
     }) {
       ForEach(this.childrenTags, (childrenTag: Tag) => {
         RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })

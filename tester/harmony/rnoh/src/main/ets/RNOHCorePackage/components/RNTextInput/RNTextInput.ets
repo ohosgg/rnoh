@@ -139,25 +139,20 @@ export struct RNTextInput {
   }
 
   onSubmitEditing(): void {
+    focusControl.requestFocus(`fixedAutoFocus${this.tag}`)
     this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "onSubmitEditing", this.value)
-  }
-
-  isFocusable(): boolean {
-    return this.descriptorWrapper?.focusable ?? false
   }
 
   build() {
     RNViewBase({ ctx: this.ctx, tag: this.tag }) {
       // patch: solve autofocus issues
-      if (!this.descriptor.props.autoFocus) {
-        Button()
-          .key(`fixedAutoFocus${this.tag}`)
-          .width(0)
-          .height(0)
-          .padding(0)
-          .margin(0)
-          .defaultFocus(true)
-      }
+      Button()
+        .key(`fixedAutoFocus${this.tag}`)
+        .width(0)
+        .height(0)
+        .padding(0)
+        .margin(0)
+        .defaultFocus(!(this.descriptorWrapper?.autoFocus ?? false))
       if (this.descriptor.props.multiline) {
         TextArea({ controller: this.areaController, placeholder: this.descriptor.props.placeholder, text: this.value })
           .fontColor(this.descriptorWrapper?.fontColor)
@@ -183,6 +178,7 @@ export struct RNTextInput {
           .borderRadius(0)
           .backgroundColor(Color.Transparent)
           .onFocus(() => this.onFocusEvent())
+          .defaultFocus(this.descriptorWrapper?.autoFocus ?? false)
           .onBlur(() => this.onBlurEvent())/*
            * We need to handle padding manually as TextArea does not handle padding correctly
            * - it does not respect percentage padding and the scroll area size is to big */
@@ -195,7 +191,6 @@ export struct RNTextInput {
             width: this.descriptorWrapper?.width,
             height: this.descriptorWrapper?.height
           })
-          .focusable(this.isFocusable())
       } else {
         TextInput({
           controller: this.inputController,
@@ -231,6 +226,7 @@ export struct RNTextInput {
           .backgroundColor(Color.Transparent)
           .onSubmit(() => this.onSubmitEditing())
           .onFocus(() => this.onFocusEvent())
+          .defaultFocus(this.descriptorWrapper?.autoFocus ?? false)
           .onBlur(() => this.onBlurEvent())/*
            * We need to handle padding manually as TextInput does not handle padding correctly
            * - the text is always centered. */
@@ -243,7 +239,6 @@ export struct RNTextInput {
             width: this.descriptorWrapper?.width,
             height: this.descriptorWrapper?.height
           })
-          .focusable(this.isFocusable())
       }
     }
   }
