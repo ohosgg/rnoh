@@ -1,6 +1,7 @@
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {
+  AnimatedRenderExample,
   AnimationsExample,
   CheckerboardExample,
   ChessboardExample,
@@ -124,6 +125,9 @@ function App() {
         </Page>
         <Page name="EXAMPLE: TABS AND SCROLL VIEW">
           <TabsAndScrollViewExample />
+        </Page>
+        <Page name="EXAMPLE: ANIMATED AND SET STATE">
+          <AnimatedRenderExample />
         </Page>
         <View
           style={[

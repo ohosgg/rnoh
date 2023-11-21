@@ -12,6 +12,7 @@ export class DescriptorRegistry {
   private descriptorByTag: Map<Tag, Descriptor> = new Map();
   private descriptorListenersSetByTag: Map<Tag, Set<(descriptor: Descriptor) => void>> = new Map();
   private subtreeListenersSetByTag: Map<Tag, Set<SubtreeListener>> = new Map();
+  private animatedRawPropsByTag: Map<Tag, Set<string>> = new Map();
   private updatedUnnotifiedTags = new Set<Tag>()
   private cleanUpCallbacks: (() => void)[] = []
 
@@ -54,15 +55,21 @@ export class DescriptorRegistry {
   /**
    * Called by NativeAnimatedTurboModule. This method needs to be encapsulated.
    */
-  public setProps<TProps extends Object>(tag: Tag, props: TProps): void {
+  public setAnimatedRawProps<TProps extends Object>(tag: Tag, props: TProps): void {
     let descriptor = this.getDescriptor<Descriptor<string, TProps>>(tag);
 
     if (!descriptor) {
       return;
     }
 
-    descriptor.props = { ...descriptor.props, ...props };
-    descriptor.rawProps = { ...descriptor.rawProps, ...props };
+    // update stored animated props
+    const oldProps = this.animatedRawPropsByTag.get(tag);
+    const mergedProps = { ...oldProps, props };
+    this.animatedRawPropsByTag.set(tag, mergedProps);
+
+    // set new props for the descriptor
+    descriptor.props = { ...descriptor.props, ...mergedProps };
+    descriptor.rawProps = { ...descriptor.rawProps, ...mergedProps };
     const updatedDescriptor = { ...descriptor };
     this.descriptorByTag.set(tag, updatedDescriptor);
 
@@ -183,11 +190,14 @@ export class DescriptorRegistry {
       const currentDescriptor = this.descriptorByTag.get(mutation.descriptor.tag);
       const children = currentDescriptor!.childrenTags;
       const mutationDescriptor = this.maybeOverwriteProps(mutation.descriptor)
+      const animatedProps = this.animatedRawPropsByTag.get(mutation.descriptor.tag);
+
       const newDescriptor = {
         ...currentDescriptor,
         ...mutation.descriptor,
-        props: { ...currentDescriptor!.props, ...mutationDescriptor.props },
-        rawProps: { ...currentDescriptor!.rawProps, ...mutationDescriptor.rawProps },
+        // NOTE: animated props override the ones from the mutation
+        props: { ...currentDescriptor!.props, ...mutationDescriptor.props, ...animatedProps },
+        rawProps: { ...currentDescriptor!.rawProps, ...mutationDescriptor.rawProps, ...animatedProps },
         childrenTags: children,
       };
       this.descriptorByTag.set(mutation.descriptor.tag, newDescriptor);
@@ -203,6 +213,7 @@ export class DescriptorRegistry {
       return [mutation.parentTag];
     } else if (mutation.type === MutationType.DELETE) {
       this.descriptorByTag.delete(mutation.tag);
+      this.animatedRawPropsByTag.delete(mutation.tag);
       return [];
     } else if (mutation.type === MutationType.REMOVE_DELETE_TREE) {
       return [];

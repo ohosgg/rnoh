@@ -5,6 +5,6 @@ export class NativeAnimatedTurboModule extends TurboModule {
   public static readonly NAME = 'NativeAnimatedTurboModule';
 
   public setViewProps(tag: Tag, props: Object) {
-    this.ctx.descriptorRegistry.setProps(tag, props);
+    this.ctx.descriptorRegistry.setAnimatedRawProps(tag, props);
   }
 }
