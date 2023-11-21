@@ -832,6 +832,9 @@ export function TextTest() {
             </Text>
           </View>
         </TestCase>
+        <TestCase itShould="text should be disabled">
+          <TextDisabledTest />
+        </TestCase>
       </TestSuite>
     </TestSuite>
   );
@@ -892,6 +895,24 @@ const OnTextLayoutView = (props: {
           setWidth(width === 100 ? 200 : 100);
           props.ctx.reset();
         }}
+      />
+    </View>
+  );
+};
+
+const TextDisabledTest = () => {
+  const [pressCount, setPressCount] = useState(0);
+  const [disabled, setDisabled] = useState(false);
+
+  return (
+    <View>
+      <Text> Press count: {pressCount} </Text>
+      <Text disabled={disabled} onPress={() => setPressCount(pressCount + 1)}>
+        {SAMPLE_PARAGRAPH_TEXT}
+      </Text>
+      <Button
+        label={disabled ? 'Enable Text' : 'Disable Text'}
+        onPress={() => setDisabled(!disabled)}
       />
     </View>
   );
