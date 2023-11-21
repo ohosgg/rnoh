@@ -246,7 +246,10 @@ export function ScrollViewTest() {
         </TestCase>
         <TestCase itShould="support sticky headers, hidden on scroll (component 1 and 4 should stick) (stickyHeaderHiddenOnScroll)">
           <View style={styles.wrapperView}>
-            <ScrollView stickyHeaderIndices={[0, 3]} nestedScrollEnabled stickyHeaderHiddenOnScroll>
+            <ScrollView
+              stickyHeaderIndices={[0, 3]}
+              nestedScrollEnabled
+              stickyHeaderHiddenOnScroll>
               {getScrollViewContent({})}
             </ScrollView>
           </View>
@@ -598,6 +601,21 @@ export function ScrollViewTest() {
           itShould="scroll down on the btn press, but prevent scrolling by dragging (scrollEnabled)">
           <ScrollEnabledTestCase />
         </TestCase>
+        <TestCase
+          modal
+          itShould="allow to scroll to the end of the content (snapToEnd = false, from 30 rectangle indice)">
+          <ScrollViewSnapToEnd />
+        </TestCase>
+        <TestCase
+          modal
+          itShould="allow to scroll to the start of the content (snapToStart = false, from 60 rectangle indice)">
+          <ScrollViewSnapToStart />
+        </TestCase>
+        <TestCase
+          modal
+          itShould="allow to scroll from start to 30, then from 60 to the end (snapToStart = false, snapToEnd = false)">
+          <ScrollViewSnapToStartAndEnd />
+        </TestCase>
       </TestSuite>
     </TestSuite>
   );
@@ -875,6 +893,52 @@ function PointerEventsView(props: {
         </ScrollView>
       </View>
       <Button label="reset" onPress={props.reset} />
+    </View>
+  );
+}
+
+function ScrollViewSnapToEnd() {
+  return (
+    <View style={styles.wrapperView}>
+      <ScrollView
+        style={{
+          ...styles.wrapperView,
+        }}
+        snapToEnd={false}
+        snapToOffsets={[1450]}>
+        {getScrollViewContent({amountOfChildren: 100})}
+      </ScrollView>
+    </View>
+  );
+}
+
+function ScrollViewSnapToStart() {
+  return (
+    <View style={styles.wrapperView}>
+      <ScrollView
+        style={{
+          ...styles.wrapperView,
+        }}
+        snapToStart={false}
+        snapToOffsets={[2950]}>
+        {getScrollViewContent({amountOfChildren: 100})}
+      </ScrollView>
+    </View>
+  );
+}
+
+function ScrollViewSnapToStartAndEnd() {
+  return (
+    <View style={styles.wrapperView}>
+      <ScrollView
+        style={{
+          ...styles.wrapperView,
+        }}
+        snapToStart={false}
+        snapToEnd={false}
+        snapToOffsets={[1450, 2950]}>
+        {getScrollViewContent({amountOfChildren: 100})}
+      </ScrollView>
     </View>
   );
 }

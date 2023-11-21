@@ -22,6 +22,8 @@ export interface ScrollViewProps extends ViewBaseProps {
 export interface ScrollViewRawProps extends ViewRawProps {
   snapToInterval?: number
   snapToOffsets?: number[]
+  snapToStart?: boolean
+  snapToEnd?: boolean
 }
 
 export interface ScrollViewState {
@@ -211,10 +213,14 @@ export struct RNScrollView {
 
   getScrollSnap(): ScrollSnapOptions | undefined {
     const snapToOffsets = this.descriptor.rawProps.snapToOffsets
+    const snapToStart = this.descriptor.rawProps.snapToStart
+    const snapToEnd = this.descriptor.rawProps.snapToEnd
     if (snapToOffsets && snapToOffsets.length > 0) {
       return {
         snapAlign: ScrollSnapAlign.CENTER,
-        snapPagination: snapToOffsets
+        snapPagination: snapToOffsets,
+        enableSnapToStart: snapToStart,
+        enableSnapToEnd: snapToEnd,
       }
     }
     const snapToInterval = this.descriptor.rawProps.snapToInterval
