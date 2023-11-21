@@ -184,6 +184,7 @@ export class RNInstanceImpl implements RNInstance {
         } else {
           this.onUnblockNativeResponder(payload.tag)
         }
+        break;
       default:
         this.logger.error(`Unknown action: ${type}`)
     }
