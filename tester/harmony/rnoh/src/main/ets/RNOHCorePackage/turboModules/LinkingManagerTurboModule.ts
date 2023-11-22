@@ -46,13 +46,13 @@ export class LinkingManagerTurboModule extends TurboModule {
         return;
       }
       case "sms": {
-        const want = this.createSMSWant(urlString);
+        const want = this.createSMSWant(uriObject);
         await this.ctx.uiAbilityContext.startAbility(want);
         return;
       }
       default: {
         try {
-          await this.ctx.uiAbilityContext.startAbility({uri: urlString})
+          await this.ctx.uiAbilityContext.startAbility({ uri: urlString })
         } catch (e) {
           throw new Error(`URL scheme ${uriObject.scheme} is not supported`);
         }
@@ -72,18 +72,24 @@ export class LinkingManagerTurboModule extends TurboModule {
   private createBrowserWant(urlString: string): Want {
     return {
       "action": "ohos.want.action.viewData",
-      "entities": [ "entity.system.browsable" ],
+      "entities": ["entity.system.browsable"],
       "uri": urlString,
     };
   }
 
-  private createSMSWant(urlString: string): Want {
+  private createSMSWant(uri: uri.URI): Want {
+    const telephone = uri.ssp;
+    const parameters = telephone ? {
+      contactObjects: JSON.stringify([{ telephone }]),
+      pageFlag: 'conversation'
+    } : undefined;
     // NOTE: the default sms app doesn't handle the `sendSms` action...
     // see https://gitee.com/openharmony/applications_mms/blob/master/entry/src/main/module.json5
     return {
       // "action": "ohos.want.action.sendSms",
       bundleName: "com.ohos.mms",
       abilityName: "com.ohos.mms.MainAbility",
+      parameters
     }
   }
 }
