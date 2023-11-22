@@ -888,6 +888,11 @@ export function TextTest() {
         <TestCase itShould="text should be disabled">
           <TextDisabledTest />
         </TestCase>
+        <TestCase
+          modal
+          itShould="activate onPress() on <Text /> if the touch moves up to 100px above or below the <Text /> body">
+          <TextPressRetentionOffsetTest />
+        </TestCase>
       </TestSuite>
     </TestSuite>
   );
@@ -967,6 +972,41 @@ const TextDisabledTest = () => {
         label={disabled ? 'Enable Text' : 'Disable Text'}
         onPress={() => setDisabled(!disabled)}
       />
+    </View>
+  );
+};
+
+const TextPressRetentionOffsetTest = () => {
+  const [pressCount, setPressCount] = useState(0);
+
+  return (
+    <View style={{height: 500, justifyContent: 'center'}}>
+      <Text style={{textAlign: 'center'}}> Press count: {pressCount} </Text>
+      <View
+        style={{
+          backgroundColor: 'lightblue',
+          height: 250,
+          justifyContent: 'center',
+        }}>
+        <Text
+          style={{
+            backgroundColor: 'blue',
+            height: 50,
+            textAlign: 'center',
+            textAlignVertical: 'center',
+            color: 'white',
+          }}
+          onPress={() => setPressCount(pressCount + 1)}
+          // @ts-ignore - pressRetentionOffset is not in the type definition
+          pressRetentionOffset={{
+            bottom: 100,
+            left: 0,
+            right: 0,
+            top: 100,
+          }}>
+          pressRetentionOffset
+        </Text>
+      </View>
     </View>
   );
 };
