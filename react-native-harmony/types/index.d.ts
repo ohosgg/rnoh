@@ -1,5 +1,5 @@
 // export * from 'react-native/Libraries/ActionSheetIOS/ActionSheetIOS';
-export * from "react-native/Libraries/Alert/Alert";
+export * from 'react-native/Libraries/Alert/Alert';
 export * from 'react-native/Libraries/Animated/Animated';
 export * from 'react-native/Libraries/Animated/Easing';
 export * from 'react-native/Libraries/Animated/useAnimatedValue';
@@ -58,7 +58,7 @@ export * from 'react-native/Libraries/ReactNative/I18nManager';
 export * from 'react-native/Libraries/ReactNative/RendererProxy';
 // export * from 'react-native/Libraries/ReactNative/RootTag';
 export * from 'react-native/Libraries/ReactNative/UIManager';
-// export * from 'react-native/Libraries/ReactNative/requireNativeComponent';
+export * from 'react-native/Libraries/ReactNative/requireNativeComponent';
 // export * from 'react-native/Libraries/Settings/Settings';
 // export * from 'react-native/Libraries/Share/Share';
 // export * from 'react-native/Libraries/StyleSheet/PlatformColorValueTypesIOS';

@@ -4,9 +4,21 @@
 #include "SampleTurboModuleSpec.h"
 #include "NativeCxxModuleExampleCxxSpec.h"
 #include "RNOHCorePackage/ComponentBinders/ViewComponentNapiBinder.h"
+#include "RNOHCorePackage/ComponentBinders/ViewComponentJSIBinder.h"
 
 using namespace rnoh;
 using namespace facebook;
+
+
+class SampleViewJSIBinder : public ViewComponentJSIBinder {
+protected:
+    facebook::jsi::Object createNativeProps(facebook::jsi::Runtime &rt) override {
+        auto nativeProps = ViewComponentJSIBinder::createNativeProps(rt);
+        nativeProps.setProperty(rt, "size", "true");
+        return nativeProps;
+    }
+};
+
 
 class SampleTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
 public:
@@ -36,3 +48,9 @@ ComponentNapiBinderByString SamplePackage::createComponentNapiBinderByName() {
         {"PropsDisplayer", std::make_shared<ViewComponentNapiBinder>()},
     };
 };
+
+ComponentJSIBinderByString SamplePackage::createComponentJSIBinderByName() {
+    return {
+        {"SampleView", std::make_shared<SampleViewJSIBinder>()},
+    };
+}

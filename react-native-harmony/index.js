@@ -65,7 +65,7 @@ module.exports = {
   get Keyboard() {
     return require('react-native/Libraries/Components/Keyboard/Keyboard');
   },
-  get KeyboardAvoidingView(){
+  get KeyboardAvoidingView() {
     return require('react-native/Libraries/Components/Keyboard/KeyboardAvoidingView')
       .default;
   },
@@ -88,6 +88,10 @@ module.exports = {
   },
   get RefreshControl() {
     return require('./Libraries/Components/RefreshControl/RefreshControl');
+  },
+  get requireNativeComponent() {
+    return require('react-native/Libraries/ReactNative/requireNativeComponent')
+      .default;
   },
   get SafeAreaView() {
     return require('./Libraries/Components/SafeAreaView/SafeAreaView').default;
@@ -114,16 +118,16 @@ module.exports = {
     return require('react-native/Libraries/Components/Touchable/Touchable');
   },
   get TouchableHighlight() {
-    return require("./Libraries/Components/Touchable/TouchableHighlight");
+    return require('./Libraries/Components/Touchable/TouchableHighlight');
   },
   get TouchableNativeFeedback() {
-    return require("./Libraries/Components/Touchable/TouchableNativeFeedback");
+    return require('./Libraries/Components/Touchable/TouchableNativeFeedback');
   },
   get TouchableOpacity() {
     return require('react-native/Libraries/Components/Touchable/TouchableOpacity');
   },
   get TouchableWithoutFeedback() {
-    return require("./Libraries/Components/Touchable/TouchableWithoutFeedback");
+    return require('./Libraries/Components/Touchable/TouchableWithoutFeedback');
   },
   get TurboModuleRegistry() {
     return require('react-native/Libraries/TurboModule/TurboModuleRegistry');

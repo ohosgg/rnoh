@@ -11,5 +11,7 @@ class SamplePackage : public Package {
     std::unique_ptr<TurboModuleFactoryDelegate> createTurboModuleFactoryDelegate() override;
 
     ComponentNapiBinderByString createComponentNapiBinderByName() override;
+
+    ComponentJSIBinderByString createComponentJSIBinderByName() override;
 };
 } // namespace rnoh
