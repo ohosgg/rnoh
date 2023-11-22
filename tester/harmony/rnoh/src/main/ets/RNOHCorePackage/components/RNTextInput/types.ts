@@ -26,3 +26,8 @@ export interface TextInputRawProps extends ViewRawProps {
 }
 
 export interface TextInputState {}
+
+export interface Selection {
+  start: number,
+  end: number,
+}

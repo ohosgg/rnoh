@@ -1,9 +1,9 @@
 import { convertColorSegmentsToString, Descriptor, RNOHContext } from '../../../RNOH';
 import { RNViewBase } from '../RNViewBase';
-import { RNOHEventEmitRequestHandlerName } from '../../RNOHEventEmitRequestHandler';
-import { TextInputProps, TextInputRawProps, TextInputState } from './types';
+import { Selection, TextInputProps, TextInputRawProps, TextInputState } from './types';
 import { TextInputDescriptorWrapper } from './TextInputDescriptorWrapper';
 import { stringToFontStyle } from '../RNText/conversions';
+import { RNOHEventEmitRequestHandlerName } from '../..';
 
 export type TextInputDescriptor = Descriptor<"TextInput", TextInputProps, TextInputState, TextInputRawProps>
 
@@ -75,6 +75,7 @@ function getInputType(keyboardType: string, secureTextEntry?: boolean): InputTyp
   }
 }
 
+
 @Component
 export struct RNTextInput {
   ctx!: RNOHContext
@@ -86,10 +87,13 @@ export struct RNTextInput {
   @State value: string = '';
   private unregisterDescriptorChangesListener?: () => void = undefined
   private cleanupCommandCallback?: () => void = undefined
+  private textWasPastedOrCut: boolean = false
+  private selection: Selection = { start: 0, end: 0 }
+  private valueChanged: boolean = false
 
   handleChangeEvent(value: string) {
     this.value = value
-    this.ctx.rnInstanceManager.emitComponentEvent(this.descriptor.tag, RNOHEventEmitRequestHandlerName.TextInputChange, value)
+    this.valueChanged = true;
   }
 
   onFocusEvent() {
@@ -145,6 +149,45 @@ export struct RNTextInput {
     this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "onSubmitEditing", this.value)
   }
 
+  onPasteOrCut(): void {
+    this.textWasPastedOrCut = true;
+  }
+
+  dispatchKeyEvent(currentSelection: Selection): void {
+    if (this.textWasPastedOrCut) {
+      this.textWasPastedOrCut = false;
+    }
+    else if (this.valueChanged) {
+      let key: string = "";
+      const noPreviousSelection = this.selection.start === this.selection.end;
+      const cursorDidNotMove = currentSelection.start === this.selection.start;
+      const cursorMovedBackwardsOrAtBeginningOfInput = (currentSelection.start < this.selection.start) || currentSelection.start <= 0;
+      if (!cursorMovedBackwardsOrAtBeginningOfInput && (noPreviousSelection || !cursorDidNotMove)) {
+        key = this.value.charAt(currentSelection.start - 1);
+      }
+      this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "onKeyPress", key);
+    }
+  }
+
+  dispatchChangeEvent(): void {
+    if (this.valueChanged) {
+      this.valueChanged = false;
+      this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, RNOHEventEmitRequestHandlerName.TextInputChange, this.value);
+    }
+  }
+
+  textSelectionChange(currentSelectionStart: number, currentSelectionEnd: number): void {
+    /**
+     * New values of selection are needed to determine what key was pressed, so this.dispatchKeyEvent needs to be
+     * invoked after this callback fires. OnChange callback fires earlier than OnTextSelectionChange, so all this logic
+     * needs to be handled here rather than in this.handleChangeEvent. According to RN the keyPress event should fire
+     * before changeEvent, so dispatching change event needs to be handled here as well.
+     * */
+    this.dispatchKeyEvent({ start: currentSelectionStart, end: currentSelectionEnd });
+    this.selection = { start: currentSelectionStart, end: currentSelectionEnd };
+    this.dispatchChangeEvent();
+  }
+
   build() {
     RNViewBase({ ctx: this.ctx, tag: this.tag }) {
       // patch: solve autofocus issues
@@ -193,6 +236,9 @@ export struct RNTextInput {
             width: this.descriptorWrapper?.width,
             height: this.descriptorWrapper?.height
           })
+          .onPaste(() => this.onPasteOrCut())
+          .onCut(() => this.onPasteOrCut())
+          .onTextSelectionChange((start, end) => this.textSelectionChange(start, end))
           .key(`TextInput@${this.tag}`)
       } else {
         TextInput({
@@ -242,6 +288,9 @@ export struct RNTextInput {
             width: this.descriptorWrapper?.width,
             height: this.descriptorWrapper?.height
           })
+          .onPaste(() => this.onPasteOrCut())
+          .onCut(() => this.onPasteOrCut())
+          .onTextSelectionChange((start, end) => this.textSelectionChange(start, end))
           .key(`TextInput@${this.tag}`)
       }
     }
