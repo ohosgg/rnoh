@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import {TestSuite, TestCase} from '@rnoh/testerino';
-import {useState} from 'react';
+import {useState,useRef} from 'react';
 import {Button, Effect, StateKeeper} from '../components';
 
 export function TextInputTest() {
@@ -108,6 +108,15 @@ export function TextInputTest() {
           <TextInput style={styles.textInput} onFocus={() => setState(true)} />
         )}
         assert={({expect, state}) => {
+          expect(state).to.be.true;
+        }}
+      />
+      <TestCase
+        modal
+        itShould="focus textInput when pressing the button"
+        initialState={false}
+        arrange={({setState}) => <FocusTextInputTest setState={setState} />}
+        assert={({state, expect}) => {
           expect(state).to.be.true;
         }}
       />
@@ -307,6 +316,18 @@ export function TextInputTest() {
     </TestSuite>
   );
 }
+const FocusTextInputTest = (props: {
+  setState: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const ref = useRef<TextInput>(null);
+  return (
+    <View>
+      <Button label="focus text input" onPress={() => ref.current?.focus()} />
+      <TextInput onFocus={() => props.setState(true)} ref={ref} />
+    </View>
+  );
+};
+
 const TextInputKeyboardType = (props: TextInputProps) => {
   return (
     <>

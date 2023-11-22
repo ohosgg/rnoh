@@ -129,6 +129,8 @@ export struct RNTextInput {
           if (parsedArgs.value !== undefined) {
             this.value = parsedArgs.value;
           }
+        } else if (command === 'focus') {
+          focusControl.requestFocus(`TextInput@${this.tag}`)
         }
       });
   }
@@ -191,6 +193,7 @@ export struct RNTextInput {
             width: this.descriptorWrapper?.width,
             height: this.descriptorWrapper?.height
           })
+          .key(`TextInput@${this.tag}`)
       } else {
         TextInput({
           controller: this.inputController,
@@ -239,6 +242,7 @@ export struct RNTextInput {
             width: this.descriptorWrapper?.width,
             height: this.descriptorWrapper?.height
           })
+          .key(`TextInput@${this.tag}`)
       }
     }
   }
