@@ -64,7 +64,7 @@ export class DescriptorRegistry {
 
     // update stored animated props
     const oldProps = this.animatedRawPropsByTag.get(tag);
-    const mergedProps = { ...oldProps, props };
+    const mergedProps = { ...oldProps, ...props };
     this.animatedRawPropsByTag.set(tag, mergedProps);
 
     // set new props for the descriptor
