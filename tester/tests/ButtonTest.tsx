@@ -8,11 +8,17 @@ export const ButtonTest = () => {
       <TestCase itShould="render a button with a title ">
         <ButtonView />
       </TestCase>
-      <TestCase 
-        itShould="button with touchSoundDisabled" 
+      <TestCase itShould="render a button that should be disabled">
+        <ButtonDisabled />
+      </TestCase>
+      <TestCase
+        itShould="render a button with touchSoundDisabled"
         skip // prop doesnt exist on native side https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/476
       >
         <ButtonTouchSoundDisabled />
+      </TestCase>
+      <TestCase itShould="render a button with accessibility label">
+        <ButtonAccessibilityLabel />
       </TestCase>
     </TestSuite>
   );
@@ -59,10 +65,66 @@ function ButtonTouchSoundDisabled() {
           touchSoundDisabled={touchSoundDisabled}
         />
         <Button
-          title={touchSoundDisabled ? 'Enable Touch Sound' : 'Disable Touch Sound'}
+          title={
+            touchSoundDisabled ? 'Enable Touch Sound' : 'Disable Touch Sound'
+          }
           color="#A4A4A4"
           onPress={toggle}
           touchSoundDisabled={false}
+        />
+      </View>
+      <Text style={styles.text}>Pressed {pressCounter} times</Text>
+    </View>
+  );
+}
+
+function ButtonDisabled() {
+  const [pressCounter, setPressCounter] = React.useState(0);
+  const [disabled, setDisabled] = React.useState(false);
+
+  const incrementPressCounter = () => {
+    setPressCounter(count => count + 1);
+  };
+
+  const toggle = () => {
+    setDisabled(!disabled);
+  };
+
+  return (
+    <View>
+      <View style={styles.buttonsContainer}>
+        <Button
+          title={disabled ? '(disabled)' : 'Press Me'}
+          color="#FF0000"
+          onPress={incrementPressCounter}
+          disabled={disabled}
+        />
+        <Button
+          title={disabled ? 'Enable button click' : 'Disable button click'}
+          color="#A4A4A4"
+          onPress={toggle}
+        />
+      </View>
+      <Text style={styles.text}>Pressed {pressCounter} times</Text>
+    </View>
+  );
+}
+
+function ButtonAccessibilityLabel() {
+  const [pressCounter, setPressCounter] = React.useState(0);
+
+  const incrementPressCounter = () => {
+    setPressCounter(count => count + 1);
+  };
+
+  return (
+    <View>
+      <View style={styles.buttonsContainer}>
+        <Button
+          title={'Increment the count'}
+          color="#FF0000"
+          onPress={incrementPressCounter}
+          accessibilityLabel="Increment the count"
         />
       </View>
       <Text style={styles.text}>Pressed {pressCounter} times</Text>
