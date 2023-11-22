@@ -9,13 +9,13 @@ import {
   isChineseOrJapaneseCharacter,
 } from '../harmony/rnoh/src/main/ets/ParagraphMeasurer';
 
-type ExtraData = {
+type TextExtraData = {
   fontSize?: number;
   lineHeight?: number;
 };
 
-class FakeTextFragmentMeasurer implements TextFragmentMeasurer<ExtraData> {
-  measureTextFragment(textFragment: TextFragment<ExtraData>): Size {
+class FakeTextFragmentMeasurer implements TextFragmentMeasurer<TextExtraData> {
+  measureTextFragment(textFragment: TextFragment<TextExtraData>): Size {
     return {
       width: textFragment.content.length,
       height:
@@ -139,6 +139,32 @@ describe('ParagraphMeasurer', () => {
           .x,
       ).toBe(2);
     });
+  });
+
+  it('should align text and placeholder vertically by default', () => {
+    const paragraphMeasurer = createParagraphMeasurer();
+
+    const result = paragraphMeasurer.measureParagraph<TextExtraData>(
+      {
+        fragments: [
+          {type: 'text', content: 'foo', extraData: {lineHeight: 3}},
+          {type: 'placeholder', width: 1, height: 1, extraData: {}},
+        ],
+      },
+      {
+        containerConfig: {},
+        wordWrapStrategy: new UnhyphenatedWordWrapStrategy(
+          new FakeTextFragmentMeasurer(),
+        ),
+      },
+    );
+
+    expect(
+      result.positionedLines[0].positionedFragments[0].positionRelativeToLine.y,
+    ).toBe(0);
+    expect(
+      result.positionedLines[0].positionedFragments[1].positionRelativeToLine.y,
+    ).toBe(1);
   });
 });
 
@@ -302,9 +328,7 @@ describe('UnhyphenatedWordWrapStrategy', () => {
     expect(result[0].positionedFragments[0].size.width).toBe('foo'.length);
     expect(result[1].size.height).not.toBeLessThanOrEqual(0);
     expect(result[2].positionedFragments.length).toBe(1);
-    expect(result[2].positionedFragments[0].size.width).toBe(
-      'bar'.length,
-    );
+    expect(result[2].positionedFragments[0].size.width).toBe('bar'.length);
   });
 
   it('should allow breaking after character', () => {
@@ -326,9 +350,13 @@ describe('UnhyphenatedWordWrapStrategy', () => {
 
     expect(result.length).toBe(2);
     expect(result[0].positionedFragments.length).toBe(1);
-    expect(result[0].positionedFragments[0].fragment.content).toStrictEqual('中文试');
+    expect(result[0].positionedFragments[0].fragment.content).toStrictEqual(
+      '中文试',
+    );
     expect(result[1].positionedFragments.length).toBe(1);
-    expect(result[1].positionedFragments[0].fragment.content).toStrictEqual('as');
+    expect(result[1].positionedFragments[0].fragment.content).toStrictEqual(
+      'as',
+    );
   });
 
   it('should preserve spaces', () => {

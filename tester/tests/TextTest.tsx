@@ -476,6 +476,13 @@ export function TextTest() {
           </View>
         </TestCase>
         <TestSuite name="views in text">
+          <TestCase itShould="vertically align text and view">
+            <Text style={{color: 'red', lineHeight: 82}}>
+              {'Hello World'}
+              <View
+                style={{width: 12, height: 12, backgroundColor: 'blue'}}></View>
+            </Text>
+          </TestCase>
           <TestCase itShould="not crash when a view is trimmed by number of lines (#1)">
             <Text numberOfLines={1}>
               '中文测试中文测试中文测试中文测试中文测试中文测试中文测试中文测试'
@@ -777,6 +784,52 @@ export function TextTest() {
             </Text>
             <Text style={{textAlignVertical: 'bottom'}}>
               -<Text style={styles.blueShortText}>Bottom</Text>-
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase itShould="align text vertically">
+          <View style={{width: 300, borderRightWidth: 1}}>
+            <Text>
+              <Text style={{lineHeight: 64, backgroundColor: 'red'}}>
+                lineHeight: 64
+              </Text>
+              <Text style={{lineHeight: 16, backgroundColor: 'blue'}}>
+                lineHeight: 16; lineHeight: 16; lineHeight: 16; lineHeight: 16;
+              </Text>
+              <View
+                style={{backgroundColor: 'purple', width: 16, height: 16}}
+              />
+            </Text>
+            <Text style={{marginTop: 16}}>
+              <Text style={{lineHeight: 16, backgroundColor: 'blue'}}>
+                lineHeight: 16
+              </Text>
+              <Text style={{lineHeight: 64, backgroundColor: 'red'}}>
+                lineHeight: 64; lineHeight: 64; lineHeight: 64; lineHeight: 64
+              </Text>
+              <View
+                style={{backgroundColor: 'purple', width: 16, height: 16}}
+              />
+            </Text>
+
+            <Text style={{marginTop: 16}}>
+              <Text
+                style={{
+                  lineHeight: 64,
+                  backgroundColor: 'red',
+                  verticalAlign: 'bottom',
+                }}>
+                lineHeight: 16; verticalAlign: bottom; lineHeight: 16;
+                verticalAlign: bottom;
+              </Text>
+              <Text
+                style={{
+                  lineHeight: 16,
+                  backgroundColor: 'blue',
+                  verticalAlign: 'bottom',
+                }}>
+                lineHeight: 16; verticalAlign: bottom;
+              </Text>
             </Text>
           </View>
         </TestCase>

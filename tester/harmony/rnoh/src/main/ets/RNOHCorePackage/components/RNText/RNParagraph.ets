@@ -50,10 +50,6 @@ export struct RNParagraph {
   }
 
   getVerticalOffset() {
-    /**
-     * TODO: Move handling vertical alignment to ParagraphMeasurer, to fix the position of attachments.
-     * https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/392
-     */
     const maxOffset = Math.max(this.descriptor.layoutMetrics.frame.size.height - this.paragraphSize.height, 0)
     switch (this.descriptor.props.textAlignVertical) {
       case "bottom":
@@ -88,7 +84,6 @@ export struct RNParagraph {
               })
               .backgroundColor(positionedFragment.fragment.extraData.backgroundColor)
               .letterSpacing(getLetterSpacing(positionedFragment.fragment.extraData.letterSpacing))
-              .lineHeight(line.size.height)
               .textCase(stringToTextTransform(positionedFragment.fragment.extraData.textTransform))
               .textShadow(getTextShadow(positionedFragment.fragment.extraData?.textShadowProps))
               .position({
@@ -97,6 +92,7 @@ export struct RNParagraph {
               })
               .width(positionedFragment.size.width)
               .height(line.size.height)
+              .maxLines(1)
           }
         })
         ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
