@@ -7,12 +7,18 @@ import {
   DeviceEventEmitter,
   findNodeHandle,
   DrawerLayoutAndroid,
+  Text,
 } from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 
 export const MiscTest = () => {
   return (
     <TestSuite name="Misc">
+      <TestCase
+        itShould="Display the __DEV__ value"
+      >
+        <Text>{`__DEV__ is ${__DEV__}`}</Text>
+      </TestCase>
       <TestCase
         itShould="represent a color as a number"
         fn={({expect}) => {
