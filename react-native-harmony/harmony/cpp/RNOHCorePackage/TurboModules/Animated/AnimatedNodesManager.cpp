@@ -11,6 +11,8 @@
 #include "Nodes/InterpolationAnimatedNode.h"
 #include "Nodes/AssociativeOperationNode.h"
 #include "Nodes/DiffClampAnimatedNode.h"
+#include "Nodes/TrackingAnimatedNode.h"
+#include "Nodes/ModulusAnimatedNode.h"
 
 #include "Drivers/EventAnimationDriver.h"
 #include "Drivers/FrameBasedAnimationDriver.h"
@@ -50,6 +52,10 @@ void AnimatedNodesManager::createNode(facebook::react::Tag tag, folly::dynamic c
         node = std::make_unique<DivisionAnimatedNode>(config, *this);
     } else if (type == "diffclamp") {
         node = std::make_unique<DiffClampAnimatedNode>(config, *this);
+    } else if (type == "tracking") {
+        node = std::make_unique<TrackingAnimatedNode>(config, *this);
+    } else if (type == "modulus") {
+        node = std::make_unique<ModulusAnimatedNode>(config, *this);
     } else {
         throw std::runtime_error("Unsupported animated node type: " + type);
     }
@@ -198,6 +204,8 @@ void AnimatedNodesManager::stopAnimation(facebook::react::Tag animationId) {
 }
 
 void AnimatedNodesManager::runUpdates(uint64_t frameTimeNanos) {
+    // we don't want to enter this while updating nodes (which can happen if a tracking node starts a new animation)
+    m_isRunningAnimations = true;
     std::vector<facebook::react::Tag> finishedAnimations;
 
     for (auto &[animationId, driver] : m_animationById) {

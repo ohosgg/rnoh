@@ -26,6 +26,8 @@ static Transform applyTransformOperation(Transform const &transform, std::string
         operation = Transform::Rotate(0, value, 0);
     } else if (property == "rotateZ") {
         operation = Transform::Rotate(0, 0, value);
+    } else if (property == "perspective") {
+        operation = Transform::Perspective(value);
     } else {
         throw std::runtime_error("Unsupported animated transform property " + property);
     }

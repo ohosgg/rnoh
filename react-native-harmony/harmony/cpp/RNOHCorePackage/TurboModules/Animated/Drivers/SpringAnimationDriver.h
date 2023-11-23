@@ -54,7 +54,6 @@ private:
     int64_t m_iterations;
     uint64_t m_currentLoop;
     double m_originalValue;
-    bool m_hasFinished;
 };
 
 } // namespace rnoh

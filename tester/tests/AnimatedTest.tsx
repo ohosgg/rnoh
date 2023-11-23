@@ -45,8 +45,17 @@ export function AnimatedTest() {
       <TestCase itShould="move grey square 2x further horizontally than red">
         <Multiply />
       </TestCase>
+      <TestCase itShould="move grey twice but half the total distance of red">
+        <Modulo />
+      </TestCase>
+      <TestCase skip itShould="move red square closer">
+        <Perspective />
+      </TestCase>
       <TestCase itShould="move square both vertically and horizontally">
         <ValueXY />
+      </TestCase>
+      <TestCase skip itShould='(broken everywhere) move both squares, with blue square following the red with a spring'>
+        <TrackingValue />
       </TestCase>
     </TestSuite>
   );
@@ -617,4 +626,151 @@ const AnimatedEndCallbackTest = () => {
   };
 
   return <Button onPress={increase} label={JSON.stringify(count)} />;
+};
+
+const TrackingValue = () => {
+  const square1Anim = useRef(new Animated.Value(50)).current;
+  const square2Anim = useRef(new Animated.Value(50)).current;
+
+  const animation = Animated.sequence([
+    Animated.timing(square1Anim, {
+      toValue: 0,
+      duration: 1000,
+      useNativeDriver: true,
+    }),
+    Animated.timing(square1Anim, {
+      toValue: 50,
+      duration: 1000,
+      useNativeDriver: true,
+    }),
+    Animated.timing(square1Anim, {
+      toValue: 0,
+      duration: 1000,
+      useNativeDriver: true,
+    }),
+    Animated.timing(square1Anim, {
+      toValue: 50,
+      duration: 1000,
+      useNativeDriver: true,
+    }),
+  ]);
+
+  const handleAnimation = () => {
+    animation.reset();
+    animation.start();
+
+    const tracking = Animated.spring(square2Anim, {
+      toValue: square1Anim,
+      useNativeDriver: true,
+      mass: 10,
+    });
+    tracking.start();
+  };
+
+  return (
+    <Pressable style={{height: 120, width: '100%'}} onPress={handleAnimation}>
+      <View style={{height: 100}}>
+        <Animated.View
+          style={{
+            height: 40,
+            width: 40,
+            backgroundColor: 'red',
+            transform: [{translateX: square1Anim}],
+          }}
+        />
+        <Animated.View
+          style={{
+            height: 40,
+            width: 40,
+            backgroundColor: 'blue',
+            transform: [{translateX: square2Anim}],
+          }}
+        />
+      </View>
+      <Text style={{height: 20}}>Press me to start animation</Text>
+    </Pressable>
+  );
+};
+
+const Modulo = () => {
+  const square1Anim = useRef(new Animated.Value(0)).current;
+  const squareModuloAnim = Animated.modulo(square1Anim, 100);
+
+  const animation = Animated.timing(square1Anim, {
+    toValue: 199,
+    duration: 1000,
+    useNativeDriver: true,
+  });
+  const handleAnimation = () => {
+    animation.reset();
+    animation.start();
+  };
+
+  return (
+    <Pressable style={{height: 120, width: '100%'}} onPress={handleAnimation}>
+      <Animated.View
+        style={{
+          height: 50,
+          width: 50,
+          backgroundColor: 'red',
+          transform: [
+            {
+              translateX: square1Anim,
+            },
+          ],
+        }}
+      />
+      <Animated.View
+        style={{
+          height: 50,
+          width: 50,
+          backgroundColor: 'grey',
+          transform: [
+            {
+              translateX: squareModuloAnim,
+            },
+          ],
+        }}
+      />
+      <Text style={{height: 20}}>Press me to start animation</Text>
+    </Pressable>
+  );
+};
+
+
+const Perspective = () => {
+  const square1Anim = useRef(new Animated.Value(500)).current;
+
+  const animation = Animated.timing(square1Anim, {
+    toValue: 50,
+    duration: 1000,
+    useNativeDriver: true,
+  });
+  const handleAnimation = () => {
+    animation.reset();
+    animation.start();
+  };
+
+  return (
+    <Pressable style={{height: 120, width: '100%'}} onPress={handleAnimation}>
+      <View style={{height: 100, justifyContent: 'center'}}>
+      <Animated.View
+        style={{
+          height: 50,
+          width: 50,
+          backgroundColor: 'red',
+          transform: [
+            {
+              rotateY: '60deg',
+            },
+            {
+              perspective: square1Anim,
+            },
+          ],
+        }}
+      />
+      </View>
+      <Text style={{height: 20}}>Press me to start animation</Text>
+    </Pressable>
+  );
 };
