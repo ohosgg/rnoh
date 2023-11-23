@@ -140,7 +140,7 @@ export struct RNScrollView {
     this.parentTag = newDescriptor.parentTag
     if (newDescriptor.props.contentOffsetX !== prevProps.contentOffsetX || newDescriptor.props.contentOffsetY !== prevProps.contentOffsetY) {
       this.scrollToPropsContentOffset();
-    } else if (this.descriptor.state.contentSizeWidth !== prevState.contentSizeWidth || this.descriptor.state.contentSizeHeight !== prevState.contentSizeHeight) {
+    } else if (this.scrollState === ScrollState.Idle && (this.descriptor.state.contentSizeWidth !== prevState.contentSizeWidth || this.descriptor.state.contentSizeHeight !== prevState.contentSizeHeight)) {
       /**
        * When a scroll content is removed, and it appears again without scrolling, scroll should remain in the original position.
        * This behavior was observed on Android. Local contentOffset is used, to use the most recent position.
@@ -301,6 +301,8 @@ export struct RNScrollView {
     }
     descriptor.state.contentOffsetX = currentOffset.xOffset;
     descriptor.state.contentOffsetY = currentOffset.yOffset;
+    this.contentOffset.x = currentOffset.xOffset;
+    this.contentOffset.y = currentOffset.yOffset;
 
     const now = Date.now();
     if (this.allowNextScrollEvent || descriptor.props.scrollEventThrottle < now - this.lastScrollDispatchTime) {
