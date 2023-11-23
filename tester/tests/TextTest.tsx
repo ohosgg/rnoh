@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 import {TestSuite, TestCase} from '@rnoh/testerino';
-import {Button} from '../components';
+import {Button, PressCounter} from '../components';
 import {useState} from 'react';
 
 const SAMPLE_PARAGRAPH_TEXT = `Quis exercitation do eu in laboris nulla sit elit officia. Incididunt ipsum aliquip commodo proident ad laborum aliquip fugiat sunt aute ea laboris mollit reprehenderit. Culpa non incididunt cupidatat esse laborum nulla quis mollit voluptate proident commodo. Consectetur ad deserunt do nulla sunt veniam magna laborum reprehenderit et ullamco fugiat fugiat.`;
@@ -645,6 +645,30 @@ export function TextTest() {
               Excepteur consequat officia ut incididunt consectetur qui
               reprehenderit quis quis ut cillum ad.
             </Text>
+          </Text>
+        </TestCase>
+      </TestSuite>
+      <TestSuite name="padding">
+        <TestCase itShould="preserve a gap of atleast 24 pixels from each container edge">
+          <View style={{width: 300}}>
+            <Text style={{padding: 24, borderWidth: 1}}>
+              <Text style={{color: 'blue'}}>Fragment1</Text>
+              {
+                'Fragment2 Fragment2 Fragment2 Fragment2 Fragment2 Fragment2 Fragment2 '
+              }
+            </Text>
+            <Text style={{padding: 24, borderWidth: 1}}>
+              Fragment1 Fragment1 Fragment1 Fragment1 Fragment1 Fragment1
+              Fragment1 Fragment1
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase
+          skip
+          itShould="[FAILS on Harmony and Android] display the attachment inline with text">
+          <Text style={{padding: 20}}>
+            Fragment1
+            <PressCounter />
           </Text>
         </TestCase>
       </TestSuite>

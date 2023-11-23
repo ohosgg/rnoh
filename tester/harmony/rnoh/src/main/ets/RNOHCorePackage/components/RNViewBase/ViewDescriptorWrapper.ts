@@ -10,7 +10,8 @@ import {
   getTransformedVector,
   DescriptorWrapper,
   Edges,
-  Corners
+  Corners,
+  CompactValue
 } from "../../../RNOH"
 import { ViewBaseProps, ViewRawProps } from "./types"
 import matrix4 from '@ohos.matrix4'
@@ -46,6 +47,24 @@ export class ViewDescriptorWrapperBase<TType extends string = string, TProps ext
       start: this.rawProps.borderStartWidth,
       end: this.rawProps.borderEndWidth,
     })
+  }
+
+  public get padding(): Edges<CompactValue> {
+    const resolvedEdges = this.resolveEdges({
+      all: this.rawProps.padding,
+      top: this.rawProps.paddingTop,
+      left: this.rawProps.paddingLeft,
+      right: this.rawProps.paddingRight,
+      bottom: this.rawProps.paddingBottom,
+      start: this.rawProps.paddingStart,
+      end: this.rawProps.paddingEnd,
+    })
+    return {
+      top: new CompactValue(resolvedEdges.top, this.height),
+      left: new CompactValue(resolvedEdges.left, this.width),
+      right: new CompactValue(resolvedEdges.right, this.width),
+      bottom: new CompactValue(resolvedEdges.bottom, this.height),
+    }
   }
 
   protected resolveEdges<T>(edges: {

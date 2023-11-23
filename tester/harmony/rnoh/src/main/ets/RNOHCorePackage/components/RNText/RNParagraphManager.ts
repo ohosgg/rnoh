@@ -57,9 +57,15 @@ export class RNParagraphManager extends RNViewManager {
     const paragraphMeasurer = new ParagraphMeasurer()
     const fragments = this.mapAttributedFragmentsToMeasurerFragments(textDescriptor.props.fragments)
     const textFragmentMeasurer = new OHOSTextFragmentMeasurer()
+    const descriptorWrapper = this.getDescriptorWrapper()
     return paragraphMeasurer.measureParagraph({ fragments }, {
       containerConfig: {
         width: textDescriptor.layoutMetrics.frame.size.width,
+        padding: {
+          top: descriptorWrapper.padding.top.asNumber(),
+          left: descriptorWrapper.padding.left.asNumber(),
+          right: descriptorWrapper.padding.right.asNumber()
+        },
         horizontalAlignment: ({
           left: 'start',
           center: 'center',

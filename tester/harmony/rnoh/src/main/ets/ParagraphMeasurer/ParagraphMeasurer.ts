@@ -56,28 +56,43 @@ export class ParagraphMeasurer {
         ...includedLine,
         positionedFragments: convertMeasuredFragmentsToPositionedFragments(
           reduceMeasuredFragments(includedLine.positionedFragments),
-        ).map(positionedFragment => {
-          if (positionedFragment.fragment.type === 'placeholder') {
+        )
+          .map(positionedFragment => {
+            if (positionedFragment.fragment.type === 'placeholder') {
+              return {
+                ...positionedFragment,
+                positionRelativeToLine: {
+                  x: positionedFragment.positionRelativeToLine.x,
+                  // vertically center placeholders
+                  y:
+                    (includedLine.size.height -
+                      positionedFragment.size.height) /
+                    2,
+                },
+              };
+            }
+            return {
+              ...positionedFragment,
+              size: {
+                ...positionedFragment.size,
+                // equalize baselines for text fragments
+                height: includedLine.size.height,
+              },
+            };
+          })
+          .map(function applyPadding(positionedFragment) {
             return {
               ...positionedFragment,
               positionRelativeToLine: {
-                x: positionedFragment.positionRelativeToLine.x,
-                // vertically center placeholders
+                x:
+                  positionedFragment.positionRelativeToLine.x +
+                  (containerConfig.padding?.left ?? 0),
                 y:
-                  (includedLine.size.height - positionedFragment.size.height) /
-                  2,
+                  positionedFragment.positionRelativeToLine.y +
+                  (containerConfig.padding?.top ?? 0),
               },
             };
-          }
-          return {
-            ...positionedFragment,
-            size: {
-              ...positionedFragment.size,
-              // equalize baselines for text fragments
-              height: includedLine.size.height,
-            },
-          };
-        }),
+          }),
       };
     });
     const maxLineWidth = Math.max(

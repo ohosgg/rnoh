@@ -50,6 +50,11 @@ export type ContainerConfig = {
   width?: number;
   horizontalAlignment?: HorizontalAlignment;
   maxNumberOfLines?: number;
+  padding?: {
+    top?: number;
+    left?: number;
+    right?: number;
+  };
 };
 
 export interface WordWrapStrategy {

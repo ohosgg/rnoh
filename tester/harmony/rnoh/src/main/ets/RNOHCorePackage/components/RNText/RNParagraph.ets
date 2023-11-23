@@ -6,6 +6,7 @@ import { RNParagraphManager } from './RNParagraphManager'
 import { CustomComponentBuilder } from '../RNComponentFactory'
 import { RNComponentFactory } from '../RNComponentFactory'
 import { TextDescriptor, TextFragmentExtraData } from './types'
+import { ViewDescriptorWrapper } from "../RNViewBase"
 import {
   capitalizeTextIfNecessary,
   getLetterSpacing,
@@ -24,6 +25,7 @@ export struct RNParagraph {
   @State descriptor: TextDescriptor = {} as TextDescriptor
   @State positionedLines: PositionedLine<TextFragmentExtraData>[] = []
   @State paragraphSize: Size = { width: 0, height: 0 }
+  @State descriptorWrapper: ViewDescriptorWrapper | undefined = undefined
   private componentManager!: RNParagraphManager
   private cleanUpCallbacks: (() => void)[] = []
 
@@ -47,9 +49,10 @@ export struct RNParagraph {
     this.positionedLines = layout.positionedLines
     this.paragraphSize = layout.size
     this.descriptor = newDescriptor
+    this.descriptorWrapper = new ViewDescriptorWrapper(newDescriptor)
   }
 
-  getVerticalOffset() {
+  getVerticalAlignmentOffset() {
     const maxOffset = Math.max(this.descriptor.layoutMetrics.frame.size.height - this.paragraphSize.height, 0)
     switch (this.descriptor.props.textAlignVertical) {
       case "bottom":
@@ -88,7 +91,7 @@ export struct RNParagraph {
               .textShadow(getTextShadow(positionedFragment.fragment.extraData?.textShadowProps))
               .position({
                 x: line.positionRelativeToParagraph.x + positionedFragment.positionRelativeToLine.x,
-                y: line.positionRelativeToParagraph.y + positionedFragment.positionRelativeToLine.y + this.getVerticalOffset()
+                y: line.positionRelativeToParagraph.y + positionedFragment.positionRelativeToLine.y + this.getVerticalAlignmentOffset()
               })
               .width(positionedFragment.size.width)
               .height(line.size.height)

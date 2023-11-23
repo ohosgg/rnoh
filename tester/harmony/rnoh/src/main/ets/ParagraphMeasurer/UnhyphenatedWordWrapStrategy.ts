@@ -95,9 +95,16 @@ export class UnhyphenatedWordWrapStrategy<
     measuredTokens: MeasuredToken[],
     containerConfig: ContainerConfig,
   ): MeasuredLine[] {
+    let contentContainerWidth = Number.MAX_SAFE_INTEGER;
+    if (containerConfig.width) {
+      contentContainerWidth =
+        containerConfig.width -
+        ((containerConfig.padding?.left ?? 0) +
+          (containerConfig.padding?.right ?? 0));
+    }
     return this.distributeMeasuredTokensAcrossLines(
       measuredTokens,
-      containerConfig.width || Number.MAX_SAFE_INTEGER,
+      contentContainerWidth,
     ).map(lineOfMeasuredTokens => ({
       positionedFragments: convertMeasuredFragmentsToPositionedFragments(
         reduceMeasuredFragments(lineOfMeasuredTokens),
@@ -118,14 +125,14 @@ export class UnhyphenatedWordWrapStrategy<
 
   private distributeMeasuredTokensAcrossLines(
     measuredTokens: MeasuredToken[],
-    containerWidth: number,
+    contentContainerWidth: number,
   ): MeasuredToken[][] {
     const linesOfTokens: MeasuredToken[][] = [];
     let remainingTokens = measuredTokens;
     while (remainingTokens.length > 0) {
       const {nextLine, remainingTokens: newRemainingTokens} = this.getNextLine(
         remainingTokens,
-        containerWidth,
+        contentContainerWidth,
       );
       linesOfTokens.push(nextLine);
       remainingTokens = newRemainingTokens;
@@ -135,7 +142,7 @@ export class UnhyphenatedWordWrapStrategy<
 
   private getNextLine(
     measuredTokens: MeasuredToken[],
-    containerWidth: number,
+    contentContainerWidth: number,
   ): {nextLine: MeasuredToken[]; remainingTokens: MeasuredToken[]} {
     const currentLineTokens: MeasuredToken[] = [];
     for (
@@ -150,7 +157,7 @@ export class UnhyphenatedWordWrapStrategy<
       } = this.extractLineInfo(currentLineTokens);
       const currentToken = measuredTokens[currentTokenIdx];
       const canFitCurrentToken =
-        currentLineWidth + currentToken.size.width <= containerWidth;
+        currentLineWidth + currentToken.size.width <= contentContainerWidth;
       if (currentToken.fragment.type === 'text') {
         if (currentToken.fragment.content === '\n') {
           return this.breakLine({
@@ -177,7 +184,7 @@ export class UnhyphenatedWordWrapStrategy<
                 measuredTokens,
                 tokenIdx: currentTokenIdx,
               });
-              if (wordWidth < containerWidth) {
+              if (wordWidth < contentContainerWidth) {
                 return this.breakLine({
                   measuredTokens,
                   breakingTokenIdx: lastPlaceholderInCurrentLineTokenIdx + 1,
@@ -196,7 +203,10 @@ export class UnhyphenatedWordWrapStrategy<
           }
         }
       } else {
-        if (currentLineWidth + currentToken.size.width <= containerWidth) {
+        if (
+          currentLineWidth + currentToken.size.width <=
+          contentContainerWidth
+        ) {
           currentLineTokens.push(currentToken);
         } else if (lastBreakableTokenIdxInCurrentLine === undefined) {
           currentLineTokens.push(currentToken);
@@ -250,7 +260,8 @@ export class UnhyphenatedWordWrapStrategy<
     const newLineStartIdx =
       breakingTokenIdx + (breakingToken.isIgnoredIfBreaksLine ? 1 : 0);
     // don't omit the only character in the line, even if it's "breaking"
-    const nextLineLength = (breakingTokenIdx === 0 && newLineStartIdx === 1) ? 1 : breakingTokenIdx;
+    const nextLineLength =
+      breakingTokenIdx === 0 && newLineStartIdx === 1 ? 1 : breakingTokenIdx;
     const nextLine = measuredTokens.slice(0, nextLineLength);
     const remainingTokens = measuredTokens.slice(newLineStartIdx) ?? [];
     return {

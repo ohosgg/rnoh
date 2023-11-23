@@ -101,6 +101,36 @@ describe('ParagraphMeasurer', () => {
     expectLineSplitting(result.positionedLines, [['baz'], ['x f…']]);
   });
 
+  it('should support padding', () => {
+    const paragraphMeasurer = createParagraphMeasurer();
+
+    const result = paragraphMeasurer.measureParagraph(
+      {
+        fragments: [
+          {
+            type: 'text',
+            content: 'foo bar',
+            extraData: {},
+          },
+        ],
+      },
+      {
+        wordWrapStrategy: new UnhyphenatedWordWrapStrategy(
+          new FakeTextFragmentMeasurer(),
+        ),
+        containerConfig: {width: 5, padding: {left: 1, right: 1, top: 1}},
+      },
+    );
+
+    expect(result.positionedLines.length).toBe(2);
+    expect(
+      result.positionedLines[0].positionedFragments[0].positionRelativeToLine.x,
+    ).toBe(1);
+    expect(
+      result.positionedLines[0].positionedFragments[0].positionRelativeToLine.y,
+    ).toBe(1);
+  });
+
   describe('horizontalAlignment', () => {
     it('should center the text', () => {
       const paragraphMeasurer = createParagraphMeasurer();
