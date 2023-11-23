@@ -56,7 +56,7 @@ export * from 'react-native/Libraries/Modal/Modal';
 export * from 'react-native/Libraries/ReactNative/AppRegistry';
 export * from 'react-native/Libraries/ReactNative/I18nManager';
 export * from 'react-native/Libraries/ReactNative/RendererProxy';
-// export * from 'react-native/Libraries/ReactNative/RootTag';
+export * from 'react-native/Libraries/ReactNative/RootTag';
 export * from 'react-native/Libraries/ReactNative/UIManager';
 export * from 'react-native/Libraries/ReactNative/requireNativeComponent';
 // export * from 'react-native/Libraries/Settings/Settings';

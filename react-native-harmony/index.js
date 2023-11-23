@@ -93,6 +93,9 @@ module.exports = {
     return require('react-native/Libraries/ReactNative/requireNativeComponent')
       .default;
   },
+  get RootTagContext() {
+    return require('react-native/Libraries/ReactNative/RootTag').RootTagContext;
+  },
   get SafeAreaView() {
     return require('./Libraries/Components/SafeAreaView/SafeAreaView').default;
   },
