@@ -62,10 +62,112 @@ export function AnimatedValueTest() {
           assert={({state, expect}) => {
             expect(state).to.be.eq(JSON.stringify({left: 1, top: 1}));
           }}></TestCase>
+        <TestCase itShould="move square to the right after extract offset">
+          <ExtractOffsetView />
+        </TestCase>
+        <TestCase itShould="move square to the left after flatten offset">
+          <FlattenOffsetView />
+        </TestCase>
       </TestSuite>
     </>
   );
 }
+const ExtractOffsetView = () => {
+  const value = useRef(new Animated.Value(0)).current;
+  const animation = Animated.loop(
+    Animated.sequence([
+      Animated.timing(value, {
+        toValue: 100,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.timing(value, {
+        toValue: 0,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+    ]),
+  );
+  return (
+    <View style={{width: '100%'}}>
+      <Animated.View
+        style={{
+          height: 20,
+          width: 20,
+          margin: 10,
+          backgroundColor: 'red',
+          transform: [
+            {
+              translateX: value,
+            },
+          ],
+        }}
+      />
+      <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+        <Button
+          label="start"
+          onPress={() => {
+            animation.reset();
+            animation.start();
+          }}
+        />
+        <Button label="stop" onPress={() => animation.stop()} />
+        <Button label="extract offset" onPress={() => value.extractOffset()} />
+      </View>
+    </View>
+  );
+};
+const FlattenOffsetView = () => {
+  const value = useRef(new Animated.Value(0)).current;
+  const animation = Animated.loop(
+    Animated.sequence([
+      Animated.timing(value, {
+        toValue: 100,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.timing(value, {
+        toValue: 0,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+    ]),
+  );
+  value.setOffset(100);
+  return (
+    <View style={{width: '100%'}}>
+      <Animated.View
+        style={{
+          height: 20,
+          width: 20,
+          margin: 10,
+          backgroundColor: 'red',
+          transform: [
+            {
+              translateX: value,
+            },
+          ],
+        }}
+      />
+      <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+        <Button
+          label="start"
+          onPress={() => {
+            animation.reset();
+            animation.start();
+          }}
+        />
+        <Button label="stop" onPress={() => animation.stop()} />
+        <Button
+          label="flatten offset"
+          onPress={() => {
+            value.flattenOffset();
+          }}
+        />
+      </View>
+    </View>
+  );
+};
 const SetOffsetView = (props: {singular: boolean}) => {
   if (props.singular) {
     const value = useRef(new Animated.Value(0)).current;
