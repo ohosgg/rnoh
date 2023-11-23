@@ -9,6 +9,7 @@ import {
   ViewToken,
   ScrollViewComponent,
   ScrollResponderMixin,
+  Platform,
 } from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import {Button, ObjectDisplayer} from '../components';
@@ -118,7 +119,10 @@ export const FlatListTest = () => {
       <TestCase modal itShould="scroll to the third item (scrollToItem)">
         <ScrollToItemTestCase />
       </TestCase>
-      <TestCase modal itShould="support sticky headers">
+      <TestCase
+        modal
+        skip={Platform.OS === 'android'}
+        itShould="support sticky headers (fails on Android with enabled Fabric)">
         <View style={{height: 100, backgroundColor: '#fff'}}>
           <FlatList
             data={DATA}
@@ -186,6 +190,40 @@ export const FlatListTest = () => {
           expect(state).to.be.not.undefined;
         }}
       />
+      <TestCase
+        modal
+        skip={Platform.OS === 'android'}
+        itShould="stick first item to the bottom (invertStickyHeaders, fails on Android with enabled Fabric)">
+        <View style={{height: 100, backgroundColor: '#fff'}}>
+          <FlatList
+            data={DATA}
+            renderItem={({item}) => (
+              <View
+                style={{
+                  padding: 20,
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#ccc',
+                }}>
+                <Text style={{fontSize: 16}}>{item.title}</Text>
+              </View>
+            )}
+            keyExtractor={item => item.id}
+            ListHeaderComponent={() => (
+              <View
+                style={{
+                  backgroundColor: '#f0f0f0',
+                  padding: 20,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{fontSize: 18, fontWeight: 'bold'}}>Header</Text>
+              </View>
+            )}
+            stickyHeaderIndices={[1]}
+            invertStickyHeaders
+          />
+        </View>
+      </TestCase>
     </TestSuite>
   );
 };

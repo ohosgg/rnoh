@@ -6,6 +6,7 @@ import {
   Text,
   SectionListProps,
   RefreshControl,
+  Platform,
 } from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import {Button, Modal, ObjectDisplayer} from '../components';
@@ -41,16 +42,8 @@ const commonProps = {
   renderSectionHeader: ({section}) => (
     <Text style={styles.title}>{section.title}</Text>
   ),
-  renderItem: ({item, index}) => (
+  renderItem: ({item}) => (
     <View style={styles.item}>
-      {index === 1 && (
-        <Button
-          label="Crash"
-          onPress={() => {
-            throw new Error('Error triggered by user');
-          }}
-        />
-      )}
       <Text style={styles.title}>{item}</Text>
     </View>
   ),
@@ -154,7 +147,9 @@ export const SectionListTest = () => {
         </Modal>
       </TestCase>
       {/* sticky headers seems to work on Android when App.tsx was replaced with content of this test */}
-      <TestCase itShould="[Fails on Android, Crashes Harmony] make headers sticky">
+      <TestCase
+        itShould="stick section headers (fails on Android when fabric is enabled)"
+        skip={Platform.OS === 'android'}>
         <Modal>
           <SectionList {...commonProps} stickySectionHeadersEnabled />
         </Modal>

@@ -6,6 +6,7 @@ import {
   ViewStyle,
   StyleProp,
   TextInput,
+  Platform,
 } from 'react-native';
 import {TestSuite, TestCase} from '@rnoh/testerino';
 import React, {useEffect, useRef, useState} from 'react';
@@ -236,15 +237,21 @@ export function ScrollViewTest() {
           </View>
         </TestCase>
       </TestSuite>
-      <TestSuite name="sticky headers">
-        <TestCase itShould="support sticky headers (component 1 and 4 should stick) (stickyHeaderIndices)">
+      <TestSuite
+        name="sticky headers" /* (sticky headers fail on Android when Fabric is enabled) */
+      >
+        <TestCase
+          itShould="stick item 1 and 4 (stickyHeaderIndices)"
+          skip={Platform.OS === 'android'}>
           <View style={styles.wrapperView}>
             <ScrollView stickyHeaderIndices={[0, 3]} nestedScrollEnabled>
               {getScrollViewContent({})}
             </ScrollView>
           </View>
         </TestCase>
-        <TestCase itShould="support sticky headers, hidden on scroll (component 1 and 4 should stick) (stickyHeaderHiddenOnScroll)">
+        <TestCase
+          skip={Platform.OS === 'android'}
+          itShould="hide sticked item 1 or 4 when scrolling down (stickyHeaderHiddenOnScroll)">
           <View style={styles.wrapperView}>
             <ScrollView
               stickyHeaderIndices={[0, 3]}
@@ -255,8 +262,8 @@ export function ScrollViewTest() {
           </View>
         </TestCase>
         <TestCase
-          skip
-          itShould="[FAILS on Android/Harmony] support inverted sticky headers (component 13 and 20 should stick) (invertStickyHeaders)"
+          skip={Platform.OS === 'android'}
+          itShould="stick item 13 and 20 to the bottom (invertStickyHeaders)"
           //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/309
         >
           <View style={styles.wrapperView}>
