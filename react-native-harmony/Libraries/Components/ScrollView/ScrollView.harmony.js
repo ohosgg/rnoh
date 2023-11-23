@@ -1809,18 +1809,10 @@ class ScrollView extends React.Component<Props, State> {
       // default to true
       snapToEnd: this.props.snapToEnd !== false,
       // pagingEnabled is overridden by snapToInterval / snapToOffsets
-      pagingEnabled: Platform.select({
-        // on iOS, pagingEnabled must be set to false to have snapToInterval / snapToOffsets work
-        ios:
+      pagingEnabled: 
           this.props.pagingEnabled === true &&
           this.props.snapToInterval == null &&
-          this.props.snapToOffsets == null,
-        // on Android, pagingEnabled must be set to true to have snapToInterval / snapToOffsets work
-        android:
-          this.props.pagingEnabled === true ||
-          this.props.snapToInterval != null ||
-          this.props.snapToOffsets != null,
-      }),
+          this.props.snapToOffsets == null, 
     };
 
     const { decelerationRate } = this.props;

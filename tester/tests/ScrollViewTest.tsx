@@ -617,9 +617,44 @@ export function ScrollViewTest() {
           <ScrollViewSnapToStartAndEnd />
         </TestCase>
       </TestSuite>
+      <TestCase modal itShould="snap to page">
+        <PagingEnabledTest />
+      </TestCase>
     </TestSuite>
   );
 }
+const PagingEnabledTest = () => {
+  const width = 300;
+  const style = StyleSheet.create({
+    view1: {
+      backgroundColor: 'pink',
+    },
+    view2: {
+      backgroundColor: 'powderblue',
+    },
+    base: {
+      height: 700,
+    },
+    scrollview: {
+      marginVertical: 40,
+      width: width,
+    },
+    box: {
+      height: 150,
+      width: 150,
+      backgroundColor: 'blue',
+      borderRadius: 5,
+    },
+  });
+  return (
+    <ScrollView style={style.scrollview} horizontal pagingEnabled>
+      <View style={[{width: width}, style.base, style.view1]}></View>
+      <View style={[{width: width}, style.base, style.view2]}></View>
+      <View style={[{width: width}, style.base, style.view1]}></View>
+      <View style={[{width: width}, style.base, style.view2]}></View>
+    </ScrollView>
+  );
+}; 
 
 function MomentumTestCase() {
   const [hasDragBegan, setHasDragBegan] = useState(0);

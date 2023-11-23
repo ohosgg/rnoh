@@ -24,6 +24,7 @@ export interface ScrollViewRawProps extends ViewRawProps {
   snapToOffsets?: number[]
   snapToStart?: boolean
   snapToEnd?: boolean
+  pagingEnabled?: boolean
 }
 
 export interface ScrollViewState {
@@ -203,6 +204,10 @@ export struct RNScrollView {
     const IOS_FAST = 0.99;
     const ARKUI_FAST = 2;
     const ARKUI_NORMAL = 0.6;
+    // only allow one page scroll at a time
+    if (this.descriptor.rawProps.pagingEnabled) {
+      return 100;
+    }
     if (this.props.decelerationRate < (IOS_NORMAL + IOS_FAST) / 2) {
       return ARKUI_FAST;
     }
@@ -215,6 +220,15 @@ export struct RNScrollView {
     const snapToOffsets = this.descriptor.rawProps.snapToOffsets
     const snapToStart = this.descriptor.rawProps.snapToStart
     const snapToEnd = this.descriptor.rawProps.snapToEnd
+    const pagingEnabled = this.descriptor.rawProps.pagingEnabled;
+    if (pagingEnabled) {
+      return {
+        snapAlign: ScrollSnapAlign.CENTER,
+        snapPagination: '100%',
+        enableSnapToStart: snapToStart,
+        enableSnapToEnd: snapToEnd,
+      }
+    }
     if (snapToOffsets && snapToOffsets.length > 0) {
       return {
         snapAlign: ScrollSnapAlign.CENTER,

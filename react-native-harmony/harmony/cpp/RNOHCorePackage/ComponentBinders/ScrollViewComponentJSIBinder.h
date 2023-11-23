@@ -20,7 +20,8 @@ class ScrollViewComponentJSIBinder : public ViewComponentJSIBinder {
         object.setProperty(rt, "snapToOffsets", "number[]");
         object.setProperty(rt, "snapToStart", "boolean");
         object.setProperty(rt, "snapToEnd", "boolean");
-        
+        object.setProperty(rt, "pagingEnabled", "boolean");
+
         return object;
     }
 
