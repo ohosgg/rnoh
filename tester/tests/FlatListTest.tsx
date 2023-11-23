@@ -7,6 +7,8 @@ import {
   FlatListProps,
   TouchableOpacity,
   ViewToken,
+  ScrollViewComponent,
+  ScrollResponderMixin,
 } from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import {Button, ObjectDisplayer} from '../components';
@@ -148,6 +150,42 @@ export const FlatListTest = () => {
           />
         </View>
       </TestCase>
+      <TestCase
+        itShould="Get the node number - getScrollableNode()"
+        initialState={undefined}
+        arrange={({state, setState}) => {
+          return (
+            <FlatListGetScrollableNode state={state} setState={setState} />
+          );
+        }}
+        assert={({state, expect}) => {
+          expect(state).to.be.an('number');
+        }}
+      />
+      <TestCase
+        itShould="Get the nativeScrollRef - getNativeScrollRef()"
+        initialState={undefined}
+        arrange={({state, setState}) => {
+          return (
+            <FlatListGetNativeScrollRef state={state} setState={setState} />
+          );
+        }}
+        assert={({state, expect}) => {
+          expect(state).to.be.not.undefined;
+        }}
+      />
+      <TestCase
+        itShould="Get the scroll responder - getScrollResponder()"
+        initialState={undefined}
+        arrange={({state, setState}) => {
+          return (
+            <FlatListGetScrollResponder state={state} setState={setState} />
+          );
+        }}
+        assert={({state, expect}) => {
+          expect(state).to.be.not.undefined;
+        }}
+      />
     </TestSuite>
   );
 };
@@ -377,5 +415,74 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
+
+function FlatListGetScrollableNode({
+  state,
+  setState,
+}: {
+  state: number | undefined;
+  setState: (state: any) => void;
+}) {
+  const flatlistRef = useRef<FlatList>(null);
+
+  const getScrollableNode = useCallback(() => {
+    const node = flatlistRef.current?.getScrollableNode();
+    setState(node);
+  }, []);
+
+  return (
+    <>
+      <Button label={'Get Scrollable Node'} onPress={getScrollableNode} />
+      <FlatList {...commonProps} ref={flatlistRef} />
+      <Text>{state}</Text>
+    </>
+  );
+}
+
+type NativeScrollRef = React.ElementRef<typeof ScrollViewComponent>;
+
+function FlatListGetNativeScrollRef({
+  state,
+  setState,
+}: {
+  state: NativeScrollRef | undefined;
+  setState: (state: any) => void;
+}) {
+  const flatlistRef = useRef<FlatList>(null);
+
+  const getNativeScrollRef = useCallback(() => {
+    const nativeScrollRef = flatlistRef.current?.getNativeScrollRef();
+    setState(nativeScrollRef);
+  }, []);
+
+  return (
+    <>
+      <Button label={'Get nativeScrollRef'} onPress={getNativeScrollRef} />
+      <FlatList {...commonProps} ref={flatlistRef} />
+    </>
+  );
+}
+
+function FlatListGetScrollResponder({
+  state,
+  setState,
+}: {
+  state: ScrollResponderMixin | undefined;
+  setState: (state: any) => void;
+}) {
+  const flatlistRef = useRef<FlatList>(null);
+
+  const getScrollResponder = useCallback(() => {
+    const scrollResponder = flatlistRef.current?.getScrollResponder();
+    setState(scrollResponder);
+  }, []);
+
+  return (
+    <>
+      <Button label={'Get scrollResponder'} onPress={getScrollResponder} />
+      <FlatList {...commonProps} ref={flatlistRef} />
+    </>
+  );
+}
 
 export default FlatListTest;
