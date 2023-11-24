@@ -1,8 +1,8 @@
-import { Descriptor, Position, RNOHComponentCommand, RNOHContext, Size, Tag } from '../../RNOH';
-import { _RNScrollViewManager } from '../componentManagers/RNScrollViewManager';
-import { RNViewBase, ViewBaseProps, ViewDescriptorWrapperBase, ViewRawProps } from './RNViewBase';
-import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from './RNPullToRefreshView';
-import { CustomComponentBuilder, RNComponentFactory } from './RNComponentFactory';
+import { Descriptor, Position, RNOHComponentCommand, RNOHContext, Size, Tag } from '../../../RNOH';
+import { _RNScrollViewManager } from './RNScrollViewManager';
+import { RNViewBase, ViewBaseProps, ViewDescriptorWrapperBase, ViewRawProps } from '../RNViewBase';
+import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from '../RNPullToRefreshView';
+import { CustomComponentBuilder, RNComponentFactory } from '../RNComponentFactory';
 
 
 export interface ScrollViewProps extends ViewBaseProps {

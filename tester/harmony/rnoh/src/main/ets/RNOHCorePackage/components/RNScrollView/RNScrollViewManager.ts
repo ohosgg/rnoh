@@ -1,6 +1,6 @@
-import type { Point, RNOHContext, Tag } from '../../RNOH';
-import { EventEmitter } from '../../RNOH';
-import { RNViewManager } from './RNViewManager'
+import type { Point, RNOHContext, Tag } from '../../../RNOH';
+import { EventEmitter } from '../../../RNOH';
+import { RNViewManager } from '../../componentManagers'
 
 export type RNScrollLocalEventArgsByName = {
   "LOCK_SCROLLING": [],

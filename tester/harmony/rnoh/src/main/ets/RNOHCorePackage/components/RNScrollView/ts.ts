@@ -1,0 +1,1 @@
+export { RNScrollViewManager } from './RNScrollViewManager';
