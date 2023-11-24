@@ -156,7 +156,7 @@ class RNOHNapiObjectBuilder {
 
     RNOHNapiObjectBuilder &addProperty(const char *name, int value);
 
-    RNOHNapiObjectBuilder &addProperty(const char *name, std::array<float, 16> matrix);
+    RNOHNapiObjectBuilder &addProperty(const char *name, std::array<facebook::react::Float, 16> matrix);
 
     RNOHNapiObjectBuilder &addProperty(const char *name, facebook::react::Float value);
 
@@ -164,7 +164,7 @@ class RNOHNapiObjectBuilder {
 
     RNOHNapiObjectBuilder &addProperty(const char *name, facebook::react::SharedColor value);
 
-    RNOHNapiObjectBuilder &addProperty(const char *name, facebook::react::RectangleCorners<float> value);
+    RNOHNapiObjectBuilder &addProperty(const char *name, facebook::react::RectangleCorners<facebook::react::Float> value);
 
     RNOHNapiObjectBuilder &addProperty(const char *name, std::string value);
 

@@ -11,7 +11,7 @@ react::TextMeasurement TextMeasurer::measure(react::AttributedString attributedS
     react::TextMeasurement result = {{0, 0}, {}};
 
     auto fragments = attributedString.getFragments();
-    auto canUseOHOSTextMeasurer = fragments.size() == 1 && !fragments[0].isAttachment() && fragments[0].textAttributes.letterSpacing == std::numeric_limits<float>::quiet_NaN();
+    auto canUseOHOSTextMeasurer = fragments.size() == 1 && !fragments[0].isAttachment() && isnan(fragments[0].textAttributes.letterSpacing && isnan(fragments[0].textAttributes.lineHeight));
     if (canUseOHOSTextMeasurer) {
         auto fragment = fragments[0];
         OHOSTextMeasurer ohosTextMeasurer;
@@ -39,7 +39,7 @@ react::TextMeasurement TextMeasurer::measure(react::AttributedString attributedS
                 auto textAttributesBuilder = arkJs.createObjectBuilder();
                 textAttributesBuilder.addProperty("fontSize", fragment.textAttributes.fontSize);
                 textAttributesBuilder.addProperty("lineHeight", fragment.textAttributes.lineHeight);
-                if(!fragment.textAttributes.fontFamily.empty()){
+                if (!fragment.textAttributes.fontFamily.empty()) {
                     textAttributesBuilder.addProperty("fontFamily", fragment.textAttributes.fontFamily);
                 }
                 textAttributesBuilder.addProperty("letterSpacing", fragment.textAttributes.letterSpacing);

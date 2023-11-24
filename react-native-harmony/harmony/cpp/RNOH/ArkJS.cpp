@@ -231,11 +231,11 @@ uint32_t ArkJS::getArrayLength(napi_value array) {
 }
 
 std::vector<uint8_t> ArkJS::getArrayBuffer(napi_value array) {
-    void* data;
+    void *data;
     size_t length;
     auto status = napi_get_arraybuffer_info(m_env, array, &data, &length);
     this->maybeThrowFromStatus(status, "Failed to read array buffer");
-    return std::vector<uint8_t>(static_cast<uint8_t*>(data), static_cast<uint8_t*>(data) + length);
+    return std::vector<uint8_t>(static_cast<uint8_t *>(data), static_cast<uint8_t *>(data) + length);
 }
 
 std::vector<std::pair<napi_value, napi_value>> ArkJS::getObjectProperties(napi_value object) {
@@ -386,7 +386,7 @@ RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, char
 }
 
 RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, facebook::react::SharedColor value) {
-    if(!value) {
+    if (!value) {
         napi_set_named_property(m_env, m_object, name, m_arkJs.getUndefined());
         return *this;
     }
@@ -400,7 +400,7 @@ RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, face
     napi_set_named_property(m_env, m_object, name, n_value);
     return *this;
 }
-RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, facebook::react::RectangleCorners<float> value) {
+RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, facebook::react::RectangleCorners<facebook::react::Float> value) {
     napi_value n_value;
     napi_create_object(m_env, &n_value);
 
@@ -411,7 +411,7 @@ RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, face
     napi_set_named_property(m_env, m_object, name, n_value);
     return *this;
 }
-RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, std::array<float, 16> matrix) {
+RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, std::array<facebook::react::Float, 16> matrix) {
     napi_value n_value;
     napi_create_array_with_length(m_env, matrix.size(), &n_value);
 

@@ -421,7 +421,7 @@ export function TextTest() {
             </Text>
           </View>
         </TestCase>
-        <TestCase itShould="text should not exceed cyan background">
+        <TestCase itShould="text should not exceed cyan background (measuring text on cpp side)">
           <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
             <Text style={{backgroundColor: 'silver'}}>FONT SIZE</Text>
           </View>
@@ -429,9 +429,6 @@ export function TextTest() {
             <Text style={{fontSize: 20, backgroundColor: 'cyan'}}>
               FONT SIZE
             </Text>
-          </View>
-          <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
-            <Text style={{backgroundColor: 'cyan'}}>FONT SIZE</Text>
           </View>
           <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
             <Text style={{backgroundColor: 'silver'}}>FONT WEIGHT</Text>
@@ -444,7 +441,7 @@ export function TextTest() {
           <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
             <Text style={{backgroundColor: 'silver'}}>LETTER SPACING!</Text>
           </View>
-          {/* On Android letter spacing may cause the bounding box to be full width (remove !) */}
+          {/* On Android letter spacing may cause the bounding box to be full width (remove ! to see the problem) */}
           <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
             <Text style={{letterSpacing: 1, backgroundColor: 'cyan'}}>
               LETTER SPACING!

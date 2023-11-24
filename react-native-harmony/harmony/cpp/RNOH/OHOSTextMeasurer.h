@@ -1,4 +1,5 @@
 #pragma once
+#include <react/renderer/graphics/Float.h>
 #include <native_drawing/drawing_text_typography.h>
 #include <native_drawing/drawing_font_collection.h>
 #include <string>
@@ -13,15 +14,15 @@ class OHOSTextMeasurer {
 
   public:
     struct Size {
-        double width;
-        double height;
+        facebook::react::Float width;
+        facebook::react::Float height;
     };
 
     struct Config {
-        double containerWidth;
-        double fontSize;
+        facebook::react::Float containerWidth;
+        facebook::react::Float fontSize;
         int fontWeight;
-        float lineHeight;
+        facebook::react::Float lineHeight;
         std::string fontFamily;
         int maximumNumberOfLines;
     };
@@ -44,27 +45,24 @@ class OHOSTextMeasurer {
         if (config.fontSize) {
             OH_Drawing_SetTextStyleFontSize(textStyle, config.fontSize);
         }
-        if (!config.fontFamily.empty()){
+        if (!config.fontFamily.empty()) {
             const char *fontFamilies[] = {config.fontFamily.c_str()};
             OH_Drawing_SetTextStyleFontFamilies(textStyle, 1, fontFamilies);
         }
         if (config.fontWeight) {
             OH_Drawing_SetTextStyleFontWeight(textStyle, this->mapValueToFontWeight(config.fontWeight));
         }
-        if (!isnan(config.lineHeight)) {
-            OH_Drawing_SetTextStyleFontHeight(textStyle, config.lineHeight);
-        }
         OH_Drawing_TypographyHandlerPushTextStyle(typographyHandler, textStyle);
         OH_Drawing_TypographyHandlerAddText(typographyHandler, text.c_str());
         auto typography = OH_Drawing_CreateTypography(typographyHandler);
-        OH_Drawing_TypographyLayout(typography, config.containerWidth ? config.containerWidth : std::numeric_limits<double>::max());
+        OH_Drawing_TypographyLayout(typography, config.containerWidth ? config.containerWidth : std::numeric_limits<facebook::react::Float>::max());
         auto height = OH_Drawing_TypographyGetHeight(typography);
         auto longestLineWidth = OH_Drawing_TypographyGetLongestLine(typography);
         OH_Drawing_DestroyTextStyle(textStyle);
         OH_Drawing_DestroyTypography(typography);
         OH_Drawing_DestroyTypographyHandler(typographyHandler);
         OH_Drawing_DestroyTypographyStyle(typographyStyle);
-        Size size{.width = longestLineWidth, .height = height};
+        Size size{.width = longestLineWidth + 0.5 /* fixes unexpected wrap */, .height = height};
         return size;
     }
 
