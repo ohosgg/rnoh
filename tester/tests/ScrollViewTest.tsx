@@ -408,6 +408,11 @@ export function ScrollViewTest() {
             </ScrollView>
           </View>
         </TestCase>
+        <TestCase
+          modal
+          itShould="snap to each item - first - at the start, second - at the center, and third - at the end">
+          <SnapToAlignmentTest />
+        </TestCase>
       </TestSuite>
       <TestSuite name="other props">
         <TestCase
@@ -630,6 +635,77 @@ export function ScrollViewTest() {
     </TestSuite>
   );
 }
+
+const SnapToAlignmentTest = () => {
+  const Items = () => {
+    const values = Array.from(Array(50), (_, index) => index + 1);
+    const styles = StyleSheet.create({
+      box1: {
+        height: 100,
+        width: 100,
+        backgroundColor: 'red',
+        justifyContent: 'center',
+      },
+      box2: {
+        height: 100,
+        width: 100,
+
+        backgroundColor: 'yellow',
+        justifyContent: 'center',
+      },
+      text: {
+        fontSize: 20,
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        verticalAlign: 'middle',
+      },
+    });
+    return (
+      <>
+        {values.map((_value, index, _array) => {
+          return (
+            <View
+              key={index}
+              style={index % 2 == 0 ? styles.box1 : styles.box2}>
+              <Text style={styles.text}>{index}</Text>
+            </View>
+          );
+        })}
+      </>
+    );
+  };
+  return (
+    <View style={{flexDirection: 'row'}}>
+      <View style={{height: 280, padding: 4}}>
+        <ScrollView
+          style={{backgroundColor: 'blue'}}
+          nestedScrollEnabled
+          snapToInterval={100}>
+          <Items />
+        </ScrollView>
+      </View>
+      <View style={{height: 280, padding: 4}}>
+        <ScrollView
+          style={{backgroundColor: 'blue'}}
+          nestedScrollEnabled
+          snapToInterval={100}
+          snapToAlignment="center">
+          <Items />
+        </ScrollView>
+      </View>
+      <View style={{height: 280, padding: 4}}>
+        <ScrollView
+          style={{backgroundColor: 'blue'}}
+          nestedScrollEnabled
+          snapToInterval={100}
+          snapToAlignment="end">
+          <Items />
+        </ScrollView>
+      </View>
+    </View>
+  );
+};
+
 const PagingEnabledTest = () => {
   const width = 300;
   const style = StyleSheet.create({

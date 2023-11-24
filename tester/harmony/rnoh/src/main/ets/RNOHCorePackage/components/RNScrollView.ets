@@ -25,6 +25,7 @@ export interface ScrollViewRawProps extends ViewRawProps {
   snapToStart?: boolean
   snapToEnd?: boolean
   pagingEnabled?: boolean
+  snapToAlignment?: string
 }
 
 export interface ScrollViewState {
@@ -70,6 +71,16 @@ interface IAnimation {
   curve?: Curve | ICurve;
 };
 type Animation = IAnimation | boolean;
+
+function getScrollSnapAlign(snapToAlignment: string | undefined): ScrollSnapAlign {
+  if (snapToAlignment === 'center') {
+    return ScrollSnapAlign.CENTER;
+  } else if (snapToAlignment === 'end') {
+    return ScrollSnapAlign.END;
+  } else {
+    return ScrollSnapAlign.START;
+  }
+}
 
 export type ScrollViewDescriptor = Descriptor<"ScrollView", ScrollViewProps, ScrollViewState, ScrollViewRawProps>;
 
@@ -223,7 +234,7 @@ export struct RNScrollView {
     const pagingEnabled = this.descriptor.rawProps.pagingEnabled;
     if (pagingEnabled) {
       return {
-        snapAlign: ScrollSnapAlign.CENTER,
+        snapAlign: ScrollSnapAlign.START,
         snapPagination: '100%',
         enableSnapToStart: snapToStart,
         enableSnapToEnd: snapToEnd,
@@ -231,7 +242,7 @@ export struct RNScrollView {
     }
     if (snapToOffsets && snapToOffsets.length > 0) {
       return {
-        snapAlign: ScrollSnapAlign.CENTER,
+        snapAlign: ScrollSnapAlign.START,
         snapPagination: snapToOffsets,
         enableSnapToStart: snapToStart,
         enableSnapToEnd: snapToEnd,
@@ -240,8 +251,8 @@ export struct RNScrollView {
     const snapToInterval = this.descriptor.rawProps.snapToInterval
     if (snapToInterval && snapToInterval > 0) {
       return {
-        snapAlign: ScrollSnapAlign.CENTER,
-        snapPagination: snapToInterval
+        snapAlign: getScrollSnapAlign(this.descriptor.rawProps.snapToAlignment),
+        snapPagination: snapToInterval,
       }
     }
     return undefined
