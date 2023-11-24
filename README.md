@@ -9,7 +9,7 @@
 1. Copy `metro.config.js` to your project
 1. Create a new Harmony project in `<YOUR_PROJECT>/harmony`
 1. Copy `tester/harmony/entry` module to `<YOUR_PROJECT>/harmony/entry`
-1. Run `./node_modules/.bin/react-native unpack-harmony` - it make take a while
+1. Run `./node_modules/.bin/react-native unpack-harmony` - it may take a while
 1. Add `"postinstall": "react-native unpack-harmony"` to `package.json`'s script section
 1. Update `tester/harmony/entry/src/main/ets/pages/Index.ets`
    1. Unregister `SampleView` and `SamplePackage`
@@ -17,7 +17,6 @@
 1. Update `tester/harmony/entry/src/main/cpp/CMakeLists.txt`
    1. Update `RNOH_CPP_DIR` - `set(RNOH_CPP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../node_modules/react-native-harmony/harmony/cpp")`
    1. Unregister `SamplePackage`
-1. Create `jsbundle.h` by running `./node_modules/.bin/react-native bundle-harmony`
 1. Open `harmony` project in DevEcoStudio and run the project
 
 ## Architecture
@@ -26,136 +25,16 @@
 
 Note: native code lives in the `/tester/harmony/rnoh` directory (native code must be in the project directory).
 
-## Current exports
-
-### Components
-
-- [ ] AccesibilityInfo
-- [x] ActivityIndicator
-- [x] Button\*
-- [x] FlatList
-- [x] Image
-- [x] ImageBackground
-- [ ] InputAccessoryView
-- [x] KeyboardAvoidingView
-- [ ] Modal
-- [x] Pressable
-- [x] RefreshControl
-- [ ] SafeAreaView
-- [x] ScrollView
-- [x] SectionList
-- [x] StatusBar
-- [x] Switch
-- [x] Text\*
-- [x] TextInput\*
-- [x] Touchable
-- [x] TouchableHighlight
-- [x] TouchableNativeFeedback (Android) - exported but not tested
-- [x] TouchableOpacity
-- [x] TouchableWithoutFeedback - handlers are not called
-- [x] View
-- [x] VirtualizedList
-- [ ] VirtualizedSectionList
-
-* Text measuring is not implemented. Width and height must be provided.
-
-### Apis
-
-- [x] Alert
-- [x] Animated
-- [x] Appearance
-- [x] AppRegistry
-- [x] AppState
-- [x] BackHandler (stub)
-- [x] DeviceInfo
-- [ ] DevSettings
-- [x] Dimensions
-- [x] Easing
-- [x] findNodeHandle
-- [x] I18nManager
-- [x] InteractionManager
-- [x] Keyboard
-- [x] LayoutAnimation (stub)
-- [x] Linking (stub)
-- [ ] LogBox
-- [x] NativeEventEmitter
-- [ ] Networking
-- [x] PanResponder
-- [x] PixelRatio
-- [ ] Settings
-- [ ] Share
-- [x] StyleSheet
-- [ ] Systrace
-- [x] TurboModuleRegistry
-- [x] UIManager
-- [ ] unstable_batchedUpdates
-- [x] useAnimatedValue
-- [ ] useColorScheme
-- [x] useWindowDimensions
-- [ ] UTFSequence
-- [ ] Vibration
-- [ ] YellowBox
-
-### Plugins
-
-- [x] DeviceEventEmitter
-- [ ] NativeAppEventEmitter
-- [x] NativeModules
-- [x] Platform
-- [ ] PlatformColor
-- [x] processColor
-- [ ] requireNativeComponent
-- [ ] RootTagContext
 
 ## Prerequisites
 
 ### DevEco Studio setup
 
-Currently we use DevEco Studio 4.0.3.400. Follow steps below to install the IDE and required SDKs.
-
-#### IDE Installation from official release
-
-1. Open [a website with DevEco Studio releases](https://developer.harmonyos.com/cn/develop/deveco-studio/archive/)
-1. Find the DevEco Studio 3.1 Release download link for your operating system and download the IDE
-   _(we recommend using a computer with Windows OS because the Local Emulator is not supported in the MacOS version of the IDE)_
-1. Unzip the downloaded compressed folder and double click the `deveco-Studio-3.1.0.200.exe` executable to open the installer
-1. Go through the setup and wait for the installation to complete
+This project uses unreleased DevEco Studio 4.0.3.700 and Open Harmony SDK shipped with DevEco. Follow steps below to install the IDE and required SDKs.
 
 #### SDK setup
 
 Before starting the development you have to install required SDKs.
-
-##### Additional setup (only for developers outside of China)
-
-If your system language isn't Chinese and region code is different than CN, you will have to do some additional setup:
-
-1. Close the DevEco Studio IDE
-1. Open the `C:\Users\<username>\AppData\Roaming\Huawei\DevEcoStudio3.1\options\country.region.xml` file in your text editor
-1. Change the `name` value of `countryregion` to `CN`. After making a change, the `country.region.xml` should have the following content:
-   ```xml
-   <application>
-       <component name="CountryRegionSetting">
-           <countryregion name="CN"/>
-       </component>
-   </application>
-   ```
-1. Save the file
-1. Open the DevEco Studio. You will be able to install SDKs now.
-
-##### Installing required SDKs
-
-Warning: This project may use unreleased SDK, if buildProfile.template.json5 specifies SDK version higher than available publicly. In that case refer to section [Installing unreleased SDK](#installing-unreleased-sdk)
-
-After doing a fresh install of the IDE you will see the SDK setup window just after opening the IDE.
-Install the required SDK and proceed through the setup.
-
-You will have to install some additional SDKs:
-
-1. Go to `Settings` -> `SDKs`
-1. Open the `HarmonyOS` tab (it should be opened by default)
-1. Select the checkbox near the first item in the list (with the appropriate DevEco Studio version)
-1. Press `Apply` button to begin installation and press `Ok` in the confirmation modal
-1. Press the `Finish` button to finish installation and close the settings window
 
 ##### Installing unreleased SDK
 
@@ -209,7 +88,7 @@ More details about GitLab access tokens can be found [in the docs](https://docs.
 
 ## Running `tester` app
 
-### Dependencies installation
+### Installing Dependencies
 
 1. Go to the `react-native-harmony` directory
 1. Create the package by running the `npm pack` command
@@ -244,7 +123,7 @@ Before you start the project, you have to setup the device on which you will be 
 1. Open `/tester/harmony` in DevEco Studio
 1. Start the HarmonyOS emulator
 1. Run `hdc rport tcp:8081 tcp:8081`
-   If `hdc` is not in your `PATH`, it can be found under `%USERPROFILE%/AppData/Local/Huawei/Sdk/hmscore/3.1.0/toolchains`
+   If `hdc` is not in your `PATH`, it can be found under `<OPEN_HARMONY_SDK>/X86SDK/openharmony/10/toolchains`
 1. Start metro by running `npm run start`
 1. Build and run entry module
 
