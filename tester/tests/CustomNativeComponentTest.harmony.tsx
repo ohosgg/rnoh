@@ -1,9 +1,14 @@
 import {TestCase, TestSuite} from '@rnoh/testerino';
-import {requireNativeComponent, ViewProps} from 'react-native-harmony';
-import {useState} from 'react';
+import {
+  findNodeHandle,
+  requireNativeComponent,
+  UIManager,
+  ViewProps,
+} from 'react-native';
+import {useRef, useState} from 'react';
 import React from 'react';
-import {StyleProp, ViewStyle} from 'react-native-harmony';
-import {Button} from '../components';
+import {StyleProp, ViewStyle} from 'react-native';
+import {Button, Ref} from '../components';
 
 /**
  * 1) SampleView JSI binder on CPP side needs to be provided to make this function work.
@@ -32,15 +37,34 @@ const SampleView = requireNativeComponent<ViewProps & {size: number}>(
  * 3) Once code generation is supported, `codegenNativeComponent` will be recommended.
  */
 
-function SampleViewWrapper({
-  children,
-  backgroundColor,
-  size,
-}: {
-  children?: any;
-  backgroundColor: string;
-  size: number;
-}) {
+type SampleViewRef = {toggleFontSize: () => void};
+
+const SampleViewWrapper = React.forwardRef<
+  SampleViewRef,
+  {
+    children?: any;
+    backgroundColor: string;
+    size: number;
+  }
+>(({children, backgroundColor, size}, ref) => {
+  const nativeRef = useRef<any>(null);
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      toggleFontSize() {
+        if (nativeRef?.current) {
+          UIManager.dispatchViewManagerCommand(
+            findNodeHandle(nativeRef.current),
+            'toggleFontSize',
+            [],
+          );
+        }
+      },
+    }),
+    [],
+  );
+
   const style: StyleProp<ViewStyle> = {
     backgroundColor: backgroundColor,
     width: size,
@@ -54,8 +78,10 @@ function SampleViewWrapper({
     opacity: 1,
   };
 
-  return <SampleView style={style} size={size} children={children} />;
-}
+  return (
+    <SampleView ref={nativeRef} style={style} size={size} children={children} />
+  );
+});
 
 export function CustomNativeComponentTest() {
   return (
@@ -74,6 +100,24 @@ export function CustomNativeComponentTest() {
             <SampleViewWrapper backgroundColor="blue" size={32} />
           </Blinker>
         </SampleViewWrapper>
+      </TestCase>
+      <TestCase itShould="toggle font size in the component below button (native commands)">
+        <Ref<SampleViewRef>
+          render={ref => {
+            return (
+              <>
+                <Button
+                  label="Toggle Font Size"
+                  onPress={() => {
+                    ref.current?.toggleFontSize();
+                  }}
+                />
+                <SampleViewWrapper ref={ref} backgroundColor="blue" size={32} />
+                ;
+              </>
+            );
+          }}
+        />
       </TestCase>
     </TestSuite>
   );
