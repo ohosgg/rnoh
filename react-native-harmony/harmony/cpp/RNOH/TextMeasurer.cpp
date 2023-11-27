@@ -11,7 +11,7 @@ react::TextMeasurement TextMeasurer::measure(react::AttributedString attributedS
     react::TextMeasurement result = {{0, 0}, {}};
 
     auto fragments = attributedString.getFragments();
-    auto canUseOHOSTextMeasurer = fragments.size() == 1 && !fragments[0].isAttachment() && isnan(fragments[0].textAttributes.letterSpacing && isnan(fragments[0].textAttributes.lineHeight));
+    auto canUseOHOSTextMeasurer = fragments.size() == 1 && !fragments[0].isAttachment() && isnan(fragments[0].textAttributes.letterSpacing) && isnan(fragments[0].textAttributes.lineHeight);
     if (canUseOHOSTextMeasurer) {
         auto fragment = fragments[0];
         OHOSTextMeasurer ohosTextMeasurer;
