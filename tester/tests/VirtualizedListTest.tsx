@@ -97,6 +97,9 @@ export function VirtualizedListTest() {
           ]);
         }}
       />
+      <TestCase modal itShould='start at the 81st item'>
+        <InitialScrollIndexTest />
+      </TestCase>
       <TestSuite name="ref">
         <TestCase
           modal
@@ -255,6 +258,25 @@ function VirtualizedListScrollToItemTest() {
         keyExtractor={(item: ItemData) => item.id}
       />
     </>
+  );
+}
+
+function InitialScrollIndexTest() {
+  return (
+    <VirtualizedList
+      style={{height: 256}}
+      data={GENERATED_DATA}
+      getItem={(_, index: number) => GENERATED_DATA[index]}
+      getItemCount={() => GENERATED_DATA.length}
+      getItemLayout={(_, index: number) => ({
+        length: 48,
+        offset: 48 * index, 
+        index,
+      })}
+      initialScrollIndex={80}
+      renderItem={({item}: {item: ItemData}) => <Item title={item.title} />}
+      keyExtractor={(item: ItemData) => item.id}
+    />
   );
 }
 

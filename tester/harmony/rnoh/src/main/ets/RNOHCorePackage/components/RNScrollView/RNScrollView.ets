@@ -102,7 +102,7 @@ export struct RNScrollView {
   private componentManager!: _RNScrollViewManager
   private lastScrollDispatchTime: number = 0
   private allowNextScrollEvent: boolean = false
-  private contentOffset: Position = { x: 0, y: 0 }
+  private contentOffset: Position = { x: 0, y: 0}
   @State shouldPreventScrolling: boolean = false
 
   aboutToAppear() {
@@ -154,7 +154,12 @@ export struct RNScrollView {
     this.parentTag = newDescriptor.parentTag
     if (newDescriptor.props.contentOffsetX !== prevProps.contentOffsetX || newDescriptor.props.contentOffsetY !== prevProps.contentOffsetY) {
       this.scrollToPropsContentOffset();
-    } else if (this.scrollState === ScrollState.Idle && (this.descriptor.state.contentSizeWidth !== prevState.contentSizeWidth || this.descriptor.state.contentSizeHeight !== prevState.contentSizeHeight)) {
+      return;
+    }
+
+    const contentSizeChanged = this.descriptor.state.contentSizeWidth !== prevState.contentSizeWidth
+      || this.descriptor.state.contentSizeHeight !== prevState.contentSizeHeight
+    if (this.scrollState === ScrollState.Idle && contentSizeChanged) {
       /**
        * When a scroll content is removed, and it appears again without scrolling, scroll should remain in the original position.
        * This behavior was observed on Android. Local contentOffset is used, to use the most recent position.
@@ -171,6 +176,7 @@ export struct RNScrollView {
     const xOffset = this.props.contentOffsetX;
     const yOffset = this.props.contentOffsetY;
     this.scroller.scrollTo({ xOffset, yOffset });
+    this.contentOffset = { x: this.props.contentOffsetX, y: this.props.contentOffsetY }
   }
 
   scrollTo(xOffset: number, yOffset: number, animated: number) {
@@ -324,8 +330,10 @@ export struct RNScrollView {
     }
     descriptor.state.contentOffsetX = currentOffset.xOffset;
     descriptor.state.contentOffsetY = currentOffset.yOffset;
-    this.contentOffset.x = currentOffset.xOffset;
-    this.contentOffset.y = currentOffset.yOffset;
+    this.contentOffset = {
+      x: currentOffset.xOffset,
+      y: currentOffset.yOffset,
+    }
 
     const now = Date.now();
     if (this.allowNextScrollEvent || descriptor.props.scrollEventThrottle < now - this.lastScrollDispatchTime) {
@@ -453,7 +461,16 @@ export struct RNScrollView {
       this.onScrollEnd()
     })
     .onAppear(() => {
-      this.scrollToPropsContentOffset()
+      if (this.props.contentOffsetX !== 0 || this.props.contentOffsetY !== 0) {
+        this.scrollToPropsContentOffset()
+      } else if (this.contentOffset.x !== 0 || this.contentOffset.y !== 0) {
+        // this handles the case where `scrollTo` has been called
+        // before the native component mounted
+        this.scroller.scrollTo({
+          xOffset: this.contentOffset.x,
+          yOffset: this.contentOffset.y,
+        })
+      }
     })
     .friction(this.getFriction())
     .scrollSnap(this.getScrollSnap())
