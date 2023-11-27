@@ -8,7 +8,7 @@ export class WebSocketTurboModule extends TurboModule {
   public static readonly NAME = 'WebSocketModule';
 
   private socketsById: Map<number, webSocket.WebSocket> = new Map();
-  private base64 = new util.Base64()
+  private base64 = new util.Base64Helper()
 
   getSupportedEvents() {
     return WEB_SOCKET_SUPPORTED_EVENT_NAMES
@@ -33,7 +33,7 @@ export class WebSocketTurboModule extends TurboModule {
           data: data,
         });
       } else if (data instanceof ArrayBuffer) {
-        const base64Data = this.base64.encodeSync(new Uint8Array(data));
+        const base64Data = this.base64.encodeToStringSync(new Uint8Array(data));
 
         this.ctx.rnInstanceManager.emitDeviceEvent("websocketMessage", {
           id: socketID,
@@ -70,7 +70,7 @@ export class WebSocketTurboModule extends TurboModule {
     }
 
     const message = this.base64.decodeSync(base64Message);
-    ws.send(message, (err) => this.handleError(socketID, err));
+    ws.send(message.buffer, (err) => this.handleError(socketID, err));
   }
 
   ping(socketID: number) {
