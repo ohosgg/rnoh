@@ -632,6 +632,9 @@ export function ScrollViewTest() {
       <TestCase modal itShould="snap to page">
         <PagingEnabledTest />
       </TestCase>
+      <TestCase modal itShould='flash scroll indicators'>
+        <FlashIndicatorsTest />
+      </TestCase>
     </TestSuite>
   );
 }
@@ -800,6 +803,23 @@ function ScrollEnabledTestCase() {
         }}
       />
       <ScrollView style={{flex: 1}} scrollEnabled={false} ref={scrollRef}>
+        {getScrollViewContent({})}
+      </ScrollView>
+    </View>
+  );
+}
+
+function FlashIndicatorsTest() {
+  const scrollRef = React.useRef<ScrollView>(null);
+  return (
+    <View style={styles.wrapperView}>
+      <Button
+        label={'Flash Indicators'}
+        onPress={() => {
+          scrollRef.current?.flashScrollIndicators();
+        }}
+      />
+      <ScrollView style={{flex: 1}} scrollEnabled={true} showsVerticalScrollIndicator={false} ref={scrollRef}>
         {getScrollViewContent({})}
       </ScrollView>
     </View>

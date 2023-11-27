@@ -94,6 +94,7 @@ export struct RNScrollView {
   @State childrenTags: Tag[] = []
   @State descriptor: ScrollViewDescriptor = Object() as ScrollViewDescriptor
   @State descriptorWrapper: ScrollViewDescriptorWrapper | undefined = undefined
+  @State indicatorFlashCounter: number = 0;
   private parentTag: Tag | undefined = undefined
   private scroller = new Scroller()
   private cleanUpCallbacks: (() => void)[] = []
@@ -117,6 +118,8 @@ export struct RNScrollView {
           this.scrollTo(args[0], args[1], args[2]);
         } else if (command === 'scrollToEnd') {
           this.scrollToEnd(args[0]);
+        } else if (command === 'flashScrollIndicators') {
+          this.flashScrollIndicators()
         } else if (command === RNOHComponentCommand.BLOCK_NATIVE_RESPONDER) {
           this.shouldPreventScrolling = true
         } else if (command === RNOHComponentCommand.UNBLOCK_NATIVE_RESPONDER) {
@@ -187,11 +190,20 @@ export struct RNScrollView {
     }
   }
 
+  flashScrollIndicators() {
+    this.indicatorFlashCounter++;
+    setTimeout(() => this.indicatorFlashCounter--, 500);
+  }
+
   scrollDirection(): ScrollDirection {
     return this.props.flexDirection === 2 ? ScrollDirection.Horizontal : ScrollDirection.Vertical;
   }
 
   scrollBarState(): BarState {
+    if (this.indicatorFlashCounter > 0) {
+      return BarState.On
+    }
+
     if (((this.props.flexDirection === 2) && !this.props.showsHorizontalScrollIndicator)
       || ((this.props.flexDirection !== 2) && !this.props.showsVerticalScrollIndicator)) {
       return BarState.Off
