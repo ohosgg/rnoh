@@ -85,4 +85,14 @@ export class RemoteImageLoader {
 
     return undefined;
   }
+
+  public queryCache(uri: string): 'memory' | 'disk' | undefined {
+    if (this.diskCache.has(uri)) {
+      return 'disk';
+    }
+    if (this.memoryCache.has(uri)) {
+      return 'memory';
+    }
+    return undefined;
+  }
 }

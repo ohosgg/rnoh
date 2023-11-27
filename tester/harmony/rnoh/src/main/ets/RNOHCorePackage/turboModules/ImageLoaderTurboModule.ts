@@ -47,8 +47,11 @@ export class ImageLoaderTurboModule extends TurboModule {
   }
 
   public queryCache(uris: Array<string>): Promise<Object> {
-    this.ctx.logger.warn("ImageLoader::queryCache is not supported")
-    return Promise.resolve({})
+    const cachedUriEntries = uris.map(uri =>
+      [uri, this.imageLoader.queryCache(uri)]
+    ).filter(([_uri, value]) => value !== undefined);
+    const cachedUriMap = Object.fromEntries(cachedUriEntries)
+    return Promise.resolve(cachedUriMap)
   }
 
   public getCachedImage(uri: string): string | undefined {

@@ -92,6 +92,19 @@ export const ImageTest = () => {
         }}
       />
       <TestCase
+        itShould="query cache"
+        fn={async ({expect}) => {
+          await Image.prefetch(REMOTE_IMAGE_URL);
+          expect(Image.queryCache).not.to.be.undefined;
+          const result = await Image.queryCache?.([REMOTE_IMAGE_URL, 'not_image']);
+          console.log(JSON.stringify(result, null, 2));
+          expect(result).to.be.not.undefined;
+          expect(result?.[REMOTE_IMAGE_URL]).to.be.not.undefined;
+          expect(result?.[REMOTE_IMAGE_URL]).to.be.eq('disk');
+          expect(result?.['not_image']).to.be.undefined;
+        }}
+      />
+      <TestCase
         skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/246
         itShould="render circular image on a red rectangle (overlayColor)">
         <Image
