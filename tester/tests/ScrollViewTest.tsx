@@ -619,7 +619,7 @@ function SnapTestCases(props: {scrollViewProps: ScrollViewProps}) {
           rhsProps={{snapToStart: false}}
         />
       </TestCase>
-      <TestCase skip modal itShould="snap to page">
+      <TestCase modal itShould="snap to page">
         <ScrollViewComparator
           scrollViewLength={ITEM_HEIGHT * 5}
           commonProps={{

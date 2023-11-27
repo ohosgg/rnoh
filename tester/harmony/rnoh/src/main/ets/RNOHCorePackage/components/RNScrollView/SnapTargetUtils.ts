@@ -31,7 +31,8 @@ export function calculateSnapTarget({
   if (isPagingEnabled) {
     return calculateNewOffsetInActiveScrollDirection(
       (currentDimOffset) => calculatePageSnapTarget(currentDimOffset,
-        isHorizontalScroll ? container.width : container.height
+        isHorizontalScroll ? container.width : container.height,
+        recentDimOffsetDelta,
       ), currentOffset, isHorizontalScroll)
   } else if (offsets && offsets.length > 0) {
     return calculateNewOffsetInActiveScrollDirection(
@@ -57,8 +58,9 @@ function calculateNewOffsetInActiveScrollDirection(mapFn: (currentDimOffset: num
   }
 }
 
-function calculatePageSnapTarget(currentDimOffset: number, pageLength: number): number {
-  return Math.round(currentDimOffset / pageLength) * pageLength
+function calculatePageSnapTarget(currentDimOffset: number, pageLength: number, dimOffsetDelta: number): number {
+  const op = dimOffsetDelta < 0 ? Math.floor : Math.ceil;
+  return op(currentDimOffset / pageLength) * pageLength
 }
 
 function pickSnapTargetFromOffsets(currentDimOffset: number, recentDimOffsetDelta: number, dimOffsets: number[]): number | null {
