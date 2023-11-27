@@ -7,6 +7,7 @@ import {
   StyleProp,
   TextInput,
   Platform,
+  ScrollViewProps,
 } from 'react-native';
 import {TestSuite, TestCase} from '@rnoh/testerino';
 import React, {useEffect, useRef, useState} from 'react';
@@ -370,49 +371,15 @@ export function ScrollViewTest() {
           }}
         />
       </TestSuite>
-      <TestSuite name="snap to">
-        <TestCase
-          modal
-          skip
-          itShould="[FAILS on all platforms?] snaps to each child "
-          //https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/307
-        >
-          <View style={[styles.wrapperView, {flexDirection: 'row'}]}>
-            <ScrollView
-              {...commonProps}
-              disableIntervalMomentum={true}
-              decelerationRate={'fast'}
-            />
-          </View>
-        </TestCase>
-        <TestCase
-          modal
-          itShould="snaps to each second child (rectangle indices: 1, 3, 5, 7...) (snapToInterval)">
-          <View style={[styles.wrapperView, {flexDirection: 'row'}]}>
-            <ScrollView
-              {...commonProps}
-              snapToInterval={100}
-              decelerationRate={'fast'}
-            />
-          </View>
-        </TestCase>
-        <TestCase
-          modal
-          itShould="snaps to in increasing multiples of 50 pixels (rectangle indices: 1, 2, 4, 7, 11, 16) (snapToOffset)) ">
-          <View style={[styles.wrapperView, {flexDirection: 'row'}]}>
-            <ScrollView
-              {...commonProps}
-              snapToOffsets={[50, 150, 300, 500, 750]}
-              decelerationRate={'fast'}>
-              {getScrollViewContent({amountOfChildren: 21})}
-            </ScrollView>
-          </View>
-        </TestCase>
-        <TestCase
-          modal
-          itShould="snap to each item - first - at the start, second - at the center, and third - at the end">
-          <SnapToAlignmentTest />
-        </TestCase>
+      <TestSuite name="snapTo*">
+        <SnapTestCases
+          scrollViewProps={{disableIntervalMomentum: false, horizontal: false}}
+        />
+      </TestSuite>
+      <TestSuite name="disableIntervalMomentum">
+        <SnapTestCases
+          scrollViewProps={{disableIntervalMomentum: true, horizontal: false}}
+        />
       </TestSuite>
       <TestSuite name="other props">
         <TestCase
@@ -613,134 +580,114 @@ export function ScrollViewTest() {
           itShould="scroll down on the btn press, but prevent scrolling by dragging (scrollEnabled)">
           <ScrollEnabledTestCase />
         </TestCase>
-        <TestCase
-          modal
-          itShould="allow to scroll to the end of the content (snapToEnd = false, from 30 rectangle indice)">
-          <ScrollViewSnapToEnd />
-        </TestCase>
-        <TestCase
-          modal
-          itShould="allow to scroll to the start of the content (snapToStart = false, from 60 rectangle indice)">
-          <ScrollViewSnapToStart />
-        </TestCase>
-        <TestCase
-          modal
-          itShould="allow to scroll from start to 30, then from 60 to the end (snapToStart = false, snapToEnd = false)">
-          <ScrollViewSnapToStartAndEnd />
-        </TestCase>
       </TestSuite>
-      <TestCase modal itShould="snap to page">
-        <PagingEnabledTest />
-      </TestCase>
-      <TestCase modal itShould='flash scroll indicators'>
+      <TestCase modal itShould="flash scroll indicators">
         <FlashIndicatorsTest />
       </TestCase>
     </TestSuite>
   );
 }
 
-const SnapToAlignmentTest = () => {
-  const Items = () => {
-    const values = Array.from(Array(50), (_, index) => index + 1);
-    const styles = StyleSheet.create({
-      box1: {
-        height: 100,
-        width: 100,
-        backgroundColor: 'red',
-        justifyContent: 'center',
-      },
-      box2: {
-        height: 100,
-        width: 100,
-
-        backgroundColor: 'yellow',
-        justifyContent: 'center',
-      },
-      text: {
-        fontSize: 20,
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        verticalAlign: 'middle',
-      },
-    });
-    return (
-      <>
-        {values.map((_value, index, _array) => {
-          return (
-            <View
-              key={index}
-              style={index % 2 == 0 ? styles.box1 : styles.box2}>
-              <Text style={styles.text}>{index}</Text>
-            </View>
-          );
-        })}
-      </>
-    );
-  };
+function SnapTestCases(props: {scrollViewProps: ScrollViewProps}) {
   return (
-    <View style={{flexDirection: 'row'}}>
-      <View style={{height: 280, padding: 4}}>
-        <ScrollView
-          style={{backgroundColor: 'blue'}}
-          nestedScrollEnabled
-          snapToInterval={100}>
-          <Items />
-        </ScrollView>
-      </View>
-      <View style={{height: 280, padding: 4}}>
-        <ScrollView
-          style={{backgroundColor: 'blue'}}
-          nestedScrollEnabled
-          snapToInterval={100}
-          snapToAlignment="center">
-          <Items />
-        </ScrollView>
-      </View>
-      <View style={{height: 280, padding: 4}}>
-        <ScrollView
-          style={{backgroundColor: 'blue'}}
-          nestedScrollEnabled
-          snapToInterval={100}
-          snapToAlignment="end">
-          <Items />
-        </ScrollView>
-      </View>
-    </View>
+    <>
+      <TestCase
+        modal
+        itShould="not snap after item 6 when snapToEnd is set to false">
+        <ScrollViewComparator
+          scrollViewLength={ITEM_HEIGHT * 5}
+          commonProps={{
+            ...props.scrollViewProps,
+            snapToOffsets: [ITEM_HEIGHT * 5],
+            children: getScrollViewContent({amountOfChildren: 25}),
+          }}
+          lhsProps={{snapToEnd: true}}
+          rhsProps={{snapToEnd: false}}
+        />
+      </TestCase>
+      <TestCase
+        modal
+        itShould="not snap before item 6 when snapToStart is set to false">
+        <ScrollViewComparator
+          scrollViewLength={ITEM_HEIGHT * 5}
+          commonProps={{
+            ...props.scrollViewProps,
+            snapToOffsets: [ITEM_HEIGHT * 5],
+            children: getScrollViewContent({amountOfChildren: 25}),
+          }}
+          lhsProps={{snapToStart: true}}
+          rhsProps={{snapToStart: false}}
+        />
+      </TestCase>
+      <TestCase skip modal itShould="snap to page">
+        <ScrollViewComparator
+          scrollViewLength={ITEM_HEIGHT * 5}
+          commonProps={{
+            ...props.scrollViewProps,
+            children: getScrollViewContent({amountOfChildren: 25}),
+          }}
+          lhsProps={{pagingEnabled: false}}
+          rhsProps={{pagingEnabled: true}}
+        />
+      </TestCase>
+      <TestCase modal itShould="snap to item 1, 3, 5, 7, 9, ...">
+        <ScrollViewComparator
+          scrollViewLength={ITEM_HEIGHT * 5}
+          commonProps={{
+            ...props.scrollViewProps,
+            children: getScrollViewContent({amountOfChildren: 25}),
+          }}
+          lhsProps={{}}
+          rhsProps={{snapToInterval: ITEM_HEIGHT * 2}}
+        />
+      </TestCase>
+      <TestCase modal itShould="snap to item 2, 3, 7, and 11 and 21">
+        <ScrollViewComparator
+          scrollViewLength={ITEM_HEIGHT * 5}
+          commonProps={{
+            ...props.scrollViewProps,
+            children: getScrollViewContent({amountOfChildren: 25}),
+          }}
+          lhsProps={{}}
+          rhsProps={{
+            snapToOffsets: [
+              ITEM_HEIGHT,
+              ITEM_HEIGHT * 2,
+              ITEM_HEIGHT * 6,
+              ITEM_HEIGHT * 10,
+            ],
+          }}
+        />
+      </TestCase>
+      <TestSuite name="snapToAlignment">
+        <TestCase modal itShould="snap to item {lhs: start, rhs: center}">
+          <ScrollViewComparator
+            scrollViewLength={ITEM_HEIGHT * 1.5}
+            commonProps={{
+              ...props.scrollViewProps,
+              children: getScrollViewContent({amountOfChildren: 25}),
+              snapToInterval: ITEM_HEIGHT,
+            }}
+            lhsProps={{snapToAlignment: 'start'}}
+            rhsProps={{snapToAlignment: 'center'}}
+          />
+        </TestCase>
+        <TestCase modal itShould="snap to item {lhs: start, rhs: end}">
+          <ScrollViewComparator
+            scrollViewLength={ITEM_HEIGHT * 1.5}
+            commonProps={{
+              ...props.scrollViewProps,
+              children: getScrollViewContent({amountOfChildren: 25}),
+              snapToInterval: ITEM_HEIGHT,
+            }}
+            lhsProps={{snapToAlignment: 'start'}}
+            rhsProps={{snapToAlignment: 'end'}}
+          />
+        </TestCase>
+      </TestSuite>
+    </>
   );
-};
-
-const PagingEnabledTest = () => {
-  const width = 300;
-  const style = StyleSheet.create({
-    view1: {
-      backgroundColor: 'pink',
-    },
-    view2: {
-      backgroundColor: 'powderblue',
-    },
-    base: {
-      height: 700,
-    },
-    scrollview: {
-      marginVertical: 40,
-      width: width,
-    },
-    box: {
-      height: 150,
-      width: 150,
-      backgroundColor: 'blue',
-      borderRadius: 5,
-    },
-  });
-  return (
-    <ScrollView style={style.scrollview} horizontal pagingEnabled>
-      <View style={[{width: width}, style.base, style.view1]}></View>
-      <View style={[{width: width}, style.base, style.view2]}></View>
-      <View style={[{width: width}, style.base, style.view1]}></View>
-      <View style={[{width: width}, style.base, style.view2]}></View>
-    </ScrollView>
-  );
-}; 
+}
 
 function MomentumTestCase() {
   const [hasDragBegan, setHasDragBegan] = useState(0);
@@ -819,7 +766,11 @@ function FlashIndicatorsTest() {
           scrollRef.current?.flashScrollIndicators();
         }}
       />
-      <ScrollView style={{flex: 1}} scrollEnabled={true} showsVerticalScrollIndicator={false} ref={scrollRef}>
+      <ScrollView
+        style={{flex: 1}}
+        scrollEnabled={true}
+        showsVerticalScrollIndicator={false}
+        ref={scrollRef}>
         {getScrollViewContent({})}
       </ScrollView>
     </View>
@@ -935,6 +886,9 @@ interface ScrollViewContentProps {
   onTouchEnd?: (event: GestureResponderEvent) => void;
   pointerEvents?: 'box-none' | 'none' | 'box-only' | 'auto' | undefined;
 }
+
+const ITEM_HEIGHT = 50;
+
 // using this as a component breaks sticky headers because react native sees it then as a single component
 function getScrollViewContent({
   style,
@@ -1035,48 +989,38 @@ function PointerEventsView(props: {
   );
 }
 
-function ScrollViewSnapToEnd() {
+function ScrollViewComparator({
+  scrollViewLength,
+  commonProps,
+  lhsProps,
+  rhsProps,
+}: {
+  scrollViewLength: number;
+  commonProps: ScrollViewProps;
+  lhsProps: ScrollViewProps;
+  rhsProps: ScrollViewProps;
+}) {
   return (
-    <View style={styles.wrapperView}>
-      <ScrollView
-        style={{
-          ...styles.wrapperView,
-        }}
-        snapToEnd={false}
-        snapToOffsets={[1450]}>
-        {getScrollViewContent({amountOfChildren: 100})}
-      </ScrollView>
-    </View>
-  );
-}
-
-function ScrollViewSnapToStart() {
-  return (
-    <View style={styles.wrapperView}>
-      <ScrollView
-        style={{
-          ...styles.wrapperView,
-        }}
-        snapToStart={false}
-        snapToOffsets={[2950]}>
-        {getScrollViewContent({amountOfChildren: 100})}
-      </ScrollView>
-    </View>
-  );
-}
-
-function ScrollViewSnapToStartAndEnd() {
-  return (
-    <View style={styles.wrapperView}>
-      <ScrollView
-        style={{
-          ...styles.wrapperView,
-        }}
-        snapToStart={false}
-        snapToEnd={false}
-        snapToOffsets={[1450, 2950]}>
-        {getScrollViewContent({amountOfChildren: 100})}
-      </ScrollView>
+    <View style={{width: '100%'}}>
+      <View
+        style={{flexDirection: 'row', width: '100%', alignItems: 'flex-end'}}>
+        <View style={{flex: 1}}>
+          <Text style={{fontSize: 12}}>{JSON.stringify(lhsProps)}</Text>
+          <View style={{height: scrollViewLength}}>
+            <ScrollView
+              style={{flex: 1, height: scrollViewLength}}
+              {...{...commonProps, ...lhsProps}}
+            />
+          </View>
+        </View>
+        <View style={{width: 4, height: '100%', backgroundColor: 'gray'}} />
+        <View style={{flex: 1}}>
+          <Text style={{fontSize: 12}}>{JSON.stringify(rhsProps)}</Text>
+          <View style={{height: scrollViewLength}}>
+            <ScrollView {...{...commonProps, ...rhsProps}} style={{flex: 1}} />
+          </View>
+        </View>
+      </View>
     </View>
   );
 }

@@ -1,75 +1,27 @@
 import { Descriptor, Position, RNOHComponentCommand, RNOHContext, Size, Tag } from '../../../RNOH';
 import { _RNScrollViewManager } from './RNScrollViewManager';
-import { RNViewBase, ViewBaseProps, ViewDescriptorWrapperBase, ViewRawProps } from '../RNViewBase';
+import { RNViewBase, ViewDescriptorWrapperBase } from '../RNViewBase';
 import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from '../RNPullToRefreshView';
 import { CustomComponentBuilder, RNComponentFactory } from '../RNComponentFactory';
-
-
-export interface ScrollViewProps extends ViewBaseProps {
-  scrollEnabled?: boolean
-  contentOffsetX: number
-  contentOffsetY: number
-  flexDirection: number
-  bounces: boolean
-  persistentScrollbar: boolean
-  showsHorizontalScrollIndicator: boolean
-  showsVerticalScrollIndicator: boolean
-  indicatorStyle?: IndicatorStyle
-  decelerationRate: number
-  scrollEventThrottle: number
-}
-
-export interface ScrollViewRawProps extends ViewRawProps {
-  snapToInterval?: number
-  snapToOffsets?: number[]
-  snapToStart?: boolean
-  snapToEnd?: boolean
-  pagingEnabled?: boolean
-  snapToAlignment?: string
-}
-
-export interface ScrollViewState {
-  contentOffsetX: number
-  contentOffsetY: number
-  contentSizeWidth: number
-  contentSizeHeight: number
-}
+import {
+  ScrollViewProps,
+  ScrollViewRawProps,
+  ScrollViewState,
+  IndicatorStyle,
+  CurrentOffset,
+  ScrollEvent
+} from "./types"
+import { calculateSnapTarget } from "./SnapTargetUtils"
 
 class ScrollViewDescriptorWrapper extends ViewDescriptorWrapperBase<"ScrollView", ScrollViewProps, ScrollViewState, ScrollViewRawProps> {
 }
 
-enum IndicatorStyle {
-  Default = 0,
-  Black = 1,
-  White = 2,
-}
-
-interface CurrentOffset {
-  xOffset: number,
-  yOffset: number
-}
-
-interface Dimensions {
-  width: number;
-  height: number;
-}
-
-interface Coordinates {
-  x: number;
-  y: number;
-}
-
-interface ScrollEvent {
-  contentSize: Dimensions;
-  contentOffset: Coordinates;
-  containerSize: Dimensions;
-  zoomScale: number;
-}
 
 interface IAnimation {
   duration?: number;
   curve?: Curve | ICurve;
 };
+
 type Animation = IAnimation | boolean;
 
 function getScrollSnapAlign(snapToAlignment: string | undefined): ScrollSnapAlign {
@@ -102,7 +54,9 @@ export struct RNScrollView {
   private componentManager!: _RNScrollViewManager
   private lastScrollDispatchTime: number = 0
   private allowNextScrollEvent: boolean = false
-  private contentOffset: Position = { x: 0, y: 0}
+  private contentOffset: Position = { x: 0, y: 0 }
+  private recentDimOffsetDelta: number = 0
+  @State shouldDisableSnapping: boolean = false
   @State shouldPreventScrolling: boolean = false
 
   aboutToAppear() {
@@ -246,6 +200,9 @@ export struct RNScrollView {
   }
 
   getScrollSnap(): ScrollSnapOptions | undefined {
+    if (this.shouldDisableSnapping) {
+      return undefined
+    }
     const snapToOffsets = this.descriptor.rawProps.snapToOffsets
     const snapToStart = this.descriptor.rawProps.snapToStart
     const snapToEnd = this.descriptor.rawProps.snapToEnd
@@ -301,7 +258,8 @@ export struct RNScrollView {
     }
   }
 
-  onScroll(_: number, scrollState: ScrollState) {
+  onScroll(offset: number, scrollState: ScrollState) {
+    this.recentDimOffsetDelta = offset
     const currentScrollState = this.scrollState;
 
     if (currentScrollState != scrollState) {
@@ -355,6 +313,33 @@ export struct RNScrollView {
   }
 
   handleDragEnd() {
+    if (this.descriptor.rawProps.disableIntervalMomentum) {
+      const snapTarget = calculateSnapTarget({
+        currentOffset: this.scroller.currentOffset(),
+        isPagingEnabled: this.descriptor.rawProps.pagingEnabled,
+        offsets: this.descriptor.rawProps.snapToOffsets,
+        interval: this.descriptor.rawProps.snapToInterval,
+        isHorizontalScroll: this.scrollDirection() === ScrollDirection.Horizontal,
+        container: {
+          width: this.descriptorWrapper?.width ?? 0,
+          height: this.descriptorWrapper?.height ?? 0,
+        },
+        content: this.contentSize,
+        recentDimOffsetDelta: this.recentDimOffsetDelta
+      })
+      if (snapTarget) {
+        this.shouldDisableSnapping = true
+        const snapDurationInMs = 100
+        this.scroller.scrollTo({
+          xOffset: snapTarget.xOffset,
+          yOffset: snapTarget.yOffset,
+          animation: { duration: snapDurationInMs }
+        })
+        setTimeout(() => {
+          this.shouldDisableSnapping = false
+        }, snapDurationInMs)
+      }
+    }
     this.ctx.rnInstance.emitComponentEvent(
       this.tag,
       "onScrollEndDrag",

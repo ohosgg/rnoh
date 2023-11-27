@@ -22,6 +22,7 @@ class ScrollViewComponentJSIBinder : public ViewComponentJSIBinder {
         object.setProperty(rt, "snapToEnd", "boolean");
         object.setProperty(rt, "pagingEnabled", "boolean");
         object.setProperty(rt, "snapToAlignment", "ScrollViewSnapToAlignment");
+        object.setProperty(rt, "disableIntervalMomentum", true);
 
         return object;
     }
