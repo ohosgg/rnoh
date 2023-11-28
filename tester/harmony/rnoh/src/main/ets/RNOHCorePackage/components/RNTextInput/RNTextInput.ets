@@ -145,7 +145,7 @@ export struct RNTextInput {
   }
 
   onSubmitEditing(): void {
-    focusControl.requestFocus(`fixedAutoFocus${this.tag}`)
+    focusControl.requestFocus(`fixedBlur${this.tag}`)
     this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "onSubmitEditing", this.value)
   }
 
@@ -190,14 +190,21 @@ export struct RNTextInput {
 
   build() {
     RNViewBase({ ctx: this.ctx, tag: this.tag }) {
-      // patch: solve autofocus issues
-      Button()
-        .key(`fixedAutoFocus${this.tag}`)
-        .width(0)
-        .height(0)
-        .padding(0)
-        .margin(0)
-        .defaultFocus(!(this.descriptorWrapper?.autoFocus ?? false))
+      /**
+       * Focus hack (1/2)
+       * This invisible buttons are needed to solve focusing issues.
+       * The first one ensures that the TextInput will not autoFocus when the property is set to false, and the
+       * second allows blurring after submitting text.
+       * */
+      if (!(this.descriptorWrapper?.autoFocus ?? false)) {
+        Button()
+          .key(`fixedAutoFocus${this.tag}`)
+          .width(0)
+          .height(0)
+          .padding(0)
+          .margin(0)
+          .defaultFocus(true)
+      }
       if (this.descriptor.props.multiline) {
         TextArea({ controller: this.areaController, placeholder: this.descriptor.props.placeholder, text: this.value })
           .fontColor(this.descriptorWrapper?.fontColor)
@@ -293,6 +300,16 @@ export struct RNTextInput {
           .onTextSelectionChange((start, end) => this.textSelectionChange(start, end))
           .key(`TextInput@${this.tag}`)
       }
+      /**
+       * Focus hack (2/2)
+       */
+      Button()
+        .key(`fixedBlur${this.tag}`)
+        .width(0)
+        .height(0)
+        .padding(0)
+        .margin(0)
+        .defaultFocus(false)
     }
   }
 }
