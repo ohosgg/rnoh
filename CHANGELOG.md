@@ -1,5 +1,50 @@
 # Changelog
 
+## v0.72.11
+- BREAKING: `react-native-harmony/metro.config` exports now a function that creates configuration instead of configuration
+- added `TextInput::keyboardType` support
+- added a way to replace implementation of any RN component
+- added custom fonts support
+- added animated gif support in `Image` component
+- added http redirects support in `Image` component
+- added `arrayBuffer` response type support in `fetch`
+- added `Animated.{diffClamp, tracking, modulus}` support when native driver is enabled
+- added `I18nManager::isRTL` support
+- added data URIs in `Image`
+- added basic `RefreshControl::progressViewOffset` support
+- added `console.log` support
+- added Image::alt support
+- added padding support in `TextInput`
+- added `ScrollView::snapToStart/End` support
+- added `TextInput::onBlur` support
+- added sms schema support in `Linking` module
+- added `TextInput::onKeyPress` support
+- added `requireNativeComponent` support
+- added `RootTagContext` support
+- added `ScrollView::pagingEnabled` support
+- added `ScrollView::snapToAlignment` support
+- added `ScrollView::flashScrollIndicators` support
+- added `ScrollView::disableIntervalMomentum` support
+- fixed text being slightly bigger than views containing that text
+- fixed infinite `TextInput::value` updates
+- fixed crashes when view inside text was trimmed by `numberOfLines`
+- fixed deadlock when using multiple surfaces
+- fixed touch issues caused by not unregistering component managers properly
+- fixed `textDecorationLine` color
+- fixed `ScrollView` position when content size changes
+- fixed freeze caused by having multiple empty lines in `Text` component
+- fixed font style not being applied to `TextInput::placeholder`
+- fixed jittering sticky headers
+- fixed precision of layout positions and dimensions
+- fixed jumping animations, when a render happens during native animation
+- fixed vertical alignment of text and attachments inside `Text`
+- fixed displaying multiple attachments on top of each other in `Text`
+- fixed padding in `Text` component
+- fixed WebSocket error handling
+- fixed `VirtualizedList::initialIndex`
+- fixed `TextInput` autofocus outside of modal
+- fixed `PlatformConstants::reactNativeVersion` format
+
 ## v0.72.10
 - breaking change: SurfaceHandle::start is now async
 - added basic support for KeyboardAvoidingView

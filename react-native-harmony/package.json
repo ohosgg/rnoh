@@ -1,6 +1,6 @@
 {
   "name": "@rnoh/react-native-harmony",
-  "version": "0.72.10",
+  "version": "0.72.11",
   "description": "",
   "scripts": {
     "install:dev-cli": "cd ../react-native-harmony-cli && npm pack && cd ../react-native-harmony && npm i ../react-native-harmony-cli/rnoh-react-native-harmony-cli-0.0.15.tgz && cd ../react-native-harmony",
