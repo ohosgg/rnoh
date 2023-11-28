@@ -38,7 +38,10 @@ export function PlatformConstantsTest() {
       <TestCase
         itShould="provide some RN version"
         fn={({expect}) => {
-          expect(Platform.constants.reactNativeVersion).to.be.not.empty;
+          expect(Platform.constants.reactNativeVersion).to.be.not.undefined;
+          expect(Platform.constants.reactNativeVersion.major).to.be.not.undefined;
+          expect(Platform.constants.reactNativeVersion.minor).to.be.not.undefined;
+          expect(Platform.constants.reactNativeVersion.patch).to.be.not.undefined;
         }}
       />
       <TestCase
