@@ -175,22 +175,26 @@ export struct RNImage {
       ctx: this.ctx,
       tag: this.tag,
     }) {
-      Image(this.imageSource?.source)
-        .accessibilityText(this.descriptor.rawProps.alt)
-        .interpolation(ImageInterpolation.High)
-        .width("100%")
-        .height("100%")
-        .objectFit(this.getResizeMode(this.descriptor.props.resizeMode))
-        .objectRepeat(this.descriptor.props.resizeMode === 4 ?
-        ImageRepeat.XY : ImageRepeat.NoRepeat)
-        .colorFilter(this.getColorFilter())
-        .blur(this.descriptor.props.blurRadius)
-        .onComplete(event => this.onLoad(event))
-        .onError((event: ImageOnErrorEvent) => {
-          if (this.imageSource !== undefined) {
-            this.dispatchOnError(event.message)
-          }
-        })
+      // NOTE: this ensures we switch the image source, even if the new source is bad.
+      // ArkUI keeps displaying the last "good" image when the passed source parameter changes
+      if (this.imageSource !== undefined) {
+        Image(this.imageSource.source)
+          .accessibilityText(this.descriptor.rawProps.alt)
+          .interpolation(ImageInterpolation.High)
+          .width("100%")
+          .height("100%")
+          .objectFit(this.getResizeMode(this.descriptor.props.resizeMode))
+          .objectRepeat(this.descriptor.props.resizeMode === 4 ?
+          ImageRepeat.XY : ImageRepeat.NoRepeat)
+          .colorFilter(this.getColorFilter())
+          .blur(this.descriptor.props.blurRadius)
+          .onComplete(event => this.onLoad(event))
+          .onError((event: ImageOnErrorEvent) => {
+            if (this.imageSource !== undefined) {
+              this.dispatchOnError(event.message)
+            }
+          })
+      }
     }
   }
 }

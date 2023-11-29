@@ -1,6 +1,9 @@
 import {Image, Text, View} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
+import React from 'react';
+import {Button} from '../components';
 
+const WRONG_IMAGE_SRC = 'not_image';
 const LOCAL_IMAGE_ASSET_ID = require('../assets/pravatar-131.jpg');
 const REMOTE_IMAGE_URL = 'https://i.pravatar.cc/100?img=31';
 const REMOTE_REDIRECT_IMAGE_URL = 'http://placeholder.com/350x150';
@@ -82,7 +85,7 @@ export const ImageTest = () => {
         fn={async ({expect}) => {
           let ex: any;
           try {
-            await Image.prefetch('not_image');
+            await Image.prefetch(WRONG_IMAGE_SRC);
           } catch (e) {
             ex = e;
           }
@@ -96,12 +99,15 @@ export const ImageTest = () => {
         fn={async ({expect}) => {
           await Image.prefetch(REMOTE_IMAGE_URL);
           expect(Image.queryCache).not.to.be.undefined;
-          const result = await Image.queryCache?.([REMOTE_IMAGE_URL, 'not_image']);
+          const result = await Image.queryCache?.([
+            REMOTE_IMAGE_URL,
+            WRONG_IMAGE_SRC,
+          ]);
           console.log(JSON.stringify(result, null, 2));
           expect(result).to.be.not.undefined;
           expect(result?.[REMOTE_IMAGE_URL]).to.be.not.undefined;
           expect(result?.[REMOTE_IMAGE_URL]).to.be.eq('disk');
-          expect(result?.['not_image']).to.be.undefined;
+          expect(result?.[WRONG_IMAGE_SRC]).to.be.undefined;
         }}
       />
       <TestCase
@@ -286,6 +292,28 @@ export const ImageTest = () => {
           />
         </View>
       </TestCase>
+      <TestCase modal itShould="stop displaying on press">
+        <SwitchSourceTest />
+      </TestCase>
     </TestSuite>
+  );
+};
+
+const SwitchSourceTest = () => {
+  const [source, setSource] = React.useState(REMOTE_IMAGE_URL);
+
+  return (
+    <View>
+      <View style={{flexDirection: 'row'}}>
+        <Image source={{uri: source}} style={{width: 100, height: 100}} />
+        <Text>{`Source: ${source}`}</Text>
+      </View>
+      <Button
+        label="Switch Source"
+        onPress={() => {
+          setSource(WRONG_IMAGE_SRC);
+        }}
+      />
+    </View>
   );
 };
