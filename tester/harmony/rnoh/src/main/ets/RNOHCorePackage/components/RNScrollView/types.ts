@@ -23,6 +23,7 @@ export interface ScrollViewRawProps extends ViewRawProps {
   pagingEnabled?: boolean
   snapToAlignment?: string
   disableIntervalMomentum?: boolean
+  inverted?: boolean
 }
 
 export interface ScrollViewState {

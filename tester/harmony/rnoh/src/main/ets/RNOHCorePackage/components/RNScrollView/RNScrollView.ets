@@ -24,6 +24,8 @@ interface IAnimation {
 
 type Animation = IAnimation | boolean;
 
+interface RemainingOffset { offsetRemain: number };
+
 function getScrollSnapAlign(snapToAlignment: string | undefined): ScrollSnapAlign {
   if (snapToAlignment === 'center') {
     return ScrollSnapAlign.CENTER;
@@ -67,7 +69,7 @@ export struct RNScrollView {
     ))
     this.cleanUpCallbacks.push(this.ctx.componentCommandReceiver.registerCommandCallback(
       this.tag,
-      (command, args: [number, number, number]) => {
+      (command, args: [number, number, boolean]) => {
         if (command === 'scrollTo') {
           this.scrollTo(args[0], args[1], args[2]);
         } else if (command === 'scrollToEnd') {
@@ -133,7 +135,7 @@ export struct RNScrollView {
     this.contentOffset = { x: this.props.contentOffsetX, y: this.props.contentOffsetY }
   }
 
-  scrollTo(xOffset: number, yOffset: number, animated: number) {
+  scrollTo(xOffset: number, yOffset: number, animated: boolean = false) {
     const animation: Animation | undefined = animated ? { duration: 1000, curve: Curve.Smooth } : undefined;
     this.scroller.scrollTo({ xOffset, yOffset, animation })
     this.contentOffset = { x: xOffset, y: yOffset };
@@ -141,12 +143,13 @@ export struct RNScrollView {
 
   scrollToEnd(animated: number) {
     if (animated) {
-      this.scroller.scrollEdge(Edge.End);
-    }
-    else {
+      this.scroller.scrollEdge(this.descriptor.rawProps.inverted ? Edge.Start : Edge.End);
+    } else if (this.descriptor.rawProps.inverted) {
+      this.scrollTo(0, 0)
+    } else {
       const xOffset = this.props.flexDirection === 2 ? this.contentSize.width - this.descriptor.layoutMetrics.frame.size.width : 0;
       const yOffset = this.props.flexDirection === 2 ? 0 : this.contentSize.height - this.descriptor.layoutMetrics.frame.size.height;
-      this.scroller.scrollTo({ xOffset, yOffset, animation: false })
+      this.scrollTo(xOffset, yOffset)
     }
   }
 
@@ -258,9 +261,14 @@ export struct RNScrollView {
     }
   }
 
-  onScroll(offset: number, scrollState: ScrollState) {
+  onScroll(offset: number, scrollState: ScrollState): RemainingOffset {
     this.recentDimOffsetDelta = offset
     const currentScrollState = this.scrollState;
+
+    // if the scroll view is inverted, we need to also invert the scrolling direction
+    if (this.descriptor.rawProps.inverted) {
+      offset = -offset;
+    }
 
     if (currentScrollState != scrollState) {
       if (currentScrollState === ScrollState.Scroll) {
@@ -276,6 +284,8 @@ export struct RNScrollView {
       }
     }
     this.scrollState = scrollState
+
+    return { offsetRemain: offset }
   }
 
   onScrollEvent() {
@@ -430,11 +440,10 @@ export struct RNScrollView {
     .scrollBar(this.scrollBarState())
     .scrollBarColor(this.scrollBarColor())
     .enableScrollInteraction((this.props.scrollEnabled && !this.shouldPreventScrolling) ?? true)
-    .nestedScroll({ scrollForward: NestedScrollMode.SELF_FIRST, scrollBackward: NestedScrollMode.SELF_FIRST })
+    .nestedScroll({ scrollForward: NestedScrollMode.SELF_ONLY, scrollBackward: NestedScrollMode.SELF_ONLY })
     .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
     .onScrollFrameBegin((offset, state) => {
-      this.onScroll(offset, state)
-      return { offsetRemain: offset }
+      return this.onScroll(offset, state)
     })
     .onScroll(() => {
       this.onScrollEvent()

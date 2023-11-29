@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {ScrollView, Text, View, VirtualizedList} from 'react-native';
+import {Text, TouchableOpacity, View, VirtualizedList} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import {Button} from '../components';
 
@@ -97,7 +97,10 @@ export function VirtualizedListTest() {
           ]);
         }}
       />
-      <TestCase modal itShould='start at the 81st item'>
+      <TestCase modal itShould="invert the list">
+        <InvertedVirtualizedListTest />
+      </TestCase>
+      <TestCase modal itShould="start at the 81st item">
         <InitialScrollIndexTest />
       </TestCase>
       <TestSuite name="ref">
@@ -261,6 +264,29 @@ function VirtualizedListScrollToItemTest() {
   );
 }
 
+function InvertedVirtualizedListTest() {
+  return (
+    <VirtualizedList
+      style={{height: 256}}
+      data={GENERATED_DATA}
+      getItem={(_, index: number) => GENERATED_DATA[index]}
+      getItemCount={() => GENERATED_DATA.length}
+      getItemLayout={(_, index: number) => ({
+        length: 48,
+        offset: 48 * index,
+        index,
+      })}
+      inverted
+      renderItem={({item}: {item: ItemData}) => (
+        <TouchableOpacity onPress={() => console.log(item.title)}>
+          <Item title={item.title} />
+        </TouchableOpacity>
+      )}
+      keyExtractor={(item: ItemData) => item.id}
+    />
+  );
+}
+
 function InitialScrollIndexTest() {
   return (
     <VirtualizedList
@@ -270,7 +296,7 @@ function InitialScrollIndexTest() {
       getItemCount={() => GENERATED_DATA.length}
       getItemLayout={(_, index: number) => ({
         length: 48,
-        offset: 48 * index, 
+        offset: 48 * index,
         index,
       })}
       initialScrollIndex={80}
