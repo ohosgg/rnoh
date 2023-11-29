@@ -336,6 +336,56 @@ export function TextTest() {
         </TestCase>
       </TestSuite>
       <TestSuite name="text measuring">
+        <TestCase tags={['dev']} itShould="not wrap any text">
+          <View
+            style={{
+              backgroundColor: 'yellow',
+              width: '100%',
+              height: 40,
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+            }}>
+            {[
+              {
+                sortCode: '0',
+                sortName: '综合',
+              },
+              {
+                sortCode: '2',
+                sortName: '最新',
+              },
+              {
+                sortCode: '3',
+                sortName: '评论',
+              },
+              {
+                sortCode: '1',
+                sortName: '价格',
+              },
+            ].map((item, index) => (
+              <View
+                style={{width: '20%', flexDirection: 'column'}}
+                key={item.sortCode + '_' + index}>
+                <View
+                  style={{
+                    width: '100%',
+                    height: 40,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                  }}>
+                  <Text
+                    ellipsizeMode={'tail'}
+                    numberOfLines={1}
+                    style={{fontSize: 14, lineHeight: 19}}>
+                    {item.sortName}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        </TestCase>
         <TestCase itShould="display all texts in one line">
           <View style={{alignSelf: 'flex-start', flexDirection: 'row'}}>
             <Text style={{backgroundColor: 'cyan'}}>

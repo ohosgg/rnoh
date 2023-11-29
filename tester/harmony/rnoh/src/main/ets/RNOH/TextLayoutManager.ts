@@ -97,11 +97,12 @@ export function measureParagraph(
    * than its children.
    *
    */
+  const magicNumber = 0.01
   const roundingHelperValue = 100
   const roundedResult: ParagraphMeasurement = {
     size: {
-      height: Math.ceil(result.size.height * roundingHelperValue) / roundingHelperValue,
-      width: Math.ceil(result.size.width * roundingHelperValue) / roundingHelperValue
+      height: (Math.ceil(result.size.height * roundingHelperValue) / roundingHelperValue) + magicNumber,
+      width: (Math.ceil(result.size.width * roundingHelperValue) / roundingHelperValue) + magicNumber
     },
     attachmentLayouts: result.attachmentLayouts
   }
