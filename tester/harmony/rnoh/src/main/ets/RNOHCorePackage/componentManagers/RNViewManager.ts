@@ -85,15 +85,23 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
   }
 
   public computeChildPoint({x, y}: Point, childTag: Tag): Point {
-    const descriptor = this.descriptorRegistry.getDescriptor(childTag);
-    const descriptorWrapper = new ViewDescriptorWrapperBase(descriptor);
+    const childDescriptor = this.descriptorRegistry.getDescriptor(childTag);
+    const descriptorWrapper = new ViewDescriptorWrapperBase(childDescriptor);
     const offset = descriptorWrapper.positionRelativeToParent;
-    let localX = x - offset.x;
-    let localY = y - offset.y;
+    
+    // the center of the view (before applying its transformation),
+    // which is the origin of the transformation (relative to parent)
+    let transformationOriginX = offset.x + descriptorWrapper.width / 2;
+    let transformationOriginY = offset.y + descriptorWrapper.height / 2;
+
     const inverse = descriptorWrapper.transformationMatrix.invert();
-    const transformedLocal = inverse.transformPoint([localX, localY]);
-    localX = transformedLocal[0];
-    localY = transformedLocal[1];
+
+    // transform the vector from the origin of the transformation
+    const transformedOffsetFromCenter = inverse.transformPoint([x - transformationOriginX, y - transformationOriginY]);
+
+    // add back the offset of the center relative to the origin of the view
+    const localX = transformedOffsetFromCenter[0] + descriptorWrapper.width / 2;
+    const localY = transformedOffsetFromCenter[1] + descriptorWrapper.height / 2;
     return { x: localX, y: localY };
   }
 
@@ -144,13 +152,18 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
     }
 
     const transformationMatrix = descriptorWrapper.transformationMatrix;
-    const [left, top] = transformationMatrix.transformPoint([newBoundingBox.left, newBoundingBox.top]);
-    const [right, bottom] = transformationMatrix.transformPoint([newBoundingBox.right, newBoundingBox.bottom]);
+    const center: [number, number] = [origin.x + descriptorWrapper.width / 2, origin.y + descriptorWrapper.height / 2];
+
+    const [leftX, leftY] = transformationMatrix.transformPoint([newBoundingBox.left - center[0], 0]);
+    const [rightX, rightY] = transformationMatrix.transformPoint([newBoundingBox.right - center[0], 0]);
+    const [topX, topY] = transformationMatrix.transformPoint([0, newBoundingBox.top - center[1]]);
+    const [bottomX, bottomY] = transformationMatrix.transformPoint([0, newBoundingBox.bottom - center[1]]);
+
     newBoundingBox = {
-      left: Math.min(left, right),
-      right: Math.max(left, right),
-      top: Math.min(top, bottom),
-      bottom: Math.max(top, bottom),
+      left: Math.min(leftX, rightX, topX, bottomX) + center[0],
+      right: Math.max(leftX, rightX, topX, bottomX) + center[0],
+      top: Math.min(leftY, rightY, topY, bottomY) + center[1],
+      bottom: Math.max(leftY, rightY, topY, bottomY) + center[1],
     }
     return newBoundingBox
   }
