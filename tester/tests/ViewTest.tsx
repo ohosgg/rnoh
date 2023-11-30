@@ -130,6 +130,24 @@ export function ViewTest() {
           />
         </View>
       </TestCase>
+      <TestCase skip itShould="render rectangle with borders with different widths and colors">
+        <View style={{width: '100%', height: 100, backgroundColor: 'gray'}}>
+          <View
+            style={{
+              height: 80,
+              width: 200,
+              borderLeftWidth: 1,
+              borderTopWidth: 10,
+              borderRightWidth: 5,
+              borderBottomWidth: 20,
+              borderLeftColor: '#ff0000',
+              borderRightColor: '#ffff00',
+              borderTopColor: 'pink',
+              borderBottomColor: 'skyblue',
+            }}
+          />
+        </View>
+      </TestCase>
       <TestCase itShould="render square with borders with different colors">
         <View style={{width: '100%', height: 100, backgroundColor: 'gray'}}>
           <View
