@@ -336,7 +336,7 @@ export function TextTest() {
         </TestCase>
       </TestSuite>
       <TestSuite name="text measuring">
-        <TestCase tags={['dev']} itShould="not wrap any text">
+        <TestCase itShould="not wrap any text">
           <View
             style={{
               backgroundColor: 'yellow',

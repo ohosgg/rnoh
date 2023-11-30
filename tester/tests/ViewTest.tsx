@@ -1,7 +1,7 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import {TestSuite, TestCase} from '@rnoh/testerino';
 import React, {useState} from 'react';
-import {Button} from '../components';
+import {Button, StateKeeper} from '../components';
 
 export function ViewTest() {
   return (
@@ -542,6 +542,53 @@ export function ViewTest() {
           <Text>Alert</Text>
         </View>
       </TestCase>
+      <TestCase
+        skip
+        itShould="[FAILS on Android/Harmony] pass on blue rect touch (onResponderReject)"
+        initialState={{
+          responderRejectedCount: 0,
+          responderGrantedCount: 0,
+          childResponderGrantedCount: 0,
+        }}
+        arrange={({setState}) => {
+          return (
+            <View
+              onStartShouldSetResponder={() => true}
+              onResponderReject={() => {
+                setState(prev => ({
+                  ...prev,
+                  responderRejectedCount: prev.responderRejectedCount + 1,
+                }));
+              }}
+              onResponderGrant={() => {
+                setState(prev => ({
+                  ...prev,
+                  responderGrantedCount: prev.responderGrantedCount + 1,
+                }));
+              }}
+              style={{
+                backgroundColor: 'green',
+                padding: 20,
+              }}>
+              <View
+                style={{backgroundColor: 'blue', width: 64, height: 64}}
+                onResponderTerminationRequest={() => false}
+                onStartShouldSetResponder={() => true}
+                onResponderGrant={() => {
+                  setState(prev => ({
+                    ...prev,
+                    childResponderGrantedCount:
+                      prev.childResponderGrantedCount + 1,
+                  }));
+                }}
+              />
+            </View>
+          );
+        }}
+        assert={({expect, state}) => {
+          expect(state.responderRejectedCount).to.be.greaterThan(0);
+        }}
+      />
     </TestSuite>
   );
 }
