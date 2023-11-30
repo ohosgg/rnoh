@@ -198,16 +198,17 @@ export class ViewDescriptorWrapperBase<TType extends string = string, TProps ext
      * z coordinate in RN then the sign of the z coordinate is determined directly
      * by the component's rotation and as such provides the necessary information.
      * */
+    const opacity = Math.max(0, Math.min(this.rawProps.opacity ?? 1, 1));
     const matrix = this.rawTransformationMatrix
     if (this.backfaceVisibility !== "hidden" || !matrix) {
-      return this.rawProps.opacity;
+      return opacity;
     }
     const unitVector = [0, 0, 1, 0]
     const resultVector = getTransformedVector(matrix, unitVector)
     if (resultVector[2] < 0) {
       return 0;
     }
-    return this.rawProps.opacity;
+    return opacity;
   }
 
   protected get backfaceVisibility() {
