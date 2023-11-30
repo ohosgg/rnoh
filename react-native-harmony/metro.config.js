@@ -3,6 +3,16 @@ const pathUtils = require('path');
 const fs = require('fs');
 const colors = require('colors/safe');
 
+let shouldPrintInfoAboutRNRedirection = true;
+
+/**
+ * @param msg {string}
+ */
+function info(msg) {
+  const infoPrefix = '[' + colors.bold(colors.cyan(`INFO`)) + ']';
+  console.log(infoPrefix, msg);
+}
+
 /**
  * @param options {{reactNativeHarmonyPackageName: string} | undefined}
  * @returns {import("metro-config").InputConfigT}
@@ -24,6 +34,14 @@ function createHarmonyMetroConfig(options) {
       /** By default, Metro pickups files from native, "harmony" directory what causes conflicts.  */
       blockList: [/\\harmony\/.*/],
       resolveRequest: (ctx, moduleName, platform) => {
+        if (shouldPrintInfoAboutRNRedirection) {
+          info(
+            `Redirected imports from ${colors.bold(
+              colors.gray('react-native')
+            )} to ${colors.bold(reactNativeHarmonyName)}`
+          );
+          shouldPrintInfoAboutRNRedirection = false;
+        }
         if (platform === 'harmony') {
           if (moduleName === 'react-native') {
             return ctx.resolveRequest(ctx, reactNativeHarmonyName, platform);
@@ -153,8 +171,15 @@ function getHarmonyPackageNameByAlias(projectRootPath) {
     const harmonyNodeModulePathSegments = harmonyNodeModulePath.split(
       pathUtils.sep
     );
-    const harmonyNodeModuleName =
+    let harmonyNodeModuleName =
       harmonyNodeModulePathSegments[harmonyNodeModulePathSegments.length - 1];
+    if (harmonyNodeModulePathSegments.length > 1) {
+      const harmonyNodeModuleParentDirName =
+        harmonyNodeModulePathSegments[harmonyNodeModulePathSegments.length - 2];
+      if (harmonyNodeModuleParentDirName.startsWith('@')) {
+        harmonyNodeModuleName = `${harmonyNodeModuleParentDirName}/${harmonyNodeModuleName}`;
+      }
+    }
     const packageJSONPath = `${harmonyNodeModulePath}${pathUtils.sep}package.json`;
     const packageJSON = readHarmonyModulePackageJSON(packageJSONPath);
     const alias = packageJSON.harmony?.alias;
@@ -166,32 +191,26 @@ function getHarmonyPackageNameByAlias(projectRootPath) {
   const harmonyPackagesCount = Object.keys(
     cachedHarmonyPackageAliasByName
   ).length;
-  const infoPrefix = '[' + colors.bold(colors.cyan(`INFO`)) + ']';
   if (harmonyPackagesCount > 0) {
     const prettyHarmonyPackagesCount = colors.bold(
       harmonyPackagesCount > 0
-        ? colors.red(harmonyPackagesCount.toString())
+        ? colors.green(harmonyPackagesCount.toString())
         : harmonyPackagesCount.toString()
     );
-    console.log(
-      infoPrefix,
-      `Detected ${prettyHarmonyPackagesCount} harmony-specific third-party package(s):`
+    info(
+      `Redirected imports to ${prettyHarmonyPackagesCount} harmony-specific third-party package(s):`
     );
     if (harmonyPackagesCount > 0) {
       Object.entries(cachedHarmonyPackageAliasByName).forEach(
         ([original, alias]) => {
-          console.log(
-            infoPrefix,
-            `• ${colors.gray(original)} → ${colors.bold(alias)}`
+          info(
+            `• ${colors.bold(colors.gray(original))} → ${colors.bold(alias)}`
           );
         }
       );
     }
   } else {
-    console.log(
-      infoPrefix,
-      'No harmony specific third-party packages have been detected'
-    );
+    info('No harmony-specific third-party packages have been detected');
   }
   console.log('');
 
