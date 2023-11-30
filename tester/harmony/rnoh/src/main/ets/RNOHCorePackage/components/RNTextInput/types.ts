@@ -18,7 +18,7 @@ export interface TextInputProps extends ViewBaseProps {
 export interface TextInputRawProps extends ViewRawProps {
   maxLength?: number
   fontWeight?: number
-  fontColor?: ColorSegments
+  color?: number
   fontFamily?: string
   fontSize?: number
   fontStyle?: string

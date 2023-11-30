@@ -311,6 +311,9 @@ export function TextInputTest() {
           placeholder="placeholder"
         />
       </TestCase>
+      <TestCase modal itShould="render textinput with red text color">
+        <TextInputWithText style={[styles.textInput, {color: 'red'}]} />
+      </TestCase>
     </TestSuite>
   );
 }

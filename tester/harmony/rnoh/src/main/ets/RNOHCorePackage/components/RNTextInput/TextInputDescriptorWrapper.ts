@@ -1,4 +1,4 @@
-import { Point, Descriptor, convertColorSegmentsToString } from '../../../RNOH';
+import { convertColorValueToRGBA, Descriptor, Point } from '../../../RNOH';
 import { ViewDescriptorWrapperBase } from '../RNViewBase/ViewDescriptorWrapper';
 import { TextInputProps, TextInputRawProps, TextInputState } from './types';
 
@@ -36,7 +36,7 @@ export class TextInputDescriptorWrapper extends ViewDescriptorWrapperBase<string
   }
 
   public get fontColor(): string {
-    return convertColorSegmentsToString(this.rawProps.fontColor);
+    return convertColorValueToRGBA(this.rawProps.color, '#FF000000');
   }
 
   public get fontStyle(): string {
