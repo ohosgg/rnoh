@@ -87,6 +87,7 @@ napi_value MutationsToNapiConverter::convertShadowView(napi_env env, react::Shad
                                                            .addProperty("height", shadowView.layoutMetrics.frame.size.height)
                                                            .build())
                                           .build())
+                         .addProperty("layoutDirection", static_cast<int>(shadowView.layoutMetrics.layoutDirection))
                          .build());
     return descriptorBuilder
         .addProperty("tag", shadowView.tag)
