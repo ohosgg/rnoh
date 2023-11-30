@@ -44,6 +44,6 @@ std::shared_ptr<react::TurboModule> TurboModuleProvider::getTurboModule(std::str
         m_cache[moduleName] = turboModule;
         return turboModule;
     }
-    LOG(ERROR) << "Couldn't provide turbo module \" " << moduleName << "\"";
+    LOG(ERROR) << "Couldn't provide turbo module \"" << moduleName << "\"";
     return nullptr;
 }

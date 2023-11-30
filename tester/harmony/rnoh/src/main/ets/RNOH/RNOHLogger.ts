@@ -16,24 +16,28 @@ export class StandardRNOHLogger implements RNOHLogger {
   private domain: number = 0xBEEF;
   private tag: string = '#RNOH_ARK';
 
-  public info(format: string, ...args: any[]): void {
-    hilog.info(this.domain, this.tag, "[RNOH] " + format, ...args);
+  public info(...args: any[]): void {
+    this.log("info", ...args)
   }
 
-  public warn(format: string, ...args: any[]): void {
-    hilog.warn(this.domain, this.tag, "[RNOH] " + format, ...args);
+  public warn(...args: any[]): void {
+    this.log("warn", ...args)
   }
 
-  public error(format: string, ...args: any[]): void {
-    hilog.error(this.domain, this.tag, "[RNOH] " + format, ...args);
+  public error(...args: any[]): void {
+    this.log("error", ...args)
   }
 
-  public fatal(format: string, ...args: any[]): void {
-    hilog.fatal(this.domain, this.tag, "[RNOH] " + format, ...args);
+  public fatal(...args: any[]): void {
+    this.log("fatal", ...args)
   }
 
-  public debug(format: string, ...args: any[]): void {
-    hilog.debug(this.domain, this.tag, "[RNOH] " + format, ...args);
+  public debug(...args: any[]): void {
+    this.log("debug", ...args)
+  }
+
+  private log(severity: "info" | "debug" | "fatal" | "error" | "warn",...args: any[]): void {
+    hilog[severity](this.domain, this.tag, 'X__ %{public}s', ...args);
   }
 }
 

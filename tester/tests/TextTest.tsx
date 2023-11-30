@@ -975,11 +975,9 @@ const OnLayoutView = (props: {
     reset: () => void;
   };
 }) => {
-  const [layout, setLayout] = useState('');
   const [width, setWidth] = useState(100);
   return (
     <View>
-      <Text>{layout}</Text>
       <Text
         style={{
           width: width,
@@ -989,7 +987,6 @@ const OnLayoutView = (props: {
           backgroundColor: 'rgba(100,100,255,0.5)',
         }}
         onLayout={event => {
-          setLayout(JSON.stringify(event.nativeEvent.layout));
           props.ctx.setState(event.nativeEvent.layout);
         }}
         onPress={() => setWidth((prev: number) => (prev === 100 ? 200 : 100))}>

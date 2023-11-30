@@ -1,10 +1,24 @@
 #include <hilog/log.h>
+#include <pthread.h>
 #include "RNOH/LogSink.h"
 
 #define LOG_DOMAIN 0xBEEF
 #define LOG_TAG "#RNOH_CPP"
 
 LogSink *LogSink::instance = nullptr;
+
+std::string getThreadSymbol() {
+    char c_threadName[16] = {0};
+    pthread_getname_np(pthread_self(), c_threadName, sizeof(c_threadName));
+    auto threadName = std::string(c_threadName);
+    if (threadName == "RNOH_JS") {
+        return "__X";
+    } else if (threadName == "RNOH_BACKGROUND") {
+        return "_X_";
+    } else {
+        return "X__";
+    }
+}
 
 void LogSink::initializeLogging() {
     if (!instance) {
@@ -24,8 +38,8 @@ void LogSink::send(
     const char *message,
     size_t message_len) {
     std::ostringstream stream;
-    stream << "[RNOH] "
-           << "<" << base_filename << ':' << line << "> "
+
+    stream << getThreadSymbol() << " " << base_filename << ':' << line << "> "
            << std::string(message, message_len);
     auto messageString = stream.str();
     auto c_str = messageString.c_str();
