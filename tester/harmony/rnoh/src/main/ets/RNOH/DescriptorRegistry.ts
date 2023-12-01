@@ -2,7 +2,7 @@ import type { Tag, Descriptor } from './DescriptorBase';
 import { getHumanNameFromMutationType, Mutation } from './Mutation';
 import { MutationType } from './Mutation';
 import type { RNInstanceImpl } from './RNInstance'
-import type { RNOHLogger } from "./RNOHLogger"
+import type { RNOHLogger } from './RNOHLogger';
 
 type RootDescriptor = Descriptor<"RootView", any>
 
@@ -15,6 +15,7 @@ export class DescriptorRegistry {
   private subtreeListenersSetByTag: Map<Tag, Set<SubtreeListener>> = new Map();
   private animatedRawPropsByTag: Map<Tag, Set<string>> = new Map();
   private updatedUnnotifiedTags = new Set<Tag>()
+  private preallocatedRawPropsByTag = new Map<Tag, Object>();
   private cleanUpCallbacks: (() => void)[] = []
   private logger: RNOHLogger
 
@@ -22,7 +23,7 @@ export class DescriptorRegistry {
     descriptorByTag: Record<Tag, Descriptor>,
     private setNativeStateFn: SetNativeStateFn,
     private rnInstance: RNInstanceImpl,
-    logger: RNOHLogger
+    logger: RNOHLogger,
   ) {
     this.logger = logger.clone("DescriptorRegistry")
     const stopTracing = this.logger.clone("constructor").startTracing()
@@ -212,7 +213,18 @@ export class DescriptorRegistry {
 
   private applyMutation(mutation: Mutation): Tag[] {
     if (mutation.type === MutationType.CREATE) {
-      this.descriptorByTag.set(mutation.descriptor.tag, this.maybeOverwriteProps(mutation.descriptor));
+      const tag = mutation.descriptor.tag;
+      const preAllocatedRawProps = this.preallocatedRawPropsByTag.get(tag);
+      this.preallocatedRawPropsByTag.delete(tag);
+      if (preAllocatedRawProps === undefined) {
+        this.logger.warn(`CREATE'ing a view with tag ${tag} without a previous preallocation.`)
+      } else {
+        // merge the rawProps received when pre-allocating,
+        // with the ones in the descriptor taking precedence
+        mutation.descriptor.rawProps = {...preAllocatedRawProps, ...mutation.descriptor.rawProps};
+      }
+
+      this.descriptorByTag.set(tag, this.maybeOverwriteProps(mutation.descriptor));
       return [];
     } else if (mutation.type === MutationType.INSERT) {
       const childDescriptor = this.descriptorByTag.get(mutation.childTag)!;
@@ -311,6 +323,19 @@ export class DescriptorRegistry {
         this.descriptorByTag.delete(tag);
       }
     });
+  }
+
+  public preallocateView(tag: Tag, rawProps: Object) {
+    if (this.getDescriptor(tag) !== undefined) {
+      this.logger.warn(`Tried to preallocate view with tag ${tag}, which is already mounted.`);
+      return;
+    }
+    if (this.preallocatedRawPropsByTag.get(tag) !== undefined) {
+      this.logger.warn(`Tried to preallocate view with tag ${tag}, which was already preallocated.`);
+      return;
+    }
+
+    this.preallocatedRawPropsByTag.set(tag, rawProps);
   }
 
   public getDescriptorByTagMap() {
