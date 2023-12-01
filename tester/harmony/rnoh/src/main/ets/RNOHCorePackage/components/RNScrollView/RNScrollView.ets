@@ -4,18 +4,19 @@ import { RNViewBase, ViewDescriptorWrapperBase } from '../RNViewBase';
 import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from '../RNPullToRefreshView';
 import { CustomComponentBuilder, RNComponentFactory } from '../RNComponentFactory';
 import {
+  CurrentOffset,
+  FirstVisibleView,
+  IndicatorStyle,
+  ScrollEvent,
   ScrollViewProps,
   ScrollViewRawProps,
-  ScrollViewState,
-  IndicatorStyle,
-  CurrentOffset,
-  ScrollEvent
-} from "./types"
-import { calculateSnapTarget } from "./SnapTargetUtils"
+  ScrollViewState
+} from './types';
+import { calculateSnapTarget } from './SnapTargetUtils';
+
 
 class ScrollViewDescriptorWrapper extends ViewDescriptorWrapperBase<"ScrollView", ScrollViewProps, ScrollViewState, ScrollViewRawProps> {
 }
-
 
 interface IAnimation {
   duration?: number;
@@ -60,6 +61,7 @@ export struct RNScrollView {
   private recentDimOffsetDelta: number = 0
   @State shouldDisableSnapping: boolean = false
   @State shouldPreventScrolling: boolean = false
+  private firstVisibleView: FirstVisibleView | undefined = undefined
 
   aboutToAppear() {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag)
@@ -108,23 +110,81 @@ export struct RNScrollView {
     }
     this.childrenTags = newDescriptor.childrenTags
     this.parentTag = newDescriptor.parentTag
+    const contentSizeChanged = this.descriptor.state.contentSizeWidth !== prevState?.contentSizeWidth
+      || this.descriptor.state.contentSizeHeight !== prevState?.contentSizeHeight
     if (newDescriptor.props.contentOffsetX !== prevProps.contentOffsetX || newDescriptor.props.contentOffsetY !== prevProps.contentOffsetY) {
       this.scrollToPropsContentOffset();
+    }
+    else {
+      if (this.scrollState === ScrollState.Idle && contentSizeChanged) {
+        /**
+         * When a scroll content is removed, and it appears again without scrolling, scroll should remain in the original position.
+         * This behavior was observed on Android. Local contentOffset is used, to use the most recent position.
+         * The contentOffset in the descriptor's state might be delayed.
+         */
+        this.scroller.scrollTo({
+          xOffset: this.contentOffset.x,
+          yOffset: this.contentOffset.y
+        });
+      }
+    }
+    if (this.descriptor.rawProps.maintainVisibleContentPosition) {
+      if (contentSizeChanged) {
+        const autoscrollToTopThreshold = this.descriptor.rawProps.maintainVisibleContentPosition.autoscrollToTopThreshold;
+        this.maintainVisibleContentPosition(autoscrollToTopThreshold);
+      }
+      const minIndexForVisible = this.descriptor.rawProps.maintainVisibleContentPosition.minIndexForVisible;
+      this.getFirstVisibleView(minIndexForVisible);
+    }
+  }
+
+  maintainVisibleContentPosition(autoscrollToTopThreshold: number | undefined): void {
+    if (!this.firstVisibleView) {
       return;
     }
+    const horizontal = this.props.flexDirection === 2;
+    const child = this.ctx.descriptorRegistry.getDescriptor(this.firstVisibleView.tag);
+    if (!child) return;
+    const newPosition = child.layoutMetrics.frame.origin;
+    if (horizontal) {
+      const deltaX = newPosition.x - this.firstVisibleView.position;
+      if (deltaX != 0) {
+        const scrollX = this.contentOffset.x;
+        this.scroller.scrollTo({ xOffset: scrollX + deltaX, yOffset: this.contentOffset.y });
+        if (autoscrollToTopThreshold && scrollX <= autoscrollToTopThreshold) {
+          this.scroller.scrollTo({ xOffset: 0, yOffset: this.contentOffset.y, animation: true });
+        }
+      }
+    }
+    else {
+      const deltaY = newPosition.y - this.firstVisibleView.position;
+      if (deltaY != 0) {
+        const scrollY = this.contentOffset.y;
+        this.scroller.scrollTo({ xOffset: this.contentOffset.x, yOffset: scrollY + deltaY });
+        if (autoscrollToTopThreshold && scrollY <= autoscrollToTopThreshold) {
+          this.scroller.scrollTo({ xOffset: this.contentOffset.x, yOffset: 0, animation: true });
+        }
+      }
+    }
+  }
 
-    const contentSizeChanged = this.descriptor.state.contentSizeWidth !== prevState.contentSizeWidth
-      || this.descriptor.state.contentSizeHeight !== prevState.contentSizeHeight
-    if (this.scrollState === ScrollState.Idle && contentSizeChanged) {
-      /**
-       * When a scroll content is removed, and it appears again without scrolling, scroll should remain in the original position.
-       * This behavior was observed on Android. Local contentOffset is used, to use the most recent position.
-       * The contentOffset in the descriptor's state might be delayed.
-       */
-      this.scroller.scrollTo({
-        xOffset: this.contentOffset.x,
-        yOffset: this.contentOffset.y
-      });
+  getFirstVisibleView(minIndexForVisible: number): void {
+    const horizontal = this.props.flexDirection === 2;
+    const currentScrollPosition = horizontal ? this.contentOffset.x : this.contentOffset.y;
+    const container = this.ctx.descriptorRegistry.getDescriptor(this.childrenTags[0]);
+    const children = container.childrenTags;
+    const containerOffset = horizontal ? container.layoutMetrics.frame.origin.x : container.layoutMetrics.frame.origin.y;
+    this.firstVisibleView = undefined
+    for (let i = minIndexForVisible; i < children.length; ++i) {
+      const child = this.ctx.descriptorRegistry.getDescriptor(children[i]);
+      const position = horizontal ? child.layoutMetrics.frame.origin.x : child.layoutMetrics.frame.origin.y;
+      if (position + containerOffset >= currentScrollPosition || i == children.length - 1) {
+        this.firstVisibleView = {
+          position: position,
+          tag: children[i],
+        }
+        break;
+      }
     }
   }
 

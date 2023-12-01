@@ -1,3 +1,4 @@
+import { Tag } from '../../../RNOH';
 import { ViewBaseProps, ViewRawProps } from '../RNViewBase/ts';
 
 
@@ -24,6 +25,7 @@ export interface ScrollViewRawProps extends ViewRawProps {
   snapToAlignment?: string
   disableIntervalMomentum?: boolean
   inverted?: boolean
+  maintainVisibleContentPosition?: MaintainVisibleContentPosition
 }
 
 export interface ScrollViewState {
@@ -64,4 +66,14 @@ export interface ScrollEvent {
   contentOffset: Coordinates;
   containerSize: Dimensions;
   zoomScale: number;
+}
+
+export interface MaintainVisibleContentPosition {
+  minIndexForVisible: number,
+  autoscrollToTopThreshold?: number,
+}
+
+export interface FirstVisibleView {
+  position: number,
+  tag: Tag,
 }

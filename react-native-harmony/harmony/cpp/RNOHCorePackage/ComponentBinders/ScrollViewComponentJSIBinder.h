@@ -24,6 +24,7 @@ class ScrollViewComponentJSIBinder : public ViewComponentJSIBinder {
         object.setProperty(rt, "snapToAlignment", "ScrollViewSnapToAlignment");
         object.setProperty(rt, "disableIntervalMomentum", true);
         object.setProperty(rt, "inverted", "boolean");
+        object.setProperty(rt, "maintainVisibleContentPosition", "Object");
 
         return object;
     }
