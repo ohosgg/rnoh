@@ -107,5 +107,9 @@ export struct RNViewBase {
     .hitTestBehavior(this.getHitTestMode())
     .shadow(this.descriptorWrapper?.shadow)
     .id(this.tag.toString())
+    .accessibilityGroup(this.descriptorWrapper?.accessibilityGroup)
+    .accessibilityText(this.descriptorWrapper?.accessibilityText)
+    .accessibilityLevel(this.descriptorWrapper?.accessibilityLevel)
+    .accessibilityDescription(this.descriptorWrapper?.accessibilityDescription)
   }
 }

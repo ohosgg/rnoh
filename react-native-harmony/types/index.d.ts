@@ -31,7 +31,7 @@ export * from 'react-native/Libraries/Components/Touchable/TouchableNativeFeedba
 export * from 'react-native/Libraries/Components/Touchable/TouchableOpacity';
 export * from 'react-native/Libraries/Components/Touchable/TouchableWithoutFeedback';
 export * from 'react-native/Libraries/Components/View/View';
-// export * from 'react-native/Libraries/Components/View/ViewAccessibility';
+export * from 'react-native/Libraries/Components/View/ViewAccessibility';
 export * from 'react-native/Libraries/Components/View/ViewPropTypes';
 export * from 'react-native/Libraries/Components/Button';
 export * from 'react-native/Libraries/EventEmitter/NativeEventEmitter';

@@ -13,7 +13,7 @@ import {
   Corners,
   CompactValue
 } from "../../../RNOH"
-import { ViewBaseProps, ViewRawProps } from "./types"
+import { AccessibilityLevel, ViewBaseProps, ViewRawProps } from "./types"
 import matrix4 from '@ohos.matrix4'
 import { ShadowStyleIOS } from '../../../RNOH/RNTypes'
 
@@ -227,6 +227,30 @@ export class ViewDescriptorWrapperBase<TType extends string = string, TProps ext
   public get focusable(): boolean {
     return this.rawProps.focusable ?? false
   }
+
+  public get accessibilityGroup(): boolean {
+    return this.rawProps.accessible ?? false;
+  }
+
+  public get accessibilityText(): string | undefined {
+    return this.rawProps["aria-label"] || this.rawProps.accessibilityLabel;
+  }
+
+  public get accessibilityLevel(): AccessibilityLevel {
+    if (
+      this.rawProps["aria-hidden"] === true || 
+      this.rawProps.accessibilityElementsHidden === true
+    ) {
+      return "no-hide-descendants";
+    }
+
+    return this.rawProps.importantForAccessibility ?? 'auto';
+  }
+
+  public get accessibilityDescription(): string | undefined {
+    return this.rawProps.accessibilityHint;
+  }
+
 }
 
 export class ViewDescriptorWrapper extends ViewDescriptorWrapperBase<string, ViewBaseProps, {}, ViewRawProps> {

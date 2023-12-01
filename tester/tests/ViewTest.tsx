@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import {TestSuite, TestCase} from '@rnoh/testerino';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, StateKeeper} from '../components';
 
 export function ViewTest() {
@@ -537,7 +537,10 @@ export function ViewTest() {
           }}
         />
       </TestCase>
-      <TestCase itShould="render a view with role">
+      <TestCase
+        itShould="render a view with role"
+        skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/603
+      >
         <View role="alert">
           <Text>Alert</Text>
         </View>
@@ -589,6 +592,177 @@ export function ViewTest() {
           expect(state.responderRejectedCount).to.be.greaterThan(0);
         }}
       />
+      <TestCase
+        modal
+        itShould='call the "escape" gesture handler'
+        initialState={false}
+        skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/602
+        arrange={({setState}) => (
+          <View
+            accessible={true}
+            style={{width: '100%', height: 100, backgroundColor: 'gray'}}
+            onAccessibilityEscape={() => {
+              console.log('onAccessibilityEscape called!');
+              setState(true);
+            }}>
+            <View
+              style={{
+                width: 100,
+                height: 100,
+                backgroundColor: 'red',
+              }}
+            />
+          </View>
+        )}
+        assert={({expect, state}) => {
+          expect(state).to.be.true;
+        }}
+      />
+      <TestCase
+        modal
+        itShould='render "First Layout" view and ignore "Ignored Layout" when accessibility is true'>
+        <View accessible={true} style={styles.accessibilityContainer}>
+          <View
+            style={[styles.accessibilityLayout, {backgroundColor: 'green'}]}
+            importantForAccessibility="yes">
+            <Text>First layout</Text>
+          </View>
+          <View
+            style={[styles.accessibilityLayout, {backgroundColor: 'yellow'}]}
+            importantForAccessibility="no-hide-descendants">
+            <Text>Ignored Layout</Text>
+          </View>
+        </View>
+      </TestCase>
+      <TestCase
+        modal
+        skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/600
+        itShould="render a view with aria-valuemax accessibility prop">
+        <View
+          accessible={true}
+          aria-valuemax={1000}
+          style={[styles.accessibilityLayout, {backgroundColor: 'green'}]}>
+          <Text>aria-valuemax: 100</Text>
+        </View>
+      </TestCase>
+      <TestCase
+        modal
+        skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/600
+        itShould="render a view with aria-valuemin accessibility prop">
+        <View
+          accessible={true}
+          aria-valuemin={10}
+          style={[styles.accessibilityLayout, {backgroundColor: 'green'}]}>
+          <Text>aria-valuemin: 10</Text>
+        </View>
+      </TestCase>
+      <TestCase
+        modal
+        skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/600
+        itShould="render a view with aria-valuenow accessibility prop">
+        <View
+          accessible={true}
+          aria-valuenow={55}
+          style={[styles.accessibilityLayout, {backgroundColor: 'green'}]}>
+          <Text>aria-valuemin: 55</Text>
+        </View>
+      </TestCase>
+      <TestCase
+        modal
+        skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/600
+        itShould="render a view with aria-valuetext accessibility prop">
+        <View
+          accessible={true}
+          aria-valuetext={'Test Text'}
+          style={[styles.accessibilityLayout, {backgroundColor: 'green'}]}>
+          <Text>aria-valuemin: Test Text</Text>
+        </View>
+      </TestCase>
+      <TestCase
+        modal
+        skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/599
+        itShould="render a view with aria-selected accessibility prop">
+        <ViewAccessibilityAriaSelected />
+      </TestCase>
+      <TestCase
+        modal
+        itShould="make the screen reader say 'This view has a red background and no text' when clicking on the View component with accessibilityLabel prop">
+        <View
+          accessible={true}
+          accessibilityLabel="This view has a red background and no text"
+          style={[styles.accessibilityLayout, {backgroundColor: 'red'}]}
+        />
+      </TestCase>
+      <TestCase
+        modal
+        itShould="make the screen reader say/display 'This view has a red background and no text' when clicking on the View component with aria-label prop">
+        <View
+          accessible={true}
+          aria-label="This view has a red background and no text"
+          style={[styles.accessibilityLayout, {backgroundColor: 'red'}]}
+        />
+      </TestCase>
+      <TestCase
+        modal
+        itShould="make the screen reader say/display 'busy' after clicking on the backgroud">
+        <View
+          accessible={true}
+          aria-busy={true}
+          style={styles.accessibilityLayout}
+        />
+      </TestCase>
+      <TestCase
+        modal
+        itShould="make the screen reader say/display: 'checked, mixed' when both button are 'checked', 'mixed' when one of the button is 'checked' and 'unchecked' when none of the button is 'checked'">
+        <ViewAccessibilityAriaChecked />
+      </TestCase>
+      <TestCase modal itShould="make the screen reader say/display: 'disabled'">
+        <View
+          accessible={true}
+          aria-disabled={true}
+          style={styles.accessibilityLayout}
+        />
+      </TestCase>
+      <TestCase modal itShould="make the screen reader hide 'Hidden layout'">
+        <View accessible={true} style={styles.accessibilityContainer}>
+          <View
+            style={[styles.accessibilityLayout, {backgroundColor: 'green'}]}
+            importantForAccessibility="yes">
+            <Text>First layout</Text>
+          </View>
+          <View
+            style={[styles.accessibilityLayout, {backgroundColor: 'yellow'}]}
+            aria-hidden={true}>
+            <Text>Hidden Layout</Text>
+          </View>
+        </View>
+      </TestCase>
+      <TestCase
+        modal
+        skip // works only on iOS
+        itShould="make the screen reader hide 'Hidden layout' accessibilityHidden">
+        <View accessible={true} style={styles.accessibilityContainer}>
+          <View
+            style={[styles.accessibilityLayout, {backgroundColor: 'green'}]}>
+            <Text>First layout</Text>
+          </View>
+          <View
+            style={[styles.accessibilityLayout, {backgroundColor: 'yellow'}]}
+            accessibilityElementsHidden={true}>
+            <Text>Hidden Layout</Text>
+          </View>
+        </View>
+      </TestCase>
+      <TestCase
+        modal
+        itShould="make the screen reader say/display 'This view has a red background' and 'Hint: and no text'">
+        <View
+          accessible={true}
+          aria-label="This view has a red background"
+          accessibilityHint='Hint: and no text'
+          style={[styles.accessibilityLayout, {backgroundColor: 'red'}]}
+        />
+      </TestCase>
     </TestSuite>
   );
 }
@@ -642,6 +816,72 @@ function PointerEventsView(props: {
   );
 }
 
+function SelectedView({
+  itemId,
+  selectedId,
+  setSelectedId,
+}: {
+  itemId: number;
+  selectedId: number;
+  setSelectedId: React.Dispatch<React.SetStateAction<number>>;
+}) {
+  return (
+    <View
+      aria-selected={selectedId === itemId}
+      accessibilityState={{selected: selectedId === itemId}}
+      style={[styles.accessibilityLayout, {borderBottomWidth: 2}]}>
+      <Text
+        style={{width: '100%', height: '100%'}}
+        onPress={() => setSelectedId(itemId)}>
+        aria-selected {String(selectedId === itemId)}
+      </Text>
+    </View>
+  );
+}
+
+function ViewAccessibilityAriaSelected() {
+  const [selectedId, setSelectedId] = useState<number>(1);
+
+  return (
+    <View accessible={true} style={styles.accessibilityContainer}>
+      {Array.from({length: 5}, (_, index) => index + 1).map(id => (
+        <SelectedView
+          key={id}
+          itemId={id}
+          selectedId={selectedId}
+          setSelectedId={setSelectedId}
+        />
+      ))}
+    </View>
+  );
+}
+
+function ViewAccessibilityAriaChecked() {
+  const [firstChecked, setFirstChecked] = useState<boolean>(false);
+  const [secondChecked, setSecondChecked] = useState<boolean>(false);
+
+  const checked = firstChecked && secondChecked;
+  const mixed = firstChecked !== secondChecked;
+
+  return (
+    <View
+      accessible={true}
+      aria-checked={checked ? true : mixed ? 'mixed' : false}
+      style={[styles.accessibilityLayout, {height: 200}]}
+      accessibilityRole="checkbox"
+      accessibilityState={{checked}}>
+      <Button
+        label={`First Element is ${firstChecked ? 'checked' : 'unchecked'}`}
+        onPress={() => setFirstChecked(!firstChecked)}
+      />
+      <Button
+        label={`Second Element is ${secondChecked ? 'checked' : 'unchecked'}`}
+        onPress={() => setSecondChecked(!secondChecked)}
+      />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   squaresContainer: {
     flexDirection: 'row',
@@ -659,5 +899,14 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     textAlign: 'center',
     height: '100%',
+  },
+  accessibilityContainer: {
+    width: '100%',
+    backgroundColor: 'gray',
+  },
+  accessibilityLayout: {
+    width: '100%',
+    height: 100,
+    backgroundColor: 'lightblue',
   },
 });
