@@ -81,7 +81,7 @@ export struct RNPullToRefreshView {
 
   build() {
     Refresh({
-      refreshing: $$this.isRefreshing,
+      refreshing: this.isRefreshing,
       builder: this.RefreshLoadingProgress({
         progressOffsetView: this.descriptor.rawProps.progressViewOffset,
         tintColor: this.descriptor.rawProps.tintColor,
