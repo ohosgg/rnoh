@@ -72,6 +72,7 @@ export function TimerTest() {
         }}
       />
       <TestCase<{date: Date; appStateStatus: AppStateStatus}[]>
+        modal
         itShould="not trigger updates when the application is in background"
         initialState={[]}
         arrange={({state, setState}) => {
