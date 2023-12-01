@@ -9,6 +9,25 @@ export enum MutationType {
   REMOVE_DELETE_TREE = 32,
 }
 
+export function getHumanNameFromMutationType(mutationType: MutationType) {
+  switch (mutationType) {
+    case MutationType.CREATE:
+      return "CREATE"
+    case MutationType.DELETE:
+      return "DELETE"
+    case MutationType.INSERT:
+      return "INSERT"
+    case MutationType.REMOVE:
+      return "REMOVE"
+    case MutationType.UPDATE:
+      return "UPDATE"
+    case MutationType.REMOVE_DELETE_TREE:
+      return "REMOVE_DELETE_TREE"
+    default:
+      return "UNKNOWN"
+  }
+}
+
 export type CreateMutation = {
   type: MutationType.CREATE
   descriptor: Descriptor
@@ -48,3 +67,4 @@ export type Mutation =
   | RemoveMutation
   | UpdateMutation
   | RemoveDeleteTreeMutation
+

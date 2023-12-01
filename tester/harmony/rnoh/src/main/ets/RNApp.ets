@@ -1,6 +1,6 @@
 import { CustomComponentBuilder } from './RNOHCorePackage'
 import { RNInstanceOptions } from './RNOH';
-import { RNInstance, JSBundleProvider, RNAbility } from './RNOH'
+import { RNInstance, JSBundleProvider, RNAbility, RNOHLogger } from './RNOH'
 import { RNSurface } from "./RNSurface"
 
 interface CustomRNInstance {
@@ -43,8 +43,11 @@ export struct RNApp {
   @State private shouldShow: boolean = false
   private shouldDestroyRNInstance: boolean = false
   private cleanUpCallbacks: (() => void)[] = []
+  private logger!: RNOHLogger
 
   aboutToAppear() {
+    this.logger = this.rnAbility.getLogger().clone("RNApp")
+    const stopTracing = this.logger.clone("aboutToAppear").startTracing()
     try {
       (async () => {
         this.rnInstance = await this.getOrCreateRNInstance()
@@ -73,13 +76,17 @@ export struct RNApp {
       } else {
         this.rnAbility.getLogger().error("Fatal exception")
       }
+    } finally {
+      stopTracing()
     }
   }
 
   aboutToDisappear() {
+    const stopTracing = this.logger.clone("aboutToDisappear").startTracing()
     if (this.shouldDestroyRNInstance)
       this.rnAbility.destroyAndUnregisterRNInstance(this.rnInstance)
     this.cleanUpCallbacks.forEach(cleanUp => cleanUp())
+    stopTracing()
   }
 
   private getOrCreateRNInstance(): Promise<RNInstance> {

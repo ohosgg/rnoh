@@ -3,10 +3,14 @@ import type { Mutation } from "./Mutation";
 import type { Tag } from "./DescriptorBase";
 import type { AttributedString, ParagraphAttributes, LayoutConstrains } from "./TextLayoutManager";
 import { measureParagraph } from "./TextLayoutManager"
-import type { DisplayMode } from './CppBridgeUtils';
+import type { DisplayMode } from './CppBridgeUtils'
+import { RNOHLogger } from "./RNOHLogger"
 
 export class NapiBridge {
-  constructor(private libRNOHApp: any) {
+  private logger: RNOHLogger
+
+  constructor(private libRNOHApp: any, logger: RNOHLogger) {
+    this.logger = logger.clone("NapiBridge")
   }
 
   createReactNativeInstance(instanceId: number,
@@ -15,9 +19,10 @@ export class NapiBridge {
                             componentCommandsListener: (tag: Tag,
                                                         commandName: string,
                                                         args: unknown) => void,
-                            onCppMessage: (type: string, payload: any) => void
-                          )
-  {
+                            onCppMessage: (type: string, payload: any) => void,
+
+
+  ) {
     this.libRNOHApp?.createReactNativeInstance(
       instanceId,
       turboModuleProvider,
@@ -26,7 +31,10 @@ export class NapiBridge {
       onCppMessage,
       (attributedString: AttributedString, paragraphAttributes: ParagraphAttributes, layoutConstraints: LayoutConstrains) => {
         try {
-          return measureParagraph(attributedString, paragraphAttributes, layoutConstraints)
+          const stopTracing = this.logger.clone("measureParagraph").startTracing()
+          const result = measureParagraph(attributedString, paragraphAttributes, layoutConstraints)
+          stopTracing()
+          return result
         } catch (err) {
           console.error(err)
           throw err

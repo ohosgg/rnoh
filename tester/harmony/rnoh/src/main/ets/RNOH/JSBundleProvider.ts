@@ -1,7 +1,7 @@
 import type resmgr from "@ohos.resourceManager";
 import http from '@ohos.net.http';
 import util from '@ohos.util';
-
+import { RNOHLogger } from "./RNOHLogger"
 
 export interface JSBundleProvider {
   getURL(): string
@@ -103,12 +103,34 @@ export class AnyJSBundleProvider implements JSBundleProvider {
     for (const jsBundleProvider of this.jsBundleProviders) {
       try {
         return await jsBundleProvider.getBundle()
-      } catch(err) {
+      } catch (err) {
         if (err instanceof JSBundleProviderError) {
           errors.push(err)
         }
       }
     }
     throw new JSBundleProviderError("Any of the jsBundleProviders was able to load the bundle", errors)
+  }
+}
+
+export class TraceJSBundleProviderDecorator implements JSBundleProvider {
+  private logger: RNOHLogger
+  constructor(private jsBundleProvider: JSBundleProvider, logger: RNOHLogger) {
+    this.logger = logger.clone('TraceJSBundleProviderDecorator')
+  }
+
+  getURL() {
+    return this.jsBundleProvider.getURL()
+  }
+
+  async getBundle() {
+    const stopTracing = this.logger.clone('getBundle').startTracing()
+    const result = await this.jsBundleProvider.getBundle()
+    stopTracing()
+    return result
+  }
+
+  getAppKeys() {
+    return this.jsBundleProvider.getAppKeys()
   }
 }

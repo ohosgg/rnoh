@@ -21,3 +21,4 @@ export * from './EventEmitter'
 export * from './types'
 export * from './TouchTargetHelper'
 export * from "./CompactValue"
+export * from "./RNOHLogger"

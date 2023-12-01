@@ -1,7 +1,8 @@
 import type { Tag, Descriptor } from './DescriptorBase';
-import type { Mutation } from './Mutation';
+import { getHumanNameFromMutationType, Mutation } from './Mutation';
 import { MutationType } from './Mutation';
 import type { RNInstanceImpl } from './RNInstance'
+import type { RNOHLogger } from "./RNOHLogger"
 
 type RootDescriptor = Descriptor<"RootView", any>
 
@@ -15,12 +16,16 @@ export class DescriptorRegistry {
   private animatedRawPropsByTag: Map<Tag, Set<string>> = new Map();
   private updatedUnnotifiedTags = new Set<Tag>()
   private cleanUpCallbacks: (() => void)[] = []
+  private logger: RNOHLogger
 
   constructor(
     descriptorByTag: Record<Tag, Descriptor>,
     private setNativeStateFn: SetNativeStateFn,
     private rnInstance: RNInstanceImpl,
+    logger: RNOHLogger
   ) {
+    this.logger = logger.clone("DescriptorRegistry")
+    const stopTracing = this.logger.clone("constructor").startTracing()
     for (const tag in descriptorByTag) {
       this.descriptorByTag.set(parseInt(tag), descriptorByTag[tag])
     }
@@ -28,10 +33,13 @@ export class DescriptorRegistry {
       this.callListeners(this.updatedUnnotifiedTags)
       this.updatedUnnotifiedTags.clear()
     }))
+    stopTracing()
   }
 
   public destroy() {
+    const stopTracing = this.logger.clone("destroy").startTracing()
     this.cleanUpCallbacks.forEach(cb => cb())
+    stopTracing()
   }
 
   public getDescriptor<TDescriptor extends Descriptor>(tag: Tag): TDescriptor {
@@ -56,6 +64,7 @@ export class DescriptorRegistry {
    * Called by NativeAnimatedTurboModule. This method needs to be encapsulated.
    */
   public setAnimatedRawProps<TProps extends Object>(tag: Tag, props: TProps): void {
+    this.logger.clone('setAnimatedRawProps').debug("")
     let descriptor = this.getDescriptor<Descriptor<string, TProps>>(tag);
 
     if (!descriptor) {
@@ -78,26 +87,53 @@ export class DescriptorRegistry {
   }
 
   public setState<TState extends Object>(tag: Tag, state: TState): void {
+    const stopTracing = this.logger.clone("setState").startTracing()
     let descriptor = this.getDescriptor<Descriptor<string, TState>>(tag);
     if (!descriptor) {
       return;
     }
 
     this.setNativeStateFn(descriptor.type, tag, state);
+    stopTracing()
   }
 
   public applyMutations(mutations: Mutation[]) {
-    const updatedDescriptorTags = new Set(mutations.flatMap(mutation =>
-    this.applyMutation(mutation)
+    const countByMutationType = mutations.reduce((acc, el) => {
+      acc[getHumanNameFromMutationType(el.type)] += 1
+      return acc
+    }, {
+      "CREATE": 0,
+      "DELETE": 0,
+      "INSERT": 0,
+      "REMOVE": 0,
+      "UPDATE": 0,
+      "REMOVE_DELETE_TREE": 0,
+      "UNKNOWN": 0
+    })
+    let formattedCountByMutationType = Object.entries(countByMutationType).reduce((acc, [mutationName, count]) => {
+      if (count > 0) {
+        acc += `${mutationName}: ${count}, `
+      }
+      return acc
+    }, "")
+    if (formattedCountByMutationType.endsWith(', ')) {
+      formattedCountByMutationType = formattedCountByMutationType.slice(0, -2)
+    }
+    const stopTracing = this.logger.clone(`applyMutations (${formattedCountByMutationType})`).startTracing()
+    const updatedDescriptorTags = new Set(mutations.flatMap(mutation => {
+      return this.applyMutation(mutation)
+    }
     ));
     if (!this.rnInstance.shouldUIBeUpdated()) {
       updatedDescriptorTags.forEach(tag => this.updatedUnnotifiedTags.add(tag))
       return;
     }
     this.callListeners(updatedDescriptorTags)
+    stopTracing()
   }
 
   private callListeners(tags: Set<Tag>): void {
+    const stopTracing = this.logger.clone(`callListeners (tags.size: ${tags.size})`).startTracing()
     tags.forEach(tag => {
       const updatedDescriptor = this.getDescriptor(tag);
       if (!updatedDescriptor) return;
@@ -106,6 +142,7 @@ export class DescriptorRegistry {
       });
     });
     this.callSubtreeListeners(tags);
+    stopTracing()
   }
 
   private callSubtreeListeners(updatedDescriptorTags: Set<Tag>) {
@@ -229,7 +266,7 @@ export class DescriptorRegistry {
      * future.
      */
     const props = descriptor.isDynamicBinder ? descriptor.rawProps : descriptor.props
-    return {...descriptor, props}
+    return { ...descriptor, props }
   }
 
   public createRootDescriptor(tag: Tag) {

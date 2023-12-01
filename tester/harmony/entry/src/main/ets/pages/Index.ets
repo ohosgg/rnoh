@@ -1,5 +1,12 @@
-import { ComponentBuilderContext } from 'rnoh';
-import { RNApp, RNAbility, AnyJSBundleProvider, MetroJSBundleProvider, ResourceJSBundleProvider } from 'rnoh'
+import { ComponentBuilderContext, RNOHLogger } from 'rnoh';
+import {
+  RNApp,
+  RNAbility,
+  AnyJSBundleProvider,
+  MetroJSBundleProvider,
+  ResourceJSBundleProvider,
+  TraceJSBundleProviderDecorator
+} from 'rnoh'
 import { SampleView, SAMPLE_VIEW_TYPE, PropsDisplayer } from "rnoh-sample-package"
 import font from '@ohos.font';
 import { createRNPackages } from '../RNPackagesFactory'
@@ -40,15 +47,16 @@ const fonts: font.FontOptions[] = [
 struct Index {
   @StorageLink('RNAbility') rnAbility: RNAbility | undefined = undefined
   @State shouldShow: boolean = false
+  private logger!: RNOHLogger
 
   aboutToAppear() {
+    this.logger = this.rnAbility!.getLogger().clone("Index")
+    const stopTracing = this.logger.clone("aboutToAppear").startTracing()
     for (const customFont of fonts) {
       font.registerFont(customFont)
     }
-    setTimeout(() => {
-      // Debugger don't work from the get-go, hence this artificial delay.
-      this.shouldShow = true
-    }, 1000)
+    this.shouldShow = true
+    stopTracing()
   }
 
   onBackPress(): boolean | undefined {
@@ -66,10 +74,10 @@ struct Index {
           initialProps: { "foo": "bar" } as Record<string, string>,
           appKey: "app_name",
           buildCustomComponent: CustomComponentBuilder,
-          jsBundleProvider: new AnyJSBundleProvider([
+          jsBundleProvider: new TraceJSBundleProviderDecorator(new AnyJSBundleProvider([
             new MetroJSBundleProvider(),
             new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'hermes_bundle.hbc'),
-            new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'bundle.harmony.js')]),
+            new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'bundle.harmony.js')]), this.rnAbility.getLogger()),
         })
       }
     }

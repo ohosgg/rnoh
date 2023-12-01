@@ -1,7 +1,6 @@
-import { RNViewBase } from './RNOHCorePackage/components/RNViewBase';
 import { ComponentBuilderContext } from './RNOHCorePackage/components/RNComponentFactory';
 import { RNComponentFactory } from './RNOHCorePackage';
-import { Descriptor, DisplayMode, RNOHContext, Tag } from './RNOH';
+import { Descriptor, DisplayMode, RNOHContext, RNOHLogger } from './RNOH';
 import {
   ViewBaseProps,
   ViewDescriptorWrapperBase,
@@ -45,8 +44,11 @@ export struct RNSurface {
   private shouldStopSurface: boolean = false;
   private initialProps!: SurfaceProps;
   private surfaceManager!: RNSurfaceManager;
+  private logger!: RNOHLogger
 
   aboutToAppear() {
+    this.logger = this.ctx.logger.clone("RNSurface")
+    const stopTracing = this.logger.clone("aboutToAppear").startTracing()
     if (Object.keys(this.surfaceConfig).includes("surfaceHandle")) {
       this.surfaceHandle = (this.surfaceConfig as SurfaceConfig1).surfaceHandle;
       this.surfaceHandle.setDisplayMode(DisplayMode.Visible);
@@ -65,9 +67,11 @@ export struct RNSurface {
       tag,
       (newDescriptor) => this.onUpdateComponent(newDescriptor)
     ))
+    stopTracing()
   }
 
   aboutToDisappear() {
+    const stopTracing = this.logger.clone("aboutToDisappear").startTracing()
     this.cleanUpCallbacks.forEach(cb => cb())
     if (this.shouldStopSurface) {
       this.surfaceHandle.stop().then(() => {
@@ -76,6 +80,7 @@ export struct RNSurface {
     } else if (this.surfaceHandle.getDisplayMode() === DisplayMode.Visible) {
       this.surfaceHandle.setDisplayMode(DisplayMode.Suspended);
     }
+    stopTracing()
   }
 
   onUpdateComponent(newDescriptor: Descriptor) {
@@ -84,11 +89,13 @@ export struct RNSurface {
   }
 
   handleAreaChange(_oldValue: Area, newValue: Area) {
+    const stopTracing = this.logger.clone("handleAreaChange").startTracing()
     this.surfaceWidth = newValue.width as number
     this.surfaceHeight = newValue.height as number
     this.surfaceOffsetX = newValue.globalPosition.x as number
     this.surfaceOffsetY = newValue.globalPosition.y as number
     this.updateSurfaceConstraints()
+    stopTracing()
   }
 
   updateSurfaceConstraints() {
@@ -118,7 +125,9 @@ export struct RNSurface {
   }
 
   handleTouch(event: TouchEvent) {
+    const stopTracing = this.logger.clone("handleTouch").startTracing()
     this.touchDispatcher.handleTouchEvent(event)
+    stopTracing()
   }
 
   build() {

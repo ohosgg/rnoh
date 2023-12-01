@@ -128,6 +128,7 @@ export class RNInstanceImpl implements RNInstance {
   public componentManagerRegistry: ComponentManagerRegistry;
   private lifecycleEventEmitter = new EventEmitter<LifecycleEventArgsByEventName>()
   private componentNameByDescriptorType = new Map<string, string>()
+  private logger: RNOHLogger
 
   /**
    * @deprecated
@@ -138,21 +139,25 @@ export class RNInstanceImpl implements RNInstance {
 
   constructor(
     private id: number,
-    private logger: RNOHLogger,
+    logger: RNOHLogger,
     public abilityContext: common.UIAbilityContext,
     private napiBridge: NapiBridge,
     private defaultProps: Record<string, any>,
     private createRNOHContext: (rnInstance: RNInstance) => RNOHContext
   ) {
+    this.logger = logger.clone("RNInstance")
+    const stopTracing = this.logger.clone("constructor").startTracing()
     this.componentManagerRegistry = new ComponentManagerRegistry();
     this.descriptorRegistry = new DescriptorRegistry(
       {
         '1': { ...rootDescriptor },
       },
       this.updateState.bind(this),
-      this
+      this,
+      logger,
     );
     this.componentCommandHub = new RNComponentCommandHub();
+    stopTracing()
   }
 
   public getId(): number {
@@ -160,6 +165,7 @@ export class RNInstanceImpl implements RNInstance {
   }
 
   public async initialize(packages: RNPackage[]) {
+    const stopTracing = this.logger.clone("initialize").startTracing()
     this.turboModuleProvider = (await this.processPackages(packages)).turboModuleProvider
     this.napiBridge.createReactNativeInstance(
       this.id,
@@ -174,9 +180,11 @@ export class RNInstanceImpl implements RNInstance {
         this.onCppMessage(type, payload)
       }
     )
+    stopTracing()
   }
 
   private onCppMessage(type: string, payload: any) {
+    const stopTracing = this.logger.clone("onCppMessage").startTracing()
     switch (type) {
       case "SCHEDULER_DID_SET_IS_JS_RESPONDER":
         if (payload.blockNativeResponder) {
@@ -188,26 +196,32 @@ export class RNInstanceImpl implements RNInstance {
       default:
         this.logger.error(`Unknown action: ${type}`)
     }
+    stopTracing()
   }
 
   private onBlockNativeResponder(tag: Tag) {
+    const stopTracing = this.logger.clone("onBlockNativeResponder").startTracing()
     const tags = this.descriptorRegistry.getDescriptorLineage(tag).map(d => d.tag)
     tags.forEach((tag) => {
       this.componentCommandHub.dispatchCommand(tag, RNOHComponentCommand.BLOCK_NATIVE_RESPONDER, undefined)
     })
+    stopTracing()
   }
 
   private onUnblockNativeResponder(tag: Tag) {
+    const stopTracing = this.logger.clone("onUnblockNativeResponder").startTracing()
     const tags = this.descriptorRegistry.getDescriptorLineage(tag).map(d => d.tag)
     tags.forEach((tag) => {
       this.componentCommandHub.dispatchCommand(tag, RNOHComponentCommand.UNBLOCK_NATIVE_RESPONDER, undefined)
     })
+    stopTracing()
   }
 
   private async processPackages(packages: RNPackage[]) {
+    const stopTracing = this.logger.clone("processPackages").startTracing()
     packages.unshift(new RNOHCorePackage({}));
     const turboModuleContext = this.createRNOHContext(this)
-    return {
+    const result = {
       turboModuleProvider: new TurboModuleProvider(
         await Promise.all(packages.map(async (pkg) => {
           const turboModuleFactory = pkg.createTurboModulesFactory(turboModuleContext);
@@ -216,6 +230,8 @@ export class RNInstanceImpl implements RNInstance {
         }))
       )
     }
+    stopTracing()
+    return result
   }
 
   public subscribeToLifecycleEvents<TEventName extends keyof LifecycleEventArgsByEventName>(type: TEventName, listener: (...args: LifecycleEventArgsByEventName[TEventName]) => void) {
@@ -235,7 +251,9 @@ export class RNInstanceImpl implements RNInstance {
   }
 
   public emitDeviceEvent(eventName: string, params: any) {
+    const stopTracing = this.logger.clone(`emitDeviceEvent (eventName: ${eventName})`).startTracing()
     this.napiBridge.callRNFunction(this.id, "RCTDeviceEventEmitter", "emit", [eventName, params]);
+    stopTracing()
   }
 
   public getBundleExecutionStatus(bundleURL: string): BundleExecutionStatus | undefined {
@@ -243,10 +261,12 @@ export class RNInstanceImpl implements RNInstance {
   }
 
   public async runJSBundle(jsBundleProvider: JSBundleProvider) {
+    const stopTracing = this.logger.clone("runJSBundle").startTracing()
     const bundleURL = jsBundleProvider.getURL()
     try {
       this.bundleExecutionStatusByBundleURL.set(bundleURL, "RUNNING")
-      await this.napiBridge.loadScript(this.id, await jsBundleProvider.getBundle(), bundleURL)
+      const jsBundle = await jsBundleProvider.getBundle()
+      await this.napiBridge.loadScript(this.id, jsBundle, bundleURL)
       this.lifecycleState = LifecycleState.READY
       this.bundleExecutionStatusByBundleURL.set(bundleURL, "DONE")
       this.lifecycleEventEmitter.emit("JS_BUNDLE_EXECUTION_FINISH", {
@@ -261,6 +281,8 @@ export class RNInstanceImpl implements RNInstance {
         this.logger.error(err.message)
       }
       throw err
+    } finally {
+      stopTracing()
     }
   }
 
@@ -269,12 +291,17 @@ export class RNInstanceImpl implements RNInstance {
   }
 
   public createSurface(appKey: string): SurfaceHandle {
+    const stopTracing = this.logger.clone("createSurface").startTracing()
     const tag = this.getNextSurfaceTag();
-    return new SurfaceHandle(this, tag, appKey, this.defaultProps, this.napiBridge);
+    const result = new SurfaceHandle(this, tag, appKey, this.defaultProps, this.napiBridge);
+    stopTracing()
+    return result
   }
 
   public updateState(componentName: string, tag: Tag, state: unknown): void {
+    const stopTracing = this.logger.clone("updateState").startTracing()
     this.napiBridge.updateState(this.id, componentName, tag, state)
+    stopTracing()
   }
 
   public onBackPress() {
