@@ -1,6 +1,7 @@
 #include "RNOH/MountingManager.h"
 
 #include <glog/logging.h>
+#include "MountingManager.h"
 
 namespace rnoh {
 
@@ -59,13 +60,17 @@ void MountingManager::performTransaction(facebook::react::MountingCoordinator::S
         [this](react::MountingTransaction const &transaction, react::SurfaceTelemetry const &surfaceTelemetry) {
             // Did mount
             taskExecutor->runTask(TaskThread::MAIN, [this, transaction] {
-                this->triggerUICallback(transaction.getMutations());
+                this->triggerUICallback(m_preallocatedViewRawPropsByTag, transaction.getMutations());
             });
         });
 }
 
 void MountingManager::dispatchCommand(facebook::react::Tag tag, std::string const &commandName, folly::dynamic const args) {
     this->commandDispatcher(tag, commandName, args);
+}
+
+void MountingManager::preallocateView(const facebook::react::ShadowNode &shadowView) {
+    m_preallocatedViewRawPropsByTag.emplace(shadowView.getTag(), shadowView.getProps()->rawProps);
 }
 
 } // namespace rnoh

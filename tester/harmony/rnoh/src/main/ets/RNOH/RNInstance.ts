@@ -186,10 +186,6 @@ export class RNInstanceImpl implements RNInstance {
   private onCppMessage(type: string, payload: any) {
     const stopTracing = this.logger.clone("onCppMessage").startTracing()
     switch (type) {
-      case "SCHEDULER_DID_REQUEST_PRELIMINARY_VIEW_ALLOCATION": {
-        this.descriptorRegistry.preallocateView(payload.tag, payload.rawProps);
-        break;
-      }
       case "SCHEDULER_DID_SET_IS_JS_RESPONDER": {
         if (payload.blockNativeResponder) {
           this.onBlockNativeResponder(payload.tag)

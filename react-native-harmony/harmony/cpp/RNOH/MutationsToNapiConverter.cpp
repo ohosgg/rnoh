@@ -9,15 +9,23 @@ using namespace rnoh;
 MutationsToNapiConverter::MutationsToNapiConverter(ComponentNapiBinderByString &&componentNapiBinderByName)
     : m_componentNapiBinderByName(std::move(componentNapiBinderByName)) {}
 
-napi_value MutationsToNapiConverter::convert(napi_env env, react::ShadowViewMutationList const &mutations) {
+napi_value MutationsToNapiConverter::convert(napi_env env, std::unordered_map<facebook::react::Tag, folly::dynamic> &preallocatedViewRawPropsByTag, react::ShadowViewMutationList const &mutations) {
     std::vector<napi_value> napiMutations;
     ArkJS arkJs(env);
     for (auto &mutation : mutations) {
         auto objBuilder = arkJs.createObjectBuilder().addProperty("type", mutation.type);
         switch (mutation.type) {
         case react::ShadowViewMutation::Type::Create: {
+            auto it = preallocatedViewRawPropsByTag.find(mutation.newChildShadowView.tag);
+            folly::dynamic preallocatedRawProps = folly::dynamic::object();
+            if (it != preallocatedViewRawPropsByTag.end()) {
+                preallocatedRawProps = std::move(it->second);
+                preallocatedViewRawPropsByTag.erase(it);
+            } else {
+                LOG(WARNING) << "No preallocated raw props for tag " << mutation.newChildShadowView.tag;
+            }
             objBuilder
-                .addProperty("descriptor", this->convertShadowView(env, mutation.newChildShadowView));
+                .addProperty("descriptor", this->convertShadowView(env, mutation.newChildShadowView, std::move(preallocatedRawProps)));
             break;
         }
         case react::ShadowViewMutation::Type::Remove: {
@@ -55,7 +63,7 @@ void rnoh::MutationsToNapiConverter::updateState(napi_env env, std::string const
     return;
 }
 
-napi_value MutationsToNapiConverter::convertShadowView(napi_env env, react::ShadowView const shadowView) {
+napi_value MutationsToNapiConverter::convertShadowView(napi_env env, react::ShadowView const shadowView, folly::dynamic &&rawPropsToMerge) {
     ArkJS arkJs(env);
     auto descriptorBuilder = arkJs.createObjectBuilder();
     if (m_componentNapiBinderByName.count(shadowView.componentName) > 0) {
@@ -89,10 +97,13 @@ napi_value MutationsToNapiConverter::convertShadowView(napi_env env, react::Shad
                                           .build())
                          .addProperty("layoutDirection", static_cast<int>(shadowView.layoutMetrics.layoutDirection))
                          .build());
+
+    auto rawProps = folly::dynamic::merge(std::move(rawPropsToMerge), shadowView.props->rawProps);
+
     return descriptorBuilder
         .addProperty("tag", shadowView.tag)
         .addProperty("type", shadowView.componentName)
         .addProperty("childrenTags", arkJs.createArray())
-        .addProperty("rawProps", arkJs.createFromDynamic(shadowView.props->rawProps))
+        .addProperty("rawProps", arkJs.createFromDynamic(std::move(rawProps)))
         .build();
 }

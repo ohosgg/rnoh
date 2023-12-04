@@ -23,7 +23,7 @@ class SchedulerDelegate : public facebook::react::SchedulerDelegate {
         auto payload = folly::dynamic::object(
             "tag", shadowView.getTag())(
             "rawProps", shadowView.getProps()->rawProps);
-        m_arkTsChannel->postMessage("SCHEDULER_DID_REQUEST_PRELIMINARY_VIEW_ALLOCATION", std::move(payload));
+        mountingManager.preallocateView(shadowView);
     }
 
     void schedulerDidDispatchCommand(
