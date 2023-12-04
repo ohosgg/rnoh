@@ -11,6 +11,7 @@ TProps extends ViewBaseProps = ViewBaseProps,
 TState extends ViewBaseState = ViewBaseState,
 TRawProps extends ViewRawProps = ViewRawProps> = Descriptor<TType, TProps, TState, TRawProps>;
 
+
 /**
  * @deprecated: Use ViewBaseDescriptor instead.
  */

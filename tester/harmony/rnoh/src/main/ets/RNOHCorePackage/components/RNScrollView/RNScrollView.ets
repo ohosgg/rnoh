@@ -386,7 +386,7 @@ export struct RNScrollView {
     if (this.descriptor.rawProps.disableIntervalMomentum) {
       const snapTarget = calculateSnapTarget({
         currentOffset: this.scroller.currentOffset(),
-        isPagingEnabled: this.descriptor.rawProps.pagingEnabled,
+        isPagingEnabled: this.descriptor.rawProps.pagingEnabled ?? false,
         offsets: this.descriptor.rawProps.snapToOffsets,
         interval: this.descriptor.rawProps.snapToInterval,
         isHorizontalScroll: this.scrollDirection() === ScrollDirection.Horizontal,

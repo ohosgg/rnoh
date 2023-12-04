@@ -1,9 +1,9 @@
-import { Descriptor } from '../../RNOH';
+import { Descriptor, RawPropsBase } from '../../RNOH';
 import { RNOHContext } from '../../RNOH'
 
 export interface PullToRefreshProps {}
 
-export interface PullToRefreshRawProps {
+export interface PullToRefreshRawProps extends RawPropsBase {
   refreshing?: boolean
   progressViewOffset?: number
   tintColor?: string

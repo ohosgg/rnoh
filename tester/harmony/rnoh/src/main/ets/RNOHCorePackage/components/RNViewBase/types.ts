@@ -1,4 +1,4 @@
-import type { ColorSegments, TransformMatrix } from '../../../RNOH';
+import type { ColorSegments, TransformMatrix, RawPropsBase, PropsBase } from '../../../RNOH';
 import { ViewStyle } from '../../../RNOH/RNTypes';
 import { AccessibilityProps as ViewAccessibility } from './ViewAccessibilityTypes';
 
@@ -6,7 +6,7 @@ export type AccessibilityLevel = 'auto' | 'yes' | 'no' | 'no-hide-descendants';
 
 export type BackfaceVisibility = 'visible' | 'hidden';
 
-export interface ViewBaseProps {
+export interface ViewBaseProps extends PropsBase {
   transform?: TransformMatrix;
 }
 
@@ -17,7 +17,7 @@ export interface HitSlop {
   right?: number;
 }
 
-export type ViewRawProps = ViewStyle &
+export type ViewRawProps = RawPropsBase & ViewStyle &
 ViewAccessibility & {
   hitSlop?: HitSlop;
   focusable?: boolean;

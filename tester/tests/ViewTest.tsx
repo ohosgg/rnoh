@@ -1,11 +1,19 @@
-import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {TestSuite, TestCase} from '@rnoh/testerino';
-import React, {useEffect, useState} from 'react';
-import {Button, StateKeeper} from '../components';
+import React, {useState} from 'react';
+import {Button} from '../components';
 
 export function ViewTest() {
   return (
     <TestSuite name="View">
+      <TestCase
+        modal
+        itShould="log the descriptor on the native side when 'debug' hint is provided">
+        <View
+          id="__harmony::debug:sampleNativeId"
+          style={{width: 64, height: 64, backgroundColor: 'red'}}
+        />
+      </TestCase>
       <TestCase itShould="render square with transparent background on gray background">
         <View style={{width: '100%', height: 100, backgroundColor: 'gray'}}>
           <View
@@ -130,7 +138,9 @@ export function ViewTest() {
           />
         </View>
       </TestCase>
-      <TestCase skip itShould="render rectangle with borders with different widths and colors">
+      <TestCase
+        skip
+        itShould="render rectangle with borders with different widths and colors">
         <View style={{width: '100%', height: 100, backgroundColor: 'gray'}}>
           <View
             style={{
@@ -759,7 +769,7 @@ export function ViewTest() {
         <View
           accessible={true}
           aria-label="This view has a red background"
-          accessibilityHint='Hint: and no text'
+          accessibilityHint="Hint: and no text"
           style={[styles.accessibilityLayout, {backgroundColor: 'red'}]}
         />
       </TestCase>

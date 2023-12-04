@@ -25,14 +25,14 @@ export interface LayoutProps {
   width: number;
   height: number;
 }
-;
+
 
 export enum LayoutDirectionRN {
   Undefined = 0,
   LeftToRight = 1,
   RightToLeft = 2,
 }
-;
+
 
 export type LayoutMetrics = {
   frame: {
@@ -53,15 +53,42 @@ export enum OverflowMode {
   HIDDEN = 1,
   SCROLL = 2,
 }
-;
+
 
 /**
  * (Component)DescriptorWrapper. Decouples "what" is received from React Native from "how".
  */
 export class DescriptorWrapper<TType = string,
-TProps extends Object = Object,
-TState extends Object = {}, TRawProps extends Object = {}> {
+TProps extends PropsBase = PropsBase,
+TState extends StateBase = StateBase, TRawProps extends RawPropsBase = RawPropsBase> {
   constructor(protected descriptor: Descriptor<TType, TProps, TState, TRawProps>) {
+  }
+
+  public get id(): NativeId | undefined {
+    const rawId = this.rawProps.nativeID
+    if (rawId?.startsWith("__harmony::")) {
+      const cheatcodeAndId = rawId.replace("__harmony::", "")
+      const [_cheatcodes, actualId] = cheatcodeAndId.split(":")
+      return actualId
+    }
+    return this.rawProps.nativeID
+  }
+
+  /**
+   * Hints are harmony-specific flags passed in id/nativeId prop.
+   * @example
+   * ```tsx
+   * <View id="__harmony::hint1;hint2;...:ACTUAL_ID" />
+   * ```
+   */
+  public get hints(): string[] {
+    const rawId = this.rawProps.nativeID
+    if (rawId?.startsWith("__harmony::")) {
+      const hintsAndId = rawId.replace("__harmony::", "")
+      const [hints, _actualId] = hintsAndId.split(":")
+      return hints.split(";")
+    }
+    return []
   }
 
   protected get rawProps(): TRawProps {
@@ -101,12 +128,29 @@ TState extends Object = {}, TRawProps extends Object = {}> {
 }
 
 /**
+ * `Value provided as `id` or `nativeId` prop. `nativeId` will be deprecated in the future.
+ * https://github.com/react-native-community/discussions-and-proposals/pull/496
+ */
+export type NativeId = string
+
+export interface RawPropsBase {
+  nativeID?: NativeId
+}
+
+export interface PropsBase {
+}
+
+export interface StateBase {
+
+}
+
+/**
  * (Component)Descriptor
  */
 export interface Descriptor<TType = string,
-TProps extends Object = {},
-TState extends Object = {},
-TRawProps extends Object = {}> {
+TProps extends Object = Object,
+TState extends Object = Object,
+TRawProps extends Object = Object> {
   type: TType;
   tag: Tag;
   parentTag?: Tag;

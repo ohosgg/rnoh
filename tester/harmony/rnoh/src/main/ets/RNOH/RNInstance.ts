@@ -12,7 +12,7 @@ import type { RNOHContext } from './RNOHContext'
 import { RNOHCorePackage } from '../RNOHCorePackage/ts'
 import type { JSBundleProvider } from './JSBundleProvider'
 import { JSBundleProviderError } from './JSBundleProvider'
-import type { Tag } from './DescriptorBase'
+import type { NativeId, Tag } from './DescriptorBase'
 import type { RNPackage, RNPackageContext } from './RNPackage'
 import type { TurboModule } from './TurboModule'
 
@@ -184,7 +184,6 @@ export class RNInstanceImpl implements RNInstance {
   }
 
   private onCppMessage(type: string, payload: any) {
-    const stopTracing = this.logger.clone("onCppMessage").startTracing()
     switch (type) {
       case "SCHEDULER_DID_SET_IS_JS_RESPONDER": {
         if (payload.blockNativeResponder) {
@@ -197,7 +196,6 @@ export class RNInstanceImpl implements RNInstance {
       default:
         this.logger.error(`Unknown action: ${type}`)
     }
-    stopTracing()
   }
 
   private onBlockNativeResponder(tag: Tag) {

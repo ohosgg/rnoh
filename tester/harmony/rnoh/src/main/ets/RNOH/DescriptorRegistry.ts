@@ -1,4 +1,4 @@
-import type { Tag, Descriptor } from './DescriptorBase';
+import { Tag, Descriptor, NativeId, DescriptorWrapper } from './DescriptorBase';
 import { getHumanNameFromMutationType, Mutation } from './Mutation';
 import { MutationType } from './Mutation';
 import type { RNInstanceImpl } from './RNInstance'
@@ -11,6 +11,7 @@ type SetNativeStateFn = (componentName: string, tag: Tag, state: unknown) => voi
 
 export class DescriptorRegistry {
   private descriptorByTag: Map<Tag, Descriptor> = new Map();
+  private descriptorById: Map<NativeId, Descriptor> = new Map();
   private descriptorListenersSetByTag: Map<Tag, Set<(descriptor: Descriptor) => void>> = new Map();
   private subtreeListenersSetByTag: Map<Tag, Set<SubtreeListener>> = new Map();
   private animatedRawPropsByTag: Map<Tag, Set<string>> = new Map();
@@ -36,6 +37,27 @@ export class DescriptorRegistry {
     stopTracing()
   }
 
+  private saveDescriptor(descriptor: Descriptor) {
+    this.descriptorByTag.set(descriptor.tag, descriptor)
+    const descriptorWrapper = new DescriptorWrapper(descriptor)
+    const id = descriptorWrapper.id
+    this.descriptorById.set(id, descriptor)
+    if (descriptorWrapper.hints.includes("debug")) {
+      this.logger.clone(`id:${id}`).debug(JSON.stringify(descriptor, null, 2))
+    }
+  }
+
+  private deleteDescriptor(tag: Tag) {
+    const descriptor = this.descriptorByTag.get(tag)
+    if (descriptor) {
+      const descriptorWrapper = new DescriptorWrapper(descriptor)
+      this.descriptorByTag.delete(descriptor.tag)
+      if (descriptorWrapper.id) {
+        this.descriptorById.delete(descriptorWrapper.id)
+      }
+    }
+  }
+
   public destroy() {
     const stopTracing = this.logger.clone("destroy").startTracing()
     this.cleanUpCallbacks.forEach(cb => cb())
@@ -44,6 +66,10 @@ export class DescriptorRegistry {
 
   public getDescriptor<TDescriptor extends Descriptor>(tag: Tag): TDescriptor {
     return this.descriptorByTag.get(tag) as TDescriptor;
+  }
+
+  public findDescriptorById<TDescriptor extends Descriptor>(id: NativeId): TDescriptor | null {
+    return this.descriptorById.get(id) as (TDescriptor | null)
   }
 
   /**
@@ -80,7 +106,7 @@ export class DescriptorRegistry {
     descriptor.props = { ...descriptor.props, ...mergedProps };
     descriptor.rawProps = { ...descriptor.rawProps, ...mergedProps };
     const updatedDescriptor = { ...descriptor };
-    this.descriptorByTag.set(tag, updatedDescriptor);
+    this.saveDescriptor(updatedDescriptor)
 
     this.descriptorListenersSetByTag.get(tag)?.forEach(cb => cb(updatedDescriptor));
     this.callSubtreeListeners(new Set([tag]));
@@ -212,7 +238,7 @@ export class DescriptorRegistry {
 
   private applyMutation(mutation: Mutation): Tag[] {
     if (mutation.type === MutationType.CREATE) {
-      this.descriptorByTag.set(mutation.descriptor.tag, this.maybeOverwriteProps(mutation.descriptor));
+      this.saveDescriptor(this.maybeOverwriteProps(mutation.descriptor))
       return [];
     } else if (mutation.type === MutationType.INSERT) {
       const childDescriptor = this.descriptorByTag.get(mutation.childTag)!;
@@ -237,7 +263,7 @@ export class DescriptorRegistry {
         rawProps: { ...currentDescriptor!.rawProps, ...mutationDescriptor.rawProps, ...animatedProps },
         childrenTags: children,
       };
-      this.descriptorByTag.set(mutation.descriptor.tag, newDescriptor);
+      this.saveDescriptor(newDescriptor)
       return [mutation.descriptor.tag];
     } else if (mutation.type === MutationType.REMOVE) {
       const parentDescriptor = this.descriptorByTag.get(mutation.parentTag)!;
@@ -249,7 +275,7 @@ export class DescriptorRegistry {
       childDescriptor.parentTag = undefined;
       return [mutation.parentTag];
     } else if (mutation.type === MutationType.DELETE) {
-      this.descriptorByTag.delete(mutation.tag);
+      this.deleteDescriptor(mutation.tag)
       this.animatedRawPropsByTag.delete(mutation.tag);
       return [];
     } else if (mutation.type === MutationType.REMOVE_DELETE_TREE) {
@@ -291,7 +317,7 @@ export class DescriptorRegistry {
         }
       }
     }
-    this.descriptorByTag.set(tag, rootDescriptor)
+    this.saveDescriptor(rootDescriptor)
   }
 
   public deleteRootDescriptor(tag: Tag) {

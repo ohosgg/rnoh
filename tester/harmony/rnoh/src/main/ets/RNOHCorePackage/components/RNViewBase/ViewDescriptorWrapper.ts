@@ -11,7 +11,8 @@ import {
   DescriptorWrapper,
   Edges,
   Corners,
-  CompactValue
+  CompactValue,
+  NativeId
 } from "../../../RNOH"
 import { AccessibilityLevel, ViewBaseProps, ViewRawProps } from "./types"
 import matrix4 from '@ohos.matrix4'
