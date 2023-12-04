@@ -3,7 +3,7 @@ import { ScrollOffset } from "./types"
 
 export type CalculateSnapTargetParams = {
   currentOffset: ScrollOffset,
-  isPagingEnabled: boolean,
+  isPagingEnabled: boolean | undefined,
   offsets: number[] | undefined,
   interval: number | undefined,
   isHorizontalScroll: boolean,
