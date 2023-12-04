@@ -46,7 +46,7 @@ export class ParagraphMeasurer {
         const newLastLine = ellipsisInserter.insertEllipsis(
           includedLines[includedLines.length - 1],
           excludedLines[0],
-          containerConfig.width,
+          containerConfig.width - ((containerConfig.padding?.left ?? 0) + (containerConfig.padding?.right ?? 0)),
         );
         includedLines = [...includedLines.slice(0, -1), newLastLine];
       }

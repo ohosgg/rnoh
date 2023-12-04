@@ -10,7 +10,8 @@ import {
   getMaxLines,
   ellipsizeModeToTextOverflow,
   getTextShadow,
-  capitalizeTextIfNecessary
+  capitalizeTextIfNecessary,
+  addZeroWidthSpace
 } from './conversions'
 import { AttributedFragment } from './types';
 import { TextProps, EllipsizeMode, TextDescriptor } from './types'
@@ -45,7 +46,7 @@ export struct RNSimpleText {
       ctx: this.ctx,
       tag: this.tag,
     }) {
-      Text(this.fragment && capitalizeTextIfNecessary(this.fragment?.text, this.fragment?.textTransform))
+      Text(this.fragment && capitalizeTextIfNecessary(addZeroWidthSpace(this.fragment?.text), this.fragment?.textTransform))
         .fontColor(convertColorSegmentsToString(this.fragment?.fontColor))
         .fontFamily(this.fragment?.fontFamily)
         .fontWeight(this.fragment?.fontWeight)

@@ -68,13 +68,13 @@ export function TextTest() {
           </Text>
         </View>
       </TestCase>
-      <TestCase itShould="show text with different ellipsize mode">
+      <TestCase itShould="show text with different ellipsize mode and clip in the middle of second sentence">
         <View style={styles.hugeContainer}>
           <Text style={styles.smallText} ellipsizeMode="tail" numberOfLines={1}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            head, AReallyReallyLongSentenceWithoutSeperatorsOrSpaces.
           </Text>
           <Text style={styles.smallText} ellipsizeMode="clip" numberOfLines={1}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            head, AReallyReallyLongSentenceWithoutSeperatorsOrSpaces.
           </Text>
         </View>
       </TestCase>
@@ -718,6 +718,22 @@ export function TextTest() {
             <PressCounter />
           </Text>
         </TestCase>
+        <TestCase itShould="insert ellipsis at same location">
+          <View style={{width: 300}}>
+            <Text style={{ paddingRight:10, paddingLeft:10, fontSize:16, width: 150, backgroundColor:'red' }}
+              numberOfLines={1}
+              ellipsizeMode='tail'
+            >
+              {'fragment1'} fragment2
+            </Text>
+            <Text style={{ paddingRight:10, paddingLeft:10, fontSize:16, width: 150, backgroundColor:'red' }}
+              numberOfLines={1}
+              ellipsizeMode='tail'
+            >
+              fragment1 fragment2
+            </Text>
+          </View>
+        </TestCase>
       </TestSuite>
       <TestSuite name="nested texts">
         <TestCase itShould="show INNER and OUTER texts on the same height (various lineHeights)">
@@ -733,7 +749,7 @@ export function TextTest() {
             </Text>
           </View>
         </TestCase>
-        <TestCase itShould="show text with ellipsize at the end of the firs line">
+        <TestCase itShould="show text with ellipsize at the end of the first line">
           <Text ellipsizeMode="tail" numberOfLines={1}>
             Cupidatat irure velit id consequat magna irure quis laborum aute
             anim est cillum aliqua dolor.
