@@ -314,6 +314,10 @@ export function TextInputTest() {
       <TestCase modal itShould="render textinput with red text color">
         <TextInputWithText style={[styles.textInput, {color: 'red'}]} />
       </TestCase>
+      <TestCase modal itShould="clear text on focus">
+        {/* iOS only */}
+        <TextInputWithText style={styles.textInput} clearTextOnFocus />
+      </TestCase>
     </TestSuite>
   );
 }

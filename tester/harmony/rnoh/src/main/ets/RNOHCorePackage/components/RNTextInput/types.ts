@@ -23,6 +23,7 @@ export interface TextInputRawProps extends ViewRawProps {
   fontSize?: number
   fontStyle?: string
   autoFocus?: boolean
+  clearTextOnFocus?: boolean
 }
 
 export interface TextInputState {}

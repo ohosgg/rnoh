@@ -90,6 +90,7 @@ export struct RNTextInput {
   private textWasPastedOrCut: boolean = false
   private selection: Selection = { start: 0, end: 0 }
   private valueChanged: boolean = false
+  private shouldIgnoreNextSelectionChange: boolean = false
 
   handleChangeEvent(value: string) {
     this.value = value
@@ -97,6 +98,10 @@ export struct RNTextInput {
   }
 
   onFocusEvent() {
+    if (this.descriptorWrapper?.clearTextOnFocus) {
+      this.value = "";
+      this.shouldIgnoreNextSelectionChange = true;
+    }
     this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "onFocus", this.value)
   }
 
@@ -177,6 +182,10 @@ export struct RNTextInput {
   }
 
   textSelectionChange(currentSelectionStart: number, currentSelectionEnd: number): void {
+    if (this.shouldIgnoreNextSelectionChange) {
+      this.shouldIgnoreNextSelectionChange = false;
+      return;
+    }
     /**
      * New values of selection are needed to determine what key was pressed, so this.dispatchKeyEvent needs to be
      * invoked after this callback fires. OnChange callback fires earlier than OnTextSelectionChange, so all this logic

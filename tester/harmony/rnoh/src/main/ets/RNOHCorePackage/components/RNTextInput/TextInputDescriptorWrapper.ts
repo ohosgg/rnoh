@@ -46,4 +46,8 @@ export class TextInputDescriptorWrapper extends ViewDescriptorWrapperBase<string
   public get autoFocus(): boolean {
     return this.rawProps.autoFocus ?? false;
   }
+
+  public get clearTextOnFocus(): boolean {
+    return this.rawProps.clearTextOnFocus ?? false;
+  }
 }
