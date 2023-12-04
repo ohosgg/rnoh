@@ -1,4 +1,4 @@
-import { Descriptor} from '../../RNOH';
+import { Descriptor } from '../../RNOH';
 import { RNOHContext } from '../../RNOH'
 
 export interface PullToRefreshProps {}
@@ -26,20 +26,28 @@ export struct RNPullToRefreshView {
   @BuilderParam renderDescriptors: () => void
   @State private descriptor: PullToRefreshDescriptor = Object() as PullToRefreshDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined
+  private cleanUpCallbacks: (() => void)[] = []
   @State private isRefreshing: boolean = false // ignore linter, this variable is read
   private prevAndCurrentRefreshStatus: [RefreshStatus, RefreshStatus] = [RefreshStatus.Inactive, RefreshStatus.Inactive]
 
   aboutToAppear() {
     this.descriptor = this.ctx.descriptorRegistry.getDescriptor<PullToRefreshDescriptor>(this.tag)
-    this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
+    this.cleanUpCallbacks.push(this.ctx.componentCommandReceiver.registerCommandCallback(
+      this.tag,
+      (command, args: [boolean]) => {
+        if (command === 'setNativeRefreshing') {
+          this.isRefreshing = args[0]
+        }
+      }));
+    this.cleanUpCallbacks.push(this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
         this.onDescriptorChange(newDescriptor as PullToRefreshDescriptor)
       }
-    )
+    ));
   }
 
   aboutToDisappear() {
-    this.unregisterDescriptorChangesListener?.()
+    this.cleanUpCallbacks.forEach(cleanUp => cleanUp())
   }
 
   onDescriptorChange(descriptor: PullToRefreshDescriptor) {
@@ -48,6 +56,13 @@ export struct RNPullToRefreshView {
   }
 
   handleRefresh() {
+    /**
+     * We set this here to true and leave the responsibility of controlling it to the react-native side. If the developer
+     * doesn't set the refreshing prop of RefreshControl in react-native to true, then this will be turned off when the
+     * descriptor updates.
+     */
+    this.isRefreshing = true;
+
     // Emit this event only when a user initiated pull to refresh, not when RN changed `refreshing` prop.
     if ([RefreshStatus.Drag, RefreshStatus.OverDrag].includes(this.prevAndCurrentRefreshStatus[0])) {
       this.ctx.rnInstance.emitComponentEvent(
@@ -56,18 +71,6 @@ export struct RNPullToRefreshView {
         {}
       )
     }
-
-    /**
-     * `Refresh` should not be active, if `refreshing` prop is set to `false`. When a user activates the `Refresh`,
-     * the component sets `isRefreshing` to `true`. For unknown reason, if `isRefreshing` is set to `false` here
-     * without timeout, and soon after `isRefreshing` is set back to `true` by `refreshing` prop,
-     * that second change is ignored.
-     */
-    setTimeout(() => {
-      if (!this.descriptor.rawProps.refreshing) {
-        this.isRefreshing = false
-      }
-    }, 500)
   }
 
   @Builder
