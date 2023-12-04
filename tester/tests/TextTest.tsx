@@ -199,6 +199,52 @@ export function TextTest() {
             </Text>
           </View>
         </TestCase>
+        <TestCase itShould="align text same way after adding padding">
+          <View style={{height: 70, flexDirection: 'column'}}>
+            <Text
+              style={{
+                paddingLeft:10,
+                paddingRight:40,
+                backgroundColor:'red',
+                maxWidth:200,
+                textAlign:'center',
+              }}
+            >
+              {'fragment1'}fragment2
+            </Text>
+            <Text
+              style={{
+                paddingLeft:10,
+                paddingRight:40,
+                backgroundColor:'red',
+                maxWidth:200,
+                textAlign:'center',
+              }}
+            >
+              fragment1fragment2
+            </Text>
+            <Text
+              style={{
+                paddingRight:10,
+                backgroundColor:'red',
+                maxWidth:200,
+                textAlign:'right',
+              }}
+            >
+              {'fragment1'}fragment2
+            </Text>
+            <Text
+              style={{
+                paddingRight:10,
+                backgroundColor:'red',
+                maxWidth:200,
+                textAlign:'right',
+              }}
+            >
+              fragment1fragment2
+            </Text>
+          </View>
+        </TestCase>
         <TestCase itShould="show text with different textDecorationLines">
           <View style={styles.container}>
             <Text style={styles.text}>None</Text>

@@ -128,7 +128,7 @@ export class ParagraphMeasurer {
       return this.alignFragmentsHorizontally(
         lines,
         horizontalAlignment,
-        containerConfig.width,
+        containerConfig.width - ((containerConfig.padding?.left ?? 0) + (containerConfig.padding?.right ?? 0)),
       );
     }
     return lines;
