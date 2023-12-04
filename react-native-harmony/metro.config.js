@@ -34,15 +34,15 @@ function createHarmonyMetroConfig(options) {
       /** By default, Metro pickups files from native, "harmony" directory what causes conflicts.  */
       blockList: [/\\harmony\/.*/],
       resolveRequest: (ctx, moduleName, platform) => {
-        if (shouldPrintInfoAboutRNRedirection) {
-          info(
-            `Redirected imports from ${colors.bold(
-              colors.gray('react-native')
-            )} to ${colors.bold(reactNativeHarmonyName)}`
-          );
-          shouldPrintInfoAboutRNRedirection = false;
-        }
         if (platform === 'harmony') {
+          if (shouldPrintInfoAboutRNRedirection) {
+            info(
+              `Redirected imports from ${colors.bold(
+                colors.gray('react-native'),
+              )} to ${colors.bold(reactNativeHarmonyName)}`,
+            );
+            shouldPrintInfoAboutRNRedirection = false;
+          }
           if (moduleName === 'react-native') {
             return ctx.resolveRequest(ctx, reactNativeHarmonyName, platform);
           } else if (moduleName.startsWith('react-native/')) {
@@ -53,16 +53,16 @@ function createHarmonyMetroConfig(options) {
             if (moduleName.startsWith('.')) {
               const moduleAbsPath = pathUtils.resolve(
                 pathUtils.dirname(ctx.originModulePath),
-                moduleName
+                moduleName,
               );
               const [_, modulePathRelativeToReactNative] = moduleAbsPath.split(
-                `${pathUtils.sep}node_modules${pathUtils.sep}react-native${pathUtils.sep}`
+                `${pathUtils.sep}node_modules${pathUtils.sep}react-native${pathUtils.sep}`,
               );
               try {
                 return ctx.resolveRequest(
                   ctx,
                   `${reactNativeHarmonyName}${pathUtils.sep}${modulePathRelativeToReactNative}`,
-                  'harmony'
+                  'harmony',
                 );
               } catch (err) {}
             }
@@ -84,13 +84,13 @@ function createHarmonyMetroConfig(options) {
                 harmonyPackageName &&
                 !isRequestFromHarmonyPackage(
                   ctx.originModulePath,
-                  harmonyPackageName
+                  harmonyPackageName,
                 )
               ) {
                 return ctx.resolveRequest(
                   ctx,
                   moduleName.replace(alias, harmonyPackageName),
-                  platform
+                  platform,
                 );
               }
             }
@@ -134,7 +134,7 @@ function getPackageName(moduleName) {
  */
 function isInternalReactNativeRelativeImport(originModulePath) {
   return originModulePath.includes(
-    `${pathUtils.sep}node_modules${pathUtils.sep}react-native${pathUtils.sep}`
+    `${pathUtils.sep}node_modules${pathUtils.sep}react-native${pathUtils.sep}`,
   );
 }
 
@@ -145,7 +145,7 @@ function isInternalReactNativeRelativeImport(originModulePath) {
  */
 function isRequestFromHarmonyPackage(originModulePath, harmonyPackageName) {
   return originModulePath.includes(
-    `${pathUtils.sep}node_modules${pathUtils.sep}${harmonyPackageName}${pathUtils.sep}`
+    `${pathUtils.sep}node_modules${pathUtils.sep}${harmonyPackageName}${pathUtils.sep}`,
   );
 }
 
@@ -166,10 +166,10 @@ function getHarmonyPackageNameByAlias(projectRootPath) {
     return cachedHarmonyPackageAliasByName;
   }
   cachedHarmonyPackageAliasByName = findHarmonyNodeModulePaths(
-    findHarmonyNodeModuleSearchPaths(projectRootPath)
+    findHarmonyNodeModuleSearchPaths(projectRootPath),
   ).reduce((acc, harmonyNodeModulePath) => {
     const harmonyNodeModulePathSegments = harmonyNodeModulePath.split(
-      pathUtils.sep
+      pathUtils.sep,
     );
     let harmonyNodeModuleName =
       harmonyNodeModulePathSegments[harmonyNodeModulePathSegments.length - 1];
@@ -189,24 +189,24 @@ function getHarmonyPackageNameByAlias(projectRootPath) {
     return acc;
   }, initialAcc);
   const harmonyPackagesCount = Object.keys(
-    cachedHarmonyPackageAliasByName
+    cachedHarmonyPackageAliasByName,
   ).length;
   if (harmonyPackagesCount > 0) {
     const prettyHarmonyPackagesCount = colors.bold(
       harmonyPackagesCount > 0
         ? colors.green(harmonyPackagesCount.toString())
-        : harmonyPackagesCount.toString()
+        : harmonyPackagesCount.toString(),
     );
     info(
-      `Redirected imports to ${prettyHarmonyPackagesCount} harmony-specific third-party package(s):`
+      `Redirected imports to ${prettyHarmonyPackagesCount} harmony-specific third-party package(s):`,
     );
     if (harmonyPackagesCount > 0) {
       Object.entries(cachedHarmonyPackageAliasByName).forEach(
         ([original, alias]) => {
           info(
-            `• ${colors.bold(colors.gray(original))} → ${colors.bold(alias)}`
+            `• ${colors.bold(colors.gray(original))} → ${colors.bold(alias)}`,
           );
-        }
+        },
       );
     }
   } else {
@@ -225,8 +225,8 @@ function findHarmonyNodeModuleSearchPaths(projectRootPath) {
   const nodeModulesPath = `${projectRootPath}${pathUtils.sep}node_modules`;
   const searchPaths = fs
     .readdirSync(nodeModulesPath)
-    .filter((dirName) => dirName.startsWith('@'))
-    .map((dirName) => `${nodeModulesPath}${pathUtils.sep}${dirName}`);
+    .filter(dirName => dirName.startsWith('@'))
+    .map(dirName => `${nodeModulesPath}${pathUtils.sep}${dirName}`);
   searchPaths.push(nodeModulesPath);
   return searchPaths;
 }
@@ -237,10 +237,10 @@ function findHarmonyNodeModuleSearchPaths(projectRootPath) {
  */
 function findHarmonyNodeModulePaths(searchPaths) {
   return searchPaths
-    .map((searchPath) => {
+    .map(searchPath => {
       return fs
         .readdirSync(searchPath)
-        .map((dirName) => `${searchPath}${pathUtils.sep}${dirName}`)
+        .map(dirName => `${searchPath}${pathUtils.sep}${dirName}`)
         .filter(hasNodeModulePathHarmonyCode);
     })
     .flat();
