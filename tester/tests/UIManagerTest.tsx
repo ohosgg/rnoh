@@ -114,9 +114,109 @@ export function UIManagerTest() {
           expect(UIManager.hasViewManagerConfig('RCTNotAView')).to.be.false;
         }}
       />
+      <TestCase
+        itShould="measure the view with respect to the window"
+        initialState={
+          {} as {x: number; y: number; width: number; height: number}
+        }
+        arrange={({setState, state}) => (
+          <MeasureInWindowTest setState={setState} />
+        )}
+        assert={({state, expect}) => {
+          expect(state.width).to.be.equal(20);
+          expect(state.height).to.be.equal(20);
+          expect(state.x).to.be.greaterThan(10);
+          expect(state.y).to.be.greaterThan(100);
+        }}
+      />
+      <TestCase
+        itShould="measure the view with respect to the parent"
+        initialState={
+          {} as {x: number; y: number; width: number; height: number}
+        }
+        arrange={({setState}) => <MeasureLayoutTest setState={setState} />}
+        assert={({state, expect}) => {
+          expect(state.width).to.be.equal(20);
+          expect(state.height).to.be.equal(20);
+          expect(state.x).to.be.equal(10);
+          expect(state.y).to.be.equal(20);
+        }}
+      />
     </TestSuite>
   );
 }
+const MeasureLayoutTest = (props: {
+  setState: React.Dispatch<
+    React.SetStateAction<{x: number; y: number; width: number; height: number}>
+  >;
+}) => {
+  const ref = useRef<View>(null);
+  const containerRef = useRef<View>(null);
+  return (
+    <>
+      <View
+        style={{
+          width: 100,
+          height: 100,
+          backgroundColor: 'red',
+          paddingLeft: 10,
+          paddingTop: 20,
+        }}
+        ref={containerRef}>
+        <View
+          style={{
+            width: 20,
+            height: 20,
+            backgroundColor: 'blue',
+          }}
+          ref={ref}></View>
+      </View>
+      <Button
+        label="measureLayout"
+        onPress={() => {
+          if (ref.current && containerRef.current) {
+            ref.current?.measureLayout(
+              containerRef.current,
+              (x, y, width, height) => {
+                props.setState({x: x, y: y, width: width, height: height});
+              },
+              () => {
+                props.setState({x: -1, y: -1, width: -1, height: -1});
+              },
+            );
+          }
+        }}
+      />
+    </>
+  );
+};
+
+const MeasureInWindowTest = (props: {
+  setState: React.Dispatch<
+    React.SetStateAction<{x: number; y: number; width: number; height: number}>
+  >;
+}) => {
+  const ref = useRef<View>(null);
+  return (
+    <>
+      <View
+        style={{
+          width: 20,
+          height: 20,
+          backgroundColor: 'blue',
+        }}
+        ref={ref}></View>
+      <Button
+        label="measureInWindow"
+        onPress={() => {
+          ref.current?.measureInWindow((x, y, width, height) => {
+            props.setState({x: x, y: y, width: width, height: height});
+          });
+        }}
+      />
+    </>
+  );
+};
 
 function DispatchCommandTest() {
   const ref = useRef<ScrollView>(null);
