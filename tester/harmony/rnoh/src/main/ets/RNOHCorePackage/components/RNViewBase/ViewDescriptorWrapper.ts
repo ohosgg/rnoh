@@ -40,13 +40,13 @@ export class ViewDescriptorWrapperBase<TType extends string = string, TProps ext
 
   public get borderWidth(): Edges<number | undefined> {
     return this.resolveEdges({
-      all: this.rawProps.borderWidth,
-      top: this.rawProps.borderTopWidth,
-      left: this.rawProps.borderLeftWidth,
-      right: this.rawProps.borderRightWidth,
-      bottom: this.rawProps.borderBottomWidth,
-      start: this.rawProps.borderStartWidth,
-      end: this.rawProps.borderEndWidth,
+      all: Number(this.rawProps.borderWidth) < 0 ? 0 : this.rawProps.borderWidth,
+      top: Number(this.rawProps.borderTopWidth) < 0 ? 0 : this.rawProps.borderTopWidth,
+      left: Number(this.rawProps.borderLeftWidth) < 0 ? 0 : this.rawProps.borderLeftWidth,
+      right: Number(this.rawProps.borderRightWidth) < 0 ? 0 : this.rawProps.borderRightWidth,
+      bottom: Number(this.rawProps.borderBottomWidth) < 0 ? 0 : this.rawProps.borderBottomWidth,
+      start: Number(this.rawProps.borderStartWidth) < 0 ? 0 : this.rawProps.borderStartWidth,
+      end: Number(this.rawProps.borderEndWidth) < 0 ? 0 : this.rawProps.borderEndWidth,
     })
   }
 
