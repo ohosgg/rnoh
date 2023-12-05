@@ -124,28 +124,7 @@ export class DescriptorRegistry {
   }
 
   public applyMutations(mutations: Mutation[]) {
-    const countByMutationType = mutations.reduce((acc, el) => {
-      acc[getHumanNameFromMutationType(el.type)] += 1
-      return acc
-    }, {
-      "CREATE": 0,
-      "DELETE": 0,
-      "INSERT": 0,
-      "REMOVE": 0,
-      "UPDATE": 0,
-      "REMOVE_DELETE_TREE": 0,
-      "UNKNOWN": 0
-    })
-    let formattedCountByMutationType = Object.entries(countByMutationType).reduce((acc, [mutationName, count]) => {
-      if (count > 0) {
-        acc += `${mutationName}: ${count}, `
-      }
-      return acc
-    }, "")
-    if (formattedCountByMutationType.endsWith(', ')) {
-      formattedCountByMutationType = formattedCountByMutationType.slice(0, -2)
-    }
-    const stopTracing = this.logger.clone(`applyMutations (${formattedCountByMutationType})`).startTracing()
+    this.logger.clone("applyMutations").debug()
     const updatedDescriptorTags = new Set(mutations.flatMap(mutation => {
       return this.applyMutation(mutation)
     }
@@ -155,11 +134,9 @@ export class DescriptorRegistry {
       return;
     }
     this.callListeners(updatedDescriptorTags)
-    stopTracing()
   }
 
   private callListeners(tags: Set<Tag>): void {
-    const stopTracing = this.logger.clone(`callListeners (tags.size: ${tags.size})`).startTracing()
     tags.forEach(tag => {
       const updatedDescriptor = this.getDescriptor(tag);
       if (!updatedDescriptor) return;
@@ -168,7 +145,6 @@ export class DescriptorRegistry {
       });
     });
     this.callSubtreeListeners(tags);
-    stopTracing()
   }
 
   private callSubtreeListeners(updatedDescriptorTags: Set<Tag>) {

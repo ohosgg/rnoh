@@ -132,7 +132,7 @@ class ConcreteComponentDescriptor : public ComponentDescriptor {
       Float animationProgress,
       const Props::Shared &props,
       const Props::Shared &newProps) const override {
-#ifdef ANDROID
+#ifdef RAW_PROPS_ENABLED // RNOH: patch
     // On Android only, the merged props should have the same RawProps as the
     // final props struct
     Props::Shared interpolatedPropsShared =

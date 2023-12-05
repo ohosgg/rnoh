@@ -452,4 +452,4 @@ target_link_libraries(rnoh PUBLIC
     react_bridging
     react_render_animations
 )
-target_compile_options(rnoh PUBLIC ${folly_compile_options} -std=c++17)
+target_compile_options(rnoh PUBLIC ${folly_compile_options} -DRAW_PROPS_ENABLED -std=c++17)

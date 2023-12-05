@@ -8,6 +8,7 @@ import type {
   Tag,
   TouchTargetHelperDelegate,
   Edges,
+  RNOHLogger
 } from '../../RNOH';
 import { ComponentManager } from '../../RNOH';
 import { ViewDescriptorWrapperBase } from "../components/RNViewBase/ViewDescriptorWrapper"
@@ -25,6 +26,7 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
   protected parentTag: Tag;
   private cleanUpCallbacks: (() => void)[] = []
   private isBoundingBoxDirty = true
+  private logger: RNOHLogger
 
   constructor(
     protected tag: Tag,
@@ -37,6 +39,7 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
     this.cleanUpCallbacks.push(this.descriptorRegistry.subscribeToDescriptorChanges(this.tag, (descriptor) => {
       this.onDescriptorChange(descriptor)
     }))
+    this.logger = ctx.logger.clone(`RNViewManager`)
   }
 
   public onDestroy() {
@@ -123,6 +126,7 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
   }
 
   protected calculateBoundingBox() {
+    this.logger.clone('calculateBoundingBox').debug()
     const descriptorWrapper = this.getDescriptorWrapper();
     if (!descriptorWrapper) {
       return { left: 0, right: 0, top: 0, bottom: 0 };

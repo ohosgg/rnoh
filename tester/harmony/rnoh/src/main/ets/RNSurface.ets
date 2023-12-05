@@ -125,9 +125,9 @@ export struct RNSurface {
   }
 
   handleTouch(event: TouchEvent) {
-    const stopTracing = this.logger.clone("handleTouch").startTracing()
+    this.logger.clone("handleTouch").debug()
     this.touchDispatcher.handleTouchEvent(event)
-    stopTracing()
+
   }
 
   build() {

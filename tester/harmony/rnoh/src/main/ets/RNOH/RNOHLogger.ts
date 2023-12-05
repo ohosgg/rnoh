@@ -37,7 +37,7 @@ type ScheduledLog = {
   formattedPath: string,
   offset: number,
   severity: Severity,
-  requestDate: Date,
+  createdAt: Date,
   timer?: ReturnType<typeof setTimeout>
   logFn: (scheduledLog: Omit<ScheduledLog, "logFn">, throttlesCount: number) => void
 }
@@ -47,24 +47,20 @@ export class StandardRNOHLogger implements RNOHLogger {
   private static scheduleLog(newScheduledLog: ScheduledLog) {
     const cls = StandardRNOHLogger
     if (cls.recentLog) {
-      if (cls.scheduledLog?.timer) {
-        clearTimeout(cls.scheduledLog.timer)
-        cls.scheduledLog.timer = undefined
-      }
       if (cls.THROTTLE_IN_MS === 0) {
         cls.scheduledLog = newScheduledLog
         cls.flushScheduledLog()
       } else if (cls.hasLogChanged(newScheduledLog)) {
         cls.flushScheduledLog()
-        cls.scheduledLog = newScheduledLog
-        cls.flushScheduledLog()
-      } else if ((new Date().getTime() - cls.THROTTLE_IN_MS) < (cls.recentLogDate?.getTime() ?? 0)) {
         cls.scheduledLog = { ...newScheduledLog, timer: setTimeout(() => {
           cls.flushScheduledLog()
         }, cls.THROTTLE_IN_MS) }
+      } else if ((new Date().getTime() - cls.THROTTLE_IN_MS) < (cls.scheduledLog?.createdAt?.getTime() ?? 0)) {
         cls.recentThrottlesCount++
-        cls.recentLog = cls.scheduledLog
-        cls.recentLogDate = new Date()
+      } else {
+        cls.scheduledLog = { ...newScheduledLog, timer: setTimeout(() => {
+          cls.flushScheduledLog()
+        }, cls.THROTTLE_IN_MS) }
       }
     } else {
       cls.scheduledLog = newScheduledLog
@@ -81,7 +77,6 @@ export class StandardRNOHLogger implements RNOHLogger {
     }
     if (cls.scheduledLog) {
       cls.scheduledLog.logFn(cls.scheduledLog, cls.recentThrottlesCount)
-      cls.recentLogDate = new Date()
       cls.recentThrottlesCount = 0
       cls.recentLog = cls.scheduledLog
       cls.scheduledLog = undefined
@@ -117,7 +112,6 @@ export class StandardRNOHLogger implements RNOHLogger {
   private static scheduledLog: ScheduledLog | undefined = undefined
   private static recentLog: ScheduledLog = undefined
   private static recentThrottlesCount: number = 0
-  private static recentLogDate: Date | undefined = undefined
   public static THROTTLE_IN_MS = 1000
 
   private formattedPath: string = ""
@@ -171,16 +165,19 @@ export class StandardRNOHLogger implements RNOHLogger {
     if (this.severityValueByName[severity] < this.severityValueByName[this.minSeverity]) {
       return;
     }
+    if (args.length === 0) {
+      args.push("")
+    }
     StandardRNOHLogger.scheduleLog({
       args,
       offset,
       severity,
       formattedPath: this.formattedPath,
-      requestDate: new Date(),
+      createdAt: new Date(),
       logFn: (scheduledLog, throttlesCount) => {
         const formattedOffset = new Array(scheduledLog.offset).fill(" ").join("")
-        const formattedThrottleCount = throttlesCount > 1 ? ` (x${throttlesCount })` : ''
-        hilog[severity](this.getDomain(), this.getTag(), `█__ ${formattedOffset}${scheduledLog.formattedPath}%{public}s${formattedThrottleCount}`, ...args)
+        const formattedLogRequestCounter = throttlesCount > 0 ? ` (x${throttlesCount + 1})` : ''
+        hilog[severity](this.getDomain(), this.getTag(), `█__ ${formattedOffset}${scheduledLog.formattedPath}%{public}s${formattedLogRequestCounter}`, ...args)
       }
     })
   }
