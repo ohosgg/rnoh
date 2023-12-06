@@ -52,9 +52,9 @@ const PanResponderInScrollView = () => {
           <View style={styles.box} />
         </Animated.View>
       </View>
-      <View style={[styles.base, styles.view2]}></View>
-      <View style={[styles.base, styles.view1]}></View>
-      <View style={[styles.base, styles.view2]}></View>
+      <View style={[styles.base, styles.view2]} />
+      <View style={[styles.base, styles.view1]} />
+      <View style={[styles.base, styles.view2]} />
     </ScrollView>
   );
 };

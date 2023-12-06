@@ -22,7 +22,9 @@ export function Benchmarker({
   }
 
   useEffect(() => {
-    if (status === 'READY') return;
+    if (status === 'READY') {
+      return;
+    }
     setTimeout(() => {
       setRefreshKey(prevKey => {
         if (prevKey >= samplesCount) {
@@ -51,7 +53,7 @@ export function Benchmarker({
             fontWeight: 'bold',
             color: status !== 'RUNNING' ? 'blue' : 'black',
           }}>
-          {status === 'RUNNING' ? 'Running...' : `Start`}
+          {status === 'RUNNING' ? 'Running...' : 'Start'}
         </Text>
       </TouchableOpacity>
 

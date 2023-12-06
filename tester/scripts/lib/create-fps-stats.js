@@ -5,7 +5,9 @@
  */
 function createFpsStats(frameTimesInSec) {
   const sampleSize = frameTimesInSec.length;
-  if (sampleSize === 0) return null;
+  if (sampleSize === 0) {
+    return null;
+  }
   // treat frame times that took longer than seconds as outliers
   const filteredFrameTimesInSec = frameTimesInSec.filter(
     frameTimesInSec => frameTimesInSec < 1,

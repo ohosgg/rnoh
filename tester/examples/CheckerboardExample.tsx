@@ -44,8 +44,12 @@ function Button({onPress}: {label: string; onPress: () => void}) {
 
 function Box({colorId}: {colorId: number}) {
   function getColor() {
-    if (colorId === 1) return '#0F0';
-    if (colorId === 2) return '#00F';
+    if (colorId === 1) {
+      return '#0F0';
+    }
+    if (colorId === 2) {
+      return '#00F';
+    }
     return '#F00';
   }
   return (

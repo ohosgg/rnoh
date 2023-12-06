@@ -159,8 +159,7 @@ function TouchCoordinatesTest({
             x: Math.round(e.nativeEvent.locationX),
             y: Math.round(e.nativeEvent.locationY),
           });
-        }}
-      >
+        }}>
         <Text>Top left</Text>
       </View>
     </View>

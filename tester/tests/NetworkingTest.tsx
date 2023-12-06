@@ -1,5 +1,5 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
-import { TestCase, TestSuite } from '@rnoh/testerino';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import {TestCase, TestSuite} from '@rnoh/testerino';
 import React from 'react';
 
 const WebSocketEcho = () => {
@@ -61,24 +61,24 @@ export const NetworkingTest = () => {
     <TestSuite name="Networking">
       <TestCase
         itShould="download data"
-        fn={async ({ expect }) => {
+        fn={async ({expect}) => {
           const response = await fetch('https://reactnative.dev/movies.json');
           const result = await response.text();
           const parsed = JSON.parse(result);
-          expect(parsed['title']).to.be.eq('The Basics - Networking');
+          expect(parsed.title).to.be.eq('The Basics - Networking');
         }}
       />
       <TestCase
         itShould="download and parse JSON data"
-        fn={async ({ expect }) => {
+        fn={async ({expect}) => {
           const response = await fetch('https://reactnative.dev/movies.json');
           const result = await response.json();
-          expect(result['title']).to.be.eq('The Basics - Networking');
+          expect(result.title).to.be.eq('The Basics - Networking');
         }}
       />
       <TestCase
         itShould="download data to an ArrayBuffer"
-        fn={async ({ expect }) => {
+        fn={async ({expect}) => {
           const response = await fetch('https://reactnative.dev/movies.json');
           const result = await response.arrayBuffer();
           expect(result.byteLength).to.be.eq(458);
@@ -86,7 +86,7 @@ export const NetworkingTest = () => {
       />
       <TestCase
         itShould="download data to a blob"
-        fn={async ({ expect }) => {
+        fn={async ({expect}) => {
           const response = await fetch('https://reactnative.dev/movies.json');
           const result = await response.blob();
           expect(result.size).to.be.eq(458);
@@ -97,7 +97,7 @@ export const NetworkingTest = () => {
       />
       <TestCase
         itShould="fail on bad url"
-        fn={async ({ expect }) => {
+        fn={async ({expect}) => {
           const received = await canFetch(
             'https://reactnative.dev/bad_url.json',
           );

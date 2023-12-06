@@ -62,8 +62,9 @@ const getFrameTimes = hitraceOutput => {
   }
 
   frameTimes = [];
-  for (i = 1; i < repaintTimestamps.length; i++)
+  for (i = 1; i < repaintTimestamps.length; i++) {
     frameTimes.push(repaintTimestamps[i] - repaintTimestamps[i - 1]);
+  }
   return frameTimes;
 };
 

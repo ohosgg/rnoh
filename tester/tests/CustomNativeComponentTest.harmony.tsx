@@ -19,7 +19,7 @@ const SampleView = requireNativeComponent<ViewProps & {size: number}>(
 
 /**
  * 2) An alternative to JSI binders and `requireNativeComponent` is `registerViewConfig` function (Harmony-only API).
- * 
+ *
     const SampleView = registerViewConfig('SampleView', () => {
       return {
         uiViewClassName: 'SampleView',

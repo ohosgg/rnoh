@@ -37,8 +37,9 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  if (expect.getState().assertionCalls != expect.getState().numPassingAsserts)
+  if (expect.getState().assertionCalls != expect.getState().numPassingAsserts) {
     console.log(JSON.stringify(result, null, 2));
+  }
 });
 
 describe('ParagraphMeasurer', () => {

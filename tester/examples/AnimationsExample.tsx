@@ -27,16 +27,19 @@ export function AnimationsExample() {
         }, 1)
       : undefined;
     return () => {
-      if (timerId) clearInterval(timerId);
+      if (timerId) {
+        clearInterval(timerId);
+      }
     };
   }, [isIntervalRunning]);
 
   useEffect(() => {
     let timerId: any;
-    if (isTogglingComponent)
+    if (isTogglingComponent) {
       timerId = setInterval(() => {
         setIsComponentVisible(prev => !prev);
       }, 1000);
+    }
     return () => {
       if (timerId) {
         clearInterval(timerId);
@@ -128,13 +131,13 @@ export function AnimationsExample() {
       x.stop();
       xNative.stop();
       fade.stop();
-    }
+    };
   }, []);
-  
+
   const spin = xAnimNative.interpolate({
     inputRange: [0, 100],
-    outputRange: ['0deg', '180deg']
-  })  
+    outputRange: ['0deg', '180deg'],
+  });
 
   return (
     <ScrollView>
@@ -201,89 +204,100 @@ export function AnimationsExample() {
           }}>
           <Text style={{height: 24}}>Position</Text>
         </Animated.View>
-          <>
-            <Animated.View
-              style={{
-                height: 100,
-                width: 100,
-                transform: [{translateX: xAnim}],
-                backgroundColor: 'red',
-              }}>
-              <Text style={{height: 24}}>Transform</Text>
-            </Animated.View>
-            <Animated.View
-              style={{
-                height: 100,
-                width: 100,
-                transform: [{translateX: xAnimNative}],
-                backgroundColor: 'red',
-              }}>
-              <Text style={{height: 24}}>Native driver</Text>
-            </Animated.View>
-            <Animated.View
-              style={{
-                height: 100,
-                width: 100,
-                transform: [{translateX: Animated.add(xAnimNative, 50)}],
-                backgroundColor: 'red',
-              }}>
-              <Text style={{height: 48}}>Native driver Addition</Text>
-            </Animated.View>
-            <Animated.View
-              style={{
-                height: 100,
-                width: 100,
-                transform: [{translateX: Animated.multiply(xAnimNative, yAnimNative)}],
-                backgroundColor: 'red',
-              }}>
-              <Text style={{height: 48}}>Native driver Multiplication</Text>
-            </Animated.View>
-            <Animated.View
-              style={{
-                height: 100,
-                width: 100,
-                transform: [{translateX: Animated.divide(xAnimNative, Animated.add(yAnimNative, 1))}],
-                backgroundColor: 'red',
-              }}>
-              <Text style={{height: 48}}>Native driver Division</Text>
-            </Animated.View>
-            <Animated.View
-              style={{
-                height: 100,
-                width: 100,
-                transform: [{translateX: Animated.subtract(xAnimNative, 50)}],
-                backgroundColor: 'red',
-              }}>
-              <Text style={{height: 48}}>Native driver Subtraction</Text>
-            </Animated.View>
-            <Animated.View
-              style={{
-                height: 100,
-                width: 100,
-                transform: [{scaleX: Animated.add(Animated.divide(xAnimNative, 100), 0.5)}],
-                backgroundColor: 'red',
-              }}>
-              <Text style={{height: 48}}>Native driver scale</Text>
-            </Animated.View>
-            <Animated.View
-              style={{
-                height: 100,
-                width: 100,
-                transform: [{rotate: spin}],
-                backgroundColor: 'red',
-              }}>
-              <Text style={{height: 48}}>Native driver rotate</Text>
-            </Animated.View>
-            <Animated.View
-              style={{
-                height: 100,
-                width: 100,
-                transform: [{rotateX: spin}, {rotateY: spin}],
-                backgroundColor: 'red',
-              }}>
-              <Text style={{height: 48}}>Native driver rotate X&Y</Text>
-            </Animated.View>
-          </>
+        <>
+          <Animated.View
+            style={{
+              height: 100,
+              width: 100,
+              transform: [{translateX: xAnim}],
+              backgroundColor: 'red',
+            }}>
+            <Text style={{height: 24}}>Transform</Text>
+          </Animated.View>
+          <Animated.View
+            style={{
+              height: 100,
+              width: 100,
+              transform: [{translateX: xAnimNative}],
+              backgroundColor: 'red',
+            }}>
+            <Text style={{height: 24}}>Native driver</Text>
+          </Animated.View>
+          <Animated.View
+            style={{
+              height: 100,
+              width: 100,
+              transform: [{translateX: Animated.add(xAnimNative, 50)}],
+              backgroundColor: 'red',
+            }}>
+            <Text style={{height: 48}}>Native driver Addition</Text>
+          </Animated.View>
+          <Animated.View
+            style={{
+              height: 100,
+              width: 100,
+              transform: [
+                {translateX: Animated.multiply(xAnimNative, yAnimNative)},
+              ],
+              backgroundColor: 'red',
+            }}>
+            <Text style={{height: 48}}>Native driver Multiplication</Text>
+          </Animated.View>
+          <Animated.View
+            style={{
+              height: 100,
+              width: 100,
+              transform: [
+                {
+                  translateX: Animated.divide(
+                    xAnimNative,
+                    Animated.add(yAnimNative, 1),
+                  ),
+                },
+              ],
+              backgroundColor: 'red',
+            }}>
+            <Text style={{height: 48}}>Native driver Division</Text>
+          </Animated.View>
+          <Animated.View
+            style={{
+              height: 100,
+              width: 100,
+              transform: [{translateX: Animated.subtract(xAnimNative, 50)}],
+              backgroundColor: 'red',
+            }}>
+            <Text style={{height: 48}}>Native driver Subtraction</Text>
+          </Animated.View>
+          <Animated.View
+            style={{
+              height: 100,
+              width: 100,
+              transform: [
+                {scaleX: Animated.add(Animated.divide(xAnimNative, 100), 0.5)},
+              ],
+              backgroundColor: 'red',
+            }}>
+            <Text style={{height: 48}}>Native driver scale</Text>
+          </Animated.View>
+          <Animated.View
+            style={{
+              height: 100,
+              width: 100,
+              transform: [{rotate: spin}],
+              backgroundColor: 'red',
+            }}>
+            <Text style={{height: 48}}>Native driver rotate</Text>
+          </Animated.View>
+          <Animated.View
+            style={{
+              height: 100,
+              width: 100,
+              transform: [{rotateX: spin}, {rotateY: spin}],
+              backgroundColor: 'red',
+            }}>
+            <Text style={{height: 48}}>Native driver rotate X&Y</Text>
+          </Animated.View>
+        </>
         {isComponentVisible && (
           <View
             style={{

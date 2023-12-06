@@ -61,7 +61,8 @@ export function AnimatedValueTest() {
           }}
           assert={({state, expect}) => {
             expect(state).to.be.eq(JSON.stringify({left: 1, top: 1}));
-          }}></TestCase>
+          }}
+        />
         <TestCase itShould="move square to the right after extract offset">
           <ExtractOffsetView />
         </TestCase>
@@ -206,7 +207,9 @@ const ListenerView = (props: {singular: boolean}) => {
   };
   const removeListener = () => {
     const lastListener = listeners.pop();
-    if (lastListener) value.removeListener(lastListener);
+    if (lastListener) {
+      value.removeListener(lastListener);
+    }
     checkListener();
   };
   const removeAll = () => {

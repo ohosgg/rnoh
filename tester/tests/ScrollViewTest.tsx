@@ -59,7 +59,8 @@ export function ScrollViewTest() {
                 borderTopWidth: 6,
                 borderRightWidth: 9,
                 borderBottomWidth: 12,
-              }}></ScrollView>
+              }}
+            />
           </View>
         </TestCase>
         <TestCase
@@ -75,7 +76,8 @@ export function ScrollViewTest() {
                 borderTopColor: 'chocolate',
                 borderRightColor: 'black',
                 borderBottomColor: 'blue',
-              }}></ScrollView>
+              }}
+            />
           </View>
         </TestCase>
         <TestCase
@@ -92,7 +94,8 @@ export function ScrollViewTest() {
                 borderTopEndRadius: 20,
                 borderBottomEndRadius: 30,
                 borderBottomStartRadius: 40,
-              }}></ScrollView>
+              }}
+            />
           </View>
         </TestCase>
         <TestCase
@@ -108,7 +111,8 @@ export function ScrollViewTest() {
                 borderTopWidth: 6,
                 borderEndWidth: 9,
                 borderBottomWidth: 12,
-              }}></ScrollView>
+              }}
+            />
           </View>
         </TestCase>
         <TestCase
@@ -171,7 +175,8 @@ export function ScrollViewTest() {
                 borderTopWidth: 6,
                 borderRightWidth: 9,
                 borderBottomWidth: 12,
-              }}></ScrollView>
+              }}
+            />
           </View>
         </TestCase>
         <TestCase
@@ -692,7 +697,7 @@ function SnapTestCases(props: {scrollViewProps: ScrollViewProps}) {
       </TestSuite>
     </>
   );
-};
+}
 const Item = (props: {label: string; mode: 'dark' | 'light'}) => {
   const stylesheet = StyleSheet.create({
     dark: {
@@ -893,7 +898,7 @@ function ScrollToOverflowEnabledTestCase() {
   return (
     <View style={styles.wrapperView}>
       <Button
-        label={`Scroll outside of the content`}
+        label={'Scroll outside of the content'}
         onPress={() => {
           ref.current?.scrollTo({x: 0, y: -60, animated: true});
         }}
@@ -912,7 +917,7 @@ function OnContentSizeChangeTestCase() {
         return (
           <View style={{width: '100%', height: '70%'}}>
             <Button
-              label={`Add one more item`}
+              label={'Add one more item'}
               onPress={() => {
                 setAmountOfChildren(amountOfChildren + 1);
               }}

@@ -30,7 +30,9 @@ export function NavigationContainer({
         navigateTo: setCurrentPageName,
         registerPageName: (pageName: string) => {
           setRegisteredPageNames(pageNames => {
-            if (pageNames.includes(pageName)) return pageNames;
+            if (pageNames.includes(pageName)) {
+              return pageNames;
+            }
             return [...pageNames, pageName];
           });
         },
@@ -52,7 +54,9 @@ export function Page({name, children}: {name: string; children: any}) {
   const {currentPageName, navigateTo, registerPageName} = useNavigation();
 
   useEffect(() => {
-    if (name !== 'INDEX') registerPageName(name);
+    if (name !== 'INDEX') {
+      registerPageName(name);
+    }
   }, [name]);
 
   return name === currentPageName ? (

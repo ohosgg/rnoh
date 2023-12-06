@@ -54,7 +54,9 @@ export function AnimatedTest() {
       <TestCase itShould="move square both vertically and horizontally">
         <ValueXY />
       </TestCase>
-      <TestCase skip itShould='(broken everywhere) move both squares, with blue square following the red with a spring'>
+      <TestCase
+        skip
+        itShould="(broken everywhere) move both squares, with blue square following the red with a spring">
         <TrackingValue />
       </TestCase>
     </TestSuite>
@@ -557,7 +559,7 @@ const DiffClamp = () => {
       <Text style={{height: 20}}>Press me to start animation</Text>
     </Pressable>
   );
-}
+};
 
 const ValueXY = () => {
   const square1Anim = useRef(new Animated.ValueXY({x: 50, y: 50})).current;
@@ -737,7 +739,6 @@ const Modulo = () => {
   );
 };
 
-
 const Perspective = () => {
   const square1Anim = useRef(new Animated.Value(500)).current;
 
@@ -754,21 +755,21 @@ const Perspective = () => {
   return (
     <Pressable style={{height: 120, width: '100%'}} onPress={handleAnimation}>
       <View style={{height: 100, justifyContent: 'center'}}>
-      <Animated.View
-        style={{
-          height: 50,
-          width: 50,
-          backgroundColor: 'red',
-          transform: [
-            {
-              rotateY: '60deg',
-            },
-            {
-              perspective: square1Anim,
-            },
-          ],
-        }}
-      />
+        <Animated.View
+          style={{
+            height: 50,
+            width: 50,
+            backgroundColor: 'red',
+            transform: [
+              {
+                rotateY: '60deg',
+              },
+              {
+                perspective: square1Anim,
+              },
+            ],
+          }}
+        />
       </View>
       <Text style={{height: 20}}>Press me to start animation</Text>
     </Pressable>

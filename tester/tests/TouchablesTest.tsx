@@ -50,7 +50,7 @@ export const TouchablesTest = () => {
           return (
             <View style={{height: 100, backgroundColor: 'red'}}>
               <TouchableWithoutFeedback onPress={() => setState(true)}>
-                <View style={{height: '100%', width: '100%'}}></View>
+                <View style={{height: '100%', width: '100%'}} />
               </TouchableWithoutFeedback>
             </View>
           );

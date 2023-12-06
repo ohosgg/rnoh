@@ -239,7 +239,8 @@ export class TabsAndScrollViewExample extends Component<any, any> {
                           width: 1,
                           height: 16,
                           backgroundColor: 'red',
-                        }}></View>
+                        }}
+                      />
                     </View>
                   ) : null}
                   <Text
@@ -278,8 +279,8 @@ export class TabsAndScrollViewExample extends Component<any, any> {
               ],
             },
           ]}>
-          <View style={{height: 56, backgroundColor: 'green'}}></View>
-          <View style={{height: 94, backgroundColor: 'green'}}></View>
+          <View style={{height: 56, backgroundColor: 'green'}} />
+          <View style={{height: 94, backgroundColor: 'green'}} />
           {this.renderSort()}
         </Animated.View>
         <View
@@ -295,8 +296,8 @@ export class TabsAndScrollViewExample extends Component<any, any> {
             },
             this.state.slideDownViewStyle,
           ]}>
-          <View style={{height: 56, backgroundColor: 'green'}}></View>
-          <View style={{height: 94, backgroundColor: 'green'}}></View>
+          <View style={{height: 56, backgroundColor: 'green'}} />
+          <View style={{height: 94, backgroundColor: 'green'}} />
           {this.renderSort()}
         </View>
       </>

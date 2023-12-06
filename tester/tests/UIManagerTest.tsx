@@ -169,7 +169,8 @@ const MeasureLayoutTest = (props: {
             height: 20,
             backgroundColor: 'blue',
           }}
-          ref={ref}></View>
+          ref={ref}
+        />
       </View>
       <Button
         label="measureLayout"
@@ -205,7 +206,8 @@ const MeasureInWindowTest = (props: {
           height: 20,
           backgroundColor: 'blue',
         }}
-        ref={ref}></View>
+        ref={ref}
+      />
       <Button
         label="measureInWindow"
         onPress={() => {

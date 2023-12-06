@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import {TestSuite, TestCase} from '@rnoh/testerino';
-import {useState,useRef} from 'react';
+import {useState, useRef} from 'react';
 import {Button, Effect, StateKeeper} from '../components';
 
 export function TextInputTest() {
