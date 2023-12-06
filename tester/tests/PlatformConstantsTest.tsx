@@ -39,9 +39,12 @@ export function PlatformConstantsTest() {
         itShould="provide some RN version"
         fn={({expect}) => {
           expect(Platform.constants.reactNativeVersion).to.be.not.undefined;
-          expect(Platform.constants.reactNativeVersion.major).to.be.not.undefined;
-          expect(Platform.constants.reactNativeVersion.minor).to.be.not.undefined;
-          expect(Platform.constants.reactNativeVersion.patch).to.be.not.undefined;
+          expect(Platform.constants.reactNativeVersion.major).to.be.not
+            .undefined;
+          expect(Platform.constants.reactNativeVersion.minor).to.be.not
+            .undefined;
+          expect(Platform.constants.reactNativeVersion.patch).to.be.not
+            .undefined;
         }}
       />
       <TestCase
@@ -53,7 +56,9 @@ export function PlatformConstantsTest() {
       <TestCase
         itShould="specify product model"
         fn={({expect}) => {
-          expect(Platform.constants.Model).to.include('NOH');
+          if (Platform.OS === 'harmony') {
+            expect(Platform.constants.Model).to.include('NOH');
+          }
         }}
       />
     </TestSuite>

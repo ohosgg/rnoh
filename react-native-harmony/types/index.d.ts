@@ -69,7 +69,7 @@ export * from 'react-native/Libraries/StyleSheet/processColor';
 export * from 'react-native/Libraries/Text/Text';
 // export * from 'react-native/Libraries/TurboModule/RCTExport';
 export * as TurboModuleRegistry from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
-// export * from 'react-native/Libraries/Types/CoreEventTypes';
+export * from 'react-native/Libraries/Types/CoreEventTypes';
 export * from 'react-native/Libraries/Utilities/Appearance';
 export * from 'react-native/Libraries/Utilities/BackHandler';
 // export * from 'react-native/Libraries/Utilities/DevSettings';
