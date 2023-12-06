@@ -111,7 +111,3 @@ export function getTextDecorationLine(textDecorationLine: number | undefined) {
       return TextDecorationType.None;
   }
 }
-
-export function addZeroWidthSpace(text: string) {
-  return text.split('').join('\u200B');
-}

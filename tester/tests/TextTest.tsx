@@ -203,44 +203,40 @@ export function TextTest() {
           <View style={{height: 70, flexDirection: 'column'}}>
             <Text
               style={{
-                paddingLeft:10,
-                paddingRight:40,
-                backgroundColor:'red',
-                maxWidth:200,
-                textAlign:'center',
-              }}
-            >
+                paddingLeft: 10,
+                paddingRight: 40,
+                backgroundColor: 'red',
+                maxWidth: 200,
+                textAlign: 'center',
+              }}>
               {'fragment1'}fragment2
             </Text>
             <Text
               style={{
-                paddingLeft:10,
-                paddingRight:40,
-                backgroundColor:'red',
-                maxWidth:200,
-                textAlign:'center',
-              }}
-            >
+                paddingLeft: 10,
+                paddingRight: 40,
+                backgroundColor: 'red',
+                maxWidth: 200,
+                textAlign: 'center',
+              }}>
               fragment1fragment2
             </Text>
             <Text
               style={{
-                paddingRight:10,
-                backgroundColor:'red',
-                maxWidth:200,
-                textAlign:'right',
-              }}
-            >
+                paddingRight: 10,
+                backgroundColor: 'red',
+                maxWidth: 200,
+                textAlign: 'right',
+              }}>
               {'fragment1'}fragment2
             </Text>
             <Text
               style={{
-                paddingRight:10,
-                backgroundColor:'red',
-                maxWidth:200,
-                textAlign:'right',
-              }}
-            >
+                paddingRight: 10,
+                backgroundColor: 'red',
+                maxWidth: 200,
+                textAlign: 'right',
+              }}>
               fragment1fragment2
             </Text>
           </View>
@@ -764,18 +760,32 @@ export function TextTest() {
             <PressCounter />
           </Text>
         </TestCase>
-        <TestCase itShould="insert ellipsis at same location">
+        <TestCase
+          skip // Inserting zero-width space in RNSimpleText that fixes this issue breaks wrapping. This problem needs to be fixed on ArkUI's side.
+          itShould="insert ellipsis at same location">
           <View style={{width: 300}}>
-            <Text style={{ paddingRight:10, paddingLeft:10, fontSize:16, width: 150, backgroundColor:'red' }}
+            <Text
+              style={{
+                paddingRight: 10,
+                paddingLeft: 10,
+                fontSize: 16,
+                width: 150,
+                backgroundColor: 'red',
+              }}
               numberOfLines={1}
-              ellipsizeMode='tail'
-            >
+              ellipsizeMode="tail">
               {'fragment1'} fragment2
             </Text>
-            <Text style={{ paddingRight:10, paddingLeft:10, fontSize:16, width: 150, backgroundColor:'red' }}
+            <Text
+              style={{
+                paddingRight: 10,
+                paddingLeft: 10,
+                fontSize: 16,
+                width: 150,
+                backgroundColor: 'red',
+              }}
               numberOfLines={1}
-              ellipsizeMode='tail'
-            >
+              ellipsizeMode="tail">
               fragment1 fragment2
             </Text>
           </View>
