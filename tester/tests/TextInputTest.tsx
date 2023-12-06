@@ -233,19 +233,16 @@ export function TextInputTest() {
         modal
         itShould="trigger onLayout event on mount"
         initialState={{}}
-        arrange={({setState}) => {
-          const [layout, setLayout] = useState('');
+        arrange={({setState, state}) => {
           return (
             <>
-              <Text>{layout}</Text>
+              <Text>{JSON.stringify(state)}</Text>
               <TextInput
                 style={styles.textInput}
                 onLayout={event => {
-                  setLayout(JSON.stringify(event.nativeEvent.layout));
                   setState(event.nativeEvent.layout);
                 }}
               />
-              ;
             </>
           );
         }}

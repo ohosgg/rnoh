@@ -6,6 +6,7 @@
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-unused-vars": "warn",
     "react-hooks/exhaustive-deps": "off",
-    "radix": "off"
+    "radix": "off",
+    "prettier/prettier": "warn"
   }
 }

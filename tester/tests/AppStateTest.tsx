@@ -10,7 +10,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {Button} from '../components';
+import {Button, Effect} from '../components';
 
 export function AppStateTest() {
   return (
@@ -30,35 +30,53 @@ export function AppStateTest() {
       <TestCase
         skip
         itShould="throw memory warning event after adding too much items"
-        initialState={false}
-        arrange={({setState}) => {
-          const [numChildren, setNumChildren] = useState(1);
-          const [text, setText] = useState('');
-
-          const handleWarningEvent = () => {
-            setState(true);
-          };
-          const run = () => {
-            setNumChildren(prev => prev + parseInt(text, 10));
-          };
-          AppState.addEventListener('memoryWarning', handleWarningEvent);
+        initialState={{
+          didEmitMemoryEvent: false,
+          childrenCount: 1,
+          textInputValue: '99',
+        }}
+        arrange={({setState, state}) => {
           return (
             <View>
+              <Effect
+                onMount={() => {
+                  AppState.addEventListener('memoryWarning', () => {
+                    setState(prev => ({...prev, didEmitMemoryEvent: true}));
+                  });
+                }}
+                children={<></>}
+              />
               <View style={{flexDirection: 'row'}}>
                 <Text>Number of items to add</Text>
                 <TextInput
-                  value={text}
-                  onChange={e => setText(e.nativeEvent.text)}
+                  value={state.textInputValue}
+                  onChange={e =>
+                    setState(prev => ({
+                      ...prev,
+                      textInputValue: e.nativeEvent.text,
+                    }))
+                  }
                   style={{borderWidth: 1, width: 50, marginLeft: 10}}
                   maxLength={6}
                 />
               </View>
-              <Text>Items: {numChildren}</Text>
-              <Button onPress={run} label="Add" />
+              <Text>Items: {state.childrenCount}</Text>
+              <Button
+                onPress={() => {
+                  setState(prev => ({
+                    ...prev,
+                    childrenCount:
+                      prev.childrenCount + parseInt(state.textInputValue, 10),
+                  }));
+                }}
+                label="Add"
+              />
               <ScrollView
-                {...commonProps}
+                {...COMMON_PROPS}
                 nestedScrollEnabled
-                children={getScrollViewContent({amountOfChildren: numChildren})}
+                children={getScrollViewContent({
+                  amountOfChildren: state.childrenCount,
+                })}
                 style={{
                   height: 100,
                 }}
@@ -95,7 +113,8 @@ const FocusHistoryView = () => {
     </View>
   );
 };
-const commonProps = {
+
+const COMMON_PROPS = {
   style: {
     borderWidth: 3,
     borderColor: 'firebrick',
@@ -106,6 +125,7 @@ const commonProps = {
   },
   children: getScrollViewContent({}),
 };
+
 interface ScrollViewContentProps {
   style?: StyleProp<ViewStyle>;
   amountOfChildren?: number;

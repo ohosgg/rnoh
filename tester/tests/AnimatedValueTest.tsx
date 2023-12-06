@@ -1,9 +1,7 @@
-import React, {useRef, useState} from 'react';
-
+import React, {useEffect, useRef, useState} from 'react';
 import {Animated, View, Text} from 'react-native';
-
 import {TestCase, TestSuite} from '@rnoh/testerino';
-import {Button} from '../components';
+import {Button, Effect} from '../components';
 
 export function AnimatedValueTest() {
   return (
@@ -41,26 +39,23 @@ export function AnimatedValueTest() {
         <TestCase itShould="move square 100px to the right on pressing setOffset">
           <SetOffsetView singular={false} />
         </TestCase>
-        <TestCase
+        <TestCase<Object>
           itShould="get layout of animated value on press"
-          initialState={JSON.stringify({left: 0, top: 0})}
+          initialState={{}}
           arrange={({setState}) => {
-            const value = useRef(new Animated.ValueXY({x: 1, y: 1})).current;
-            const [text, setText] = useState('');
-            const onPress = () => {
-              const layout = JSON.stringify(value.getLayout());
-              setState(layout);
-              setText(layout);
-            };
+            const animValue = new Animated.ValueXY({x: 1, y: 1});
             return (
-              <>
-                <Text>{text}</Text>
-                <Button label="get layout" onPress={onPress} />
-              </>
+              <Effect
+                onMount={() => {
+                  setState(animValue.getLayout());
+                }}
+              />
             );
           }}
           assert={({state, expect}) => {
-            expect(state).to.be.eq(JSON.stringify({left: 1, top: 1}));
+            expect(JSON.stringify(state)).to.be.eq(
+              JSON.stringify({left: 1, top: 1}),
+            );
           }}
         />
         <TestCase itShould="move square to the right after extract offset">
@@ -170,24 +165,22 @@ const FlattenOffsetView = () => {
   );
 };
 const SetOffsetView = (props: {singular: boolean}) => {
+  const animValue = useRef(new Animated.Value(0)).current;
+  const animValueXY = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
   if (props.singular) {
-    const value = useRef(new Animated.Value(0)).current;
-
     return (
       <MovingSquare
-        value={value}
+        animValue={animValue}
         labels={['set offset']}
-        onPresses={[() => value.setOffset(200)]}
+        onPresses={[() => animValue.setOffset(200)]}
       />
     );
   } else {
-    const value = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
-
     return (
       <MovingSquareXY
-        value={value}
+        animValueXY={animValueXY}
         labels={['set offset']}
-        onPresses={[() => value.setOffset({x: 100, y: 0})]}
+        onPresses={[() => animValueXY.setOffset({x: 100, y: 0})]}
       />
     );
   }
@@ -195,30 +188,29 @@ const SetOffsetView = (props: {singular: boolean}) => {
 
 const ListenerView = (props: {singular: boolean}) => {
   const [text, setText] = useState('');
-  const [listeners, setlisteners] = useState<string[]>([]);
-  const value = props.singular
-    ? useRef(new Animated.Value(0)).current
-    : useRef(new Animated.ValueXY({x: 0, y: 0})).current;
+  const [listeners, setListeners] = useState<string[]>([]);
+  const animValue = useRef(new Animated.Value(0)).current;
+  const animValueXY = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
   const listener = () => {};
   const addListener = () => {
-    listeners.push(value.addListener(listener));
-    setlisteners(listeners);
+    listeners.push(animValue.addListener(listener));
+    setListeners(listeners);
     checkListener();
   };
   const removeListener = () => {
     const lastListener = listeners.pop();
     if (lastListener) {
-      value.removeListener(lastListener);
+      animValue.removeListener(lastListener);
     }
     checkListener();
   };
   const removeAll = () => {
-    value.removeAllListeners();
+    animValue.removeAllListeners();
     checkListener();
   };
   const checkListener = () => {
     setText(
-      value.hasListeners()
+      animValue.hasListeners()
         ? `listener: ${listeners}`
         : 'no listener is attached',
     );
@@ -228,13 +220,13 @@ const ListenerView = (props: {singular: boolean}) => {
       <Text>{text}</Text>
       {props.singular ? (
         <MovingSquare
-          value={value as Animated.Value}
+          animValue={animValue}
           labels={['add', 'remove', 'removeAll']}
           onPresses={[addListener, removeListener, removeAll]}
         />
       ) : (
         <MovingSquareXY
-          value={value as Animated.ValueXY}
+          animValueXY={animValueXY}
           labels={['add', 'remove', 'removeAll']}
           onPresses={[addListener, removeListener, removeAll]}
         />
@@ -247,52 +239,58 @@ const SetValueView = (props: {
   singular?: boolean;
   setState: React.Dispatch<React.SetStateAction<number>>;
 }) => {
-  if (props.singular) {
-    const animValue = useRef(new Animated.Value(0)).current;
-    animValue.addListener(({value}) => {
-      if (value === 200) {
-        props.setState(value);
-      }
-    });
+  const animValue = useRef(new Animated.Value(0)).current;
+  const animValueXY = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
 
+  useEffect(() => {
+    if (props.singular) {
+      animValue.addListener(({value}) => {
+        if (value === 200) {
+          props.setState(value);
+        }
+      });
+    } else {
+      animValueXY.addListener(({x}) => {
+        if (x === 100) {
+          props.setState(x);
+        }
+      });
+    }
+  }, []);
+
+  if (props.singular) {
     return (
       <MovingSquare
-        value={animValue}
+        animValue={animValue}
         labels={['set value']}
         onPresses={[() => animValue.setValue(200)]}
       />
     );
   } else {
-    const animValue = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
-    animValue.addListener(({x}) => {
-      if (x === 100) {
-        props.setState(x);
-      }
-    });
     return (
       <MovingSquareXY
-        value={animValue}
+        animValueXY={animValueXY}
         labels={['set valueXY']}
-        onPresses={[() => animValue.setValue({x: 100, y: 0})]}
+        onPresses={[() => animValueXY.setValue({x: 100, y: 0})]}
       />
     );
   }
 };
 
 const MovingSquare = (props: {
-  value: Animated.Value;
+  animValue: Animated.Value;
   labels: string[];
   onPresses: (() => void)[];
 }) => {
   const [isRunning, setIsRunning] = useState(false);
   const animation = Animated.loop(
     Animated.sequence([
-      Animated.timing(props.value, {
+      Animated.timing(props.animValue, {
         toValue: 100,
         duration: 500,
         useNativeDriver: true,
       }),
-      Animated.timing(props.value, {
+      Animated.timing(props.animValue, {
         toValue: 0,
         duration: 500,
         useNativeDriver: true,
@@ -303,7 +301,7 @@ const MovingSquare = (props: {
     if (isRunning) {
       animation.stop();
       animation.reset();
-      props.value.setOffset(0);
+      props.animValue.setOffset(0);
       setIsRunning(false);
     } else {
       setIsRunning(true);
@@ -323,7 +321,7 @@ const MovingSquare = (props: {
           backgroundColor: 'red',
           transform: [
             {
-              translateX: props.value,
+              translateX: props.animValue,
             },
           ],
         }}
@@ -337,19 +335,19 @@ const MovingSquare = (props: {
 };
 
 const MovingSquareXY = (props: {
-  value: Animated.ValueXY;
+  animValueXY: Animated.ValueXY;
   labels: string[];
   onPresses: (() => void)[];
 }) => {
   const [isRunning, setIsRunning] = useState(false);
   const animation = Animated.loop(
     Animated.sequence([
-      Animated.timing(props.value, {
+      Animated.timing(props.animValueXY, {
         toValue: {x: 25, y: 25},
         duration: 500,
         useNativeDriver: true,
       }),
-      Animated.timing(props.value, {
+      Animated.timing(props.animValueXY, {
         toValue: {x: 0, y: 0},
         duration: 500,
         useNativeDriver: true,
@@ -359,7 +357,7 @@ const MovingSquareXY = (props: {
   const animate = () => {
     if (isRunning) {
       animation.stop();
-      props.value.setOffset({x: 0, y: 0});
+      props.animValueXY.setOffset({x: 0, y: 0});
       setIsRunning(false);
     } else {
       setIsRunning(true);
@@ -379,9 +377,9 @@ const MovingSquareXY = (props: {
           backgroundColor: 'red',
           transform: [
             {
-              translateX: props.value.x,
+              translateX: props.animValueXY.x,
             },
-            {translateY: props.value.y},
+            {translateY: props.animValueXY.y},
           ],
         }}
       />

@@ -2,10 +2,10 @@ import {useEffect} from 'react';
 
 export function Effect({
   onMount,
-  children,
+  children = null,
 }: {
   onMount: () => Promise<() => void> | (() => void) | void | Promise<void>;
-  children: any;
+  children?: any;
 }) {
   useEffect(() => {
     let cleanUp: () => void = () => {};

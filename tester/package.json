@@ -15,7 +15,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint App.tsx ./benchmarks ./components ./examples ./jests ./scripts ./tests",
     "lint:fix": "npm run lint -- --fix",
-    "verify": "npm run typecheck && npm run test",
+    "verify": "npm run typecheck && npm run test && npm run lint",
     "start": "react-native start",
     "benchmark-fps": "node ./scripts/get-frame-times | node ./scripts/create-fps-stats",
     "test": "jest"
