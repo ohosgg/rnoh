@@ -1,3 +1,4 @@
+.husky
 bundle.harmony.js
 package-lock.json
 *.hbc

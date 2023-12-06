@@ -1,9 +1,0 @@
-{
-  "compilerOptions": {
-    "module": "ESNext",
-    "target": "esnext",
-    "types": [
-      "bun-types"
-    ]
-  }
-}
