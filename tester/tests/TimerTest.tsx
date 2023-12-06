@@ -60,7 +60,7 @@ export function TimerTest() {
 
           await new Promise(resolve => {
             setInterval(() => {
-              if (i == 1) {
+              if (i === 1) {
                 resolve(null);
               }
               i++;

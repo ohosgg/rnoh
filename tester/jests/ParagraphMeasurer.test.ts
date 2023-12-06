@@ -37,7 +37,9 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  if (expect.getState().assertionCalls != expect.getState().numPassingAsserts) {
+  if (
+    expect.getState().assertionCalls !== expect.getState().numPassingAsserts
+  ) {
     console.log(JSON.stringify(result, null, 2));
   }
 });
@@ -54,7 +56,7 @@ describe('ParagraphMeasurer', () => {
       extraData: {},
     };
 
-    const result = paragraphMeasurer.measureParagraph(
+    const layout = paragraphMeasurer.measureParagraph(
       {fragments: [textFragment]},
       {
         wordWrapStrategy: new UnhyphenatedWordWrapStrategy(
@@ -64,8 +66,8 @@ describe('ParagraphMeasurer', () => {
       },
     );
 
-    expect(result.size.width).toBe('enim laborum ad'.length);
-    expectLineSplitting(result.positionedLines, [
+    expect(layout.size.width).toBe('enim laborum ad'.length);
+    expectLineSplitting(layout.positionedLines, [
       ['Aute'],
       ['reprehenderit'],
       ['amet deserunt'],
@@ -79,7 +81,7 @@ describe('ParagraphMeasurer', () => {
     const paragraphMeasurer = createParagraphMeasurer();
     const textFragmentMeasurer = new FakeTextFragmentMeasurer();
 
-    const result = paragraphMeasurer.measureParagraph(
+    const layout = paragraphMeasurer.measureParagraph(
       {
         fragments: [
           {
@@ -97,15 +99,16 @@ describe('ParagraphMeasurer', () => {
         ellipsisInserter: new TailEllipsisInserter(textFragmentMeasurer),
       },
     );
+    result = layout;
 
-    expect(result.positionedLines.length).toBe(2);
-    expectLineSplitting(result.positionedLines, [['baz'], ['x f…']]);
+    expect(layout.positionedLines.length).toBe(2);
+    expectLineSplitting(layout.positionedLines, [['baz'], ['x f…']]);
   });
 
   it('should support padding', () => {
     const paragraphMeasurer = createParagraphMeasurer();
 
-    const result = paragraphMeasurer.measureParagraph(
+    const layout = paragraphMeasurer.measureParagraph(
       {
         fragments: [
           {
@@ -123,12 +126,12 @@ describe('ParagraphMeasurer', () => {
       },
     );
 
-    expect(result.positionedLines.length).toBe(2);
+    expect(layout.positionedLines.length).toBe(2);
     expect(
-      result.positionedLines[0].positionedFragments[0].positionRelativeToLine.x,
+      layout.positionedLines[0].positionedFragments[0].positionRelativeToLine.x,
     ).toBe(1);
     expect(
-      result.positionedLines[0].positionedFragments[0].positionRelativeToLine.y,
+      layout.positionedLines[0].positionedFragments[0].positionRelativeToLine.y,
     ).toBe(1);
   });
 
@@ -136,7 +139,7 @@ describe('ParagraphMeasurer', () => {
     it('should center the text', () => {
       const paragraphMeasurer = createParagraphMeasurer();
 
-      const result = paragraphMeasurer.measureParagraph(
+      const layout = paragraphMeasurer.measureParagraph(
         {fragments: [{type: 'text', content: 'foo', extraData: {}}]},
         {
           wordWrapStrategy: new UnhyphenatedWordWrapStrategy(
@@ -147,7 +150,7 @@ describe('ParagraphMeasurer', () => {
       );
 
       expect(
-        result.positionedLines[0].positionedFragments[0].positionRelativeToLine
+        layout.positionedLines[0].positionedFragments[0].positionRelativeToLine
           .x,
       ).toBe(1);
     });
@@ -155,7 +158,7 @@ describe('ParagraphMeasurer', () => {
     it('should align the text to the end', () => {
       const paragraphMeasurer = createParagraphMeasurer();
 
-      const result = paragraphMeasurer.measureParagraph(
+      const layout = paragraphMeasurer.measureParagraph(
         {fragments: [{type: 'text', content: 'foo', extraData: {}}]},
         {
           wordWrapStrategy: new UnhyphenatedWordWrapStrategy(
@@ -166,7 +169,7 @@ describe('ParagraphMeasurer', () => {
       );
 
       expect(
-        result.positionedLines[0].positionedFragments[0].positionRelativeToLine
+        layout.positionedLines[0].positionedFragments[0].positionRelativeToLine
           .x,
       ).toBe(2);
     });
@@ -175,7 +178,7 @@ describe('ParagraphMeasurer', () => {
   it('should align text and placeholder vertically by default', () => {
     const paragraphMeasurer = createParagraphMeasurer();
 
-    const result = paragraphMeasurer.measureParagraph<TextExtraData>(
+    const layout = paragraphMeasurer.measureParagraph<TextExtraData>(
       {
         fragments: [
           {type: 'text', content: 'foo', extraData: {lineHeight: 3}},
@@ -191,10 +194,10 @@ describe('ParagraphMeasurer', () => {
     );
 
     expect(
-      result.positionedLines[0].positionedFragments[0].positionRelativeToLine.y,
+      layout.positionedLines[0].positionedFragments[0].positionRelativeToLine.y,
     ).toBe(0);
     expect(
-      result.positionedLines[0].positionedFragments[1].positionRelativeToLine.y,
+      layout.positionedLines[0].positionedFragments[1].positionRelativeToLine.y,
     ).toBe(1);
   });
 });

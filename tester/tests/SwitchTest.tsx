@@ -19,7 +19,7 @@ export function SwitchTest() {
             thumbColor={'beige'}
             onValueChange={toggleSwitch}
             value={isEnabled}
-            onChange={event => setEvent(JSON.stringify(event.nativeEvent))}
+            onChange={e => setEvent(JSON.stringify(e.nativeEvent))}
           />
         </View>
       </TestCase>

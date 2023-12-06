@@ -1,6 +1,5 @@
 import {
   Animated,
-  Dimensions,
   PanResponder,
   ScrollView,
   StyleSheet,
@@ -18,7 +17,7 @@ export const PanResponderTest = () => {
           expect(PanResponder.create({})).to.be.not.empty;
         }}
       />
-      <TestCase itShould="allow panning inside scrollview">
+      <TestCase itShould="allow panning inside ScrollView">
         <PanResponderInScrollView />
       </TestCase>
     </TestSuite>

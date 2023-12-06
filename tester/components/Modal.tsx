@@ -22,7 +22,7 @@ export function Modal(props: {
   return (
     <Portal hostName="ModalHost">
       <View
-        onTouchEnd={e => {
+        onTouchEnd={() => {
           setIsOpen(false);
         }}
         style={[

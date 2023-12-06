@@ -1,6 +1,6 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 
-import {Pressable, PressableProps, StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 
 import {TestCase, TestSuite} from '@rnoh/testerino';
 

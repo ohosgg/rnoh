@@ -19,7 +19,7 @@ export function UIManagerTest() {
           view: {width: 0, height: 0},
           text: {width: 0, height: 0},
         }}
-        arrange={({setState, state}) => {
+        arrange={({setState}) => {
           return (
             <Ref<View>
               render={refView => {
@@ -31,7 +31,7 @@ export function UIManagerTest() {
                           onMount={() => {
                             setTimeout(() => {
                               refText.current?.measure(
-                                (x, y, width, height, left, top) => {
+                                (x, y, width, height, _left, _top) => {
                                   setState(prev => ({
                                     ...prev,
                                     text: {width, height},
@@ -39,7 +39,7 @@ export function UIManagerTest() {
                                 },
                               );
                               refView.current?.measure(
-                                (x, y, width, height, left, top) => {
+                                (x, y, width, height, _left, _top) => {
                                   setState(prev => ({
                                     ...prev,
                                     view: {width, height},
@@ -119,9 +119,7 @@ export function UIManagerTest() {
         initialState={
           {} as {x: number; y: number; width: number; height: number}
         }
-        arrange={({setState, state}) => (
-          <MeasureInWindowTest setState={setState} />
-        )}
+        arrange={({setState}) => <MeasureInWindowTest setState={setState} />}
         assert={({state, expect}) => {
           expect(state.width).to.be.equal(20);
           expect(state.height).to.be.equal(20);

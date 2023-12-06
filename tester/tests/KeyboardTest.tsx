@@ -2,12 +2,11 @@ import {TestSuite, TestCase} from '@rnoh/testerino';
 import {
   Keyboard,
   StyleSheet,
-  Text,
   TextInput,
   KeyboardEvent,
   Dimensions,
 } from 'react-native';
-import {Button, ObjectDisplayer} from '../components';
+import {Button} from '../components';
 import {useEffect} from 'react';
 import {EmitterSubscription} from 'react-native/Libraries/vendor/emitter/EventEmitter';
 

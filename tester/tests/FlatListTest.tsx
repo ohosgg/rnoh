@@ -101,7 +101,7 @@ export const FlatListTest = () => {
           <FlatList
             data={[]}
             nestedScrollEnabled
-            renderItem={({item}) => null}
+            renderItem={() => null}
             ListEmptyComponent={
               <Text style={{textAlign: 'center'}}>This list is empty</Text>
             }
@@ -274,7 +274,7 @@ function ViewabilityConfigTest({
 function MaxToRenderPerBatchTestCase() {
   const [data, setData] = useState<string[]>([]);
 
-  const renderItem = ({item, index}: {item: string; index: number}) => {
+  const renderItem = ({item}: {item: string; index: number}) => {
     return <Text style={{height: 20}}>{item}</Text>;
   };
 
@@ -340,7 +340,7 @@ class ExtraDataTestCase extends React.PureComponent<{}, MultiSelectListState> {
     selected: new Map<string, boolean>(),
   };
 
-  _keyExtractor = (item: ItemData, index: number) => item.id;
+  _keyExtractor = (item: ItemData, _index: number) => item.id;
 
   _onPressItem = (id: string) => {
     this.setState(state => {
@@ -480,7 +480,6 @@ function FlatListGetScrollableNode({
 type NativeScrollRef = React.ElementRef<typeof ScrollViewComponent>;
 
 function FlatListGetNativeScrollRef({
-  state,
   setState,
 }: {
   state: NativeScrollRef | undefined;
@@ -502,7 +501,6 @@ function FlatListGetNativeScrollRef({
 }
 
 function FlatListGetScrollResponder({
-  state,
   setState,
 }: {
   state: ScrollResponderMixin | undefined;

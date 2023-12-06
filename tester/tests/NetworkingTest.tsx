@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import React from 'react';
 
@@ -50,7 +50,7 @@ export const NetworkingTest = () => {
   const canFetch = async (url: string) => {
     try {
       const response = await fetch(url);
-      const _result = await response.json();
+      await response.json();
       return true;
     } catch (error) {
       return false;

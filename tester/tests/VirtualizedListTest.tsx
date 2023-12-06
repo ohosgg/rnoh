@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import {Text, TouchableOpacity, View, VirtualizedList} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import {Button} from '../components';
@@ -53,7 +53,7 @@ export function VirtualizedListTest() {
           return (
             <VirtualizedList
               data={data}
-              getItem={(data: number[], idx: number) => data[idx]}
+              getItem={(items: number[], idx: number) => items[idx]}
               getItemCount={() => data.length}
               renderItem={({item}: {item: number}) => (
                 <View style={{height: 100, padding: 16, borderWidth: 1}}>

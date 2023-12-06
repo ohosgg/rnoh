@@ -56,13 +56,13 @@ const getFrameTimes = hitraceOutput => {
         trace.functionDetails.includes('finishFrame'), //this is for traces from the emulator
     )
     .map(trace => trace.timestamp);
-  if (repaintTimestamps.length == 0) {
+  if (repaintTimestamps.length === 0) {
     console.error('no repaint traces captured!');
     return;
   }
 
-  frameTimes = [];
-  for (i = 1; i < repaintTimestamps.length; i++) {
+  const frameTimes = [];
+  for (let i = 1; i < repaintTimestamps.length; i++) {
     frameTimes.push(repaintTimestamps[i] - repaintTimestamps[i - 1]);
   }
   return frameTimes;
@@ -105,7 +105,7 @@ const run = () => {
       console.error(`spawn error: ${error}`);
     });
 
-    child.on('close', code => {
+    child.on('close', () => {
       let frameTimes = getFrameTimes(hitraceOutput);
       console.log(JSON.stringify(frameTimes));
     });

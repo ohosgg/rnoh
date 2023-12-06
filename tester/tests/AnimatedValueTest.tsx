@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react';
 
-import {Animated, View, Easing, EasingFunction, Text} from 'react-native';
+import {Animated, View, Text} from 'react-native';
 
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import {Button} from '../components';
@@ -248,8 +248,8 @@ const SetValueView = (props: {
   setState: React.Dispatch<React.SetStateAction<number>>;
 }) => {
   if (props.singular) {
-    const value = useRef(new Animated.Value(0)).current;
-    value.addListener(({value}) => {
+    const animValue = useRef(new Animated.Value(0)).current;
+    animValue.addListener(({value}) => {
       if (value === 200) {
         props.setState(value);
       }
@@ -257,23 +257,23 @@ const SetValueView = (props: {
 
     return (
       <MovingSquare
-        value={value}
+        value={animValue}
         labels={['set value']}
-        onPresses={[() => value.setValue(200)]}
+        onPresses={[() => animValue.setValue(200)]}
       />
     );
   } else {
-    const value = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
-    value.addListener(({x, y}) => {
+    const animValue = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
+    animValue.addListener(({x}) => {
       if (x === 100) {
         props.setState(x);
       }
     });
     return (
       <MovingSquareXY
-        value={value}
+        value={animValue}
         labels={['set valueXY']}
-        onPresses={[() => value.setValue({x: 100, y: 0})]}
+        onPresses={[() => animValue.setValue({x: 100, y: 0})]}
       />
     );
   }

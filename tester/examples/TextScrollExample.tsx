@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState} from 'react';
 import {ScrollView, Text, TextInput, View} from 'react-native';
 
 export function TextScrollExample() {

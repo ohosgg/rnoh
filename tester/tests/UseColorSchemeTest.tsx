@@ -1,4 +1,4 @@
-import {Appearance, useColorScheme, useWindowDimensions} from 'react-native';
+import {Appearance, useColorScheme} from 'react-native';
 import {TestSuite, TestCase} from '@rnoh/testerino';
 
 export function UseColorSchemeTest() {

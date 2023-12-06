@@ -1,13 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Animated,
-  Platform,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Animated, ScrollView, Text, TextInput, View} from 'react-native';
 import {Button} from '../components';
 
 export function AnimationsExample() {

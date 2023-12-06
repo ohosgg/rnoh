@@ -13,7 +13,8 @@ import {TestSuite, TestCase} from '@rnoh/testerino';
 import React, {useEffect, useRef, useState} from 'react';
 import {Button, ObjectDisplayer} from '../components';
 import {GestureResponderEvent} from 'react-native/Libraries/Types/CoreEventTypes';
-const commonProps = {
+
+const COMMON_PROPS = {
   style: {
     borderWidth: 3,
     borderColor: 'firebrick',
@@ -24,6 +25,7 @@ const commonProps = {
   },
   children: getScrollViewContent({}),
 };
+
 export function ScrollViewTest() {
   return (
     <TestSuite name="ScrollView">
@@ -33,7 +35,7 @@ export function ScrollViewTest() {
           itShould="render scroll view with different border radii (topLeft, topRight, ...)">
           <View style={styles.wrapperView}>
             <ScrollView
-              {...commonProps}
+              {...COMMON_PROPS}
               style={{
                 borderColor: 'firebrick',
                 backgroundColor: 'beige',
@@ -51,7 +53,7 @@ export function ScrollViewTest() {
           itShould="render scroll view with different border widths (left, right, top, bottom)">
           <View style={styles.wrapperView}>
             <ScrollView
-              {...commonProps}
+              {...COMMON_PROPS}
               style={{
                 borderColor: 'firebrick',
                 backgroundColor: 'beige',
@@ -68,7 +70,7 @@ export function ScrollViewTest() {
           itShould="render scroll view with different border colors (left, right, top, bottom)">
           <View style={styles.wrapperView}>
             <ScrollView
-              {...commonProps}
+              {...COMMON_PROPS}
               style={{
                 backgroundColor: 'beige',
                 borderWidth: 3,
@@ -85,7 +87,7 @@ export function ScrollViewTest() {
           itShould="render  scroll view with different border radii (start, end)">
           <View style={styles.wrapperView}>
             <ScrollView
-              {...commonProps}
+              {...COMMON_PROPS}
               style={{
                 borderColor: 'firebrick',
                 backgroundColor: 'beige',
@@ -103,7 +105,7 @@ export function ScrollViewTest() {
           itShould="render scroll view with different border widths (start, end)">
           <View style={styles.wrapperView}>
             <ScrollView
-              {...commonProps}
+              {...COMMON_PROPS}
               style={{
                 borderColor: 'firebrick',
                 backgroundColor: 'beige',
@@ -120,7 +122,7 @@ export function ScrollViewTest() {
           itShould="render scroll view with different border colors (start, end)">
           <View style={styles.wrapperView}>
             <ScrollView
-              {...commonProps}
+              {...COMMON_PROPS}
               style={{
                 backgroundColor: 'beige',
                 borderWidth: 3,
@@ -139,7 +141,7 @@ export function ScrollViewTest() {
           itShould="render scrollview with content container with different border radii (topLeft, topRight, ...) (contentContainerStyle)">
           <View style={styles.wrapperView}>
             <ScrollView
-              {...commonProps}
+              {...COMMON_PROPS}
               style={{
                 borderWidth: 3,
                 borderColor: 'green',
@@ -162,7 +164,7 @@ export function ScrollViewTest() {
           itShould="render scroll view with contentContainer with different border widths (left, right, top, bottom) (contentContainerStyle)">
           <View style={styles.wrapperView}>
             <ScrollView
-              {...commonProps}
+              {...COMMON_PROPS}
               style={{
                 borderWidth: 3,
                 borderColor: 'green',
@@ -184,7 +186,7 @@ export function ScrollViewTest() {
           itShould="render scroll view contentContainer with different border colors (left, right, top, bottom) (contentContainerStyle)">
           <View style={styles.wrapperView}>
             <ScrollView
-              {...commonProps}
+              {...COMMON_PROPS}
               style={{
                 borderWidth: 3,
                 borderColor: 'green',
@@ -204,22 +206,25 @@ export function ScrollViewTest() {
       <TestSuite name="scroll indicators / scrollbar">
         <TestCase modal itShould="have persistent scrollbar">
           <View style={styles.wrapperView}>
-            <ScrollView persistentScrollbar={true} {...commonProps} />
+            <ScrollView persistentScrollbar={true} {...COMMON_PROPS} />
           </View>
         </TestCase>
         <TestCase modal itShould="shows white vertical scroll indicator">
           <View style={styles.wrapperView}>
-            <ScrollView {...commonProps} indicatorStyle={'white'} />
+            <ScrollView {...COMMON_PROPS} indicatorStyle={'white'} />
           </View>
         </TestCase>
         <TestCase modal itShould="show vertical scroll indicator">
           <View style={styles.wrapperView}>
-            <ScrollView {...commonProps} showsVerticalScrollIndicator={true} />
+            <ScrollView {...COMMON_PROPS} showsVerticalScrollIndicator={true} />
           </View>
         </TestCase>
         <TestCase modal itShould="hide vertical scroll indicator">
           <View style={styles.wrapperView}>
-            <ScrollView showsVerticalScrollIndicator={false} {...commonProps} />
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              {...COMMON_PROPS}
+            />
           </View>
         </TestCase>
         <TestCase modal itShould="show horizontal scroll indicator">
@@ -227,7 +232,7 @@ export function ScrollViewTest() {
             <ScrollView
               showsHorizontalScrollIndicator={true}
               horizontal
-              {...commonProps}>
+              {...COMMON_PROPS}>
               {getScrollViewContentHorizontal({})}
             </ScrollView>
           </View>
@@ -237,7 +242,7 @@ export function ScrollViewTest() {
             <ScrollView
               showsHorizontalScrollIndicator={false}
               horizontal
-              {...commonProps}>
+              {...COMMON_PROPS}>
               {getScrollViewContentHorizontal({})}
             </ScrollView>
           </View>
@@ -391,7 +396,7 @@ export function ScrollViewTest() {
           modal
           itShould="scroll should be disabled (it renders with the 5th element at the top)">
           <View style={styles.wrapperView}>
-            <ScrollView {...commonProps} scrollEnabled={false} />
+            <ScrollView {...COMMON_PROPS} scrollEnabled={false} />
           </View>
         </TestCase>
         <TestCase modal itShould="display horizontal scroll view">
@@ -400,7 +405,7 @@ export function ScrollViewTest() {
               width: '100%',
               height: 150,
             }}>
-            <ScrollView {...commonProps} horizontal={true} />
+            <ScrollView {...COMMON_PROPS} horizontal={true} />
           </View>
         </TestCase>
         <TestCase
@@ -430,7 +435,7 @@ export function ScrollViewTest() {
         >
           <View style={styles.wrapperView}>
             <ScrollView
-              {...commonProps}
+              {...COMMON_PROPS}
               contentInset={{top: 10, right: 20, bottom: 30, left: 40}}
             />
           </View>
@@ -443,7 +448,7 @@ export function ScrollViewTest() {
         >
           <View style={styles.wrapperView}>
             <TextInput style={styles.textInput} />
-            <ScrollView {...commonProps} automaticallyAdjustKeyboardInsets />
+            <ScrollView {...COMMON_PROPS} automaticallyAdjustKeyboardInsets />
           </View>
         </TestCase>
         <TestCase
@@ -463,7 +468,7 @@ export function ScrollViewTest() {
             renderContent={setObject => {
               return (
                 <ScrollView
-                  {...commonProps}
+                  {...COMMON_PROPS}
                   scrollEventThrottle={1000}
                   onScroll={(e: {nativeEvent: Object}) => {
                     setObject(e.nativeEvent);
@@ -477,8 +482,8 @@ export function ScrollViewTest() {
           modal
           itShould="the left scrollview should decelerate faster (stops earlier) than the right one (decelarationRate)">
           <View style={[styles.wrapperView, {flexDirection: 'row'}]}>
-            <ScrollView {...commonProps} decelerationRate={0.8} />
-            <ScrollView {...commonProps} decelerationRate={0.999} />
+            <ScrollView {...COMMON_PROPS} decelerationRate={0.8} />
+            <ScrollView {...COMMON_PROPS} decelerationRate={0.999} />
           </View>
         </TestCase>
         <TestCase
@@ -490,10 +495,10 @@ export function ScrollViewTest() {
           <View>
             <TextInput style={styles.textInput} />
             <View style={[styles.wrapperView, {flexDirection: 'row'}]}>
-              <ScrollView {...commonProps} keyboardDismissMode={'on-drag'}>
+              <ScrollView {...COMMON_PROPS} keyboardDismissMode={'on-drag'}>
                 {getScrollViewContent({})}
               </ScrollView>
-              <ScrollView {...commonProps} keyboardDismissMode={'none'}>
+              <ScrollView {...COMMON_PROPS} keyboardDismissMode={'none'}>
                 {getScrollViewContent({})}
               </ScrollView>
             </View>
@@ -509,11 +514,11 @@ export function ScrollViewTest() {
             <TextInput style={styles.textInput} />
             <View style={[styles.wrapperView, {flexDirection: 'row'}]}>
               <ScrollView
-                {...commonProps}
+                {...COMMON_PROPS}
                 keyboardShouldPersistTaps={'never'}
               />
               <ScrollView
-                {...commonProps}
+                {...COMMON_PROPS}
                 keyboardShouldPersistTaps={'always'}
               />
             </View>
@@ -523,8 +528,8 @@ export function ScrollViewTest() {
           modal
           itShould="the left scrollview should bounce (briefly scroll beyond the content to show the view below and then come back to top/bottom accordingly)">
           <View style={[styles.wrapperView, {flexDirection: 'row'}]}>
-            <ScrollView {...commonProps} />
-            <ScrollView {...commonProps} bounces={false} />
+            <ScrollView {...COMMON_PROPS} />
+            <ScrollView {...COMMON_PROPS} bounces={false} />
           </View>
         </TestCase>
         <TestCase
@@ -546,7 +551,7 @@ export function ScrollViewTest() {
               styles.wrapperView,
               {flexDirection: 'row', alignContent: 'space-between'},
             ]}>
-            <ScrollView {...commonProps}>
+            <ScrollView {...COMMON_PROPS}>
               <ScrollView
                 nestedScrollEnabled
                 style={{
@@ -562,7 +567,7 @@ export function ScrollViewTest() {
               </ScrollView>
               {getScrollViewContent({})}
             </ScrollView>
-            <ScrollView {...commonProps}>
+            <ScrollView {...COMMON_PROPS}>
               <ScrollView
                 nestedScrollEnabled={false}
                 style={{
@@ -753,7 +758,7 @@ const AppendingList = () => {
         }}
         nestedScrollEnabled
         style={styles.scrollView}>
-        {items.map((value, index, _array) => React.cloneElement(value))}
+        {items.map((value, _index, _array) => React.cloneElement(value))}
       </ScrollView>
       <View style={styles.row}>
         <Button

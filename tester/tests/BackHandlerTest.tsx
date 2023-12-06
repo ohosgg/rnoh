@@ -1,6 +1,6 @@
 import {BackHandler, Text, TouchableOpacity, View} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {Button} from '../components';
 
 export const BackHandlerTest = () => {
@@ -29,7 +29,7 @@ export const BackHandlerTest = () => {
       </TestCase>
       <TestCase itShould="allow to add, remove eventListener and display number of system back presses/gestures accordingly">
         <Text style={{width: '100%'}}>
-          Back pressed {counter} time{counter == 1 ? '' : 's'}
+          Back pressed {counter} time{counter === 1 ? '' : 's'}
         </Text>
         <View style={{flexDirection: 'row'}}>
           <Button

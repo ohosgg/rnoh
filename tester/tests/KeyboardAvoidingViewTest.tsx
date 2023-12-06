@@ -1,17 +1,15 @@
 import {
-  Button,
   Keyboard,
   KeyboardAvoidingView,
   StyleProp,
   StyleSheet,
-  Text,
   TextInput,
   TouchableWithoutFeedback,
   View,
   ViewStyle,
 } from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
-import React, {useEffect, useRef, useState} from 'react';
+import React from 'react';
 import {Modal} from '../components';
 
 export const KeyboardAvoidingViewTest = () => {

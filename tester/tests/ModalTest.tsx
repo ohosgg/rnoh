@@ -1,13 +1,6 @@
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import React, {useState} from 'react';
-import {
-  Modal,
-  StyleSheet,
-  Text,
-  Pressable,
-  View,
-  ModalProps,
-} from 'react-native';
+import {Modal, StyleSheet, Text, View, ModalProps} from 'react-native';
 import {Button} from '../components';
 
 export function ModalTest() {

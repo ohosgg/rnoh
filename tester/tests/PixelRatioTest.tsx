@@ -1,6 +1,5 @@
 import {PixelRatio, Text} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
-import {ObjectDisplayer} from '../components';
 
 export const PixelRatioTest = () => {
   return (

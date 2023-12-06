@@ -1,6 +1,6 @@
-import {SafeAreaView, View, StatusBar, Text} from 'react-native';
-import {Button} from '../components';
 import {useState} from 'react';
+import {SafeAreaView, StatusBar, View} from 'react-native';
+import {Button} from '../components';
 
 export function SafeAreaViewExample() {
   const [isStatusBarHidden, setIsStatusBarHidden] = useState(false);

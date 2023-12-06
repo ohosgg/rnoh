@@ -38,7 +38,7 @@ const calculateFps = (frameTimes, dt) => {
       frameIndex++;
     }
 
-    if (currentFrameTimes.length == 0) {
+    if (currentFrameTimes.length === 0) {
       fpsArray.push(1 / frameTimes[frameIndex + 1]);
     } else {
       fpsArray.push(

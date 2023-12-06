@@ -12,8 +12,8 @@ export function Benchmarker({
     'READY',
   );
   const [refreshKey, setRefreshKey] = useState(0);
-  const [startDateTime, setStartDateTime] = useState<Date>();
-  const [endDateTime, setEndDateTime] = useState<Date>();
+  const [_startDateTime, setStartDateTime] = useState<Date>();
+  const [_endDateTime, setEndDateTime] = useState<Date>();
 
   function start() {
     setStartDateTime(new Date());
@@ -37,11 +37,6 @@ export function Benchmarker({
       });
     }, 0);
   }, [refreshKey, status, samplesCount]);
-
-  const durationInMs =
-    endDateTime && startDateTime
-      ? endDateTime.getTime() - startDateTime.getTime()
-      : 0;
 
   return (
     <View style={{height: '100%', padding: 16}}>

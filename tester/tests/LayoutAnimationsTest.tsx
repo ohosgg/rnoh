@@ -1,6 +1,5 @@
 import {
   LayoutAnimation,
-  Pressable,
   View,
   Platform,
   UIManager,

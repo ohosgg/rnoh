@@ -10,7 +10,7 @@ function createFpsStats(frameTimesInSec) {
   }
   // treat frame times that took longer than seconds as outliers
   const filteredFrameTimesInSec = frameTimesInSec.filter(
-    frameTimesInSec => frameTimesInSec < 1,
+    frameTimeInSec => frameTimeInSec < 1,
   );
 
   return {

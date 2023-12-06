@@ -20,7 +20,7 @@ export function CheckerboardExample() {
         new Array(N_ROWS).fill(0).map((_, rowId) => {
           return (
             <View key={rowId} style={{flexDirection: 'row', width: '100%'}}>
-              {new Array(N_COLS).fill(0).map((_, colId) => {
+              {new Array(N_COLS).fill(0).map((__, colId) => {
                 return <Box key={colId} colorId={(rowId + colId) % 3} />;
               })}
             </View>

@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, Text, Vibration} from 'react-native';
+import React from 'react';
+import {Vibration} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import {Button} from '../components';
 
@@ -61,15 +61,3 @@ export const VibrationTest = () => {
     </TestSuite>
   );
 };
-
-const styles = StyleSheet.create({
-  buttonContainer: {
-    width: 80,
-    height: 80,
-  },
-  text: {
-    height: 20,
-    width: 200,
-    fontSize: 14,
-  },
-});

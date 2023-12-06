@@ -1,5 +1,5 @@
 import {TestCase, TestSuite} from '@rnoh/testerino';
-import {ImageBackground, Text, View} from 'react-native';
+import {ImageBackground, Text} from 'react-native';
 
 const LOCAL_IMAGE_ASSET_ID = require('../assets/pravatar-131.jpg');
 

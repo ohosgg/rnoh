@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react';
+import {useState} from 'react';
 import {Text, View} from 'react-native';
 
 export function ObjectDisplayer(props: {
@@ -15,7 +15,7 @@ export function ObjectDisplayer(props: {
           fontSize: 8,
           backgroundColor: '#EEE',
         }}>
-        {typeof object === undefined ? 'undefined' : JSON.stringify(object)}
+        {object === undefined ? 'undefined' : JSON.stringify(object)}
       </Text>
       {props.renderContent(setObject)}
     </View>

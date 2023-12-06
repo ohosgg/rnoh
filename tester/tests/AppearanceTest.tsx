@@ -13,12 +13,12 @@ export function AppearanceTest() {
 
   useEffect(() => {
     const handleColorThemeChange = ({
-      colorScheme,
+      colorScheme: newColorScheme,
     }: {
       colorScheme: ColorSchemeName;
     }) => {
-      setColorScheme(colorScheme);
-      setColorSchemeHistory(prev => [...prev, colorScheme]);
+      setColorScheme(newColorScheme);
+      setColorSchemeHistory(prev => [...prev, newColorScheme]);
     };
 
     Appearance.addChangeListener(handleColorThemeChange);
@@ -48,7 +48,7 @@ export function AppearanceTest() {
         <Text>{colorScheme}</Text>
         <Text>
           {colorSchemeHistory
-            .map(colorScheme => (colorScheme ? colorScheme : 'null'))
+            .map(oldColorScheme => (oldColorScheme ? oldColorScheme : 'null'))
             .join(', ')}
         </Text>
       </TestCase>
