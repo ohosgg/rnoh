@@ -58,17 +58,28 @@ export class DeviceInfoTurboModule extends TurboModule {
         fontScale: 1,
         densityDpi: displayInstance.densityDPI,
       } };
-    return new DeviceInfoTurboModule(ctx, initialDisplayMetrics)
+    return new DeviceInfoTurboModule(ctx, initialDisplayMetrics, windowInstance)
   }
 
   private displayMetrics?: DisplayMetrics = null;
+  private cleanUpCallbacks?: (() => void)[] = []
 
-  constructor(protected ctx: TurboModuleContext, initialDisplayMetrics: DisplayMetrics) {
+  constructor(protected ctx: TurboModuleContext, initialDisplayMetrics: DisplayMetrics, windowInstance: window.Window) {
     super(ctx);
     this.displayMetrics = initialDisplayMetrics;
-    this.ctx.rnInstance.subscribeToLifecycleEvents("CONFIGURATION_UPDATE", () => {
-      this.updateDeviceMetrics();
-    });
+    const updateDeviceMetrics = () => this.updateDeviceMetrics()
+    this.cleanUpCallbacks.push(
+      this.ctx.rnInstance.subscribeToLifecycleEvents("CONFIGURATION_UPDATE", updateDeviceMetrics)
+    )
+    windowInstance.on("windowSizeChange", updateDeviceMetrics)
+    this.cleanUpCallbacks.push(() => {
+      windowInstance.off("windowSizeChange", updateDeviceMetrics)
+    })
+  }
+
+  __onDestroy__() {
+    super.__onDestroy__()
+    this.cleanUpCallbacks.forEach(cb => cb())
   }
 
   getConstants() {

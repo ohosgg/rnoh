@@ -25,6 +25,10 @@ export class RNOHCorePackage extends RNPackage {
   createTurboModulesFactory(ctx: TurboModuleContext): TurboModulesFactory {
     return new CoreTurboModulesFactory(ctx);
   }
+
+  getDebugName() {
+    return "rnoh"
+  }
 }
 
 const TURBO_MODULE_CLASS_BY_NAME: Record<string, typeof TurboModule> = {
@@ -41,14 +45,14 @@ const TURBO_MODULE_CLASS_BY_NAME: Record<string, typeof TurboModule> = {
   [PlatformConstantsTurboModule.NAME]: PlatformConstantsTurboModule,
   [SourceCodeTurboModule.NAME]: SourceCodeTurboModule,
   [TimingTurboModule.NAME]: TimingTurboModule,
-  [WebSocketTurboModule.NAME]: WebSocketTurboModule
+  [WebSocketTurboModule.NAME]: WebSocketTurboModule,
+  [I18nManagerTurboModule.NAME]: I18nManagerTurboModule,
 };
 
 const EAGER_TURBO_MODULE_CLASS_BY_NAME = {
   [DeviceInfoTurboModule.NAME]: DeviceInfoTurboModule,
   [StatusBarTurboModule.NAME]: StatusBarTurboModule,
   [SafeAreaTurboModule.NAME]: SafeAreaTurboModule,
-  [I18nManagerTurboModule.NAME]: I18nManagerTurboModule
 } as const
 
 class CoreTurboModulesFactory extends TurboModulesFactory {
@@ -60,7 +64,6 @@ class CoreTurboModulesFactory extends TurboModulesFactory {
       [SafeAreaTurboModule.NAME]: await SafeAreaTurboModule.create(this.ctx, statusBarTurboModule),
       [StatusBarTurboModule.NAME]: statusBarTurboModule,
       [DeviceInfoTurboModule.NAME]: await DeviceInfoTurboModule.create(this.ctx),
-      [I18nManagerTurboModule.NAME]: await I18nManagerTurboModule.create(this.ctx)
     }
   }
 

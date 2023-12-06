@@ -55,6 +55,7 @@ struct Index {
     for (const customFont of fonts) {
       font.registerFont(customFont)
     }
+
     this.shouldShow = true
     stopTracing()
   }

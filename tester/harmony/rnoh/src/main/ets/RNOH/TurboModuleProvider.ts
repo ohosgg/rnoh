@@ -28,4 +28,10 @@ export class TurboModuleProvider {
     }
     return false;
   }
+
+  onDestroy() {
+    Object.values(this.cachedTurboModuleByName).forEach(turboModule => {
+      turboModule.__onDestroy__()
+    })
+  }
 }

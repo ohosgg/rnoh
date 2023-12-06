@@ -20,4 +20,8 @@ export abstract class RNPackage {
   };
 
   abstract createTurboModulesFactory(ctx: TurboModuleContext): TurboModulesFactory;
+
+  getDebugName(): string | undefined {
+    return undefined
+  }
 }

@@ -50,23 +50,26 @@ export struct RNApp {
     const stopTracing = this.logger.clone("aboutToAppear").startTracing()
     try {
       (async () => {
-        this.rnInstance = await this.getOrCreateRNInstance()
-        await this.onSetUp(this.rnInstance)
-        const jsBundleExecutionStatus = this.rnInstance.getBundleExecutionStatus(this.jsBundleProvider?.getURL())
-        if (this.jsBundleProvider && jsBundleExecutionStatus === undefined) {
-          await this.rnInstance.runJSBundle(this.jsBundleProvider)
-          this.shouldShow = true
-          return;
-        }
-        if (jsBundleExecutionStatus !== "DONE") {
-          this.cleanUpCallbacks.push(this.rnInstance.subscribeToLifecycleEvents("JS_BUNDLE_EXECUTION_FINISH", (args) => {
-            if (args.appKeys.includes(this.appKey)) {
-              this.shouldShow = true
-            }
-          }))
-        } else {
-          this.shouldShow = true
-        }
+        await (async () => {
+          this.rnInstance = await this.getOrCreateRNInstance()
+          await this.onSetUp(this.rnInstance)
+          const jsBundleExecutionStatus = this.rnInstance.getBundleExecutionStatus(this.jsBundleProvider?.getURL())
+          if (this.jsBundleProvider && jsBundleExecutionStatus === undefined) {
+            await this.rnInstance.runJSBundle(this.jsBundleProvider)
+            this.shouldShow = true
+            return;
+          }
+          if (jsBundleExecutionStatus !== "DONE") {
+            this.cleanUpCallbacks.push(this.rnInstance.subscribeToLifecycleEvents("JS_BUNDLE_EXECUTION_FINISH", (args) => {
+              if (args.appKeys.includes(this.appKey)) {
+                this.shouldShow = true
+              }
+            }))
+          } else {
+            this.shouldShow = true
+          }
+        })()
+        stopTracing()
       })()
     } catch(reason) {
       if (typeof reason === "string")
@@ -76,7 +79,6 @@ export struct RNApp {
       } else {
         this.rnAbility.getLogger().error("Fatal exception")
       }
-    } finally {
       stopTracing()
     }
   }

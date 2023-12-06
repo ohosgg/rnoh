@@ -5,6 +5,8 @@ export type TurboModuleContext = RNOHContext;
 export class TurboModule {
   public static readonly NAME;
 
-  constructor(protected ctx: TurboModuleContext) {
+  public constructor(protected ctx: TurboModuleContext) {
   };
+
+  public __onDestroy__() {}
 }

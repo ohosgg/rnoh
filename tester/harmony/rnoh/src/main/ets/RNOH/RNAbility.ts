@@ -2,7 +2,7 @@ import UIAbility from '@ohos.app.ability.UIAbility';
 import { NapiBridge } from "./NapiBridge"
 import type { RNOHLogger } from "./RNOHLogger";
 import { StandardRNOHLogger } from "./RNOHLogger"
-import type window from '@ohos.window';
+import window from '@ohos.window';
 import hilog from '@ohos.hilog';
 import type { TurboModuleProvider } from "./TurboModuleProvider"
 import libRNOHApp from 'librnoh_app.so'
@@ -55,6 +55,9 @@ export abstract class RNAbility extends UIAbility {
 
   public destroyAndUnregisterRNInstance(rnInstance: RNInstance): void {
     const stopTracing = this.logger.clone("destroyAndUnregisterRNInstance").startTracing()
+    if (rnInstance instanceof RNInstanceImpl) {
+      rnInstance.onDestroy()
+    }
     this.rnInstanceRegistry.deleteInstance(rnInstance.getId())
     stopTracing()
   }
@@ -63,7 +66,7 @@ export abstract class RNAbility extends UIAbility {
     if (!(rnInstance instanceof RNInstanceImpl)) {
       throw new Error("RNInstance must extends RNInstanceImpl")
     }
-    return new RNOHContext("0.0.0", rnInstance, this.providedLogger)
+    return new RNOHContext("0.72.5", rnInstance, this.providedLogger)
   }
 
   protected createLogger(): RNOHLogger {
@@ -81,17 +84,20 @@ export abstract class RNAbility extends UIAbility {
   }
 
   onWindowStageCreate(windowStage: window.WindowStage) {
-    const stopTracing = this.logger.clone("onWindowStageCreate").startTracing()
-    this.onWindowSetup(windowStage.getMainWindowSync()).then(() => {
+    const logger = this.logger.clone("onWindowStageCreate")
+    const stopTracing = logger.startTracing()
+    const mainWindow = windowStage.getMainWindowSync()
+    this.onWindowSetup(mainWindow).then(async () => {
       windowStage.loadContent(this.getPagePath(), (err, data) => {
         if (err.code) {
-          hilog.error(0x0000, 'RNOH', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
+          logger.error("Failed to load the content", err.code)
           return;
         }
-        hilog.info(0x0000, 'RNOH', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
+        logger.info("Succeeded in loading the content", JSON.stringify(data))
       });
-    }).catch((reason) => {
-      hilog.error(0x0000, 'RNOH', 'Failed to setup window. Cause: %{public}s', JSON.stringify(reason) ?? '');
+
+    }).catch((err: Error) => {
+      logger.error("Failed to setup window", JSON.stringify(err))
     }).finally(() => {
       stopTracing()
     })

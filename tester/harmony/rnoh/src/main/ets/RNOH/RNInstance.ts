@@ -160,6 +160,10 @@ export class RNInstanceImpl implements RNInstance {
     stopTracing()
   }
 
+  public onDestroy() {
+    this.turboModuleProvider.onDestroy()
+  }
+
   public getId(): number {
     return this.id;
   }
@@ -217,12 +221,19 @@ export class RNInstanceImpl implements RNInstance {
   }
 
   private async processPackages(packages: RNPackage[]) {
-    const stopTracing = this.logger.clone("processPackages").startTracing()
+    const logger = this.logger.clone("processPackages")
+    const stopTracing = logger.startTracing()
     packages.unshift(new RNOHCorePackage({}));
     const turboModuleContext = this.createRNOHContext(this)
     const result = {
       turboModuleProvider: new TurboModuleProvider(
-        await Promise.all(packages.map(async (pkg) => {
+        await Promise.all(packages.map(async (pkg, idx) => {
+          const pkgDebugName = pkg.getDebugName()
+          let traceName = `package${idx + 1}`
+          if (pkgDebugName) {
+            traceName += `: ${pkgDebugName}`
+          }
+          logger.clone(traceName).debug("")
           const turboModuleFactory = pkg.createTurboModulesFactory(turboModuleContext);
           await turboModuleFactory.prepareEagerTurboModules()
           return turboModuleFactory
