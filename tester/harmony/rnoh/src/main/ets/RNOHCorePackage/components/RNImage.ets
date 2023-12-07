@@ -193,6 +193,7 @@ export struct RNImage {
             if (this.imageSource !== undefined) {
               this.dispatchOnError(event.message)
             }
+            this.imageSource = undefined;
           })
       }
     }

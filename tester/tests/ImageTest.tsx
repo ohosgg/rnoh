@@ -300,18 +300,20 @@ export const ImageTest = () => {
 };
 
 const SwitchSourceTest = () => {
-  const [source, setSource] = React.useState(REMOTE_IMAGE_URL);
+  const SOURCES = [REMOTE_IMAGE_URL, '', REMOTE_REDIRECT_IMAGE_URL, WRONG_IMAGE_SRC];
+
+  const [idx, setIdx] = React.useState(0);
 
   return (
     <View>
       <View style={{flexDirection: 'row'}}>
-        <Image source={{uri: source}} style={{width: 100, height: 100}} />
-        <Text>{`Source: ${source}`}</Text>
+        <Image source={{uri: SOURCES[idx]}} style={{width: 100, height: 100}} />
+        <Text>{`Source: ${SOURCES[idx]}`}</Text>
       </View>
       <Button
         label="Switch Source"
         onPress={() => {
-          setSource(WRONG_IMAGE_SRC);
+          setIdx(i => ((i + 1) % SOURCES.length));
         }}
       />
     </View>
