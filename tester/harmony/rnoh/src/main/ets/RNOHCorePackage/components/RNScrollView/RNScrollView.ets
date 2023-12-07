@@ -383,7 +383,10 @@ export struct RNScrollView {
   }
 
   handleDragEnd() {
-    if (this.descriptor.rawProps.disableIntervalMomentum) {
+    // if `disableIntervalMomentum` is not explicitly set,
+    // but we have `pagingEnabled`, we still use the custom snapping logic
+    const disableIntervalMomentum = this.descriptor.rawProps.disableIntervalMomentum ?? this.descriptor.rawProps.pagingEnabled
+    if (disableIntervalMomentum) {
       const snapTarget = calculateSnapTarget({
         currentOffset: this.scroller.currentOffset(),
         isPagingEnabled: this.descriptor.rawProps.pagingEnabled ?? false,
@@ -399,7 +402,7 @@ export struct RNScrollView {
       })
       if (snapTarget) {
         this.shouldDisableSnapping = true
-        const snapDurationInMs = 100
+        const snapDurationInMs = 500
         this.scroller.scrollTo({
           xOffset: snapTarget.xOffset,
           yOffset: snapTarget.yOffset,
