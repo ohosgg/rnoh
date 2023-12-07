@@ -300,7 +300,12 @@ export const ImageTest = () => {
 };
 
 const SwitchSourceTest = () => {
-  const SOURCES = [REMOTE_IMAGE_URL, '', REMOTE_REDIRECT_IMAGE_URL, WRONG_IMAGE_SRC];
+  const SOURCES = [
+    REMOTE_IMAGE_URL,
+    '',
+    REMOTE_REDIRECT_IMAGE_URL,
+    WRONG_IMAGE_SRC,
+  ];
 
   const [idx, setIdx] = React.useState(0);
 
@@ -313,7 +318,7 @@ const SwitchSourceTest = () => {
       <Button
         label="Switch Source"
         onPress={() => {
-          setIdx(i => ((i + 1) % SOURCES.length));
+          setIdx(i => (i + 1) % SOURCES.length);
         }}
       />
     </View>

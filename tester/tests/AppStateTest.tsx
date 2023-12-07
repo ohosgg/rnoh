@@ -50,12 +50,13 @@ export function AppStateTest() {
                 <Text>Number of items to add</Text>
                 <TextInput
                   value={state.textInputValue}
-                  onChange={e =>
+                  onChange={e => {
+                    e.persist();
                     setState(prev => ({
                       ...prev,
-                      textInputValue: e.nativeEvent.text,
-                    }))
-                  }
+                      textInputValue: e.nativeEvent?.text,
+                    }));
+                  }}
                   style={{borderWidth: 1, width: 50, marginLeft: 10}}
                   maxLength={6}
                 />
