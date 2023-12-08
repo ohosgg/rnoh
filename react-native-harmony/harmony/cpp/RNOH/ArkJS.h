@@ -102,8 +102,6 @@ class ArkJS {
 
     napi_env getEnv();
 
-    void throwError(const char *message);
-
     napi_valuetype getType(napi_value value);
 
     napi_value convertIntermediaryValueToNapiValue(IntermediaryArg arg);
@@ -142,6 +140,8 @@ class RNOHNapiObject {
   private:
     ArkJS m_arkJs;
     napi_value m_object;
+
+    friend class RNOHNapiObjectBuilder;
 };
 
 class RNOHNapiObjectBuilder {
@@ -176,6 +176,7 @@ class RNOHNapiObjectBuilder {
     ArkJS m_arkJs;
     napi_env m_env;
     napi_value m_object;
+    std::unordered_map<std::string, napi_value> m_properties;
 };
 
 class Promise {
