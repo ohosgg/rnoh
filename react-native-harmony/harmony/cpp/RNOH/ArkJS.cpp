@@ -362,7 +362,7 @@ RNOHNapiObjectBuilder::RNOHNapiObjectBuilder(napi_env env, ArkJS arkJs) : m_env(
 RNOHNapiObjectBuilder::RNOHNapiObjectBuilder(napi_env env, ArkJS arkJs, napi_value object) : m_env(env), m_arkJs(arkJs), m_object(object) {}
 
 RNOHNapiObjectBuilder &RNOHNapiObjectBuilder::addProperty(const char *name, napi_value value) {
-    m_properties.insert_or_assign(name, value);
+    m_properties.emplace_back(name, value);
     return *this;
 }
 

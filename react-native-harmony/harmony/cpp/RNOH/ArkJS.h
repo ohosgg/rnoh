@@ -176,7 +176,7 @@ class RNOHNapiObjectBuilder {
     ArkJS m_arkJs;
     napi_env m_env;
     napi_value m_object;
-    std::unordered_map<std::string, napi_value> m_properties;
+    std::vector<std::pair<std::string, napi_value>> m_properties;
 };
 
 class Promise {
