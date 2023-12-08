@@ -14,7 +14,7 @@
     "android": "react-native run-android",
     "format": "prettier App.tsx ./benchmarks ./components ./examples ./jests ./scripts ./tests -w",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint App.tsx ./benchmarks ./components ./examples ./jests ./scripts ./tests",
+    "lint": "eslint App.tsx ./benchmarks ./components ./examples ./jests ./scripts ./tests --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "verify": "npm run typecheck && npm run test && npm run lint",
     "start": "react-native start",
