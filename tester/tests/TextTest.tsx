@@ -1126,6 +1126,25 @@ export function TextTest() {
             Normal Text
           </Text>
         </TestCase>
+        <TestCase
+          modal
+          skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/586
+          itShould="render Text with different text decoration styles">
+          <View>
+            <Text style={[styles.styledBox, {textDecorationStyle: 'dashed'}]}>
+              Text decoration style dashed
+            </Text>
+            <Text style={[styles.styledBox, {textDecorationStyle: 'dotted'}]}>
+              Text decoration style dotted
+            </Text>
+            <Text style={[styles.styledBox, {textDecorationStyle: 'double'}]}>
+              Text decoration style double
+            </Text>
+            <Text style={[styles.styledBox, {textDecorationStyle: 'solid'}]}>
+              Text decoration style solid
+            </Text>
+          </View>
+        </TestCase>
       </TestSuite>
     </TestSuite>
   );
@@ -1291,5 +1310,13 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     color: 'black',
+  },
+  styledBox: {
+    width: '100%',
+    padding: 10,
+    marginTop: 16,
+    marginBottom: 16,
+    textDecorationColor: 'red',
+    textDecorationLine: 'underline',
   },
 });
