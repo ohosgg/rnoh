@@ -96,6 +96,10 @@ export struct RNParagraph {
               .width(positionedFragment.size.width)
               .height(line.size.height)
               .maxLines(1)
+              .accessibilityGroup(this.descriptorWrapper?.accessibilityGroup)
+              .accessibilityText(this.descriptorWrapper?.accessibilityText)
+              .accessibilityLevel(this.descriptorWrapper?.accessibilityLevel)
+              .accessibilityDescription(this.descriptorWrapper?.accessibilityDescription)
           }
         })
       })

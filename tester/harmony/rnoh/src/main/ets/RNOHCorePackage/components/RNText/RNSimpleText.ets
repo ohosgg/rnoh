@@ -15,6 +15,17 @@ import {
 import { AttributedFragment } from './types';
 import { TextDescriptor } from './types'
 
+function getAccessibilityLevel(descriptor: TextDescriptor) {
+  if (
+    descriptor.props["aria-hidden"] === true ||
+      descriptor.props.accessibilityElementsHidden === true
+  ) {
+    return "no-hide-descendants";
+  }
+
+  return descriptor.props.importantForAccessibility ?? 'auto';
+}
+
 @Component
 export struct RNSimpleText {
   ctx!: RNOHContext
@@ -69,6 +80,10 @@ export struct RNSimpleText {
         .padding(this.descriptor.props.padding)
         .copyOption(this.descriptor.props.selectable ? CopyOptions.LocalDevice : CopyOptions.None)
         .enabled(!this.descriptor.props.disabled)
+        .accessibilityGroup(this.descriptor.props.accessible)
+        .accessibilityText(this.descriptor.props["aria-label"] || this.descriptor.props.accessibilityLabel)
+        .accessibilityLevel(getAccessibilityLevel(this.descriptor))
+        .accessibilityDescription(this.descriptor.props.accessibilityHint)
     }
   }
 }

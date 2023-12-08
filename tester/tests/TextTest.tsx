@@ -3,8 +3,7 @@ import {TestSuite, TestCase} from '@rnoh/testerino';
 import {Button, PressCounter} from '../components';
 import {useState} from 'react';
 
-const SAMPLE_PARAGRAPH_TEXT =
-  'Quis exercitation do eu in laboris nulla sit elit officia. Incididunt ipsum aliquip commodo proident ad laborum aliquip fugiat sunt aute ea laboris mollit reprehenderit. Culpa non incididunt cupidatat esse laborum nulla quis mollit voluptate proident commodo. Consectetur ad deserunt do nulla sunt veniam magna laborum reprehenderit et ullamco fugiat fugiat.';
+const SAMPLE_PARAGRAPH_TEXT = `Quis exercitation do eu in laboris nulla sit elit officia. Incididunt ipsum aliquip commodo proident ad laborum aliquip fugiat sunt aute ea laboris mollit reprehenderit. Culpa non incididunt cupidatat esse laborum nulla quis mollit voluptate proident commodo. Consectetur ad deserunt do nulla sunt veniam magna laborum reprehenderit et ullamco fugiat fugiat.`;
 
 export function TextTest() {
   return (
@@ -569,7 +568,8 @@ export function TextTest() {
           <TestCase itShould="vertically align text and view">
             <Text style={{color: 'red', lineHeight: 82}}>
               {'Hello World'}
-              <View style={{width: 12, height: 12, backgroundColor: 'blue'}} />
+              <View
+                style={{width: 12, height: 12, backgroundColor: 'blue'}}></View>
             </Text>
           </TestCase>
           <TestCase itShould="not crash when a view is trimmed by number of lines (#1)">
@@ -1035,6 +1035,96 @@ export function TextTest() {
           modal
           itShould="activate onPress() on <Text /> if the touch moves up to 100px above or below the <Text /> body">
           <TextPressRetentionOffsetTest />
+        </TestCase>
+      </TestSuite>
+      <TestSuite name="text accessibility">
+        <TestCase
+          modal
+          skip // no screen reader to test it - issue not created
+          itShould='make the screen reader say "This is accessible text"'>
+          <Text accessible={true}>This is accessible text</Text>
+        </TestCase>
+        <TestCase
+          modal
+          skip // no screen reader to test it - issue not created
+          itShould='make the screen reader say "Important Text"'>
+          <View>
+            <Text accessible importantForAccessibility={'yes'}>
+              Important Text
+            </Text>
+            <Text accessible importantForAccessibility="no-hide-descendants">
+              Ignored Text
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase
+          modal
+          skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/585
+          itShould='make the screen reader say "Selected, First Text" and "Second Text"'>
+          <View>
+            <Text accessible={true} aria-selected={true}>
+              First Text
+            </Text>
+            <Text accessible={true} aria-selected={false}>
+              Second Text
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase
+          modal
+          skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/582
+          itShould='make the screen reader say "Checked, First Text" and "Second Text"'>
+          <View>
+            <Text accessible={true} aria-checked={true}>
+              First Text
+            </Text>
+            <Text accessible={true} aria-checked={false}>
+              Second Text
+            </Text>
+          </View>
+        </TestCase>
+        <TestCase
+          modal
+          skip // no screen reader to test it (but implemented) - issue not created
+          itShould='make the screen reader say "Hello World" even if the text is "Hello User"'>
+          <Text accessible={true} accessibilityLabel="Hello World">
+            Hello User
+          </Text>
+        </TestCase>
+        <TestCase
+          modal
+          skip // no screen reader to test it (but implemented) - issue not created
+          itShould='make the screen reader say hint "There is a hint"'>
+          <Text accessible={true} accessibilityHint="There is a hint">
+            Normal Text
+          </Text>
+        </TestCase>
+        <TestCase
+          modal
+          skip // no screen reader to test it (but implemented) - https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/584
+          itShould='make the screen reader say "Hello World" even if the text is "Hello User" - aria-label'>
+          <Text accessible={true} aria-label="Hello World">
+            Hello User
+          </Text>
+        </TestCase>
+        <TestCase
+          modal
+          skip // no screen reader to test it (not implemented) - https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/581
+          itShould='make the screen reader say/display "busy" after clicking on Loading Text'>
+          <Text accessible aria-busy={true}>
+            Loading
+          </Text>
+        </TestCase>
+        <TestCase
+          modal
+          skip // no screen reader to test it (not implemented) - not supported yet on ArkUI (issue not created yet)
+          itShould='make the screen reader say/display "disabled"'>
+          <Text accessible={true} aria-disabled={true}>
+            Disabled Text
+          </Text>
+          <Text accessible={true} aria-disabled={false}>
+            Normal Text
+          </Text>
         </TestCase>
       </TestSuite>
     </TestSuite>

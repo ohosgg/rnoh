@@ -1,6 +1,7 @@
 import type { ColorSegments, Descriptor, Tag } from '../../../RNOH/DescriptorBase'
 import type { OHOSMeasurerTextFragmentExtraData } from '../../../RNOH/TextLayoutManager'
 import type { ViewBaseProps } from '../RNViewBase/types'
+import { AccessibilityProps as ViewAccessibility } from '../RNViewBase/ViewAccessibilityTypes';
 
 export type AttributedFragment = {
   text?: string
@@ -50,7 +51,7 @@ export type TextShadowProps = {
   textShadowRadius?: number,
 }
 
-export type TextProps = ViewBaseProps & {
+export type TextProps = ViewBaseProps & ViewAccessibility & {
   textAlign?: string
   fragments: AttributedFragment[]
   padding?: PaddingProps
