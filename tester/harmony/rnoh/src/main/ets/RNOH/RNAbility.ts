@@ -26,8 +26,11 @@ export abstract class RNAbility extends UIAbility {
   protected logger: RNOHLogger
   protected rnInstanceRegistry: RNInstanceRegistry
   protected window: window.Window | undefined
+  protected initializationDateTime: Date
+  protected readinessDateTime: Date | undefined
 
   async onCreate(want, param) {
+    this.initializationDateTime = new Date()
     this.providedLogger = this.createLogger()
     this.providedLogger.info(RNOH_BANNER)
     this.logger = this.providedLogger.clone("RNAbility")
@@ -44,6 +47,13 @@ export abstract class RNAbility extends UIAbility {
     AppStorage.setOrCreate('RNInstanceFactory', this.rnInstanceRegistry)
     AppStorage.setOrCreate('RNAbility', this)
     stopTracing()
+  }
+
+  public markReadiness(): void {
+    if (!this.readinessDateTime) {
+      this.readinessDateTime = new Date()
+      this.logger.warn(`START UP TIME: ${this.readinessDateTime.getTime() - this.initializationDateTime.getTime()} ms`)
+    }
   }
 
   public async createAndRegisterRNInstance(options: RNInstanceOptions): Promise<RNInstance> {
@@ -66,7 +76,7 @@ export abstract class RNAbility extends UIAbility {
     if (!(rnInstance instanceof RNInstanceImpl)) {
       throw new Error("RNInstance must extends RNInstanceImpl")
     }
-    return new RNOHContext("0.72.5", rnInstance, this.providedLogger)
+    return new RNOHContext("0.72.5", rnInstance, this.providedLogger, this)
   }
 
   protected createLogger(): RNOHLogger {

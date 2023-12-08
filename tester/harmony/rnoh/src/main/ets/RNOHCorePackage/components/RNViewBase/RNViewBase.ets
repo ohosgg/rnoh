@@ -29,23 +29,30 @@ export struct RNViewBase {
   private unregisterCommandCallback?: () => void = undefined
 
   aboutToAppear() {
-    let descriptor = this.ctx.descriptorRegistry.getDescriptor<ViewBaseDescriptor>(this.tag)
+    const descriptor = this.ctx.descriptorRegistry.getDescriptor<ViewBaseDescriptor>(this.tag)
     if (!this.componentManager) {
       this.componentManager = new RNViewManager(this.tag, this.ctx)
     }
     this.unregisterComponentManager = this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager)
-    this.setDescriptor(descriptor)
+    this.onDescriptorChange(descriptor)
+    this.maybeLogStartUpTime()
     const parentTag = descriptor.parentTag;
     this.componentManager.setParentTag(parentTag);
     this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
-        this.setDescriptor(newDescriptor)
+        this.onDescriptorChange(newDescriptor)
       }
     )
   }
 
-  private setDescriptor(descriptor: ViewBaseDescriptor) {
+  private onDescriptorChange(descriptor: ViewBaseDescriptor) {
     this.descriptorWrapper = new ViewDescriptorWrapper(descriptor)
+  }
+
+  private maybeLogStartUpTime() {
+    if ((this.descriptorWrapper?.hints ?? []).includes("ready")) {
+      this.ctx.rnAbility.markReadiness()
+    }
   }
 
   aboutToDisappear() {

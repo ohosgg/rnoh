@@ -25,6 +25,7 @@ function App() {
   return (
     <NavigationContainer>
       <PortalProvider>
+        <View id="__harmony::ready" />
         <Page name="TESTS: DEV">
           <TesterExample filter={{tags: ['dev']}} />
         </Page>

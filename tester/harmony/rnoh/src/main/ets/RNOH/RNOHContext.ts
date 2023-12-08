@@ -4,6 +4,7 @@ import type { RNComponentCommandHub, RNComponentCommandReceiver } from './RNComp
 import type { RNOHLogger } from './RNOHLogger';
 import type { RNInstance, RNInstanceImpl } from './RNInstance';
 import type { ComponentManagerRegistry } from './ComponentManagerRegistry';
+import type { RNAbility } from "./RNAbility"
 
 export class RNOHContext {
   public get descriptorRegistry(): DescriptorRegistry {
@@ -44,6 +45,7 @@ export class RNOHContext {
     public reactNativeVersion: string,
     private rnInstanceImpl: RNInstanceImpl,
     public logger: RNOHLogger,
+    public rnAbility: RNAbility
   ) {
   }
 }

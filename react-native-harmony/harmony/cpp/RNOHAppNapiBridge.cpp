@@ -20,6 +20,16 @@ auto uiTicker = std::make_shared<UITicker>();
 static napi_value createReactNativeInstance(napi_env env, napi_callback_info info) {
     LogSink::initializeLogging();
     LOG(INFO) << "createReactNativeInstance";
+#ifdef REACT_NATIVE_DEBUG
+    std::string warning =
+        "\n"
+        ".--------------------------------.\n"
+        "| REACT_NATIVE_DEBUG is enabled! |\n"
+        "'--------------------------------'\n";
+    LOG(WARNING) << warning;
+    LOG(WARNING)
+        << "REACT_NATIVE_DEBUG is enabled. The performance is heavily affected. Do not run debug mode on production!";
+#endif
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 6);
     size_t instanceId = arkJs.getDouble(args[0]);
