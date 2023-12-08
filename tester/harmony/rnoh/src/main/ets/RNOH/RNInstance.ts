@@ -102,6 +102,13 @@ export interface RNInstance {
   bindComponentNameToDescriptorType(componentName: string, descriptorType: string);
 
   getComponentNameFromDescriptorType(descriptorType: string): string
+
+  /**
+   * Blocks gestures in targetComponent and its ancestors. Used by react-native-gesture-handler when panning in
+   * RNScrollView or other scrollable components.
+   * @returns a function that cancels this this effect
+   */
+  blockComponentsGestures(targetComponentTag: Tag): (() => void)
 }
 
 /**
@@ -191,9 +198,9 @@ export class RNInstanceImpl implements RNInstance {
     switch (type) {
       case "SCHEDULER_DID_SET_IS_JS_RESPONDER": {
         if (payload.blockNativeResponder) {
-          this.onBlockNativeResponder(payload.tag)
+          this.onBlockResponder(payload.tag)
         } else {
-          this.onUnblockNativeResponder(payload.tag)
+          this.onUnblockResponder(payload.tag)
         }
         break;
       }
@@ -202,8 +209,15 @@ export class RNInstanceImpl implements RNInstance {
     }
   }
 
-  private onBlockNativeResponder(tag: Tag) {
-    const stopTracing = this.logger.clone("onBlockNativeResponder").startTracing()
+  public blockComponentsGestures(tag: Tag) {
+    this.onBlockResponder(tag)
+    return () => {
+      this.onUnblockResponder(tag)
+    }
+  }
+
+  private onBlockResponder(tag: Tag) {
+    const stopTracing = this.logger.clone("onBlockResponder").startTracing()
     const tags = this.descriptorRegistry.getDescriptorLineage(tag).map(d => d.tag)
     tags.forEach((tag) => {
       this.componentCommandHub.dispatchCommand(tag, RNOHComponentCommand.BLOCK_NATIVE_RESPONDER, undefined)
@@ -211,8 +225,8 @@ export class RNInstanceImpl implements RNInstance {
     stopTracing()
   }
 
-  private onUnblockNativeResponder(tag: Tag) {
-    const stopTracing = this.logger.clone("onUnblockNativeResponder").startTracing()
+  private onUnblockResponder(tag: Tag) {
+    const stopTracing = this.logger.clone("onUnblockResponder").startTracing()
     const tags = this.descriptorRegistry.getDescriptorLineage(tag).map(d => d.tag)
     tags.forEach((tag) => {
       this.componentCommandHub.dispatchCommand(tag, RNOHComponentCommand.UNBLOCK_NATIVE_RESPONDER, undefined)
