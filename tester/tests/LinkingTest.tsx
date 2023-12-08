@@ -60,7 +60,12 @@ export function LinkingTest() {
         <Button onPress={() => Linking.openSettings()} label="Open settings" />
       </TestCase>
       <TestCase itShould="fail on bad url">
-        <Button onPress={() => Linking.openURL('bad://url').catch((e) => console.warn(e))} label="Bad URL" />
+        <Button
+          onPress={() =>
+            Linking.openURL('bad://url').catch(e => console.warn(e))
+          }
+          label="Bad URL"
+        />
       </TestCase>
     </TestSuite>
   );

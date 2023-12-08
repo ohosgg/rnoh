@@ -3,7 +3,8 @@ import {TestSuite, TestCase} from '@rnoh/testerino';
 import {Button, PressCounter} from '../components';
 import {useState} from 'react';
 
-const SAMPLE_PARAGRAPH_TEXT = `Quis exercitation do eu in laboris nulla sit elit officia. Incididunt ipsum aliquip commodo proident ad laborum aliquip fugiat sunt aute ea laboris mollit reprehenderit. Culpa non incididunt cupidatat esse laborum nulla quis mollit voluptate proident commodo. Consectetur ad deserunt do nulla sunt veniam magna laborum reprehenderit et ullamco fugiat fugiat.`;
+const SAMPLE_PARAGRAPH_TEXT =
+  'Quis exercitation do eu in laboris nulla sit elit officia. Incididunt ipsum aliquip commodo proident ad laborum aliquip fugiat sunt aute ea laboris mollit reprehenderit. Culpa non incididunt cupidatat esse laborum nulla quis mollit voluptate proident commodo. Consectetur ad deserunt do nulla sunt veniam magna laborum reprehenderit et ullamco fugiat fugiat.';
 
 export function TextTest() {
   return (
@@ -568,8 +569,7 @@ export function TextTest() {
           <TestCase itShould="vertically align text and view">
             <Text style={{color: 'red', lineHeight: 82}}>
               {'Hello World'}
-              <View
-                style={{width: 12, height: 12, backgroundColor: 'blue'}}></View>
+              <View style={{width: 12, height: 12, backgroundColor: 'blue'}} />
             </Text>
           </TestCase>
           <TestCase itShould="not crash when a view is trimmed by number of lines (#1)">
