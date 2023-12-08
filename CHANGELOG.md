@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.72.12
+- added `ScrollView::inverted` prop support
+- added more detailed logs
+- added `ScrollView::maintainVisibleContentPosition` support
+- added `TextInput::clearOnFocus` support
+- added `hints` support:
+  - `debug` hint
+  - `ready` hint
+- added `RNInstance::blockComponentsGestures` method
+- added error handling for errors thrown from turbo modules
+- fixed unnecessary text wrapping issue
+- fixed touches when transform was provided
+- fixed image sometimes not changing on source change
+- fixed imports not being hijacked to scoped third-party harmony packages
+- fixed `fontColor` in `TextInput`
+- fixed opacity exceeding the range
+- fixed some props sometimes not being provided to native components
+- fixed RefreshControl behavior
+- fixed inserting ellipsis when `Text` has padding
+- fixed opacity not being animated when using layout animations
+- fixed reacting on dimensions change on devices with folding screen
+- fixed aggressive page snapping
+
 ## v0.72.11
 - BREAKING: `react-native-harmony/metro.config` exports now a function that creates configuration instead of configuration
 - added `TextInput::keyboardType` support

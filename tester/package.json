@@ -5,7 +5,7 @@
   "scripts": {
     "install:hooks": "cd .. && husky install tester/.husky && cd tester && npx husky add .husky/pre-push \"cd tester && npm run verify\"",
     "preinstall": "cd ../react-native-harmony && npm pack && cd ../tester",
-    "postinstall": "node ./scripts/create-build-profile && npm uninstall react-native-harmony && npm i react-native-harmony@file:../react-native-harmony/rnoh-react-native-harmony-0.72.11.tgz",
+    "postinstall": "node ./scripts/create-build-profile && npm uninstall react-native-harmony && npm i react-native-harmony@file:../react-native-harmony/rnoh-react-native-harmony-0.72.12.tgz",
     "dev:cli": "cd ../react-native-harmony && npm run install:dev-cli && cd ../tester && npm i",
     "dev:rn": "npm i && npm run dev",
     "dev": "react-native bundle-harmony --dev --minify=false",
@@ -29,7 +29,7 @@
     "react": "18.2.0",
     "react-native": "0.72.5",
     "react-native-flipper-performance-plugin": "^0.4.0",
-    "react-native-harmony": "file:../react-native-harmony/rnoh-react-native-harmony-0.72.11.tgz"
+    "react-native-harmony": "file:../react-native-harmony/rnoh-react-native-harmony-0.72.12.tgz"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
