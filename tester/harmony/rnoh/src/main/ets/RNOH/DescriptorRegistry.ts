@@ -10,6 +10,8 @@ type SubtreeListener = () => void;
 type SetNativeStateFn = (componentName: string, tag: Tag, state: unknown) => void
 
 export class DescriptorRegistry {
+  static readonly ANIMATED_NON_RAW_PROP_KEYS = ['transform'];
+
   private descriptorByTag: Map<Tag, Descriptor> = new Map();
   private descriptorById: Map<NativeId, Descriptor> = new Map();
   private descriptorListenersSetByTag: Map<Tag, Set<(descriptor: Descriptor) => void>> = new Map();
@@ -86,10 +88,25 @@ export class DescriptorRegistry {
     return results.reverse();
   }
 
+  private splitAnimatedProps(animatedProps: Object): [Object, Object] {
+    const props = {};
+    const rawProps = {};
+
+    Object.entries(animatedProps).forEach(([key, value]) => {
+      if (DescriptorRegistry.ANIMATED_NON_RAW_PROP_KEYS.includes(key)) {
+        props[key] = value;
+      } else {
+        rawProps[key] = value;
+      }
+    })
+
+    return [props, rawProps];
+  }
+
   /**
    * Called by NativeAnimatedTurboModule. This method needs to be encapsulated.
    */
-  public setAnimatedRawProps<TProps extends Object>(tag: Tag, props: TProps): void {
+  public setAnimatedRawProps<TProps extends Object>(tag: Tag, newProps: TProps): void {
     this.logger.clone('setAnimatedRawProps').debug("")
     let descriptor = this.getDescriptor<Descriptor<string, TProps>>(tag);
 
@@ -99,12 +116,14 @@ export class DescriptorRegistry {
 
     // update stored animated props
     const oldProps = this.animatedRawPropsByTag.get(tag);
-    const mergedProps = { ...oldProps, ...props };
+    const mergedProps = { ...oldProps, ...newProps };
     this.animatedRawPropsByTag.set(tag, mergedProps);
 
+    const [props, rawProps] = this.splitAnimatedProps(mergedProps);
+
     // set new props for the descriptor
-    descriptor.props = { ...descriptor.props, ...mergedProps };
-    descriptor.rawProps = { ...descriptor.rawProps, ...mergedProps };
+    descriptor.props = { ...descriptor.props, ...props };
+    descriptor.rawProps = { ...descriptor.rawProps, ...rawProps };
     const updatedDescriptor = { ...descriptor };
     this.saveDescriptor(updatedDescriptor)
 
