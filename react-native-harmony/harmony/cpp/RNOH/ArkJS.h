@@ -112,6 +112,8 @@ class ArkJS {
     napi_env m_env;
 
     void maybeThrowFromStatus(napi_status status, const char *message);
+
+    void maybeRethrowAsCpp(napi_status status);
 };
 
 class RNOHNapiObject {

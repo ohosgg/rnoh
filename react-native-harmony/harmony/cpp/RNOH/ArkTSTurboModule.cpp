@@ -1,4 +1,7 @@
+#include <exception>
+#include <optional>
 #include <variant>
+#include <glog/logging.h>
 #include <jsi/JSIDynamic.h>
 #include <ReactCommon/CallbackWrapper.h>
 #include <ReactCommon/TurboModuleUtils.h>
@@ -25,25 +28,37 @@ ArkTSTurboModule::ArkTSTurboModule(Context ctx, std::string name) : m_ctx(ctx), 
 // calls a TurboModule method and blocks until it returns, returning its result
 jsi::Value ArkTSTurboModule::call(jsi::Runtime &runtime, const std::string &methodName, const jsi::Value *jsiArgs, size_t argsCount) {
     folly::dynamic result;
+    std::optional<std::exception> thrownError = std::nullopt;
     auto args = convertJSIValuesToIntermediaryValues(runtime, m_ctx.jsInvoker, jsiArgs, argsCount);
-    m_ctx.taskExecutor->runSyncTask(TaskThread::MAIN, [ctx = m_ctx, &methodName, &args, &result, &runtime]() {
-        ArkJS arkJs(ctx.env);
-        auto napiArgs = arkJs.convertIntermediaryValuesToNapiValues(args);
-        auto napiTurboModuleObject = arkJs.getObject(ctx.arkTsTurboModuleInstanceRef);
-        auto napiResult = napiTurboModuleObject.call(methodName, napiArgs);
-        result = arkJs.getDynamic(napiResult);
+    m_ctx.taskExecutor->runSyncTask(TaskThread::MAIN, [ctx = m_ctx, &name = name_, &thrownError, &methodName, &args, &result, &runtime]() {
+        try {
+            ArkJS arkJs(ctx.env);
+            auto napiArgs = arkJs.convertIntermediaryValuesToNapiValues(args);
+            auto napiTurboModuleObject = arkJs.getObject(ctx.arkTsTurboModuleInstanceRef);
+            auto napiResult = napiTurboModuleObject.call(methodName, napiArgs);
+            result = arkJs.getDynamic(napiResult);
+        } catch (const std::exception &e) {
+            thrownError = e;
+        }
     });
+    if (thrownError.has_value()) {
+        throw thrownError;
+    }
     return jsi::valueFromDynamic(runtime, result);
 }
 
 // calls a TurboModule method without blocking and ignores its result
 void rnoh::ArkTSTurboModule::scheduleCall(facebook::jsi::Runtime &runtime, const std::string &methodName, const facebook::jsi::Value *jsiArgs, size_t argsCount) {
     auto args = convertJSIValuesToIntermediaryValues(runtime, m_ctx.jsInvoker, jsiArgs, argsCount);
-    m_ctx.taskExecutor->runTask(TaskThread::MAIN, [ctx = m_ctx, methodName, args = std::move(args), &runtime]() {
-        ArkJS arkJs(ctx.env);
-        auto napiArgs = arkJs.convertIntermediaryValuesToNapiValues(args);
-        auto napiTurboModuleObject = arkJs.getObject(ctx.arkTsTurboModuleInstanceRef);
-        napiTurboModuleObject.call(methodName, napiArgs);
+    m_ctx.taskExecutor->runTask(TaskThread::MAIN, [ctx = m_ctx, name = name_, methodName, args = std::move(args), &runtime]() {
+        try {
+            ArkJS arkJs(ctx.env);
+            auto napiArgs = arkJs.convertIntermediaryValuesToNapiValues(args);
+            auto napiTurboModuleObject = arkJs.getObject(ctx.arkTsTurboModuleInstanceRef);
+            napiTurboModuleObject.call(methodName, napiArgs);
+        } catch (const std::exception &e) {
+            LOG(ERROR) << "Exception thrown while calling " << name << " TurboModule method "<< methodName << ": " << e.what();
+        }
     });
 }
 
@@ -51,13 +66,28 @@ void rnoh::ArkTSTurboModule::scheduleCall(facebook::jsi::Runtime &runtime, const
 jsi::Value ArkTSTurboModule::callAsync(jsi::Runtime &runtime, const std::string &methodName, const jsi::Value *jsiArgs, size_t argsCount) {
     auto args = convertJSIValuesToIntermediaryValues(runtime, m_ctx.jsInvoker, jsiArgs, argsCount);
     napi_ref napiResultRef;
-    m_ctx.taskExecutor->runSyncTask(TaskThread::MAIN, [ctx = m_ctx, &methodName, &args, &runtime, &napiResultRef]() {
+    std::optional<std::exception> thrownError = std::nullopt;
+    m_ctx.taskExecutor->runSyncTask(TaskThread::MAIN, [ctx = m_ctx, &thrownError, &methodName, &args, &runtime, &napiResultRef]() {
         ArkJS arkJs(ctx.env);
         auto napiArgs = arkJs.convertIntermediaryValuesToNapiValues(args);
         auto napiTurboModuleObject = arkJs.getObject(ctx.arkTsTurboModuleInstanceRef);
-        auto napiResult = napiTurboModuleObject.call(methodName, napiArgs);
-        napiResultRef = arkJs.createReference(napiResult);
+        try {
+            auto napiResult = napiTurboModuleObject.call(methodName, napiArgs);
+            napiResultRef = arkJs.createReference(napiResult);
+        } catch (std::exception const &e) {
+            thrownError = e;
+        }
     });
+    
+    if (thrownError.has_value()) {
+        return react::createPromiseAsJSIValue(runtime, [ctx = m_ctx, message = thrownError->what()](auto &rt, auto jsiPromise) {
+            ctx.jsInvoker->invokeAsync([message, jsiPromise] {
+                jsiPromise->reject(message);
+                jsiPromise->allowRelease();
+            });
+        });
+    }
+    
     return react::createPromiseAsJSIValue(
         runtime, [ctx = m_ctx, napiResultRef](jsi::Runtime &rt2, std::shared_ptr<react::Promise> jsiPromise) {
             ctx.taskExecutor->runTask(TaskThread::MAIN, [ctx, napiResultRef, &rt2, jsiPromise]() {
@@ -143,8 +173,16 @@ std::string preparePromiseRejectionResult(const std::vector<folly::dynamic> args
     if (args.size() > 1) {
         throw std::invalid_argument("`reject` accepts only one argument");
     }
-    if (!args[0].isString()) {
-        throw std::invalid_argument("The type of argument provided `reject` must be string. It's going to be used as an error message");
+    
+    auto error = args[0];
+    if (error.isObject()) {
+        auto message = error["message"];
+        if (message.isString()) {
+            return message.getString();
+        }
     }
-    return args[0].getString();
+    else if (error.isString()) {
+        return error.getString();
+    }
+    throw std::invalid_argument("The type of argument provided `reject` must be string or contain a string 'message' field. It's going to be used as an error message");
 }

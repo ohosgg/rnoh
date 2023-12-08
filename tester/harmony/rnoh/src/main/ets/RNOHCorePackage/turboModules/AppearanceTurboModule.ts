@@ -40,6 +40,6 @@ export class AppearanceTurboModule extends TurboModule {
   }
 
   setColorScheme(colorScheme: string) : void {
-    this.ctx.logger.error('Appearance::setColorScheme not supported')
+    throw new Error('Appearance::setColorScheme not supported')
   };
 }

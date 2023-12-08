@@ -1,5 +1,6 @@
 #include "ArkJS.h"
 #include "napi/native_api.h"
+#include <stdexcept>
 #include <string>
 
 static void maybeThrowFromStatus(napi_env env, napi_status status, const char *message) {
@@ -17,6 +18,23 @@ static void maybeThrowFromStatus(napi_env env, napi_status status, const char *m
     }
 }
 
+void ArkJS::maybeRethrowAsCpp(napi_status status) {
+    if (status == napi_ok) {
+        return;
+    }
+    bool hasThrown;
+    napi_is_exception_pending(m_env, &hasThrown);
+    if (status != napi_pending_exception && !hasThrown) {
+        return;
+    }
+    napi_value nError;
+    napi_get_and_clear_last_exception(m_env, &nError);
+    
+    auto message = getObjectProperty(nError, "message");
+    auto messageStr = getString(message);
+    throw std::runtime_error(messageStr);
+}
+
 ArkJS::ArkJS(napi_env env) {
     m_env = env;
 }
@@ -26,16 +44,13 @@ napi_env ArkJS::getEnv() {
 }
 
 napi_value ArkJS::call(napi_value callback, std::vector<napi_value> args, napi_value thisObject) {
-    napi_value result;
-    auto status = napi_call_function(m_env, thisObject, callback, args.size(), args.data(), &result);
-    this->maybeThrowFromStatus(status, "Couldn't call a callback");
-    return result;
+    return call(callback, args.data(), args.size(), thisObject);
 }
 
 napi_value ArkJS::call(napi_value callback, const napi_value *args, int argsCount, napi_value thisObject) {
     napi_value result;
     auto status = napi_call_function(m_env, thisObject, callback, argsCount, args, &result);
-    this->maybeThrowFromStatus(status, "Couldn't call a callback");
+    this->maybeRethrowAsCpp(status);
     return result;
 }
 
