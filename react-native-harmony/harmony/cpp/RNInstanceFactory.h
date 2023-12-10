@@ -40,10 +40,11 @@ std::unique_ptr<RNInstance> createRNInstance(int id,
     auto mainThreadChannel = std::make_shared<ArkTSChannel>(taskExecutor, ArkJS(env), napiEventDispatcherRef);
     auto contextContainer = std::make_shared<facebook::react::ContextContainer>();
     auto textMeasurer = std::make_shared<TextMeasurer>(env, measureTextFnRef, taskExecutor);
+    auto shadowViewRegistry = std::make_shared<ShadowViewRegistry>();
     contextContainer->insert("textLayoutManagerDelegate", textMeasurer);
     PackageProvider packageProvider;
     auto packages = packageProvider.getPackages({});
-    packages.insert(packages.begin(), std::make_shared<RNOHCorePackage>(Package::Context{}));
+    packages.insert(packages.begin(), std::make_shared<RNOHCorePackage>(Package::Context{ .shadowViewRegistry = shadowViewRegistry }));
 
     auto componentDescriptorProviderRegistry = std::make_shared<facebook::react::ComponentDescriptorProviderRegistry>();
     std::vector<std::shared_ptr<TurboModuleFactoryDelegate>> turboModuleFactoryDelegates;
@@ -86,5 +87,6 @@ std::unique_ptr<RNInstance> createRNInstance(int id,
                                         std::move(mutationsListener),
                                         std::move(commandDispatcher),
                                         mainThreadChannel,
-                                        uiTicker);
+                                        uiTicker,
+                                        shadowViewRegistry);
 }

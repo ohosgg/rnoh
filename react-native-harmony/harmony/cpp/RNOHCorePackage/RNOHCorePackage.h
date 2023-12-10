@@ -142,7 +142,7 @@ class RNOHCorePackage : public Package {
             {"RootView", std::make_shared<ViewComponentNapiBinder>()},
             {"View", std::make_shared<ViewComponentNapiBinder>()},
             {"Image", std::make_shared<ImageComponentNapiBinder>()},
-            {"Paragraph", std::make_shared<TextComponentNapiBinder>()},
+            {"Paragraph", std::make_shared<TextComponentNapiBinder>(this->m_ctx.shadowViewRegistry)},
             {"ScrollView", std::make_shared<ScrollViewComponentNapiBinder>()},
             {"TextInput", std::make_shared<TextInputComponentNapiBinder>()},
             {"ModalHostView", std::make_shared<ModalHostViewNapiBinder>()},

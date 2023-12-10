@@ -5,10 +5,11 @@ import {
   DEFAULT_LINE_SPACING,
   OHOSTextFragmentMeasurer,
   PLACEHOLDER_SYMBOL,
-  RNOHContext
+  RNOHContext,
 } from '../../../RNOH';
 import type { Tag } from '../../../RNOH/DescriptorBase';
 import { RNViewManager } from '../../componentManagers/RNViewManager';
+import { RNFragmentManager } from './RNFragmentManager';
 import type { AttributedFragment, TextDescriptor, TextFragmentExtraData } from './types';
 
 export class RNParagraphManager extends RNViewManager {
@@ -17,6 +18,10 @@ export class RNParagraphManager extends RNViewManager {
     ctx: RNOHContext,
   ) {
     super(tag, ctx);
+    for (let fragment of this.getFragmentsTags()) {
+      const fragmentComponentManager = new RNFragmentManager(fragment, ctx, this.tag)
+      this.cleanUpCallbacks.push(this.componentManagerRegistry.registerComponentManager(fragment, fragmentComponentManager))
+    }
   }
 
   private mapAttributedFragmentsToMeasurerFragments(attributedFragments: AttributedFragment[]): MeasurerFragment<TextFragmentExtraData>[] {
@@ -48,6 +53,7 @@ export class RNParagraphManager extends RNViewManager {
           lineHeight: attributedFragment.lineHeight || (attributedFragment.fontSize ?? 16) * (1 + DEFAULT_LINE_SPACING),
           textTransform: attributedFragment.textTransform,
           textShadowProps: attributedFragment.textShadowProps,
+          tag: attributedFragment.parentShadowView?.tag,
         }
       }
     })
@@ -76,5 +82,18 @@ export class RNParagraphManager extends RNViewManager {
       wordWrapStrategy: new UnhyphenatedWordWrapStrategy(textFragmentMeasurer),
       ellipsisInserter: new TailEllipsisInserter(textFragmentMeasurer)
     })
+  }
+
+  public getActiveChildrenTags(): Tag[] {
+    const descriptor = this.getDescriptor() as TextDescriptor;
+    // check children tags in reverse order,
+    // since the last child is the one on top
+    const childrenTags = descriptor.childrenTags.slice().reverse();
+    return childrenTags.concat(this.getFragmentsTags().reverse());
+  }
+
+  private getFragmentsTags(): Tag[] {
+    const descriptor = this.getDescriptor() as TextDescriptor;
+    return descriptor.props.fragments.map(fragment => fragment?.parentShadowView?.tag).filter(tag => tag) as number[];
   }
 }

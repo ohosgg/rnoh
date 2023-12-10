@@ -1,4 +1,3 @@
-import { RNViewManager } from '../RNOHCorePackage';
 import { RNOHEventEmitRequestHandlerName } from '../RNOHCorePackage/RNOHEventEmitRequestHandler';
 import { Descriptor, Tag } from './DescriptorBase';
 import { RNInstance } from './RNInstance';
@@ -91,7 +90,7 @@ export class TouchDispatcher {
 
   private maybeRemoveDeletedTargets() {
     const deletedTargetIds = Array.from<[number, Tag]>(this.targetTagByTouchId.entries())
-      .filter((touchIdAndTargetTag) =>!this.rnInstance.descriptorRegistry.getDescriptor<Descriptor>(touchIdAndTargetTag[1]))
+      .filter((touchIdAndTargetTag) =>!this.rnInstance.componentManagerRegistry.getComponentManager(touchIdAndTargetTag[1]))
       .map((touchIdAndTargetTag) => touchIdAndTargetTag[0]);
     deletedTargetIds.forEach(id => this.targetTagByTouchId.delete(id));
   }
@@ -147,7 +146,7 @@ export class TouchDispatcher {
       if (!componentManager || !TouchTargetHelper.isTouchTargetHelperDelegate(componentManager) || componentManager.isHandlingTouches()) {
         return true;
       }
-      currentTag = (componentManager as RNViewManager).getParentTag();
+      currentTag = componentManager.getParentTag();
     }
 
     // if we didn't reach the surface,

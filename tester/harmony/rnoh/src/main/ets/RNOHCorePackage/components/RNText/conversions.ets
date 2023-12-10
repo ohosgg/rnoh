@@ -28,6 +28,39 @@ export function stringToVerticalAlign(textAlignVertical: string) {
   }
 }
 
+const ALIGNMENT_MAP: Record<string, Record<string, Alignment>> = {
+  "start": {
+    "top": Alignment.TopStart,
+    "center": Alignment.Start,
+    "bottom": Alignment.BottomStart
+  },
+  "center": {
+    "top": Alignment.Top,
+    "center": Alignment.Center,
+    "bottom": Alignment.Bottom
+  },
+  "right": {
+    "top": Alignment.TopEnd,
+    "center": Alignment.End,
+    "bottom": Alignment.BottomEnd
+  }
+};
+
+export function stringToStackAlignment(alignment: string = "start", verticalAlignment: string = "top") {
+  if (verticalAlignment === "auto") { // auto is passed from React
+    verticalAlignment = "top";
+  }
+  if (alignment === "start") {
+    if (verticalAlignment === "top")
+      return Alignment.TopStart
+    if (verticalAlignment === "center")
+      return Alignment.Start;
+    if (verticalAlignment === "bottom")
+      return Alignment.BottomStart
+  }
+  return ALIGNMENT_MAP[alignment]?.[verticalAlignment] || Alignment.TopStart;
+}
+
 export function stringToFontStyle(style: string | undefined): FontStyle {
   if (style === 'italic') {
     return FontStyle.Italic;

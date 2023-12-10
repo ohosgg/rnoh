@@ -33,4 +33,15 @@ export class ComponentManagerRegistry {
     }
   }
 
+  public getComponentManagerLineage(tag: Tag): ComponentManager[] {
+    const results: ComponentManager[] = []
+    let currentTag: Tag | undefined = tag
+    do {
+      let descriptor = this.getComponentManager(currentTag)
+      currentTag = descriptor.getParentTag()
+      results.push(descriptor)
+    } while (currentTag !== undefined);
+    return results.reverse();
+  }
+
 }

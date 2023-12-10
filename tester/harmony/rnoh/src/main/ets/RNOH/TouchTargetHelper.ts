@@ -102,10 +102,6 @@ export class TouchTargetHelper {
     if (!TouchTargetHelper.isTouchTargetHelperDelegate(componentManager)) {
       return null;
     }
-    const descriptor = this.descriptorRegistry.getDescriptor(viewTag);
-    if (!descriptor) {
-      return null;
-    }
 
     let canHandleTouch = componentManager.canHandleTouch()
     const canChildrenHandleTouch = componentManager.canChildrenHandleTouch()
@@ -138,13 +134,15 @@ export class TouchTargetHelper {
   }
 
   public findViewCoordinates(point: Point, viewTag: Tag): Point {
-    const path = [];
+    let currentComponentManager = this.componentManagerRegistry.getComponentManager(viewTag);
+
+    const path: number[] = [];
     let currentTag = viewTag;
-    let currentDescriptor = this.descriptorRegistry.getDescriptor(currentTag);
+
     while (currentTag !== undefined && currentTag !== this.surfaceTag) {
       path.push(currentTag);
-      currentTag = currentDescriptor.parentTag;
-      currentDescriptor = this.descriptorRegistry.getDescriptor(currentTag);
+      currentTag = currentComponentManager.getParentTag();
+      currentComponentManager = this.componentManagerRegistry.getComponentManager(currentTag);
     }
     if (currentTag !== this.surfaceTag) {
       // the view isn't a descendant of surfaceTag - we bail

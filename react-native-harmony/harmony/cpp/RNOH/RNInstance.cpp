@@ -80,7 +80,7 @@ void RNInstance::initializeScheduler() {
 
     this->schedulerDelegate = std::make_unique<SchedulerDelegate>(MountingManager(
                                                                       taskExecutor,
-                                                                      shadowViewRegistry,
+                                                                      m_shadowViewRegistry,
                                                                       [this](auto &preallocatedViewRawPropsByTag, react::ShadowViewMutationList mutations) {
                                                                           this->m_mutationsListener(this->m_mutationsToNapiConverter, preallocatedViewRawPropsByTag, mutations);
                                                                       },
@@ -277,7 +277,7 @@ void rnoh::RNInstance::emitComponentEvent(napi_env env, react::Tag tag, std::str
         .tag = tag,
         .eventName = std::move(eventName),
         .payload = payload,
-        .shadowViewRegistry = this->shadowViewRegistry,
+        .shadowViewRegistry = this->m_shadowViewRegistry,
     };
 
     if (m_eventDispatcher != nullptr) {
@@ -298,7 +298,7 @@ void rnoh::RNInstance::onMemoryLevel(size_t memoryLevel) {
 }
 
 void rnoh::RNInstance::updateState(napi_env env, std::string const &componentName, facebook::react::Tag tag, napi_value newState) {
-    if (auto state = shadowViewRegistry->getFabricState<facebook::react::State>(tag)) {
+    if (auto state = m_shadowViewRegistry->getFabricState<facebook::react::State>(tag)) {
         m_mutationsToNapiConverter.updateState(env, componentName, state, newState);
     }
 }

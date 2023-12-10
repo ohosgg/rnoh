@@ -12,6 +12,9 @@ namespace rnoh {
 
 class TextComponentNapiBinder : public ViewComponentNapiBinder {
   public:
+    TextComponentNapiBinder(ShadowViewRegistry::Shared shadowViewRegistry)
+        : m_shadowViewRegistry(shadowViewRegistry) {}
+
     napi_value createProps(napi_env env, facebook::react::ShadowView const shadowView) override {
         napi_value napiViewProps = ViewComponentNapiBinder::createProps(env, shadowView);
         if (auto state = std::dynamic_pointer_cast<const facebook::react::ConcreteState<facebook::react::ParagraphState>>(shadowView.state)) {
@@ -86,18 +89,25 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
                 if (textDecorationLine.has_value()) {
                     fragmentObjBuilder.addProperty("textDecorationLine", static_cast<int>(textDecorationLine.value()));
                 }
-                if (fragment.isAttachment())
+                auto fragmentShadowView = fragment.parentShadowView;
+                auto shouldAddFragmentToShadowViewRegistry = fragmentShadowView.tag && fragmentShadowView.tag != shadowView.tag;
+                if (fragment.isAttachment() || shouldAddFragmentToShadowViewRegistry) {
                     fragmentObjBuilder.addProperty("parentShadowView", arkJs.createObjectBuilder()
-                                                                           .addProperty("tag", fragment.parentShadowView.tag)
+                                                                           .addProperty("tag", fragmentShadowView.tag)
                                                                            .addProperty("layoutMetrics", arkJs.createObjectBuilder()
                                                                                                              .addProperty("frame", arkJs.createObjectBuilder()
                                                                                                                                        .addProperty("size", arkJs.createObjectBuilder()
-                                                                                                                                                                .addProperty("width", fragment.parentShadowView.layoutMetrics.frame.size.width)
-                                                                                                                                                                .addProperty("height", fragment.parentShadowView.layoutMetrics.frame.size.height)
+                                                                                                                                                                .addProperty("width", fragmentShadowView.layoutMetrics.frame.size.width)
+                                                                                                                                                                .addProperty("height", fragmentShadowView.layoutMetrics.frame.size.height)
                                                                                                                                                                 .build())
-                                                                                                                                       .build())
-                                                                                                             .build())
-                                                                           .build());
+                                                                                                                                        .build())
+                                                                                                                .build())
+                                                                            .build());
+                }
+                if (shouldAddFragmentToShadowViewRegistry) {
+                    this->m_shadowViewRegistry->setShadowView(fragmentShadowView.tag, fragmentShadowView);
+                }
+
                 fragmentsPayload.push_back(fragmentObjBuilder.build());
             }
             auto fragmentsArray = arkJs.createArray(fragmentsPayload);
@@ -109,6 +119,7 @@ class TextComponentNapiBinder : public ViewComponentNapiBinder {
     };
 
   private:
+    ShadowViewRegistry::Shared m_shadowViewRegistry;
     std::string textAlignmentToString(facebook::react::TextAlignment alignment) {
         switch (alignment) {
         case facebook::react::TextAlignment::Natural:

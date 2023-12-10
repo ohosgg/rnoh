@@ -38,6 +38,7 @@ export type TextFragmentExtraData = OHOSMeasurerTextFragmentExtraData & {
   textDecorationLine?: number,
   textTransform?: string,
   textShadowProps?: TextShadowProps
+  tag?: Tag,
 }
 
 export type TextDescriptor = Descriptor<"Paragraph", TextProps>

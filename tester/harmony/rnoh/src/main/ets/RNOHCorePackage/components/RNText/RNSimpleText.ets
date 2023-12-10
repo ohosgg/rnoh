@@ -1,10 +1,11 @@
+import { RNParagraphManager } from './RNParagraphManager';
 import { convertColorSegmentsToString, RNOHContext, DEFAULT_LINE_SPACING, } from '../../../RNOH'
 import { RNViewBase } from '../RNViewBase'
 import {
   stringToFontStyle,
   getTextDecorationLine,
   stringToAlignment,
-  stringToVerticalAlign,
+  stringToStackAlignment,
   stringToTextTransform,
   getLetterSpacing,
   getMaxLines,
@@ -32,6 +33,7 @@ export struct RNSimpleText {
   tag: number = 0
   @State descriptor: TextDescriptor = {} as TextDescriptor
   @State fragment: AttributedFragment | undefined = undefined
+  private componentManager!: RNParagraphManager
   private unregisterDescriptorChangesListener?: () => void = undefined
 
   aboutToAppear() {
@@ -55,6 +57,8 @@ export struct RNSimpleText {
     RNViewBase({
       ctx: this.ctx,
       tag: this.tag,
+      componentManager: this.componentManager,
+      customAlign: stringToStackAlignment(this.descriptor.props.textAlign, this.descriptor.props.textAlignVertical),
     }) {
       Text(this.fragment && capitalizeTextIfNecessary(this.fragment?.text, this.fragment?.textTransform))
         .fontColor(convertColorSegmentsToString(this.fragment?.fontColor))
@@ -70,13 +74,10 @@ export struct RNSimpleText {
         .backgroundColor(convertColorSegmentsToString(this.fragment?.backgroundColor))
         .letterSpacing(getLetterSpacing(this.fragment?.letterSpacing))
         .textCase(stringToTextTransform(this.fragment?.textTransform))
-        .width("100%")
-        .height("100%")
         .maxLines(getMaxLines(this.descriptor.props.maximumNumberOfLines))
         .textShadow(getTextShadow(this.fragment?.textShadowProps))
         .textOverflow({ overflow: ellipsizeModeToTextOverflow(this.descriptor.props.ellipsizeMode) })
         .textAlign(stringToAlignment(this.descriptor.props.textAlign))
-        .align(stringToVerticalAlign(this.descriptor.props.textAlignVertical))
         .padding(this.descriptor.props.padding)
         .copyOption(this.descriptor.props.selectable ? CopyOptions.LocalDevice : CopyOptions.None)
         .enabled(!this.descriptor.props.disabled)

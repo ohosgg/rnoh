@@ -1,6 +1,7 @@
 #pragma once
 #include <react/renderer/componentregistry/ComponentDescriptorProvider.h>
 #include "RNOH/TurboModule.h"
+#include "RNOH/ShadowViewRegistry.h"
 #include "RNOH/TurboModuleFactory.h"
 #include "RNOH/UIManagerModule.h"
 #include "RNOH/MutationsToNapiConverter.h"
@@ -10,7 +11,9 @@ namespace rnoh {
 
 class Package {
   public:
-    struct Context {};
+    struct Context {
+      ShadowViewRegistry::Shared shadowViewRegistry;
+    };
 
     Package(Context ctx);
     virtual ~Package(){};

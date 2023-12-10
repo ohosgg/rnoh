@@ -30,9 +30,7 @@ export struct RNParagraph {
   private cleanUpCallbacks: (() => void)[] = []
 
   aboutToAppear() {
-    this.componentManager = new RNParagraphManager(this.tag, this.ctx)
     this.onDescriptorChange(this.ctx.descriptorRegistry.getDescriptor<TextDescriptor>(this.tag))
-    this.cleanUpCallbacks.push(this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager));
     this.cleanUpCallbacks.push(this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
         this.onDescriptorChange(newDescriptor as TextDescriptor)

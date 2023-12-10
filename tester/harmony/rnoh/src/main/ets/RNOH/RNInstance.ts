@@ -218,7 +218,7 @@ export class RNInstanceImpl implements RNInstance {
 
   private onBlockResponder(tag: Tag) {
     const stopTracing = this.logger.clone("onBlockResponder").startTracing()
-    const tags = this.descriptorRegistry.getDescriptorLineage(tag).map(d => d.tag)
+    const tags = this.componentManagerRegistry.getComponentManagerLineage(tag).map(d => d.getTag())
     tags.forEach((tag) => {
       this.componentCommandHub.dispatchCommand(tag, RNOHComponentCommand.BLOCK_NATIVE_RESPONDER, undefined)
     })
@@ -227,7 +227,7 @@ export class RNInstanceImpl implements RNInstance {
 
   private onUnblockResponder(tag: Tag) {
     const stopTracing = this.logger.clone("onUnblockResponder").startTracing()
-    const tags = this.descriptorRegistry.getDescriptorLineage(tag).map(d => d.tag)
+    const tags = this.componentManagerRegistry.getComponentManagerLineage(tag).map(d => d.getTag())
     tags.forEach((tag) => {
       this.componentCommandHub.dispatchCommand(tag, RNOHComponentCommand.UNBLOCK_NATIVE_RESPONDER, undefined)
     })

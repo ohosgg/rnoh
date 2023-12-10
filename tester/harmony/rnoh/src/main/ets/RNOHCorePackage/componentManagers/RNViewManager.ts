@@ -24,7 +24,7 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
   protected descriptorRegistry: DescriptorRegistry;
   protected componentManagerRegistry: ComponentManagerRegistry;
   protected parentTag: Tag;
-  private cleanUpCallbacks: (() => void)[] = []
+  protected cleanUpCallbacks: (() => void)[] = []
   private isBoundingBoxDirty = true
   private logger: RNOHLogger
 
@@ -35,7 +35,7 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
     super();
     this.descriptorRegistry = ctx.descriptorRegistry;
     this.componentManagerRegistry = ctx.componentManagerRegistry;
-    this.parentTag = this.descriptorRegistry.getDescriptor(tag).parentTag!;
+    this.parentTag = this.descriptorRegistry.getDescriptor(tag)?.parentTag!; // RHFragmentManager sets parentTag manually, so this parentTag! is not true, but it's ok
     this.cleanUpCallbacks.push(this.descriptorRegistry.subscribeToDescriptorChanges(this.tag, (descriptor) => {
       this.onDescriptorChange(descriptor)
     }))
@@ -89,9 +89,12 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
 
   public computeChildPoint({x, y}: Point, childTag: Tag): Point {
     const childDescriptor = this.descriptorRegistry.getDescriptor(childTag);
+    if (!childDescriptor) {
+      return { x, y };
+    }
     const descriptorWrapper = new ViewDescriptorWrapperBase(childDescriptor);
     const offset = descriptorWrapper.positionRelativeToParent;
-    
+
     // the center of the view (before applying its transformation),
     // which is the origin of the transformation (relative to parent)
     let transformationOriginX = offset.x + descriptorWrapper.width / 2;
@@ -223,5 +226,9 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
 
   public getParentTag(): Tag {
     return this.parentTag
+  }
+
+  public getTag(): Tag {
+    return this.tag
   }
 }

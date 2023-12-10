@@ -46,13 +46,14 @@ class RNInstance : public facebook::react::LayoutAnimationStatusDelegate {
                MutationsListener &&mutationsListener,
                MountingManager::CommandDispatcher &&commandDispatcher,
                ArkTSChannel::Shared arkTsChannel,
-               UITicker::Shared uiTicker)
+               UITicker::Shared uiTicker,
+               ShadowViewRegistry::Shared shadowViewRegistry)
         : m_id(id),
           instance(std::make_shared<facebook::react::Instance>()),
           m_contextContainer(contextContainer),
           scheduler(nullptr),
           taskExecutor(taskExecutor),
-          shadowViewRegistry(std::make_shared<ShadowViewRegistry>()),
+          m_shadowViewRegistry(shadowViewRegistry),
           m_turboModuleFactory(std::move(turboModuleFactory)),
           m_componentDescriptorProviderRegistry(componentDescriptorProviderRegistry),
           m_mutationsToNapiConverter(mutationsToNapiConverter),
@@ -101,7 +102,7 @@ class RNInstance : public facebook::react::LayoutAnimationStatusDelegate {
     std::unique_ptr<facebook::react::Scheduler> scheduler;
     std::unique_ptr<SchedulerDelegate> schedulerDelegate;
     std::shared_ptr<facebook::react::ComponentDescriptorProviderRegistry> m_componentDescriptorProviderRegistry;
-    ShadowViewRegistry::Shared shadowViewRegistry;
+    ShadowViewRegistry::Shared m_shadowViewRegistry;
     TurboModuleFactory m_turboModuleFactory;
     std::shared_ptr<EventDispatcher> m_eventDispatcher;
     MutationsToNapiConverter m_mutationsToNapiConverter;

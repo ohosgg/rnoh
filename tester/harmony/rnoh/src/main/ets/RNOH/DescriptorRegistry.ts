@@ -76,6 +76,7 @@ export class DescriptorRegistry {
 
   /**
    * @returns [...ancestors, descriptor]
+   * Tree of descriptors represent data we have received from RN. To get representation of current state of UI use getComponentManagerLineage.
    */
   public getDescriptorLineage(tag: Tag): Descriptor[] {
     const results: Descriptor[] = []

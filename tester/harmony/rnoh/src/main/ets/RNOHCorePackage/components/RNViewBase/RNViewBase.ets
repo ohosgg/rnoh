@@ -22,6 +22,7 @@ export struct RNViewBase {
   public ctx!: RNOHContext
   public tag: number = 0
   public componentManager!: RNViewManager;
+  @Prop public customAlign: Alignment = Alignment.TopStart;
   @BuilderParam public renderChildren: () => void
   @State private descriptorWrapper: ViewDescriptorWrapper | undefined = undefined
   private unregisterDescriptorChangesListener?: () => void = undefined
@@ -32,8 +33,8 @@ export struct RNViewBase {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ViewBaseDescriptor>(this.tag)
     if (!this.componentManager) {
       this.componentManager = new RNViewManager(this.tag, this.ctx)
+      this.unregisterComponentManager = this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager)
     }
-    this.unregisterComponentManager = this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager)
     this.onDescriptorChange(descriptor)
     this.maybeLogStartUpTime()
     const parentTag = descriptor.parentTag;
@@ -101,6 +102,7 @@ export struct RNViewBase {
     Stack() {
       this.renderChildren()
     }
+    .align(this.customAlign)
     .width(this.descriptorWrapper?.width)
     .height(this.descriptorWrapper?.height)
     .backgroundColor(this.descriptorWrapper?.backgroundColor)

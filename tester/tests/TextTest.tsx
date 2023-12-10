@@ -1036,6 +1036,11 @@ export function TextTest() {
           itShould="activate onPress() on <Text /> if the touch moves up to 100px above or below the <Text /> body">
           <TextPressRetentionOffsetTest />
         </TestCase>
+        <TestCase
+          modal
+          itShould="increase the counter when 'press me' is pressed (handling gestures in text fragments)">
+          <TextPressNestedTest />
+        </TestCase>
       </TestSuite>
       <TestSuite name="text accessibility">
         <TestCase
@@ -1255,6 +1260,28 @@ const TextPressRetentionOffsetTest = () => {
           }}>
           pressRetentionOffset
         </Text>
+      </View>
+    </View>
+  );
+};
+
+const TextPressNestedTest = () => {
+  const [pressCount, setPressCount] = useState(0);
+
+  return (
+    <View style={{height: 500, justifyContent: 'center'}}>
+      <Text style={{textAlign: 'center'}}> Press count: {pressCount} </Text>
+      <View
+        style={{
+          backgroundColor: 'lightblue',
+          height: 250,
+          justifyContent: 'center',
+        }}>
+        <Text style={{ backgroundColor: 'green', height: 250}}>
+            <Text style={{ backgroundColor: 'purple', height: 150, fontSize: 34 }} onPress={()=> setPressCount(pressCount + 1)}>
+              press me (on android press below also triggers event)
+            </Text>
+          </Text>
       </View>
     </View>
   );
