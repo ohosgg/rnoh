@@ -8,6 +8,7 @@ import {
   FirstVisibleView,
   IndicatorStyle,
   ScrollEvent,
+  ScrollPosition,
   ScrollViewProps,
   ScrollViewRawProps,
   ScrollViewState
@@ -37,6 +38,15 @@ function getScrollSnapAlign(snapToAlignment: string | undefined): ScrollSnapAlig
   }
 }
 
+function isEdgeStart(edge: Edge) {
+  /*
+   * The Edge type value names do not correspond with values returned by the onScrollEdge callback.
+   * This is needed to avoid confusion, as normally scrolling to start edge of horizontal scroll would return Edge.Center
+   * which is not only a bad name but is also deprecated.
+   * */
+  return edge === 0 || edge === 1;
+}
+
 export type ScrollViewDescriptor = Descriptor<"ScrollView", ScrollViewProps, ScrollViewState, ScrollViewRawProps>;
 
 @Component
@@ -62,6 +72,10 @@ export struct RNScrollView {
   @State shouldDisableSnapping: boolean = false
   @State shouldPreventScrolling: boolean = false
   private firstVisibleView: FirstVisibleView | undefined = undefined
+  @State shouldAllowParentScrolling: boolean = false
+  private scrollPosition: ScrollPosition | undefined = undefined;
+  private isNested: boolean = false
+  private fitsAllContent: boolean = false;
 
   aboutToAppear() {
     const descriptor = this.ctx.descriptorRegistry.getDescriptor<ScrollViewDescriptor>(this.tag)
@@ -84,6 +98,7 @@ export struct RNScrollView {
           this.shouldPreventScrolling = false
         }
       }));
+    this.setIsNested();
     this.componentManager = new _RNScrollViewManager(this.tag, this.ctx, this.scroller)
     this.cleanUpCallbacks.push(this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager));
     this.cleanUpCallbacks.push(this.componentManager.subscribe("LOCK_SCROLLING", () => {
@@ -96,6 +111,20 @@ export struct RNScrollView {
 
   aboutToDisappear() {
     this.cleanUpCallbacks.forEach(cleanUp => cleanUp())
+  }
+
+  setIsNested() {
+    let currentTag = this.parentTag;
+    while (currentTag !== undefined) {
+      const descriptor = this.ctx.descriptorRegistry.getDescriptor(currentTag);
+      const componentName = this.ctx.rnInstance.getComponentNameFromDescriptorType(descriptor.type);
+      if (componentName === "ScrollView" && (descriptor as ScrollViewDescriptor).props.flexDirection === this.props.flexDirection) {
+        this.isNested = true;
+        return;
+      }
+      currentTag = descriptor.parentTag;
+    }
+    this.isNested = false;
   }
 
   onDescriptorUpdate(newDescriptor: ScrollViewDescriptor) {
@@ -136,6 +165,10 @@ export struct RNScrollView {
       const minIndexForVisible = this.descriptor.rawProps.maintainVisibleContentPosition.minIndexForVisible;
       this.getFirstVisibleView(minIndexForVisible);
     }
+    this.setInitialScrollPosition();
+    this.fitsAllContent = (this.props.flexDirection === 2)
+      ? this.contentSize.width <= this.descriptor.layoutMetrics.frame.size.width
+      : this.contentSize.height <= this.descriptor.layoutMetrics.frame.size.height;
   }
 
   maintainVisibleContentPosition(autoscrollToTopThreshold: number | undefined): void {
@@ -322,13 +355,13 @@ export struct RNScrollView {
   }
 
   onScroll(offset: number, scrollState: ScrollState): RemainingOffset {
-    this.recentDimOffsetDelta = offset
-    const currentScrollState = this.scrollState;
-
     // if the scroll view is inverted, we need to also invert the scrolling direction
     if (this.descriptor.rawProps.inverted) {
       offset = -offset;
     }
+
+    this.recentDimOffsetDelta = offset
+    const currentScrollState = this.scrollState;
 
     if (currentScrollState != scrollState) {
       if (currentScrollState === ScrollState.Scroll) {
@@ -344,7 +377,20 @@ export struct RNScrollView {
       }
     }
     this.scrollState = scrollState
-
+    if (this.isNested) {
+      if (this.fitsAllContent
+        || (offset >= 0 && this.scrollPosition === ScrollPosition.EDGE_END)
+        || (offset <= 0 && this.scrollPosition === ScrollPosition.EDGE_START)) {
+        if (!this.shouldAllowParentScrolling) {
+          this.shouldAllowParentScrolling = true;
+        }
+        return { offsetRemain: 0 };
+      } else if (this.shouldAllowParentScrolling) {
+        this.shouldAllowParentScrolling = false;
+        this.scrollPosition = ScrollPosition.MIDDLE;
+        return { offsetRemain: 0 };
+      }
+    }
     return { offsetRemain: offset }
   }
 
@@ -480,6 +526,40 @@ export struct RNScrollView {
     return true
   }
 
+  getEdgeEffect(): EdgeEffect {
+    if (!this.isNested && this.props.bounces) {
+      return EdgeEffect.Spring;
+    }
+    else {
+      return EdgeEffect.None;
+    }
+  }
+
+  getNestedScroll(): NestedScrollOptions {
+    if (this.shouldAllowParentScrolling) {
+      return { scrollForward: NestedScrollMode.SELF_FIRST, scrollBackward: NestedScrollMode.SELF_FIRST };
+    }
+    else {
+      return { scrollForward: NestedScrollMode.SELF_ONLY, scrollBackward: NestedScrollMode.SELF_ONLY };
+    }
+  }
+
+  setInitialScrollPosition(): void {
+    const horizontal = this.props.flexDirection === 2;
+    const startBound = 0;
+    const endBound = horizontal
+      ? this.contentSize.width - this.descriptor.layoutMetrics.frame.size.width
+      : this.contentSize.height - this.descriptor.layoutMetrics.frame.size.height;
+    const contentOffset = horizontal ? this.contentOffset.x : this.contentOffset.y;
+    if (contentOffset <= startBound) {
+      this.scrollPosition = ScrollPosition.EDGE_START;
+    } else if (contentOffset >= endBound) {
+      this.scrollPosition = ScrollPosition.EDGE_END;
+    } else {
+      this.scrollPosition = ScrollPosition.MIDDLE;
+    }
+  }
+
   @Builder
   buildScrollCore() {
     Scroll(this.scroller) {
@@ -503,8 +583,8 @@ export struct RNScrollView {
     .scrollBar(this.scrollBarState())
     .scrollBarColor(this.scrollBarColor())
     .enableScrollInteraction((this.props.scrollEnabled && !this.shouldPreventScrolling) ?? true)
-    .nestedScroll({ scrollForward: NestedScrollMode.SELF_ONLY, scrollBackward: NestedScrollMode.SELF_ONLY })
-    .edgeEffect(this.props.bounces ? EdgeEffect.Spring : EdgeEffect.None)
+    .nestedScroll(this.getNestedScroll())
+    .edgeEffect(this.getEdgeEffect())
     .onScrollFrameBegin((offset, state) => {
       return this.onScroll(offset, state)
     })
@@ -531,6 +611,9 @@ export struct RNScrollView {
     })
     .friction(this.getFriction())
     .scrollSnap(this.getScrollSnap())
+    .onScrollEdge((edge) => {
+      this.scrollPosition = isEdgeStart(edge) ? ScrollPosition.EDGE_START : ScrollPosition.EDGE_END;
+    })
   }
 
   build() {

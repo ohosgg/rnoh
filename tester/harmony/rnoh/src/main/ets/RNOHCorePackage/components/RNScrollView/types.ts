@@ -77,3 +77,9 @@ export interface FirstVisibleView {
   position: number,
   tag: Tag,
 }
+
+export enum ScrollPosition {
+  EDGE_START,
+  MIDDLE,
+  EDGE_END,
+}

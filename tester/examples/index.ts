@@ -12,3 +12,4 @@ export * from './TogglingComponentExample';
 export * from './StickyHeadersExample';
 export * from './TestTextsExample';
 export * from './TabsAndScrollViewExample';
+export * from './NestedScrollingExample';

@@ -14,6 +14,7 @@ import {
   StickyHeadersExample,
   TesterExample,
   TabsAndScrollViewExample,
+  NestedScrollingExample,
 } from './examples';
 import {NavigationContainer, Page} from './components';
 import {Benchmarker, DeepTree, SierpinskiTriangle} from './benchmarks';
@@ -129,6 +130,9 @@ function App() {
         </Page>
         <Page name="EXAMPLE: ANIMATED AND SET STATE">
           <AnimatedRenderExample />
+        </Page>
+        <Page name="EXAMPLE: NESTED SCROLLING EXAMPLE">
+          <NestedScrollingExample />
         </Page>
         <View
           style={[
