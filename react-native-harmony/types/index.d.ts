@@ -79,7 +79,7 @@ export * from '../Libraries/Utilities/Platform';
 export * from 'react-native/Libraries/Vibration/Vibration';
 // export * from 'react-native/Libraries/YellowBox/YellowBoxDeprecated';
 // export * from 'react-native/Libraries/vendor/core/ErrorUtils';
-// export * from 'react-native/Libraries/vendor/emitter/EventEmitter';
+export * from 'react-native/Libraries/vendor/emitter/EventEmitter';
 
 export * from 'react-native/types/public/DeprecatedPropertiesAlias';
 export * from 'react-native/types/public/Insets';

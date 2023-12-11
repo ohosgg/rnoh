@@ -295,6 +295,21 @@ export const ImageTest = () => {
       <TestCase modal itShould="stop displaying on press">
         <SwitchSourceTest />
       </TestCase>
+      <TestCase itShould="render top image in a bit lower quality (difference barely visible)">
+        <Image
+          style={{width: 200, height: 200}}
+          source={require('../assets/noise.png')}
+          resizeMethod="resize"
+          resizeMode="stretch"
+        />
+        <View style={{height: 10}} />
+        <Image
+          style={{width: 200, height: 200}}
+          source={require('../assets/noise.png')}
+          resizeMethod="scale"
+          resizeMode="stretch"
+        />
+      </TestCase>
     </TestSuite>
   );
 };

@@ -12,6 +12,7 @@ export interface ImageProps extends ViewBaseProps {
 
 interface ImageRawProps extends ViewRawProps{
   alt: string
+  resizeMethod: string
 }
 
 interface ImageOnCompleteEvent {
@@ -183,6 +184,7 @@ export struct RNImage {
           .interpolation(ImageInterpolation.High)
           .width("100%")
           .height("100%")
+          .autoResize(this.descriptor.rawProps.resizeMethod!=='scale')
           .objectFit(this.getResizeMode(this.descriptor.props.resizeMode))
           .objectRepeat(this.descriptor.props.resizeMode === 4 ?
           ImageRepeat.XY : ImageRepeat.NoRepeat)

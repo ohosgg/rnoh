@@ -8,6 +8,7 @@ class ImageComponentJSIBinder : public ViewComponentJSIBinder {
         object.setProperty(rt, "source", "array");
         object.setProperty(rt, "alt", "string");
         object.setProperty(rt, "resizeMode", "string");
+        object.setProperty(rt, "resizeMethod", "string");
         object.setProperty(rt, "blurRadius", "number");
         return object;
     }
