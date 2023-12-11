@@ -10,9 +10,12 @@ import {
   Text,
   RootTag,
   RootTagContext,
+  View,
 } from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import {useContext} from 'react';
+import React from 'react';
+import {Button} from '../components';
 
 export const MiscTest = () => {
   const rootTag: RootTag = useContext(RootTagContext);
@@ -69,6 +72,24 @@ export const MiscTest = () => {
           expect(rootTag).to.be.greaterThan(0);
         }}
       />
+      <TestCase itShould="have red background color after hiding, updating and showing again">
+        <DisplayNoneUpdateTest />
+      </TestCase>
     </TestSuite>
   );
 };
+
+function DisplayNoneUpdateTest() {
+  const [display, setDisplay] = React.useState<'none' | undefined>(undefined);
+  const [counter, setCounter] = React.useState(0);
+  return (
+    <View>
+      <Text style={{display, backgroundColor: 'red'}}>{counter}</Text>
+      <Button
+        onPress={() => setDisplay(display ? undefined : 'none')}
+        label={display ? 'Show' : 'Hide'}
+      />
+      <Button onPress={() => setCounter(counter + 1)} label="Update" />
+    </View>
+  );
+}

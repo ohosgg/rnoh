@@ -42,9 +42,9 @@ static napi_value createReactNativeInstance(napi_env env, napi_callback_info inf
         instanceId,
         env,
         arkTsTurboModuleProviderRef,
-        [env, mutationsListenerRef](MutationsToNapiConverter mutationsToNapiConverter, auto &preallocatedViewRawPropsByTag, auto const &mutations) {
+        [env, mutationsListenerRef](MutationsToNapiConverter mutationsToNapiConverter, auto const &mutations) {
             ArkJS arkJs(env);
-            auto napiMutations = mutationsToNapiConverter.convert(env, preallocatedViewRawPropsByTag, mutations);
+            auto napiMutations = mutationsToNapiConverter.convert(env, mutations);
             std::array<napi_value, 1> args = {napiMutations};
             auto listener = arkJs.getReferenceValue(mutationsListenerRef);
             arkJs.call<1>(listener, args);

@@ -33,13 +33,12 @@ class MutationsToNapiConverter {
 
     napi_value convert(
         napi_env env,
-        std::unordered_map<facebook::react::Tag, folly::dynamic> &prellocatedViewRawPropsByTag,
         facebook::react::ShadowViewMutationList const &mutations);
 
     void updateState(napi_env env, std::string const &componentName, facebook::react::State::Shared const &state, napi_value newState);
 
   private:
-    napi_value convertShadowView(napi_env env, facebook::react::ShadowView const shadowView, folly::dynamic &&rawPropsToMerge = folly::dynamic::object());
+    napi_value convertShadowView(napi_env env, facebook::react::ShadowView const shadowView);
 
     ComponentNapiBinderByString m_componentNapiBinderByName;
 };

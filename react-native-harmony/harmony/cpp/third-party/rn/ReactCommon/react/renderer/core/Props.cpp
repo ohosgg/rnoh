@@ -27,11 +27,10 @@ Props::Props(
                                                        "nativeID",
                                                        sourceProps.nativeId,
                                                        {}))
-      // RNOH patch: remove conditional compilation for ANDROID
+      // RNOH patch: remove conditional compilation for ANDROID,
+      // merge with source rawProps to keep all properties
       ,
-      rawProps(
-          shouldSetRawProps ? (folly::dynamic)rawProps
-                            : /* null */ folly::dynamic())
+      rawProps(folly::dynamic::merge(sourceProps.rawProps, (folly::dynamic)rawProps))
 {
 }
 

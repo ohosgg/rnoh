@@ -1277,11 +1277,13 @@ const TextPressNestedTest = () => {
           height: 250,
           justifyContent: 'center',
         }}>
-        <Text style={{ backgroundColor: 'green', height: 250}}>
-            <Text style={{ backgroundColor: 'purple', height: 150, fontSize: 34 }} onPress={()=> setPressCount(pressCount + 1)}>
-              press me (on android press below also triggers event)
-            </Text>
+        <Text style={{backgroundColor: 'green', height: 250}}>
+          <Text
+            style={{backgroundColor: 'purple', height: 150, fontSize: 34}}
+            onPress={() => setPressCount(pressCount + 1)}>
+            press me (on android press below also triggers event)
           </Text>
+        </Text>
       </View>
     </View>
   );

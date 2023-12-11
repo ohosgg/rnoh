@@ -19,12 +19,7 @@ class SchedulerDelegate : public facebook::react::SchedulerDelegate {
         mountingManager.scheduleTransaction(mountingCoordinator);
     }
 
-    void schedulerDidRequestPreliminaryViewAllocation(facebook::react::SurfaceId surfaceId, const facebook::react::ShadowNode &shadowView) override {
-        auto payload = folly::dynamic::object(
-            "tag", shadowView.getTag())(
-            "rawProps", shadowView.getProps()->rawProps);
-        mountingManager.preallocateView(shadowView);
-    }
+    void schedulerDidRequestPreliminaryViewAllocation(facebook::react::SurfaceId surfaceId, const facebook::react::ShadowNode &shadowView) override {}
 
     void schedulerDidDispatchCommand(
         const facebook::react::ShadowView &shadowView,

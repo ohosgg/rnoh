@@ -31,7 +31,6 @@
 namespace rnoh {
 using MutationsListener = std::function<void(
     MutationsToNapiConverter,
-    std::unordered_map<facebook::react::Tag, folly::dynamic> &preallocatedViewRawPropsByTag,
     facebook::react::ShadowViewMutationList const &mutations)>;
 
 class RNInstance : public facebook::react::LayoutAnimationStatusDelegate {

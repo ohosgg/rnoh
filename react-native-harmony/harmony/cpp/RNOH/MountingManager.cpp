@@ -60,17 +60,13 @@ void MountingManager::performTransaction(facebook::react::MountingCoordinator::S
         [this](react::MountingTransaction const &transaction, react::SurfaceTelemetry const &surfaceTelemetry) {
             // Did mount
             taskExecutor->runTask(TaskThread::MAIN, [this, transaction] {
-                this->triggerUICallback(m_preallocatedViewRawPropsByTag, transaction.getMutations());
+                this->triggerUICallback(transaction.getMutations());
             });
         });
 }
 
 void MountingManager::dispatchCommand(facebook::react::Tag tag, std::string const &commandName, folly::dynamic const args) {
     this->commandDispatcher(tag, commandName, args);
-}
-
-void MountingManager::preallocateView(const facebook::react::ShadowNode &shadowView) {
-    m_preallocatedViewRawPropsByTag.emplace(shadowView.getTag(), shadowView.getProps()->rawProps);
 }
 
 } // namespace rnoh

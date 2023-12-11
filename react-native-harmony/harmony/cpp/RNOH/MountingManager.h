@@ -18,10 +18,7 @@ namespace rnoh {
 
 class MountingManager {
   public:
-    using TriggerUICallback = std::function<void(
-      std::unordered_map<facebook::react::Tag, folly::dynamic> &preallocatedViewRawPropsByTag,
-      facebook::react::ShadowViewMutationList const &mutations)
-    >;
+    using TriggerUICallback = std::function<void(facebook::react::ShadowViewMutationList const &mutations)>;
     using CommandDispatcher = std::function<void(facebook::react::Tag tag, std::string const &commandName, folly::dynamic const args)>;
 
     MountingManager(TaskExecutor::Shared taskExecutor, ShadowViewRegistry::Shared shadowViewRegistry, TriggerUICallback &&triggerUICallback, CommandDispatcher &&commandDispatcher)
@@ -38,14 +35,11 @@ class MountingManager {
 
     void dispatchCommand(facebook::react::Tag tag, std::string const &commandName, folly::dynamic const args);
     
-    void preallocateView(const facebook::react::ShadowNode &shadowView);
-
   private:
     TaskExecutor::Shared taskExecutor;
     ShadowViewRegistry::Shared shadowViewRegistry;
     TriggerUICallback triggerUICallback;
     CommandDispatcher commandDispatcher;
-    std::unordered_map<facebook::react::Tag, folly::dynamic> m_preallocatedViewRawPropsByTag;
 };
 
 } // namespace rnoh
