@@ -24,10 +24,7 @@ class ArkJS {
 
     template <size_t args_count>
     napi_value call(napi_value callback, std::array<napi_value, args_count> args, napi_value thisObject = nullptr) {
-        napi_value result;
-        auto status = napi_call_function(m_env, thisObject, callback, args.size(), args.data(), &result);
-        this->maybeThrowFromStatus(status, "Couldn't call a callback");
-        return result;
+        return call(callback, args.data(), args.size(), thisObject);
     }
 
     napi_value call(napi_value callback, std::vector<napi_value> args, napi_value thisObject = nullptr);
