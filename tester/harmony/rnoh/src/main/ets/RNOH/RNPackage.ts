@@ -1,4 +1,5 @@
 import type { TurboModule, TurboModuleContext } from "./TurboModule";
+import type { DescriptorWrapperFactory } from "./DescriptorRegistry"
 
 export abstract class TurboModulesFactory {
   constructor(protected ctx: TurboModuleContext) {
@@ -13,15 +14,33 @@ export abstract class TurboModulesFactory {
   abstract hasTurboModule(name: string): boolean;
 }
 
+class FakeTurboModulesFactory extends TurboModulesFactory {
+  createTurboModule(name: string) {
+    return null
+  }
+
+  hasTurboModule(name: string) {
+    return false
+  }
+}
+
 export type RNPackageContext = {};
+export type DescriptorWrapperFactoryByDescriptorTypeCtx = {}
+export type DescriptorWrapperFactoryByDescriptorType = Record<string, DescriptorWrapperFactory>
 
 export abstract class RNPackage {
   constructor(protected ctx: RNPackageContext) {
   };
 
-  abstract createTurboModulesFactory(ctx: TurboModuleContext): TurboModulesFactory;
+  createTurboModulesFactory(ctx: TurboModuleContext): TurboModulesFactory {
+    return new FakeTurboModulesFactory(ctx)
+  };
 
   getDebugName(): string | undefined {
     return undefined
+  }
+
+  createDescriptorWrapperFactoryByDescriptorType(ctx: DescriptorWrapperFactoryByDescriptorTypeCtx): DescriptorWrapperFactoryByDescriptorType {
+    return {}
   }
 }

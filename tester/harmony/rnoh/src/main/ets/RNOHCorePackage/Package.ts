@@ -1,4 +1,4 @@
-import { RNPackage, TurboModulesFactory } from '../RNOH/RNPackage';
+import { RNPackage, TurboModulesFactory, DescriptorWrapperFactoryByDescriptorType } from '../RNOH/RNPackage';
 import type { TurboModule, TurboModuleContext } from '../RNOH/TurboModule';
 import {
   AlertManagerTurboModule,
@@ -20,10 +20,15 @@ import {
   I18nManagerTurboModule
 } from './turboModules';
 import { LinkingManagerTurboModule } from './turboModules/LinkingManagerTurboModule';
+import { ViewDescriptorWrapper } from "./components/ts"
 
 export class RNOHCorePackage extends RNPackage {
   createTurboModulesFactory(ctx: TurboModuleContext): TurboModulesFactory {
     return new CoreTurboModulesFactory(ctx);
+  }
+
+  createDescriptorWrapperFactoryByDescriptorType({}): DescriptorWrapperFactoryByDescriptorType {
+    return { "View": (ctx) => new ViewDescriptorWrapper(ctx.descriptor) }
   }
 
   getDebugName() {

@@ -74,7 +74,7 @@ export abstract class RNAbility extends UIAbility {
 
   public createRNOHContext({rnInstance}: { rnInstance: RNInstance }) {
     if (!(rnInstance instanceof RNInstanceImpl)) {
-      throw new Error("RNInstance must extends RNInstanceImpl")
+      throw new Error("RNInstance must extend RNInstanceImpl")
     }
     return new RNOHContext("0.72.5", rnInstance, this.providedLogger, this)
   }

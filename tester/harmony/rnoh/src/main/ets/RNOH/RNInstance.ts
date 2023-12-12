@@ -1,7 +1,7 @@
 import type UIAbility from '@ohos.app.ability.UIAbility'
 import type common from '@ohos.app.ability.common'
 import { CommandDispatcher, RNComponentCommandHub } from './RNComponentCommandHub'
-import { DescriptorRegistry } from './DescriptorRegistry'
+import { DescriptorRegistry, DescriptorWrapperFactory } from './DescriptorRegistry'
 import { ComponentManagerRegistry } from './ComponentManagerRegistry'
 import { SurfaceHandle } from './SurfaceHandle'
 import { TurboModuleProvider } from './TurboModuleProvider'
@@ -155,14 +155,6 @@ export class RNInstanceImpl implements RNInstance {
     this.logger = logger.clone("RNInstance")
     const stopTracing = this.logger.clone("constructor").startTracing()
     this.componentManagerRegistry = new ComponentManagerRegistry();
-    this.descriptorRegistry = new DescriptorRegistry(
-      {
-        '1': { ...rootDescriptor },
-      },
-      this.updateState.bind(this),
-      this,
-      logger,
-    );
     this.componentCommandHub = new RNComponentCommandHub();
     stopTracing()
   }
@@ -177,12 +169,35 @@ export class RNInstanceImpl implements RNInstance {
 
   public async initialize(packages: RNPackage[]) {
     const stopTracing = this.logger.clone("initialize").startTracing()
-    this.turboModuleProvider = (await this.processPackages(packages)).turboModuleProvider
+    const { descriptorWrapperFactoryByDescriptorType, turboModuleProvider } = await this.processPackages(packages)
+    this.turboModuleProvider = turboModuleProvider
+    this.descriptorRegistry = new DescriptorRegistry(
+      {
+        '1': { ...rootDescriptor },
+      },
+      this.updateState.bind(this),
+      this,
+      descriptorWrapperFactoryByDescriptorType,
+      this.logger,
+    );
     this.napiBridge.createReactNativeInstance(
       this.id,
       this.turboModuleProvider,
       (mutations) => {
-        this.descriptorRegistry.applyMutations(mutations)
+        try {
+          this.descriptorRegistry.applyMutations(mutations)
+        } catch (err) {
+          if (typeof err === "string") {
+            this.logger.error(err)
+          } else if (err instanceof Error) {
+            this.logger.error(err.message)
+            if (err.stack) {
+              this.logger.error(err.stack)
+            }
+          } else {
+            this.logger.error("Unexpected error when applying mutations")
+          }
+        }
       },
       (tag, commandName, args) => {
         this.componentCommandHub.dispatchCommand(tag, commandName, args)
@@ -240,6 +255,13 @@ export class RNInstanceImpl implements RNInstance {
     packages.unshift(new RNOHCorePackage({}));
     const turboModuleContext = this.createRNOHContext(this)
     const result = {
+      descriptorWrapperFactoryByDescriptorType: packages.reduce((acc, pkg) => {
+        const descriptorWrapperFactoryByDescriptorType = pkg.createDescriptorWrapperFactoryByDescriptorType({})
+        for (const [descriptorType, descriptorWrapperFactory] of Object.entries(descriptorWrapperFactoryByDescriptorType)) {
+          acc.set(descriptorType, descriptorWrapperFactory)
+        }
+        return acc
+      }, new Map<string, DescriptorWrapperFactory>()),
       turboModuleProvider: new TurboModuleProvider(
         await Promise.all(packages.map(async (pkg, idx) => {
           const pkgDebugName = pkg.getDebugName()

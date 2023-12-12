@@ -1,19 +1,21 @@
 import { Tag, Descriptor, NativeId, DescriptorWrapper } from './DescriptorBase';
-import { getHumanNameFromMutationType, Mutation } from './Mutation';
+import { Mutation } from './Mutation';
 import { MutationType } from './Mutation';
 import type { RNInstanceImpl } from './RNInstance'
-import type { RNOHLogger } from './RNOHLogger';
+import type { RNOHLogger } from './RNOHLogger'
 
 type RootDescriptor = Descriptor<"RootView", any>
 
 type SubtreeListener = () => void;
 type SetNativeStateFn = (componentName: string, tag: Tag, state: unknown) => void
+export type DescriptorWrapperFactory = (ctx: {descriptor: Descriptor}) => DescriptorWrapper
 
 export class DescriptorRegistry {
   static readonly ANIMATED_NON_RAW_PROP_KEYS = ['transform'];
 
   private descriptorByTag: Map<Tag, Descriptor> = new Map();
-  private descriptorById: Map<NativeId, Descriptor> = new Map();
+  private descriptorWrapperByTag: Map<Tag, DescriptorWrapper> = new Map();
+  private descriptorTagById: Map<NativeId, Tag> = new Map();
   private descriptorListenersSetByTag: Map<Tag, Set<(descriptor: Descriptor) => void>> = new Map();
   private subtreeListenersSetByTag: Map<Tag, Set<SubtreeListener>> = new Map();
   private animatedRawPropsByTag: Map<Tag, Set<string>> = new Map();
@@ -25,12 +27,14 @@ export class DescriptorRegistry {
     descriptorByTag: Record<Tag, Descriptor>,
     private setNativeStateFn: SetNativeStateFn,
     private rnInstance: RNInstanceImpl,
-    logger: RNOHLogger,
+    private descriptorWrapperFactoryByDescriptorType: Map<string, DescriptorWrapperFactory>,
+  logger: RNOHLogger,
   ) {
     this.logger = logger.clone("DescriptorRegistry")
     const stopTracing = this.logger.clone("constructor").startTracing()
     for (const tag in descriptorByTag) {
       this.descriptorByTag.set(parseInt(tag), descriptorByTag[tag])
+      this.descriptorWrapperByTag.set(parseInt(tag), new DescriptorWrapper(descriptorByTag[tag]))
     }
     this.cleanUpCallbacks.push(this.rnInstance.subscribeToLifecycleEvents("FOREGROUND", () => {
       this.callListeners(this.updatedUnnotifiedTags)
@@ -41,21 +45,25 @@ export class DescriptorRegistry {
 
   private saveDescriptor(descriptor: Descriptor) {
     this.descriptorByTag.set(descriptor.tag, descriptor)
-    const descriptorWrapper = new DescriptorWrapper(descriptor)
+    const createDescriptorWrapper = this.descriptorWrapperFactoryByDescriptorType.get(descriptor.type)
+    let descriptorWrapper = new DescriptorWrapper(descriptor)
+    if (createDescriptorWrapper) {
+      descriptorWrapper = createDescriptorWrapper({ descriptor })
+    }
+    this.descriptorWrapperByTag.set(descriptor.tag, descriptorWrapper)
     const id = descriptorWrapper.id
-    this.descriptorById.set(id, descriptor)
+    this.descriptorTagById.set(id, descriptor.tag)
     if (descriptorWrapper.hints.includes("debug")) {
       this.logger.clone(`id:${id}`).debug(JSON.stringify(descriptor, null, 2))
     }
   }
 
   private deleteDescriptor(tag: Tag) {
-    const descriptor = this.descriptorByTag.get(tag)
-    if (descriptor) {
-      const descriptorWrapper = new DescriptorWrapper(descriptor)
-      this.descriptorByTag.delete(descriptor.tag)
+    const descriptorWrapper = this.descriptorWrapperByTag.get(tag)
+    if (descriptorWrapper) {
+      this.descriptorByTag.delete(descriptorWrapper.tag)
       if (descriptorWrapper.id) {
-        this.descriptorById.delete(descriptorWrapper.id)
+        this.descriptorTagById.delete(descriptorWrapper.id)
       }
     }
   }
@@ -70,8 +78,16 @@ export class DescriptorRegistry {
     return this.descriptorByTag.get(tag) as TDescriptor;
   }
 
+  public findDescriptorWrapperByTag<TDescriptorWrapper extends DescriptorWrapper>(tag: Tag): TDescriptorWrapper | null {
+    return this.descriptorWrapperByTag.get(tag) as TDescriptorWrapper | null
+  }
+
   public findDescriptorById<TDescriptor extends Descriptor>(id: NativeId): TDescriptor | null {
-    return this.descriptorById.get(id) as (TDescriptor | null)
+    const tag = this.descriptorTagById.get(id)
+    if (tag) {
+      return this.descriptorByTag.get(tag) as (TDescriptor | null)
+    }
+    return null
   }
 
   /**

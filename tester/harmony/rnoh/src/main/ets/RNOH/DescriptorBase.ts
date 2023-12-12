@@ -64,6 +64,10 @@ TState extends StateBase = StateBase, TRawProps extends RawPropsBase = RawPropsB
   constructor(protected descriptor: Descriptor<TType, TProps, TState, TRawProps>) {
   }
 
+  public get tag(): Tag {
+    return this.descriptor.tag
+  }
+
   public get id(): NativeId | undefined {
     const rawId = this.rawProps.nativeID
     if (rawId?.startsWith("__harmony::")) {

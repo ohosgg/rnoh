@@ -1,6 +1,6 @@
 import { Descriptor, RNOHContext, TransformMatrix } from '../../../RNOH';
 import { ViewBaseProps, ViewRawProps } from './types';
-import { ViewDescriptorWrapper } from './ViewDescriptorWrapper';
+import { ViewDescriptorWrapperBase } from './ViewDescriptorWrapper';
 import { RNViewManager } from '../../componentManagers';
 import matrix4 from '@ohos.matrix4';
 
@@ -24,7 +24,7 @@ export struct RNViewBase {
   public componentManager!: RNViewManager;
   @Prop public customAlign: Alignment = Alignment.TopStart;
   @BuilderParam public renderChildren: () => void
-  @State private descriptorWrapper: ViewDescriptorWrapper | undefined = undefined
+  @State private descriptorWrapper: ViewDescriptorWrapperBase | undefined = undefined
   private unregisterDescriptorChangesListener?: () => void = undefined
   private unregisterComponentManager?: () => void = undefined
   private unregisterCommandCallback?: () => void = undefined
@@ -47,7 +47,11 @@ export struct RNViewBase {
   }
 
   private onDescriptorChange(descriptor: ViewBaseDescriptor) {
-    this.descriptorWrapper = new ViewDescriptorWrapper(descriptor)
+    let descriptorWrapper = this.ctx.descriptorRegistry.findDescriptorWrapperByTag<ViewDescriptorWrapperBase>(descriptor.tag)
+    if (!descriptorWrapper || !(descriptorWrapper instanceof ViewDescriptorWrapperBase)) {
+      descriptorWrapper = new ViewDescriptorWrapperBase(descriptor)
+    }
+    this.descriptorWrapper = descriptorWrapper
   }
 
   private maybeLogStartUpTime() {
