@@ -37,9 +37,13 @@ export class ComponentManagerRegistry {
     const results: ComponentManager[] = []
     let currentTag: Tag | undefined = tag
     do {
-      let descriptor = this.getComponentManager(currentTag)
-      currentTag = descriptor.getParentTag()
-      results.push(descriptor)
+      const componentManager = this.getComponentManager(currentTag)
+      if (!componentManager) {
+        // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/707
+        break;
+      }
+      currentTag = componentManager.getParentTag()
+      results.push(componentManager)
     } while (currentTag !== undefined);
     return results.reverse();
   }
