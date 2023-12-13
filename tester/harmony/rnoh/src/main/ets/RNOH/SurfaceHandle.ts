@@ -107,7 +107,7 @@ export class SurfaceHandle {
 
   public async destroy() {
     if (this.destroyed) {
-      throw new Error("destroy called on a destroyed surface");
+      return;
     }
     if (this.isRunning) {
       throw new Error("Surface must be stopped before can be destroyed")

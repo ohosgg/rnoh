@@ -57,4 +57,12 @@ export class RNInstanceRegistry {
   private getDefaultProps(): Record<string, any> {
     return { concurrentRoot: true }
   }
+
+  public getAllDestroyedPromise() {
+    const destroyedPromises: Promise<void>[] = []
+    for(let rnInstance of this.instanceMap.values()) {
+      destroyedPromises.push(rnInstance.getDestroyedPromise())
+    }
+    return Promise.all(destroyedPromises)
+  }
 }

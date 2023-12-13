@@ -73,6 +73,10 @@ class RNInstance : public facebook::react::LayoutAnimationStatusDelegate {
         if (this->unsubscribeUITickListener != nullptr) {
             unsubscribeUITickListener();
         }
+        for (auto surfaceHandle : this->surfaceHandlers) {
+            surfaceHandle.second->stop();
+            scheduler->unregisterSurface(*surfaceHandle.second);
+        }
     }
 
     void start();

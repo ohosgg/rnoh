@@ -17,8 +17,19 @@ using namespace rnoh;
 std::unordered_map<size_t, std::unique_ptr<RNInstance>> rnInstanceById;
 auto uiTicker = std::make_shared<UITicker>();
 
-static napi_value createReactNativeInstance(napi_env env, napi_callback_info info) {
+static napi_value cleanUp(napi_env env, napi_callback_info info) {
     LogSink::initializeLogging();
+    LOG(INFO) << "cleanUp";
+    /**
+     * This CPP code can survive closing an app. The app can be closed before removing all RNInstances.
+     * As a workaround, all rnInstances are removed on the start.
+     */
+    rnInstanceById.clear();
+    ArkJS arkJs(env);
+    return arkJs.getUndefined();
+}
+
+static napi_value createReactNativeInstance(napi_env env, napi_callback_info info) {
     LOG(INFO) << "createReactNativeInstance";
 #ifdef REACT_NATIVE_DEBUG
     std::string warning =
@@ -61,10 +72,19 @@ static napi_value createReactNativeInstance(napi_env env, napi_callback_info inf
         uiTicker);
 
     if (rnInstanceById.find(instanceId) != rnInstanceById.end()) {
-        throw std::invalid_argument("RNInstance with the following id " + std::to_string(instanceId) + " has been already created");
+        LOG(FATAL) << "RNInstance with the following id " + std::to_string(instanceId) + " has been already created";
     }
     auto [it, _inserted] = rnInstanceById.emplace(instanceId, std::move(rnInstance));
     it->second->start();
+    return arkJs.getUndefined();
+}
+
+static napi_value destroyReactNativeInstance(napi_env env, napi_callback_info info) {
+    LOG(INFO) << "destroyReactNativeInstance";
+    ArkJS arkJs(env);
+    auto args = arkJs.getCallbackArgs(info, 1);
+    size_t rnInstanceId = arkJs.getDouble(args[0]);
+    rnInstanceById.erase(rnInstanceId);
     return arkJs.getUndefined();
 }
 
@@ -248,7 +268,9 @@ static napi_value updateState(napi_env env, napi_callback_info info) {
 EXTERN_C_START
 static napi_value Init(napi_env env, napi_value exports) {
     napi_property_descriptor desc[] = {
+        {"cleanUp", nullptr, cleanUp, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"createReactNativeInstance", nullptr, createReactNativeInstance, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"destroyReactNativeInstance", nullptr, destroyReactNativeInstance, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"loadScript", nullptr, loadScript, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"startSurface", nullptr, startSurface, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"stopSurface", nullptr, stopSurface, nullptr, nullptr, nullptr, napi_default, nullptr},

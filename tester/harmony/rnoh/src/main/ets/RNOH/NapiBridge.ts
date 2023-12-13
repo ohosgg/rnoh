@@ -13,6 +13,10 @@ export class NapiBridge {
     this.logger = logger.clone("NapiBridge")
   }
 
+  cleanUp() {
+    this.libRNOHApp?.cleanUp()
+  }
+
   createReactNativeInstance(instanceId: number,
                             turboModuleProvider: TurboModuleProvider,
                             mutationsListener: (mutations: Mutation[]) => void,
@@ -40,6 +44,10 @@ export class NapiBridge {
           throw err
         }
       });
+  }
+
+  destroyReactNativeInstance(instanceId: number) {
+    this.libRNOHApp?.destroyReactNativeInstance(instanceId)
   }
 
   emitComponentEvent(instanceId: number, tag: Tag, eventEmitRequestHandlerName: string, payload: any) {

@@ -287,7 +287,7 @@ void rnoh::RNInstance::emitComponentEvent(napi_env env, react::Tag tag, std::str
     for (auto &eventEmitRequestHandler : m_eventEmitRequestHandlers) {
         eventEmitRequestHandler->handleEvent(ctx);
     }
-                }
+}
 
 void rnoh::RNInstance::onMemoryLevel(size_t memoryLevel) {
     // Android memory levels are 5, 10, 15, while Ark's are 0, 1, 2

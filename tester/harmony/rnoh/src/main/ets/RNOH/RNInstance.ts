@@ -136,6 +136,9 @@ export class RNInstanceImpl implements RNInstance {
   private lifecycleEventEmitter = new EventEmitter<LifecycleEventArgsByEventName>()
   private componentNameByDescriptorType = new Map<string, string>()
   private logger: RNOHLogger
+  private surfaceHandles: Set<SurfaceHandle> = new Set()
+  private destroyedPromise: Promise<void> | undefined = undefined
+  private resolveDestroyPromise: (() => void) = () => {}
 
   /**
    * @deprecated
@@ -156,11 +159,25 @@ export class RNInstanceImpl implements RNInstance {
     const stopTracing = this.logger.clone("constructor").startTracing()
     this.componentManagerRegistry = new ComponentManagerRegistry();
     this.componentCommandHub = new RNComponentCommandHub();
+    this.destroyedPromise = new Promise(resolve => {
+      this.resolveDestroyPromise = resolve
+    })
     stopTracing()
   }
 
-  public onDestroy() {
+  public getDestroyedPromise() {
+    return this.destroyedPromise
+  }
+
+  public async onDestroy() {
+    const stopTracing = this.logger.clone("onDestroy").startTracing()
+    for (const surfaceHandle of this.surfaceHandles) {
+      await surfaceHandle.destroy()
+    }
+    this.napiBridge.destroyReactNativeInstance(this.id)
     this.turboModuleProvider.onDestroy()
+    this.resolveDestroyPromise()
+    stopTracing()
   }
 
   public getId(): number {
@@ -340,6 +357,7 @@ export class RNInstanceImpl implements RNInstance {
     const stopTracing = this.logger.clone("createSurface").startTracing()
     const tag = this.getNextSurfaceTag();
     const result = new SurfaceHandle(this, tag, appKey, this.defaultProps, this.napiBridge);
+    this.surfaceHandles.add(result)
     stopTracing()
     return result
   }

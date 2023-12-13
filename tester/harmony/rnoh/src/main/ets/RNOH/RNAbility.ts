@@ -36,6 +36,7 @@ export abstract class RNAbility extends UIAbility {
     this.logger = this.providedLogger.clone("RNAbility")
     const stopTracing = this.logger.clone("onCreate").startTracing()
     this.napiBridge = new NapiBridge(libRNOHApp, this.providedLogger)
+    this.napiBridge.cleanUp()
     this.rnInstanceRegistry = new RNInstanceRegistry(
       this.providedLogger,
       this.napiBridge,
@@ -43,9 +44,14 @@ export abstract class RNAbility extends UIAbility {
       (rnInstance) => this.createRNOHContext({
         rnInstance
       }))
-    AppStorage.setOrCreate('RNOHLogger', this.logger)
-    AppStorage.setOrCreate('RNInstanceFactory', this.rnInstanceRegistry)
     AppStorage.setOrCreate('RNAbility', this)
+    stopTracing()
+  }
+
+  async onDestroy() {
+    // NOTE: It looks like onDestroy is not awaited.
+    const stopTracing = this.logger.clone("onDestroy").startTracing()
+    await this.rnInstanceRegistry.getAllDestroyedPromise()
     stopTracing()
   }
 
@@ -63,10 +69,10 @@ export abstract class RNAbility extends UIAbility {
     return result
   }
 
-  public destroyAndUnregisterRNInstance(rnInstance: RNInstance): void {
+  public async destroyAndUnregisterRNInstance(rnInstance: RNInstance): Promise<void> {
     const stopTracing = this.logger.clone("destroyAndUnregisterRNInstance").startTracing()
     if (rnInstance instanceof RNInstanceImpl) {
-      rnInstance.onDestroy()
+      await rnInstance.onDestroy()
     }
     this.rnInstanceRegistry.deleteInstance(rnInstance.getId())
     stopTracing()
@@ -123,25 +129,25 @@ export abstract class RNAbility extends UIAbility {
 
   onConfigurationUpdate(config) {
     const stopTracing = this.logger.clone("onConfigurationUpdate").startTracing()
-    this.rnInstanceRegistry.forEach((rnInstance) => rnInstance.onConfigurationUpdate(config))
+    this.rnInstanceRegistry?.forEach((rnInstance) => rnInstance.onConfigurationUpdate(config))
     stopTracing()
   }
 
   onForeground() {
     const stopTracing = this.logger.clone("onForeground").startTracing()
-    this.rnInstanceRegistry.forEach((rnInstance) => rnInstance.onForeground())
+    this.rnInstanceRegistry?.forEach((rnInstance) => rnInstance.onForeground())
     stopTracing()
   }
 
   onBackground() {
     const stopTracing = this.logger.clone("onBackground").startTracing()
-    this.rnInstanceRegistry.forEach((rnInstance) => rnInstance.onBackground())
+    this.rnInstanceRegistry?.forEach((rnInstance) => rnInstance.onBackground())
     stopTracing()
   }
 
   onBackPress() {
     const stopTracing = this.logger.clone("onBackPress").startTracing()
-    this.rnInstanceRegistry.forEach((rnInstance) => rnInstance.onBackPress())
+    this.rnInstanceRegistry?.forEach((rnInstance) => rnInstance.onBackPress())
     stopTracing()
     return true;
   }
