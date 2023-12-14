@@ -310,6 +310,66 @@ export const ImageTest = () => {
           resizeMode="stretch"
         />
       </TestCase>
+      <TestCase
+        modal
+        skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/483
+        itShould="fade images with varying durations">
+        <View style={{flexDirection: 'row', gap: 24}}>
+          <View style={{width: 100}}>
+            <Image
+              // HACK: ?v=Date.now() is used to prevent caching
+              // - cached images are not fading/faded in
+              source={{uri: REMOTE_IMAGE_URL + '?v=' + Date.now()}}
+              style={{width: 100, height: 100, borderRadius: 8}}
+              fadeDuration={0}
+            />
+            <Text>This image will fade in over the time of 0s.</Text>
+          </View>
+          <View style={{width: 100}}>
+            <Image
+              source={{uri: REMOTE_IMAGE_URL + '?v=' + Date.now()}}
+              style={{width: 100, height: 100, borderRadius: 8}}
+              fadeDuration={1500}
+            />
+            <Text>This image will fade in over the time of 1.5s.</Text>
+          </View>
+          <View style={{width: 100}}>
+            <Image
+              source={{uri: REMOTE_IMAGE_URL + '?v=' + Date.now()}}
+              style={{width: 100, height: 100, borderRadius: 8}}
+              fadeDuration={5000}
+            />
+            <Text>This image will fade in over the time of 5s.</Text>
+          </View>
+        </View>
+        {/* To test local fadeDuration for localImages you have to disable caching */}
+        <View style={{flexDirection: 'row', gap: 24}}>
+          <View style={{width: 100}}>
+            <Image
+              source={LOCAL_IMAGE_ASSET_ID}
+              style={{width: 100, height: 100, borderRadius: 8}}
+              fadeDuration={0}
+            />
+            <Text>This image will fade in over the time of 0s.</Text>
+          </View>
+          <View style={{width: 100}}>
+            <Image
+              source={LOCAL_IMAGE_ASSET_ID}
+              style={{width: 100, height: 100, borderRadius: 8}}
+              fadeDuration={1500}
+            />
+            <Text>This image will fade in over the time of 1.5s.</Text>
+          </View>
+          <View style={{width: 100}}>
+            <Image
+              source={LOCAL_IMAGE_ASSET_ID}
+              style={{width: 100, height: 100, borderRadius: 8}}
+              fadeDuration={5000}
+            />
+            <Text>This image will fade in over the time of 5s.</Text>
+          </View>
+        </View>
+      </TestCase>
     </TestSuite>
   );
 };
