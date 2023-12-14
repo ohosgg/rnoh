@@ -1,4 +1,4 @@
-import { Tag } from '../../../RNOH';
+import { Tag } from '../../../RNOH/ts';
 import { ViewBaseProps, ViewRawProps } from '../RNViewBase/ts';
 
 

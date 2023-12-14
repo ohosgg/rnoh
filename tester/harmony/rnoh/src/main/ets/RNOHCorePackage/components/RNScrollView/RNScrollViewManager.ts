@@ -1,5 +1,5 @@
-import type { Point, RNOHContext, Tag } from '../../../RNOH';
-import { EventEmitter } from '../../../RNOH';
+import type { Point, RNOHContext, Tag } from '../../../RNOH/ts';
+import { EventEmitter } from '../../../RNOH/ts';
 import { RNViewManager } from '../../componentManagers'
 
 export type RNScrollLocalEventArgsByName = {

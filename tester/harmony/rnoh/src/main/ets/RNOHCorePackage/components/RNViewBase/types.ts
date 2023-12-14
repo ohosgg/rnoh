@@ -1,4 +1,4 @@
-import type { ColorSegments, TransformMatrix, RawPropsBase, PropsBase } from '../../../RNOH';
+import type { ColorSegments, TransformMatrix, RawPropsBase, PropsBase } from '../../../RNOH/ts';
 import { ViewStyle } from '../../../RNOH/RNTypes';
 import { AccessibilityProps as ViewAccessibility } from './ViewAccessibilityTypes';
 

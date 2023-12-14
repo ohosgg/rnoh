@@ -1,4 +1,4 @@
-import type { Point } from '../../RNOH';
+import type { Point } from '../../RNOH/ts';
 import { RNViewManager } from './RNViewManager'
 
 export class RNSurfaceManager extends RNViewManager {

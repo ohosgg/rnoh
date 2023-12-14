@@ -1,4 +1,4 @@
-import type { Tag } from '../../RNOH';
+import type { Tag } from '../../RNOH/ts';
 import { TurboModule } from "../../RNOH/TurboModule";
 
 export class NativeAnimatedTurboModule extends TurboModule {

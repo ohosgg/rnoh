@@ -1,7 +1,7 @@
 import {
   Point,
   RNOHContext
-} from '../../../RNOH';
+} from '../../../RNOH/ts';
 import type { Tag } from '../../../RNOH/DescriptorBase';
 import { RNViewManager } from '../../componentManagers/RNViewManager';
 import { RNParagraphManager } from './RNParagraphManager';

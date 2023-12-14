@@ -2,7 +2,7 @@ import type { TurboModuleContext } from "../../RNOH/TurboModule";
 import { TurboModule } from "../../RNOH/TurboModule";
 import window from '@ohos.window';
 
-import { convertColorValueToHex, EventEmitter } from '../../RNOH';
+import { convertColorValueToHex, EventEmitter } from '../../RNOH/ts';
 
 
 type StatusBarConstants = {

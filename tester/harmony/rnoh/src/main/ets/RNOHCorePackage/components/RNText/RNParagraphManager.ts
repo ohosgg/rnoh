@@ -6,7 +6,7 @@ import {
   OHOSTextFragmentMeasurer,
   PLACEHOLDER_SYMBOL,
   RNOHContext,
-} from '../../../RNOH';
+} from '../../../RNOH/ts';
 import type { Tag } from '../../../RNOH/DescriptorBase';
 import { RNViewManager } from '../../componentManagers/RNViewManager';
 import { RNFragmentManager } from './RNFragmentManager';

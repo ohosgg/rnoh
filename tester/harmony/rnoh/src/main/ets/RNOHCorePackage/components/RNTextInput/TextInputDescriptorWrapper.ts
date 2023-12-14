@@ -1,4 +1,4 @@
-import { convertColorValueToRGBA, Descriptor, Point } from '../../../RNOH';
+import { convertColorValueToRGBA, Descriptor, Point } from '../../../RNOH/ts';
 import { ViewDescriptorWrapperBase } from '../RNViewBase/ViewDescriptorWrapper';
 import { TextInputProps, TextInputRawProps, TextInputState } from './types';
 

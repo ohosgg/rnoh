@@ -9,8 +9,8 @@ import type {
   TouchTargetHelperDelegate,
   Edges,
   RNOHLogger
-} from '../../RNOH';
-import { ComponentManager } from '../../RNOH';
+} from '../../RNOH/ts';
+import { ComponentManager } from '../../RNOH/ComponentManager';
 import { ViewDescriptorWrapperBase } from "../components/RNViewBase/ViewDescriptorWrapper"
 
 

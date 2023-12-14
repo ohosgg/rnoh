@@ -1,4 +1,4 @@
-import { LifecycleState } from '../../RNOH';
+import { LifecycleState } from '../../RNOH/ts';
 import type { TurboModuleContext } from "../../RNOH/TurboModule";
 import { TurboModule } from "../../RNOH/TurboModule";
 
