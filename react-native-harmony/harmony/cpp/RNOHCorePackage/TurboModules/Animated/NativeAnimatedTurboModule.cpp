@@ -279,7 +279,7 @@ NativeAnimatedTurboModule::NativeAnimatedTurboModule(const ArkTSTurboModule::Con
 
 NativeAnimatedTurboModule::~NativeAnimatedTurboModule() {
     if (m_initializedEventListener) {
-        m_ctx.eventDispatcher->unregisterEventListener(shared_from_this());
+        m_ctx.eventDispatcher->unregisterExpiredListeners();
     }
 }
 
