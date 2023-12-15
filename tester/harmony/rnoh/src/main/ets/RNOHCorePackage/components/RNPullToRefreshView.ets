@@ -23,6 +23,7 @@ export type PullToRefreshDescriptor = Descriptor<"PullToRefreshView", PullToRefr
 export struct RNPullToRefreshView {
   ctx!: RNOHContext
   tag: number = 0
+  @State loadingOpacity: number = 0
   @BuilderParam renderDescriptors: () => void
   @State private descriptor: PullToRefreshDescriptor = Object() as PullToRefreshDescriptor
   private unregisterDescriptorChangesListener?: () => void = undefined
@@ -79,7 +80,9 @@ export struct RNPullToRefreshView {
       .width('112px')
       .height('112px')
       .color(params.tintColor)
-      .margin({ top: `${params.progressOffsetView}px` ?? 0 })
+      .translate({x: 0,y: (typeof params.progressOffsetView === 'number' ? params.progressOffsetView+ 'px' : 0)})
+      .opacity(this.loadingOpacity)
+      .animation({ duration: 300 })
   }
 
   build() {
@@ -94,6 +97,12 @@ export struct RNPullToRefreshView {
     }
     .onStateChange((refreshStatus) => {
       this.prevAndCurrentRefreshStatus = [this.prevAndCurrentRefreshStatus[1], refreshStatus]
+      if (refreshStatus === RefreshStatus.Drag || refreshStatus === RefreshStatus.OverDrag || refreshStatus === RefreshStatus.Refresh) {
+        this.loadingOpacity = 1
+      }
+      if (refreshStatus === RefreshStatus.Inactive || refreshStatus === RefreshStatus.Done) {
+        this.loadingOpacity = 0;
+      }
     })
     .onRefreshing(() => this.handleRefresh())
   }
