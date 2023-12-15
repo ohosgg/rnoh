@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <memory>
 #include <napi/native_api.h>
 #include <js_native_api.h>
 #include <js_native_api_types.h>
@@ -28,7 +29,7 @@ class TaskExecutor {
     bool isOnTaskThread(TaskThread thread) const;
 
   private:
-    std::array<std::unique_ptr<AbstractTaskRunner>, TaskThread::BACKGROUND + 1> m_taskRunners;
+    std::array<std::shared_ptr<AbstractTaskRunner>, TaskThread::BACKGROUND + 1> m_taskRunners;
 };
 
 } // namespace rnoh

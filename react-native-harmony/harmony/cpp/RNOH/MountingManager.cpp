@@ -59,8 +59,8 @@ void MountingManager::performTransaction(facebook::react::MountingCoordinator::S
         },
         [this](react::MountingTransaction const &transaction, react::SurfaceTelemetry const &surfaceTelemetry) {
             // Did mount
-            taskExecutor->runTask(TaskThread::MAIN, [this, transaction] {
-                this->triggerUICallback(transaction.getMutations());
+            taskExecutor->runTask(TaskThread::MAIN, [triggerUICallback=this->triggerUICallback, transaction] {
+                triggerUICallback(transaction.getMutations());
             });
         });
 }

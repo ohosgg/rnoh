@@ -85,8 +85,9 @@ export struct RNApp {
 
   aboutToDisappear() {
     const stopTracing = this.logger.clone("aboutToDisappear").startTracing()
-    if (this.shouldDestroyRNInstance)
+    if (this.shouldDestroyRNInstance) {
       this.rnAbility.destroyAndUnregisterRNInstance(this.rnInstance)
+    }
     this.cleanUpCallbacks.forEach(cleanUp => cleanUp())
     stopTracing()
   }

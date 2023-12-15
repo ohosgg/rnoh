@@ -48,10 +48,9 @@ export abstract class RNAbility extends UIAbility {
     stopTracing()
   }
 
-  async onDestroy() {
-    // NOTE: It looks like onDestroy is not awaited.
+  onDestroy() {
     const stopTracing = this.logger.clone("onDestroy").startTracing()
-    await this.rnInstanceRegistry.getAllDestroyedPromise()
+    this.rnInstanceRegistry.forEach(instance => instance.onDestroy())
     stopTracing()
   }
 
@@ -69,10 +68,10 @@ export abstract class RNAbility extends UIAbility {
     return result
   }
 
-  public async destroyAndUnregisterRNInstance(rnInstance: RNInstance): Promise<void> {
+  public destroyAndUnregisterRNInstance(rnInstance: RNInstance) {
     const stopTracing = this.logger.clone("destroyAndUnregisterRNInstance").startTracing()
     if (rnInstance instanceof RNInstanceImpl) {
-      await rnInstance.onDestroy()
+      rnInstance.onDestroy()
     }
     this.rnInstanceRegistry.deleteInstance(rnInstance.getId())
     stopTracing()

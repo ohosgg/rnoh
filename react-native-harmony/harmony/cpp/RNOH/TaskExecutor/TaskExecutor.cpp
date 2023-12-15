@@ -7,12 +7,16 @@
 
 namespace rnoh {
 
-TaskExecutor::TaskExecutor(napi_env mainEnv)
-    : m_taskRunners({
-          std::make_unique<NapiTaskRunner>(mainEnv),
-          std::make_unique<ThreadTaskRunner>("RNOH_JS"),
-          std::make_unique<ThreadTaskRunner>("RNOH_BACKGROUND"),
-      }) {}
+TaskExecutor::TaskExecutor(napi_env mainEnv) {
+    auto mainTaskRunner = std::make_shared<NapiTaskRunner>(mainEnv);
+    auto jsTaskRunner = std::make_shared<ThreadTaskRunner>("RNOH_JS");
+    // NOTE: we merge MAIN and BG threads for now,
+    // to allow for calling MAIN->BG->MAIN synchronously without deadlocks
+    m_taskRunners = {
+        mainTaskRunner,
+        jsTaskRunner,
+        mainTaskRunner};
+}
 
 void TaskExecutor::runTask(TaskThread thread, Task &&task) {
     m_taskRunners[thread]->runAsyncTask(std::move(task));

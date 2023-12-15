@@ -62,7 +62,7 @@ export class NapiBridge {
     })
   }
 
-  async startSurface(
+  startSurface(
     instanceId: number,
     surfaceTag: number,
     initialSurfaceWidth: number,
@@ -71,19 +71,16 @@ export class NapiBridge {
     surfaceOffsetY: number,
     pixelRatio: number,
     initialProps: any) {
-    return new Promise(resolve => {
-      this.libRNOHApp?.startSurface(
-        instanceId,
-        surfaceTag,
-        initialSurfaceWidth,
-        initialSurfaceHeight,
-        surfaceOffsetX,
-        surfaceOffsetY,
-        pixelRatio,
-        initialProps,
-        () => resolve(undefined)
-      );
-    })
+    this.libRNOHApp?.startSurface(
+      instanceId,
+      surfaceTag,
+      initialSurfaceWidth,
+      initialSurfaceHeight,
+      surfaceOffsetX,
+      surfaceOffsetY,
+      pixelRatio,
+      initialProps,
+    );
   }
 
   updateSurfaceConstraints(
@@ -134,26 +131,20 @@ export class NapiBridge {
     instanceId: number,
     surfaceTag: number,
   ) {
-    return new Promise((resolve) => {
-      this.libRNOHApp?.stopSurface(
-        instanceId,
-        surfaceTag,
-        () => resolve(undefined)
-      );
-    })
+    this.libRNOHApp?.stopSurface(
+      instanceId,
+      surfaceTag
+    );
   }
 
   async destroySurface(
     instanceId: number,
     surfaceTag: number,
   ) {
-    return new Promise((resolve) => {
-      this.libRNOHApp?.destroySurface(
-        instanceId,
-        surfaceTag,
-        () => resolve(undefined)
-      );
-    })
+    this.libRNOHApp?.destroySurface(
+      instanceId,
+      surfaceTag
+    );
   }
 
   setSurfaceDisplayMode(instanceId: number, surfaceTag: Tag, displayMode: DisplayMode): void {

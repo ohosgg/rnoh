@@ -1,10 +1,14 @@
 import type { TurboModule } from './TurboModule';
 import type { TurboModulesFactory } from './RNPackage';
+import { RNOHLogger } from './RNOHLogger';
 
 export class TurboModuleProvider {
   private cachedTurboModuleByName: Record<string, TurboModule> = {};
+  private logger: RNOHLogger
 
-  constructor(private turboModulesFactories: TurboModulesFactory[]) { }
+  constructor(private turboModulesFactories: TurboModulesFactory[], logger: RNOHLogger) {
+    this.logger = logger.clone("TurboModuleProvider");
+  }
 
   getModule<T extends TurboModule>(name: string): T {
     if (!(name in this.cachedTurboModuleByName)) {
@@ -30,8 +34,12 @@ export class TurboModuleProvider {
   }
 
   onDestroy() {
-    Object.values(this.cachedTurboModuleByName).forEach(turboModule => {
-      turboModule.__onDestroy__()
+    Object.entries(this.cachedTurboModuleByName).forEach(([name, turboModule]) => {
+      try {
+        turboModule.__onDestroy__()
+      } catch {
+        this.logger.error("Error while cleaning up TurboModule "+name);
+      }
     })
   }
 }

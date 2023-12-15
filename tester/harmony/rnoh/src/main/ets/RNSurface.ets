@@ -74,9 +74,12 @@ export struct RNSurface {
     const stopTracing = this.logger.clone("aboutToDisappear").startTracing()
     this.cleanUpCallbacks.forEach(cb => cb())
     if (this.shouldStopSurface) {
-      this.surfaceHandle.stop().then(() => {
+      if (!this.surfaceHandle.isDestroyed()) {
+        // NOTE: when the app is stopping, it's possible the ability cleaned up the surface
+        // before us. This is fine.
+        this.surfaceHandle.stop();
         this.surfaceHandle.destroy();
-      })
+      }
     } else if (this.surfaceHandle.getDisplayMode() === DisplayMode.Visible) {
       this.surfaceHandle.setDisplayMode(DisplayMode.Suspended);
     }
@@ -108,11 +111,9 @@ export struct RNSurface {
           surfaceOffsetY: this.surfaceOffsetY,
           pixelRatio: vp2px(1)
         },
-        this.initialProps).then(() => {
-        this.surfaceHandle.setDisplayMode(DisplayMode.Visible)
-      })
+        this.initialProps)
+      this.surfaceHandle.setDisplayMode(DisplayMode.Visible)
       this.shouldStartSurface = false
-
     } else {
       this.surfaceHandle.updateConstraints({
         width: this.surfaceWidth,

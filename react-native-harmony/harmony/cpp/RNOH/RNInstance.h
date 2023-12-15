@@ -83,10 +83,10 @@ class RNInstance : public facebook::react::LayoutAnimationStatusDelegate {
     void loadScript(std::vector<uint8_t> &&bundle, std::string const sourceURL, std::function<void(const std::string)> &&onFinish);
     void createSurface(facebook::react::Tag surfaceId, std::string const &moduleName);
     void updateSurfaceConstraints(facebook::react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY, float pixelRatio);
-    void startSurface(facebook::react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY, float pixelRatio, folly::dynamic &&initialProps, std::function<void()> &&onFinish);
+    void startSurface(facebook::react::Tag surfaceId, float width, float height, float viewportOffsetX, float viewportOffsetY, float pixelRatio, folly::dynamic &&initialProps);
     void setSurfaceProps(facebook::react::Tag surfaceId, folly::dynamic &&props);
-    void stopSurface(facebook::react::Tag surfaceId, std::function<void()> &&onFinish);
-    void destroySurface(facebook::react::Tag surfaceId, std::function<void()> &&onFinish);
+    void stopSurface(facebook::react::Tag surfaceId);
+    void destroySurface(facebook::react::Tag surfaceId);
     void setSurfaceDisplayMode(facebook::react::Tag surfaceId, facebook::react::DisplayMode displayMode);
     void callFunction(std::string &&module, std::string &&method, folly::dynamic &&params);
     void emitComponentEvent(napi_env env, facebook::react::Tag tag, std::string eventName, napi_value payload);

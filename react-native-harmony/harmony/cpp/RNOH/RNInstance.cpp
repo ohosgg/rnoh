@@ -129,9 +129,7 @@ void rnoh::RNInstance::createSurface(react::Tag surfaceId, std::string const &ap
         return;
     }
     auto surfaceHandler = std::make_shared<react::SurfaceHandler>(appKey, surfaceId);
-    this->taskExecutor->runTask(TaskThread::MAIN, [surfaceHandler, this]() {
-        this->scheduler->registerSurface(*surfaceHandler);
-    });
+    this->scheduler->registerSurface(*surfaceHandler);
     surfaceHandlers.insert({surfaceId, std::move(surfaceHandler)});
 }
 
@@ -141,43 +139,31 @@ void RNInstance::startSurface(react::Tag surfaceId,
                               float viewportOffsetX,
                               float viewportOffsetY,
                               float pixelRatio,
-                              folly::dynamic &&initialProps,
-                              std::function<void()> &&onFinish) {
+                              folly::dynamic &&initialProps) {
     try {
-        this->taskExecutor->runTask(TaskThread::MAIN, [=]() {
-            auto it = surfaceHandlers.find(surfaceId);
-            if (it == surfaceHandlers.end()) {
-                LOG(ERROR) << "startSurface: No surface with id " << surfaceId;
-                return;
-            }
+        auto it = surfaceHandlers.find(surfaceId);
+        if (it == surfaceHandlers.end()) {
+            LOG(ERROR) << "startSurface: No surface with id " << surfaceId;
+            return;
+        }
 
-            auto surfaceHandler = it->second;
-            surfaceHandler->setProps(std::move(initialProps));
-            auto layoutConstraints = surfaceHandler->getLayoutConstraints();
-            layoutConstraints.layoutDirection = react::LayoutDirection::LeftToRight;
-            layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
-                .width = width,
-                .height = height};
-            auto layoutContext = surfaceHandler->getLayoutContext();
-            surfaceHandler->setDisplayMode(react::DisplayMode::Suspended);
-            layoutContext.viewportOffset = {viewportOffsetX, viewportOffsetY};
-            layoutContext.pointScaleFactor = pixelRatio;
-            surfaceHandler->constraintLayout(layoutConstraints, layoutContext);
-            LOG(INFO) << "startSurface::starting: surfaceId=" << surfaceId;
-            /**
-             * Running on BACKGROUND thread prevents deadlock when text is measured on the main thread.
-             * It should be safe to remove once we text measurement is moved on the background thread.
-             */
-            this->taskExecutor->runTask(TaskThread::BACKGROUND, [this, surfaceHandler, surfaceId, onFinish]() {
-                surfaceHandler->start();
-                LOG(INFO) << "startSurface::started surfaceId=" << surfaceId;
-                this->taskExecutor->runTask(TaskThread::MAIN, [this, surfaceHandler, onFinish]() {
-                    auto mountingCoordinator = surfaceHandler->getMountingCoordinator();
-                    mountingCoordinator->setMountingOverrideDelegate(m_animationDriver);
-                    onFinish();
-                });
-            });
-        });
+        auto surfaceHandler = it->second;
+        surfaceHandler->setProps(std::move(initialProps));
+        auto layoutConstraints = surfaceHandler->getLayoutConstraints();
+        layoutConstraints.layoutDirection = react::LayoutDirection::LeftToRight;
+        layoutConstraints.minimumSize = layoutConstraints.maximumSize = {
+            .width = width,
+            .height = height};
+        auto layoutContext = surfaceHandler->getLayoutContext();
+        surfaceHandler->setDisplayMode(react::DisplayMode::Suspended);
+        layoutContext.viewportOffset = {viewportOffsetX, viewportOffsetY};
+        layoutContext.pointScaleFactor = pixelRatio;
+        surfaceHandler->constraintLayout(layoutConstraints, layoutContext);
+        LOG(INFO) << "startSurface::starting: surfaceId=" << surfaceId;
+        surfaceHandler->start();
+        LOG(INFO) << "startSurface::started surfaceId=" << surfaceId;
+        auto mountingCoordinator = surfaceHandler->getMountingCoordinator();
+        mountingCoordinator->setMountingOverrideDelegate(m_animationDriver);
     } catch (const std::exception &e) {
         LOG(ERROR) << "startSurface: " << e.what() << "\n";
         throw e;
@@ -193,7 +179,7 @@ void rnoh::RNInstance::setSurfaceProps(facebook::react::Tag surfaceId, folly::dy
     it->second->setProps(std::move(props));
 }
 
-void rnoh::RNInstance::stopSurface(react::Tag surfaceId, std::function<void()> &&onFinish) {
+void rnoh::RNInstance::stopSurface(react::Tag surfaceId) {
     auto it = surfaceHandlers.find(surfaceId);
     if (it == surfaceHandlers.end()) {
         LOG(ERROR) << "stopSurface: No surface with id " << surfaceId;
@@ -201,35 +187,24 @@ void rnoh::RNInstance::stopSurface(react::Tag surfaceId, std::function<void()> &
     }
     auto surfaceHandle = it->second;
     // stopping on main thread asynchronously caused dead lock
-    this->taskExecutor->runTask(TaskThread::JS, [this, surfaceId, surfaceHandle, onFinish = std::move(onFinish)]() {
-        LOG(INFO) << "stopSurface: stopping " << surfaceId;
-        try {
-            surfaceHandle->stop();
-            LOG(INFO) << "stopSurface: stopped " << surfaceId;
-            this->taskExecutor->runTask(TaskThread::MAIN, [onFinish = std::move(onFinish)]() {
-                onFinish();
-            });
-        } catch (const std::exception &e) {
-            LOG(ERROR) << "stopSurface: failed - " << e.what() << "\n";
-            this->taskExecutor->runTask(TaskThread::MAIN, [onFinish = std::move(onFinish)]() {
-                onFinish();
-            });
-            throw e;
-        };
-    });
+    LOG(INFO) << "stopSurface: stopping " << surfaceId;
+    try {
+        surfaceHandle->stop();
+        LOG(INFO) << "stopSurface: stopped " << surfaceId;
+    } catch (const std::exception &e) {
+        LOG(ERROR) << "stopSurface: failed - " << e.what() << "\n";
+        throw e;
+    };
 }
 
-void rnoh::RNInstance::destroySurface(react::Tag surfaceId, std::function<void()> &&onFinish) {
-    this->taskExecutor->runTask(TaskThread::MAIN, [this, surfaceId, onFinish = std::move(onFinish)]() {
-        auto it = surfaceHandlers.find(surfaceId);
-        if (it == surfaceHandlers.end()) {
-            LOG(ERROR) << "destroySurface: No surface with id " << surfaceId;
-            return;
-        }
-        scheduler->unregisterSurface(*it->second);
-        surfaceHandlers.erase(it);
-        onFinish();
-    });
+void rnoh::RNInstance::destroySurface(react::Tag surfaceId) {
+    auto it = surfaceHandlers.find(surfaceId);
+    if (it == surfaceHandlers.end()) {
+        LOG(ERROR) << "destroySurface: No surface with id " << surfaceId;
+        return;
+    }
+    scheduler->unregisterSurface(*it->second);
+    surfaceHandlers.erase(it);
 }
 
 void rnoh::RNInstance::setSurfaceDisplayMode(facebook::react::Tag surfaceId, facebook::react::DisplayMode displayMode) {
@@ -304,8 +279,10 @@ void rnoh::RNInstance::updateState(napi_env env, std::string const &componentNam
 }
 
 void RNInstance::callFunction(std::string &&module, std::string &&method, folly::dynamic &&params) {
-    this->taskExecutor->runTask(TaskThread::JS, [this, module = std::move(module), method = std::move(method), params = std::move(params)]() mutable {
-        this->instance->callJSFunction(std::move(module), std::move(method), std::move(params));
+    this->taskExecutor->runTask(TaskThread::JS, [weakInstance = std::weak_ptr(this->instance), module = std::move(module), method = std::move(method), params = std::move(params)]() mutable {
+        if (auto instance = weakInstance.lock()) {
+            instance->callJSFunction(std::move(module), std::move(method), std::move(params));
+        }
     });
 }
 
