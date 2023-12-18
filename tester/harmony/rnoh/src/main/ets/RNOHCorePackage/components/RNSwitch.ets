@@ -1,7 +1,6 @@
-import { ColorSegments, Descriptor} from '../../RNOH';
-import { convertColorSegmentsToString, RNOHContext } from '../../RNOH'
-import { ViewBaseProps, ViewRawProps } from './RNViewBase';
-import { RNViewBase } from './RNViewBase'
+import { RNViewManager } from '..';
+import { ColorSegments, convertColorSegmentsToString, Descriptor, RNOHContext } from '../../RNOH';
+import { RNViewBase, ViewBaseProps, ViewRawProps } from './RNViewBase';
 
 export interface SwitchProps extends ViewBaseProps {
   trackColor?: ColorSegments
@@ -17,15 +16,22 @@ export struct RNSwitch {
   ctx!: RNOHContext
   tag: number = 0
   @State private descriptor: SwitchDescriptor = Object() as SwitchDescriptor
-  private unregisterDescriptorChangesListener?: () => void = undefined
+  private cleanUpCallbacks: (() => void)[] = []
+  private componentManager!: RNViewManager;
 
   aboutToAppear() {
-    this.descriptor = this.ctx.descriptorRegistry.getDescriptor<SwitchDescriptor>(this.tag)
-    this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
+    this.descriptor = this.ctx.descriptorRegistry.getDescriptor<SwitchDescriptor>(this.tag);
+    this.cleanUpCallbacks.push(this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
         this.descriptor = (newDescriptor as SwitchDescriptor)
+        if (this.componentManager) {
+          this.componentManager.setIsEnabled(!this.descriptor.props.disabled);
+        }
       }
-    )
+    ));
+    this.componentManager = new RNViewManager(this.tag, this.ctx);
+    this.componentManager.setIsEnabled(!this.descriptor.props.disabled);
+    this.cleanUpCallbacks.push(this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager));
   }
 
   onChange(isOn: boolean) {
@@ -40,13 +46,14 @@ export struct RNSwitch {
   }
 
   aboutToDisappear() {
-    this.unregisterDescriptorChangesListener?.()
+    this.cleanUpCallbacks.forEach(cleanUp => cleanUp());
   }
 
   build() {
     RNViewBase({
       ctx: this.ctx,
       tag: this.tag,
+      componentManager: this.componentManager
     }) {
       Toggle({ type: ToggleType.Switch, isOn: this.descriptor.props.value })
         .margin(0)

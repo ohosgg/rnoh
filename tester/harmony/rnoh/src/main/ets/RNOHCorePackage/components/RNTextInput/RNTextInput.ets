@@ -3,7 +3,7 @@ import { RNViewBase } from '../RNViewBase';
 import { Selection, TextInputProps, TextInputRawProps, TextInputState } from './types';
 import { TextInputDescriptorWrapper } from './TextInputDescriptorWrapper';
 import { stringToFontStyle } from '../RNText/conversions';
-import { RNOHEventEmitRequestHandlerName } from '../..';
+import { RNOHEventEmitRequestHandlerName, RNViewManager } from '../..';
 
 export type TextInputDescriptor = Descriptor<"TextInput", TextInputProps, TextInputState, TextInputRawProps>
 
@@ -85,12 +85,12 @@ export struct RNTextInput {
   inputController: TextInputController = new TextInputController();
   areaController: TextAreaController = new TextAreaController();
   @State value: string = '';
-  private unregisterDescriptorChangesListener?: () => void = undefined
-  private cleanupCommandCallback?: () => void = undefined
+  private cleanUpCallbacks: (() => void)[] = []
   private textWasPastedOrCut: boolean = false
   private selection: Selection = { start: 0, end: 0 }
   private valueChanged: boolean = false
   private shouldIgnoreNextSelectionChange: boolean = false
+  private componentManager!: RNViewManager
 
   handleChangeEvent(value: string) {
     this.value = value
@@ -112,18 +112,24 @@ export struct RNTextInput {
   onDescriptorChange(newDescriptor: TextInputDescriptor) {
     this.descriptor = newDescriptor;
     this.descriptorWrapper = new TextInputDescriptorWrapper(this.descriptor)
+    if (this.componentManager) {
+      this.componentManager?.setIsEnabled(newDescriptor.props.editable ?? true);
+    }
   }
 
   aboutToAppear() {
     const newDescriptor = this.ctx.descriptorRegistry.getDescriptor<TextInputDescriptor>(this.tag);
     this.value = newDescriptor.props.text ?? '';
     this.onDescriptorChange(newDescriptor);
-    this.unregisterDescriptorChangesListener = this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
+    this.cleanUpCallbacks.push(this.ctx.descriptorRegistry.subscribeToDescriptorChanges(this.tag,
       (newDescriptor) => {
         this.onDescriptorChange(newDescriptor as TextInputDescriptor);
       }
-    )
-    this.cleanupCommandCallback = this.ctx.componentCommandReceiver.registerCommandCallback(
+    ));
+    this.componentManager = new RNViewManager(this.tag, this.ctx);
+    this.componentManager.setIsEnabled(newDescriptor.props.editable ?? true);
+    this.cleanUpCallbacks.push(this.ctx.componentManagerRegistry.registerComponentManager(this.tag, this.componentManager));
+    this.cleanUpCallbacks.push(this.ctx.componentCommandReceiver.registerCommandCallback(
       this.tag,
       (command, args: Object[]) => {
         if (command === 'blur') {
@@ -141,12 +147,11 @@ export struct RNTextInput {
         } else if (command === 'focus') {
           focusControl.requestFocus(`TextInput@${this.tag}`)
         }
-      });
+      }));
   }
 
   aboutToDisappear() {
-    this.unregisterDescriptorChangesListener?.()
-    this.cleanupCommandCallback?.();
+    this.cleanUpCallbacks.forEach(cleanUp => cleanUp());
   }
 
   onSubmitEditing(): void {
@@ -198,7 +203,7 @@ export struct RNTextInput {
   }
 
   build() {
-    RNViewBase({ ctx: this.ctx, tag: this.tag }) {
+    RNViewBase({ ctx: this.ctx, tag: this.tag, componentManager: this.componentManager }) {
       /**
        * Focus hack (1/2)
        * This invisible buttons are needed to solve focusing issues.

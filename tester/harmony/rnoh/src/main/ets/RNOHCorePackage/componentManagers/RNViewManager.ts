@@ -3,15 +3,15 @@ import type {
   ComponentManagerRegistry,
   Descriptor,
   DescriptorRegistry,
+  Edges,
   Point,
   RNOHContext,
+  RNOHLogger,
   Tag,
-  TouchTargetHelperDelegate,
-  Edges,
-  RNOHLogger
+  TouchTargetHelperDelegate
 } from '../../RNOH/ts';
 import { ComponentManager } from '../../RNOH/ComponentManager';
-import { ViewDescriptorWrapperBase } from "../components/RNViewBase/ViewDescriptorWrapper"
+import { ViewDescriptorWrapperBase } from '../components/RNViewBase/ViewDescriptorWrapper';
 
 
 export class RNViewManager extends ComponentManager implements TouchTargetHelperDelegate {
@@ -27,6 +27,7 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
   protected cleanUpCallbacks: (() => void)[] = []
   private isBoundingBoxDirty = true
   private logger: RNOHLogger
+  private enabled: boolean = true
 
   constructor(
     protected tag: Tag,
@@ -207,13 +208,24 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
   }
 
   public canChildrenHandleTouch(): boolean {
-    const descriptorWrapper = this.getDescriptorWrapper()
-    return descriptorWrapper?.pointerEvents == "auto" || descriptorWrapper?.pointerEvents == "box-none"
+    const descriptorWrapper = this.getDescriptorWrapper();
+    let pointerEvents = descriptorWrapper?.pointerEvents;
+    if (!(this.isEnabled())) {
+      if (pointerEvents === "auto") {
+        return true;
+      } else if (pointerEvents === "box-only") {
+        return false;
+      }
+    }
+    return pointerEvents == "auto" || pointerEvents == "box-none";
   }
 
   public canHandleTouch(): boolean {
-    const descriptorWrapper = this.getDescriptorWrapper()
-    return descriptorWrapper?.pointerEvents == "auto" || descriptorWrapper?.pointerEvents == "box-only"
+    const descriptorWrapper = this.getDescriptorWrapper();
+    if (!(this.isEnabled())) {
+      return false;
+    }
+    return descriptorWrapper?.pointerEvents == "auto" || descriptorWrapper?.pointerEvents == "box-only";
   }
 
   public isClippingChildren(): boolean {
@@ -230,5 +242,13 @@ export class RNViewManager extends ComponentManager implements TouchTargetHelper
 
   public getTag(): Tag {
     return this.tag
+  }
+
+  public setIsEnabled(isEnabled: boolean): void {
+    this.enabled = isEnabled;
+  }
+
+  public isEnabled(): boolean {
+    return this.enabled;
   }
 }

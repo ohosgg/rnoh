@@ -1,6 +1,13 @@
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import {useRef} from 'react';
-import {Animated, Text, TouchableOpacity, View, ViewStyle} from 'react-native';
+import {
+  Animated,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {Button} from '../components';
 import React from 'react';
 
@@ -69,6 +76,28 @@ export function TouchHandlingTest() {
           ]}
         />
       </TestCase>
+      <TestCase
+        itShould="respond to touches on disabled components when wrapped in Touchables"
+        initialState={false}
+        arrange={({setState}) => (
+          <TouchableOpacity
+            onPress={() => {
+              setState(true);
+            }}>
+            <TextInput
+              editable={false}
+              style={{
+                borderWidth: 2,
+                borderColor: 'blue',
+              }}
+              value={'Non-editable TextInput'}
+            />
+          </TouchableOpacity>
+        )}
+        assert={({expect, state}) => {
+          expect(state).to.be.true;
+        }}
+      />
     </TestSuite>
   );
 }
