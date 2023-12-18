@@ -144,8 +144,10 @@ function isInternalReactNativeRelativeImport(originModulePath) {
  * @returns {boolean}
  */
 function isRequestFromHarmonyPackage(originModulePath, harmonyPackageName) {
+  const slashes = new RegExp('/', 'g');
+  const packagePath = harmonyPackageName.replace(slashes, pathUtils.sep);
   return originModulePath.includes(
-    `${pathUtils.sep}node_modules${pathUtils.sep}${harmonyPackageName}${pathUtils.sep}`,
+    `${pathUtils.sep}node_modules${pathUtils.sep}${packagePath}${pathUtils.sep}`,
   );
 }
 
