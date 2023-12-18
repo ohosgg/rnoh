@@ -73,3 +73,8 @@ export class RNComponentCommandHub extends RNComponentCommandReceiver {
  * the JS side.
  */
 export type CommandDispatcher = RNComponentCommandHub;
+
+export enum RNOHComponentCommand {
+  BLOCK_NATIVE_RESPONDER = "RNOH::BLOCK_NATIVE_RESPONDER",
+  UNBLOCK_NATIVE_RESPONDER = "RNOH::UNBLOCK_NATIVE_RESPONDER",
+}

@@ -1,6 +1,6 @@
 import type UIAbility from '@ohos.app.ability.UIAbility'
 import type common from '@ohos.app.ability.common'
-import { CommandDispatcher, RNComponentCommandHub } from './RNComponentCommandHub'
+import { CommandDispatcher, RNComponentCommandHub, RNOHComponentCommand } from './RNComponentCommandHub'
 import { DescriptorRegistry, DescriptorWrapperFactory } from './DescriptorRegistry'
 import { ComponentManagerRegistry } from './ComponentManagerRegistry'
 import { SurfaceHandle } from './SurfaceHandle'
@@ -12,9 +12,10 @@ import type { RNOHContext } from './RNOHContext'
 import { RNOHCorePackage } from '../RNOHCorePackage/ts'
 import type { JSBundleProvider } from './JSBundleProvider'
 import { JSBundleProviderError } from './JSBundleProvider'
-import type { NativeId, Tag } from './DescriptorBase'
+import type { Tag } from './DescriptorBase'
 import type { RNPackage, RNPackageContext } from './RNPackage'
 import type { TurboModule } from './TurboModule'
+import { ResponderLockDispatcher } from "./ResponderLockDispatcher"
 
 export type SurfaceContext = {
   width: number
@@ -120,10 +121,6 @@ export type RNInstanceOptions = {
   createRNPackages: (ctx: RNPackageContext) => RNPackage[]
 }
 
-export enum RNOHComponentCommand {
-  BLOCK_NATIVE_RESPONDER = "RNOH::BLOCK_NATIVE_RESPONDER",
-  UNBLOCK_NATIVE_RESPONDER = "RNOH::UNBLOCK_NATIVE_RESPONDER",
-}
 
 export class RNInstanceImpl implements RNInstance {
   private turboModuleProvider: TurboModuleProvider
@@ -137,6 +134,7 @@ export class RNInstanceImpl implements RNInstance {
   private componentNameByDescriptorType = new Map<string, string>()
   private logger: RNOHLogger
   private surfaceHandles: Set<SurfaceHandle> = new Set()
+  private responderLockDispatcher: ResponderLockDispatcher
 
   /**
    * @deprecated
@@ -157,6 +155,7 @@ export class RNInstanceImpl implements RNInstance {
     const stopTracing = this.logger.clone("constructor").startTracing()
     this.componentManagerRegistry = new ComponentManagerRegistry();
     this.componentCommandHub = new RNComponentCommandHub();
+    this.responderLockDispatcher = new ResponderLockDispatcher(this.componentManagerRegistry, this.componentCommandHub, logger)
     stopTracing()
   }
 
@@ -164,7 +163,7 @@ export class RNInstanceImpl implements RNInstance {
     const stopTracing = this.logger.clone("onDestroy").startTracing()
     for (const surfaceHandle of this.surfaceHandles) {
       if (surfaceHandle.isRunning()) {
-        this.logger.warn("Destroying instance with running surface with tag: "+surfaceHandle.getTag());
+        this.logger.warn("Destroying instance with running surface with tag: " + surfaceHandle.getTag());
         surfaceHandle.stop();
       }
       surfaceHandle.destroy()
@@ -224,9 +223,9 @@ export class RNInstanceImpl implements RNInstance {
     switch (type) {
       case "SCHEDULER_DID_SET_IS_JS_RESPONDER": {
         if (payload.blockNativeResponder) {
-          this.onBlockResponder(payload.tag)
+          this.responderLockDispatcher.onBlockResponder(payload.tag)
         } else {
-          this.onUnblockResponder(payload.tag)
+          this.responderLockDispatcher.onUnblockResponder(payload.tag)
         }
         break;
       }
@@ -236,28 +235,10 @@ export class RNInstanceImpl implements RNInstance {
   }
 
   public blockComponentsGestures(tag: Tag) {
-    this.onBlockResponder(tag)
+    this.responderLockDispatcher.onBlockResponder(tag)
     return () => {
-      this.onUnblockResponder(tag)
+      this.responderLockDispatcher.onUnblockResponder(tag)
     }
-  }
-
-  private onBlockResponder(tag: Tag) {
-    const stopTracing = this.logger.clone("onBlockResponder").startTracing()
-    const tags = this.componentManagerRegistry.getComponentManagerLineage(tag).map(d => d.getTag())
-    tags.forEach((tag) => {
-      this.componentCommandHub.dispatchCommand(tag, RNOHComponentCommand.BLOCK_NATIVE_RESPONDER, undefined)
-    })
-    stopTracing()
-  }
-
-  private onUnblockResponder(tag: Tag) {
-    const stopTracing = this.logger.clone("onUnblockResponder").startTracing()
-    const tags = this.componentManagerRegistry.getComponentManagerLineage(tag).map(d => d.getTag())
-    tags.forEach((tag) => {
-      this.componentCommandHub.dispatchCommand(tag, RNOHComponentCommand.UNBLOCK_NATIVE_RESPONDER, undefined)
-    })
-    stopTracing()
   }
 
   private async processPackages(packages: RNPackage[]) {
