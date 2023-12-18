@@ -151,9 +151,15 @@ export struct RNScrollView {
          * This behavior was observed on Android. Local contentOffset is used, to use the most recent position.
          * The contentOffset in the descriptor's state might be delayed.
          */
+        const width = this.descriptorWrapper?.width ?? 0;
+        const height = this.descriptorWrapper?.height ?? 0;
+        const maxOffsetX = this.descriptor.state.contentSizeWidth < width ? 0 : (this.descriptor.state.contentSizeWidth - width);
+        const maxOffsetY = this.descriptor.state.contentSizeHeight < height ? 0 : (this.descriptor.state.contentSizeHeight - height);
+        const xOffset = (width && this.contentOffset.x > maxOffsetX) ? maxOffsetX : this.contentOffset.x;
+        const yOffset = (height && this.contentOffset.y > maxOffsetY) ? maxOffsetY : this.contentOffset.y;
         this.scroller.scrollTo({
-          xOffset: this.contentOffset.x,
-          yOffset: this.contentOffset.y
+          xOffset,
+          yOffset
         });
       }
     }
