@@ -599,6 +599,12 @@ export function ScrollViewTest() {
         itShould="maintain scroll position when adding/removing elements">
         <AppendingList />
       </TestCase>
+      <TestCase
+        modal
+        skip // https://gl.swmansion.com/rnoh/react-native-harmony/-/issues/498
+        itShould="fill the remaining space of scroll view with yellow color but the element inside scroll view remains transparent">
+        <ScrollViewEndFillColorTest />
+      </TestCase>
     </TestSuite>
   );
 }
@@ -1141,6 +1147,36 @@ function ScrollViewComparator({
             <ScrollView {...{...commonProps, ...rhsProps}} style={{flex: 1}} />
           </View>
         </View>
+      </View>
+    </View>
+  );
+}
+
+function ScrollViewEndFillColorTest() {
+  return (
+    <View
+      style={{
+        backgroundColor: 'pink',
+        width: '100%',
+        justifyContent: 'center',
+      }}>
+      <View
+        style={{
+          height: 400,
+          marginTop: 50,
+          marginBottom: 50,
+        }}>
+        <ScrollView endFillColor={'yellow'}>
+          <View
+            style={{
+              height: 100,
+              borderWidth: 1,
+              borderColor: '#000',
+              padding: 10,
+            }}>
+            <Text>Content smaller than scroll view</Text>
+          </View>
+        </ScrollView>
       </View>
     </View>
   );
