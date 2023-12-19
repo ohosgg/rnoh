@@ -8,7 +8,6 @@ import type { RNPackage, RNPackageContext } from './RNPackage';
 
 
 export class RNInstanceRegistry {
-  private nextInstanceId = 0;
   private instanceMap: Map<number, RNInstanceImpl> = new Map();
 
   constructor(
@@ -24,7 +23,7 @@ export class RNInstanceRegistry {
       createRNPackages: (ctx: RNPackageContext) => RNPackage[]
     }
   ): Promise<RNInstance> {
-    const id = this.nextInstanceId++;
+    const id = this.napiBridge.getNextRNInstanceId();
     const instance = new RNInstanceImpl(
       id,
       this.logger,

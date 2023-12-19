@@ -65,7 +65,7 @@ const rootDescriptor = {
   }
 }
 
-type FeatureFlagName = "USE_BUILD_RN_COMPONENT"
+type FeatureFlagName = "USE_BUILD_RN_COMPONENT" | "ENABLE_RN_INSTANCE_CLEAN_UP"
 
 export interface RNInstance {
   descriptorRegistry: DescriptorRegistry;
@@ -175,7 +175,9 @@ export class RNInstanceImpl implements RNInstance {
       }
       surfaceHandle.destroy()
     }
-    this.napiBridge.destroyReactNativeInstance(this.id)
+    if (this.isFeatureFlagEnabled("ENABLE_RN_INSTANCE_CLEAN_UP")) {
+      this.napiBridge.destroyReactNativeInstance(this.id)
+    }
     this.turboModuleProvider.onDestroy()
     stopTracing()
   }

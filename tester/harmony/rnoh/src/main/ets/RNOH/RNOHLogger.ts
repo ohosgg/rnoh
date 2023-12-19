@@ -133,6 +133,10 @@ export class StandardRNOHLogger implements RNOHLogger {
     }
   }
 
+  public setMinSeverity(minSeverity: Severity) {
+    this.minSeverity = minSeverity
+  }
+
   public info(...args: any[]): void {
     this.log("info", this.getCurrentOffset(), ...args)
   }

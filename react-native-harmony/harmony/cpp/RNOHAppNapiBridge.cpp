@@ -17,30 +17,37 @@ using namespace rnoh;
 std::unordered_map<size_t, std::unique_ptr<RNInstance>> rnInstanceById;
 auto uiTicker = std::make_shared<UITicker>();
 
-static napi_value cleanUp(napi_env env, napi_callback_info info) {
+static napi_value onInit(napi_env env, napi_callback_info info) {
     LogSink::initializeLogging();
-    LOG(INFO) << "cleanUp";
-    /**
-     * This CPP code can survive closing an app. The app can be closed before removing all RNInstances.
-     * As a workaround, all rnInstances are removed on the start.
-     */
-    rnInstanceById.clear();
+    LOG(INFO) << "onInit";
     ArkJS arkJs(env);
-    return arkJs.getUndefined();
+    auto args = arkJs.getCallbackArgs(info, 1);
+    auto shouldClearRNInstances = arkJs.getBoolean(args[0]);
+    if (shouldClearRNInstances) {
+        /**
+         * This CPP code can survive closing an app. The app can be closed before removing all RNInstances.
+         * As a workaround, all rnInstances are removed on the start.
+         */
+        rnInstanceById.clear();
+    }
+    auto isDebugModeEnabled = false;
+#ifdef REACT_NATIVE_DEBUG
+    isDebugModeEnabled = true;
+#endif
+    return arkJs.createObjectBuilder()
+        .addProperty("isDebugModeEnabled", isDebugModeEnabled)
+        .build();
+}
+
+static napi_value getNextRNInstanceId(napi_env env, napi_callback_info info) {
+    static size_t nextId = 0;
+    nextId++;
+    LOG(INFO) << "getNextRNInstanceId: " << nextId;
+    return ArkJS(env).createInt(nextId);
 }
 
 static napi_value createReactNativeInstance(napi_env env, napi_callback_info info) {
     LOG(INFO) << "createReactNativeInstance";
-#ifdef REACT_NATIVE_DEBUG
-    std::string warning =
-        "\n"
-        ".--------------------------------.\n"
-        "| REACT_NATIVE_DEBUG is enabled! |\n"
-        "'--------------------------------'\n";
-    LOG(WARNING) << warning;
-    LOG(WARNING)
-        << "REACT_NATIVE_DEBUG is enabled. The performance is heavily affected. Do not run debug mode on production!";
-#endif
     ArkJS arkJs(env);
     auto args = arkJs.getCallbackArgs(info, 6);
     size_t instanceId = arkJs.getDouble(args[0]);
@@ -202,7 +209,7 @@ static napi_value setSurfaceDisplayMode(napi_env env, napi_callback_info info) {
     if (it == rnInstanceById.end()) {
         return arkJs.getUndefined();
     }
-    auto &rnInstance = it->second; 
+    auto &rnInstance = it->second;
     facebook::react::Tag surfaceId = arkJs.getDouble(args[1]);
     LOG(INFO) << "setSurfaceDisplayMode: surfaceId=" << surfaceId << "\n";
     rnInstance->setSurfaceDisplayMode(surfaceId, static_cast<facebook::react::DisplayMode>(arkJs.getDouble(args[2])));
@@ -233,7 +240,7 @@ static napi_value callRNFunction(napi_env env, napi_callback_info info) {
     if (it == rnInstanceById.end()) {
         return arkJs.getUndefined();
     }
-    auto &rnInstance = it->second; 
+    auto &rnInstance = it->second;
     auto moduleString = arkJs.getString(args[1]);
     auto nameString = arkJs.getString(args[2]);
     auto argsDynamic = arkJs.getDynamic(args[3]);
@@ -270,7 +277,8 @@ static napi_value updateState(napi_env env, napi_callback_info info) {
 EXTERN_C_START
 static napi_value Init(napi_env env, napi_value exports) {
     napi_property_descriptor desc[] = {
-        {"cleanUp", nullptr, cleanUp, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"onInit", nullptr, onInit, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"getNextRNInstanceId", nullptr, getNextRNInstanceId, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"createReactNativeInstance", nullptr, createReactNativeInstance, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"destroyReactNativeInstance", nullptr, destroyReactNativeInstance, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"loadScript", nullptr, loadScript, nullptr, nullptr, nullptr, napi_default, nullptr},

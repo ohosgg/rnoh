@@ -13,8 +13,12 @@ export class NapiBridge {
     this.logger = logger.clone("NapiBridge")
   }
 
-  cleanUp() {
-    this.libRNOHApp?.cleanUp()
+  onInit(shouldCleanUpRNInstances: boolean): { isDebugModeEnabled: boolean } {
+    return this.libRNOHApp?.onInit(shouldCleanUpRNInstances)
+  }
+
+  getNextRNInstanceId(): number {
+    return this.libRNOHApp?.getNextRNInstanceId()
   }
 
   createReactNativeInstance(instanceId: number,

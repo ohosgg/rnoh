@@ -3,7 +3,6 @@ import { NapiBridge } from "./NapiBridge"
 import type { RNOHLogger } from "./RNOHLogger";
 import { StandardRNOHLogger } from "./RNOHLogger"
 import window from '@ohos.window';
-import hilog from '@ohos.hilog';
 import type { TurboModuleProvider } from "./TurboModuleProvider"
 import libRNOHApp from 'librnoh_app.so'
 import { RNInstanceRegistry } from './RNInstanceRegistry';
@@ -28,6 +27,7 @@ export abstract class RNAbility extends UIAbility {
   protected window: window.Window | undefined
   protected initializationDateTime: Date
   protected readinessDateTime: Date | undefined
+  protected isDebugModeEnabled: boolean = true
 
   async onCreate(want, param) {
     this.initializationDateTime = new Date()
@@ -36,7 +36,14 @@ export abstract class RNAbility extends UIAbility {
     this.logger = this.providedLogger.clone("RNAbility")
     const stopTracing = this.logger.clone("onCreate").startTracing()
     this.napiBridge = new NapiBridge(libRNOHApp, this.providedLogger)
-    this.napiBridge.cleanUp()
+    const { isDebugModeEnabled } = this.napiBridge.onInit(this.shouldCleanUpRNInstance__hack())
+    this.isDebugModeEnabled = isDebugModeEnabled
+    if (this.logger instanceof StandardRNOHLogger) {
+      this.logger.setMinSeverity(this.isDebugModeEnabled ? "debug" : "info")
+    }
+    if (this.isDebugModeEnabled) {
+      this.logger.warn("Debug mode is enabled. Performance is affected.")
+    }
     this.rnInstanceRegistry = new RNInstanceRegistry(
       this.providedLogger,
       this.napiBridge,
@@ -46,6 +53,10 @@ export abstract class RNAbility extends UIAbility {
       }))
     AppStorage.setOrCreate('RNAbility', this)
     stopTracing()
+  }
+
+  protected shouldCleanUpRNInstance__hack(): boolean {
+    return false
   }
 
   onDestroy() {

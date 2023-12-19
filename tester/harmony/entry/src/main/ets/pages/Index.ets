@@ -76,7 +76,7 @@ struct Index {
           appKey: "app_name",
           buildCustomComponent: CustomComponentBuilder,
           onSetUp: (rnInstance) => {
-            // rnInstance.enableFeatureFlag("USE_BUILD_RN_COMPONENT")
+            rnInstance.enableFeatureFlag("ENABLE_RN_INSTANCE_CLEAN_UP")
           },
           jsBundleProvider: new TraceJSBundleProviderDecorator(new AnyJSBundleProvider([
             new MetroJSBundleProvider(),
