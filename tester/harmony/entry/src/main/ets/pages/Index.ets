@@ -12,7 +12,7 @@ import font from '@ohos.font';
 import { createRNPackages } from '../RNPackagesFactory'
 
 @Builder
-function CustomComponentBuilder(ctx: ComponentBuilderContext) {
+export function CustomComponentBuilder(ctx: ComponentBuilderContext) {
   if (ctx.componentName === SAMPLE_VIEW_TYPE) {
     SampleView({
       ctx: ctx.rnohContext,
@@ -75,6 +75,9 @@ struct Index {
           initialProps: { "foo": "bar" } as Record<string, string>,
           appKey: "app_name",
           buildCustomComponent: CustomComponentBuilder,
+          onSetUp: (rnInstance) => {
+            // rnInstance.enableFeatureFlag("USE_BUILD_RN_COMPONENT")
+          },
           jsBundleProvider: new TraceJSBundleProviderDecorator(new AnyJSBundleProvider([
             new MetroJSBundleProvider(),
             new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'hermes_bundle.hbc'),

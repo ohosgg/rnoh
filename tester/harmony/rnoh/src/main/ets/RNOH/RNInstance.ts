@@ -65,6 +65,8 @@ const rootDescriptor = {
   }
 }
 
+type FeatureFlagName = "USE_BUILD_RN_COMPONENT"
+
 export interface RNInstance {
   descriptorRegistry: DescriptorRegistry;
 
@@ -89,6 +91,10 @@ export interface RNInstance {
   emitComponentEvent(tag: Tag, eventEmitRequestHandlerName: string, payload: any): void;
 
   getBundleExecutionStatus(bundleURL: string): BundleExecutionStatus | undefined
+
+  enableFeatureFlag(featureFlagName: FeatureFlagName): void
+
+  isFeatureFlagEnabled(featureFlagName: FeatureFlagName): boolean
 
   runJSBundle(jsBundleProvider: JSBundleProvider): Promise<void>;
 
@@ -135,6 +141,7 @@ export class RNInstanceImpl implements RNInstance {
   private logger: RNOHLogger
   private surfaceHandles: Set<SurfaceHandle> = new Set()
   private responderLockDispatcher: ResponderLockDispatcher
+  private isFeatureFlagEnabledByName = new Map<FeatureFlagName, boolean>()
 
   /**
    * @deprecated
@@ -175,6 +182,14 @@ export class RNInstanceImpl implements RNInstance {
 
   public getId(): number {
     return this.id;
+  }
+
+  enableFeatureFlag(featureFlagName: FeatureFlagName): void {
+    this.isFeatureFlagEnabledByName.set(featureFlagName, true)
+  }
+
+  isFeatureFlagEnabled(featureFlagName: FeatureFlagName): boolean {
+    return this.isFeatureFlagEnabledByName.get(featureFlagName) ?? false
   }
 
   public async initialize(packages: RNPackage[]) {

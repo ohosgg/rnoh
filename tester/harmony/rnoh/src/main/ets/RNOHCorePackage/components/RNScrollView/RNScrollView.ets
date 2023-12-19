@@ -2,7 +2,7 @@ import { Descriptor, Position, RNOHComponentCommand, RNOHContext, Size, Tag } fr
 import { _RNScrollViewManager } from './RNScrollViewManager';
 import { RNViewBase, ViewDescriptorWrapperBase } from '../RNViewBase';
 import { RN_PULL_TO_REFRESH_VIEW_NAME, RNPullToRefreshView } from '../RNPullToRefreshView';
-import { CustomComponentBuilder, RNComponentFactory } from '../RNComponentFactory';
+import { CustomComponentBuilder, RNComponentFactory, buildRNComponent } from '../RNComponentFactory';
 import {
   CurrentOffset,
   FirstVisibleView,
@@ -570,9 +570,15 @@ export struct RNScrollView {
   buildScrollCore() {
     Scroll(this.scroller) {
       Stack() {
-        ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
-          RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
-        }, (childrenTag: Tag) => childrenTag.toString())
+        if (this.ctx.rnInstance.isFeatureFlagEnabled("USE_BUILD_RN_COMPONENT")) {
+          ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
+            buildRNComponent(this.ctx, this.ctx.descriptorRegistry.findDescriptorWrapperByTag(childrenTag))
+          }, (childrenTag: Tag) => childrenTag.toString())
+        } else {
+          ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
+            RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
+          }, (childrenTag: Tag) => childrenTag.toString())
+        }
       }
       .width(this.contentSize.width)
       .height(this.contentSize.height)

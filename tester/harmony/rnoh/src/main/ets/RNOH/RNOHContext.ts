@@ -49,3 +49,8 @@ export class RNOHContext {
   ) {
   }
 }
+
+/**
+ * RNOHContext might be deprecated in the future. Use RNComponentContext only in ets files.
+ */
+export type RNComponentContext = RNOHContext

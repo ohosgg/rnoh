@@ -1,4 +1,4 @@
-import { Tag, RNOHContext } from "../../RNOH"
+import { Tag, RNOHContext, RNComponentContext, DescriptorWrapper } from "../../RNOH"
 import { RNView } from "./RNView"
 import { RNImage } from "./RNImage"
 import { RNTextInput } from "./RNTextInput"
@@ -10,6 +10,9 @@ import { RNSwitch } from './RNSwitch'
 import { RNActivityIndicator } from './RNActivityIndicator'
 
 export interface ComponentBuilderContext {
+  /**
+   * @deprecated Use `rnComponentContext` instead.
+   */
   rnohContext: RNOHContext
   /**
    * @deprecated: Use tag and componentName instead
@@ -17,6 +20,10 @@ export interface ComponentBuilderContext {
   descriptor: DescriptorEssence
   tag: Tag
   componentName: string
+  /**
+   * rnComponentContext will replace rnohContext in the future
+   */
+  rnComponentContext: RNComponentContext
 }
 
 interface DescriptorEssence {
@@ -25,6 +32,86 @@ interface DescriptorEssence {
 }
 
 export type CustomComponentBuilder = (ctx: ComponentBuilderContext) => void
+
+class ComponentBuilderContextImpl implements ComponentBuilderContext {
+  public rnComponentContext: RNComponentContext
+  public rnohContext: RNOHContext
+  public tag: Tag
+  public componentName: string
+  public descriptor: DescriptorEssence
+
+  constructor(rnComponentContext: RNComponentContext, rnohContext: RNOHContext, tag: Tag, componentName: string, descriptor: DescriptorEssence) {
+    this.rnComponentContext = rnComponentContext
+    this.rnohContext = rnohContext
+    this.tag = tag
+    this.componentName = componentName
+    this.descriptor = descriptor
+  }
+}
+
+@Builder
+function buildCustomComponent(ctx: ComponentBuilderContext) {
+  /**
+   * If you want to improve the performance, you can tell RNOH to use buildRNComponent instead of RNComponentFactory.
+   * However, there's no official way to inject your custom components into that builder, therefore you need to specify
+   * those component here and enable feature flag 'USE_BUILD_RN_COMPONENT' by calling `RNInstance::enableFeatureFlag`.
+   */
+}
+
+@Builder
+export function buildRNComponent(ctx: RNComponentContext, descriptorWrapper: DescriptorWrapper) {
+  if (ctx.rnInstance.getComponentNameFromDescriptorType(descriptorWrapper.type_) === "View" || ctx.rnInstance.getComponentNameFromDescriptorType(descriptorWrapper.type_) === "RootView") {
+    RNView({
+      ctx: ctx,
+      tag: descriptorWrapper.tag,
+      buildCustomComponent: buildCustomComponent
+    })
+  } else if (ctx.rnInstance.getComponentNameFromDescriptorType(descriptorWrapper.type_) === "Image") {
+    RNImage({ ctx: ctx, tag: descriptorWrapper.tag })
+  } else if (ctx.rnInstance.getComponentNameFromDescriptorType(descriptorWrapper.type_) === "TextInput") {
+    RNTextInput({ ctx: ctx, tag: descriptorWrapper.tag })
+  } else if (ctx.rnInstance.getComponentNameFromDescriptorType(descriptorWrapper.type_) === "Paragraph") {
+    RNText({ ctx: ctx, tag: descriptorWrapper.tag, buildCustomComponent: buildCustomComponent })
+  } else if (ctx.rnInstance.getComponentNameFromDescriptorType(descriptorWrapper.type_) === "PullToRefreshView") {
+    /**
+     * RNScrollView displays Refresh component if PullToRefreshView is its direct parent.
+     * Native Refresh component works correctly, only when a native Scroll is its direct child.
+     */
+    buildRNComponent(ctx, ctx.descriptorRegistry.findDescriptorWrapperByTag(descriptorWrapper.childrenTags[0]))
+  }
+  else if (ctx.rnInstance.getComponentNameFromDescriptorType(descriptorWrapper.type_) === "ScrollView") {
+    RNScrollView({
+      ctx: ctx,
+      tag: descriptorWrapper.tag,
+      buildCustomComponent: buildCustomComponent,
+    })
+  } else if (ctx.rnInstance.getComponentNameFromDescriptorType(descriptorWrapper.type_) === "Switch") {
+    RNSwitch({
+      ctx: ctx,
+      tag: descriptorWrapper.tag,
+    })
+  } else if (ctx.rnInstance.getComponentNameFromDescriptorType(descriptorWrapper.type_) === "ModalHostView") {
+    RNModalHostView({
+      ctx: ctx,
+      tag: descriptorWrapper.tag,
+      buildCustomComponent: buildCustomComponent
+    })
+  } else if (ctx.rnInstance.getComponentNameFromDescriptorType(descriptorWrapper.type_) === "ActivityIndicatorView") {
+    RNActivityIndicator({
+      ctx: ctx,
+      tag: descriptorWrapper.tag,
+    })
+  } else if (ctx.rnInstance.getComponentNameFromDescriptorType(descriptorWrapper.type_) !== '') {
+    buildCustomComponent(new ComponentBuilderContextImpl(
+      ctx,
+      ctx,
+      descriptorWrapper.tag,
+      ctx.rnInstance.getComponentNameFromDescriptorType(descriptorWrapper.type_),
+      ctx.descriptorRegistry.getDescriptor<Descriptor>(descriptorWrapper.tag) as DescriptorEssence,
+    ))
+  }
+}
+
 
 @Component
 export struct RNComponentFactory {
@@ -104,6 +191,7 @@ export struct RNComponentFactory {
     } else if (this.componentName !== '') {
       this.buildCustomComponent({
         rnohContext: this.ctx,
+        rnComponentContext: this.ctx,
         descriptor: this.ctx.descriptorRegistry.getDescriptor<Descriptor>(this.tag) as DescriptorEssence,
         tag: this.tag,
         componentName: this.componentName

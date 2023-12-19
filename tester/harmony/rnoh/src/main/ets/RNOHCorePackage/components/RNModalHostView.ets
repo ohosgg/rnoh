@@ -7,7 +7,7 @@ import { ViewBaseProps } from './RNViewBase'
 import { TouchDispatcher } from '../../RNOH/TouchDispatcher'
 import { RNModalHostViewManager } from '../componentManagers/RNModalHostViewManager';
 import { CustomComponentBuilder } from './RNComponentFactory'
-import { RNComponentFactory } from './RNComponentFactory'
+import { RNComponentFactory, buildRNComponent } from './RNComponentFactory'
 
 interface ModalHostViewProps extends ViewBaseProps {
   transparent: boolean;
@@ -70,9 +70,15 @@ struct ModalHostViewDialog {
   build() {
     if (this.showContent) {
       Stack() {
-        ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
-          RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
-        }, (childrenTag: Tag) => childrenTag.toString())
+        if (this.ctx.rnInstance.isFeatureFlagEnabled("USE_BUILD_RN_COMPONENT")) {
+          ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
+            buildRNComponent(this.ctx, this.ctx.descriptorRegistry.findDescriptorWrapperByTag(childrenTag))
+          }, (childrenTag: Tag) => childrenTag.toString())
+        } else {
+          ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
+            RNComponentFactory({ ctx: this.ctx, tag: childrenTag, buildCustomComponent: this.buildCustomComponent })
+          }, (childrenTag: Tag) => childrenTag.toString())
+        }
       }.onTouch((touchEvent) => this.touchDispatcher.handleTouchEvent(touchEvent))
     }
   }
