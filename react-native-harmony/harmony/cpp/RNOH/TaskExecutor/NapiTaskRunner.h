@@ -19,6 +19,9 @@ class NapiTaskRunner : public AbstractTaskRunner  {
     NapiTaskRunner(napi_env env);
     ~NapiTaskRunner() override;
 
+    NapiTaskRunner(const NapiTaskRunner &) = delete;
+    NapiTaskRunner &operator=(const NapiTaskRunner &) = delete;
+
     void runAsyncTask(Task &&task) override;
     void runSyncTask(Task &&task) override;
 
@@ -32,6 +35,8 @@ class NapiTaskRunner : public AbstractTaskRunner  {
     std::mutex tasksMutex;
     std::queue<Task> tasksQueue;
     std::thread::id threadId;
+    std::condition_variable cv;
+    std::shared_ptr<std::atomic_bool> running = std::make_shared<std::atomic_bool>(true);
 };
 
 } // namespace rnoh

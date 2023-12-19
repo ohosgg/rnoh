@@ -15,13 +15,9 @@ class EventBeat : public facebook::react::EventBeat {
             return;
         }
 
-        if (auto taskExecutor = m_taskExecutor.lock()) {
-            taskExecutor->runTask(TaskThread::BACKGROUND, [this]() {
-                this->m_runtimeExecutor([this](facebook::jsi::Runtime &runtime) {
-                    beat(runtime);
-                });
-            });
-        }
+        this->m_runtimeExecutor([this](facebook::jsi::Runtime &runtime) {
+            beat(runtime);
+        });
     }
 
     void request() const override {

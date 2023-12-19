@@ -46,6 +46,8 @@ NapiTaskRunner::NapiTaskRunner(napi_env env) : env(env) {
 }
 
 NapiTaskRunner::~NapiTaskRunner() {
+    running->store(false);
+    cv.notify_all();
     uv_close(reinterpret_cast<uv_handle_t *>(&asyncHandle), nullptr);
 }
 
@@ -60,16 +62,15 @@ void NapiTaskRunner::runSyncTask(Task &&task) {
         task();
         return;
     }
-    std::condition_variable cv;
     std::unique_lock<std::mutex> lock(tasksMutex);
     std::atomic_bool done{false};
-    tasksQueue.push([&cv, &done, task = std::move(task)]() {
+    tasksQueue.push([this, &done, task = std::move(task)]() {
         task();
         done = true;
         cv.notify_all();
     });
     uv_async_send(&asyncHandle);
-    cv.wait(lock, [&done] { return done.load(); });
+    cv.wait(lock, [running = this->running, &done] { return !(running->load()) || done.load(); });
 }
 
 bool NapiTaskRunner::isOnCurrentThread() const {

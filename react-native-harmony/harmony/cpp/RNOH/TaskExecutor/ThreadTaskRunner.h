@@ -16,6 +16,9 @@ class ThreadTaskRunner : public AbstractTaskRunner {
     ThreadTaskRunner(std::string name);
     ~ThreadTaskRunner() override;
 
+    ThreadTaskRunner(const ThreadTaskRunner &) = delete;
+    ThreadTaskRunner &operator=(const ThreadTaskRunner &) = delete;
+
     void runAsyncTask(Task &&task) override;
     void runSyncTask(Task &&task) override;
 

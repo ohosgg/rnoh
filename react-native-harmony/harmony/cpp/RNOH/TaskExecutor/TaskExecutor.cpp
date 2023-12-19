@@ -23,11 +23,34 @@ void TaskExecutor::runTask(TaskThread thread, Task &&task) {
 }
 
 void TaskExecutor::runSyncTask(TaskThread thread, Task &&task) {
+    auto waitsOnThread = m_waitsOnThread[thread];
+    if (waitsOnThread.has_value() && isOnTaskThread(waitsOnThread.value())) {
+        throw std::runtime_error("Deadlock detected");
+    }
+    auto currentThread = getCurrentTaskThread();
+    if (currentThread.has_value()) {
+        m_waitsOnThread[currentThread.value()] = thread;
+    }
     m_taskRunners[thread]->runSyncTask(std::move(task));
+    if (currentThread.has_value()) {
+        m_waitsOnThread[currentThread.value()] = std::nullopt;
+    }
 }
 
 bool TaskExecutor::isOnTaskThread(TaskThread thread) const {
     return m_taskRunners[thread]->isOnCurrentThread();
+}
+
+std::optional<TaskThread> TaskExecutor::getCurrentTaskThread() const {
+    if (isOnTaskThread(TaskThread::MAIN)) {
+        return TaskThread::MAIN;
+    } else if (isOnTaskThread(TaskThread::JS)) {
+        return TaskThread::JS;
+    } else if (isOnTaskThread(TaskThread::BACKGROUND)) {
+        return TaskThread::BACKGROUND;
+    } else {
+        return std::nullopt;
+    }
 }
 
 } // namespace rnoh

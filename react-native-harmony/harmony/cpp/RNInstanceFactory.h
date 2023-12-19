@@ -33,10 +33,7 @@ std::unique_ptr<RNInstance> createRNInstance(int id,
                                              napi_ref measureTextFnRef,
                                              napi_ref napiEventDispatcherRef,
                                              UITicker::Shared uiTicker) {
-    static std::shared_ptr<TaskExecutor> taskExecutor = nullptr;
-    if (taskExecutor == nullptr) {
-        taskExecutor = std::make_shared<TaskExecutor>(env);
-    }
+    std::shared_ptr<TaskExecutor> taskExecutor = std::make_shared<TaskExecutor>(env);
     auto mainThreadChannel = std::make_shared<ArkTSChannel>(taskExecutor, ArkJS(env), napiEventDispatcherRef);
     auto contextContainer = std::make_shared<facebook::react::ContextContainer>();
     auto textMeasurer = std::make_shared<TextMeasurer>(env, measureTextFnRef, taskExecutor);

@@ -44,8 +44,8 @@ void ThreadTaskRunner::runSyncTask(Task &&task) {
         task();
         done = true;
     });
-    cv.notify_one();
-    cv.wait(lock, [this, &done] { return done.load(); });
+    cv.notify_all();
+    cv.wait(lock, [this, &done] { return !running.load() || done.load(); });
 }
 
 bool ThreadTaskRunner::isOnCurrentThread() const {
