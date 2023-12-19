@@ -1,5 +1,5 @@
 import {TestCase, TestSuite} from '@rnoh/testerino';
-import {useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Text,
@@ -14,6 +14,23 @@ import React from 'react';
 export function TouchHandlingTest() {
   return (
     <TestSuite name="Touch Handling">
+      <TestCase
+        itShould="pass when pressed red rectangle"
+        initialState={false}
+        arrange={({setState}) => {
+          return (
+            <TouchIssue1
+              onPress={() => {
+                setState(true);
+              }}
+            />
+          );
+        }}
+        assert={({expect, state}) => {
+          expect(state).to.be.true;
+        }}
+      />
+
       <TestCase
         itShould="register a touch after native transform animation"
         initialState={false}
@@ -194,3 +211,47 @@ function TouchCoordinatesTest({
     </View>
   );
 }
+
+const TouchIssue1 = ({onPress}: {onPress: () => void}) => {
+  const nPressesRef = useRef(0);
+  const [nRenders, setNRenders] = useState(0);
+  const [label, setLabel] = useState('hello');
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setNRenders(1);
+    }, 2000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  if (nRenders > 0) {
+    return (
+      <View style={{opacity: 1, marginTop: 50}}>
+        <View collapsable={false}>
+          <TouchableOpacity
+            onPress={() => {
+              onPress();
+              setLabel(`${label}+${nPressesRef.current}`);
+              nPressesRef.current++;
+            }}>
+            <Text>{label}</Text>
+            <View
+              id="foo"
+              style={{height: 100, width: 100, backgroundColor: 'red'}}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  } else {
+    return (
+      <View style={{opacity: 0, marginTop: 50}}>
+        <View collapsable={false}>
+          <View style={{height: 100, width: 100}} />
+        </View>
+      </View>
+    );
+  }
+};

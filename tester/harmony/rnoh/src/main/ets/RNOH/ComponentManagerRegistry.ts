@@ -1,35 +1,43 @@
 import type { ComponentManager } from './ComponentManager';
 import type { Tag } from './DescriptorBase';
+import type { RNOHLogger } from "./RNOHLogger"
 
 export class ComponentManagerRegistry {
-  private componentManagerByTag: Map<Tag, ComponentManager>;
-
-  constructor() {
-    this.componentManagerByTag = new Map();
+  private componentManagersByTag: Map<Tag, ComponentManager[]>;
+  private logger: RNOHLogger
+  constructor(logger: RNOHLogger) {
+    this.componentManagersByTag = new Map();
+    this.logger = logger.clone("ComponentManagerRegistry")
   }
 
-  public getComponentManager(tag: Tag): ComponentManager {
-    return this.componentManagerByTag.get(tag);
+  public getComponentManager(tag: Tag): ComponentManager | undefined {
+    const componentManagers = this.componentManagersByTag.get(tag);
+    if (!componentManagers || componentManagers.length === 0) {
+      return undefined
+    }
+    if (componentManagers.length > 1) {
+      this.logger.clone("getComponentManager").warn(`Found ${componentManagers.length} component managers with the same tag (${tag})`)
+    }
+    return componentManagers[componentManagers.length - 1]
   }
 
   public registerComponentManager(tag: Tag, manager: ComponentManager) {
-    const alreadyRegisteredManager = this.componentManagerByTag.get(tag)
-    if (alreadyRegisteredManager) {
-      alreadyRegisteredManager.onDestroy()
+    const componentManagers = this.componentManagersByTag.get(tag)
+    if (!componentManagers) {
+      this.componentManagersByTag.set(tag, [])
     }
-    this.componentManagerByTag.set(tag, manager);
-    return () => {
-      const componentManager = this.componentManagerByTag.get(tag)
-      if (componentManager === manager) {
-        /**
-         * RN may quickly remove and create a component with the same tag. In such situations,
-         * OldComponent::aboutToDisappear is called after NewComponent::aboutToAppear, thus removing
-         * a component manager for a new component.
-         */
-        componentManager.onDestroy()
-        this.componentManagerByTag.delete(tag);
-      }
+    this.componentManagersByTag.get(tag)!.push(manager)
 
+    return () => {
+      const componentManagers = this.componentManagersByTag.get(tag)
+      if (componentManagers) {
+        manager.onDestroy()
+        const filteredComponentManagers = componentManagers.filter(cm => cm !== manager)
+        this.componentManagersByTag.set(tag, filteredComponentManagers)
+        if (filteredComponentManagers.length === 0) {
+          this.componentManagersByTag.delete(tag);
+        }
+      }
     }
   }
 
