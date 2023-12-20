@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <chrono>
 #include <future>
+#include <mutex>
 #include "NativeVsyncHandle.h"
 
 namespace rnoh {
@@ -20,18 +21,21 @@ class UITicker {
     using Shared = std::shared_ptr<UITicker>;
 
     std::function<void()> subscribe(int id, std::function<void()> &&listener) {
+        std::lock_guard lock(listenersMutex);
         auto listenersCount = m_listenerById.size();
         m_listenerById.insert_or_assign(id, std::move(listener));
         if (listenersCount == 0) {
             this->requestNextTick();
         }
         return [id, this]() {
+            std::lock_guard lock(listenersMutex);
             this->m_listenerById.erase(id);
         };
     }
 
   private:
     std::unordered_map<int, std::function<void()>> m_listenerById;
+    std::mutex listenersMutex;
     NativeVsyncHandle m_vsyncHandle;
 
     void requestNextTick() {
@@ -39,6 +43,7 @@ class UITicker {
     }
 
     void tick() {
+        std::lock_guard lock(listenersMutex);
         for (const auto &idAndListener : m_listenerById) {
             idAndListener.second();
         }
