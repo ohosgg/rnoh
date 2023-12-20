@@ -44,7 +44,7 @@ export class ResourceJSBundleProvider implements JSBundleProvider {
 
 
 export class MetroJSBundleProvider implements JSBundleProvider {
-  constructor(private bundleUrl: string = "http://localhost:8081/index.bundle?platform=harmony&dev=false&minify=false", private appKeys: string[] = []) {
+  constructor(private bundleUrl: string = "http://localhost:8081/index.bundle?platform=harmony&dev=true&minify=false", private appKeys: string[] = []) {
   }
 
   getAppKeys() {
@@ -55,25 +55,52 @@ export class MetroJSBundleProvider implements JSBundleProvider {
     return this.bundleUrl
   }
 
-  async getBundle() {
-    const httpRequest = http.createHttp();
-    try {
-      const data = await httpRequest.request(
-        this.bundleUrl,
-        {
-          header: {
-            'Content-Type': 'text/javascript'
-          },
+  async getBundle(): Promise<ArrayBuffer> {
+    return new Promise((resolve, reject) => {
+      const httpRequest = http.createHttp();
+      const dataChunks: ArrayBuffer[] = [];
+
+      function cleanUp() {
+        httpRequest.destroy();
+      }
+
+      httpRequest.on("dataReceive", (chunk) => {
+        dataChunks.push(chunk);
+      });
+
+      httpRequest.on("dataEnd", () => {
+        const totalLength = dataChunks.map(chunk => chunk.byteLength).reduce((acc, length) => acc + length, 0);
+        const result = new Uint8Array(totalLength);
+        let offset = 0;
+        for (const chunk of dataChunks) {
+          const chunkArray = new Uint8Array(chunk);
+          result.set(chunkArray, offset);
+          offset += chunk.byteLength;
         }
-      );
-      const encoder = new util.TextEncoder();
-      const result = encoder.encodeInto(data.result as string);
-      return result.buffer;
-    } catch (err) {
-      throw new JSBundleProviderError(`Couldn't load JSBundle from ${this.bundleUrl}`, err)
-    } finally {
-      httpRequest.destroy();
-    }
+        resolve(result.buffer);
+        cleanUp();
+      });
+
+      try {
+        httpRequest.requestInStream(
+          this.bundleUrl,
+          {
+            header: {
+              'Content-Type': 'text/javascript'
+            },
+          },
+          (err, data) => {
+            if (err) {
+              reject(new JSBundleProviderError(`Couldn't load JSBundle from ${this.bundleUrl}`, err));
+              cleanUp();
+            }
+          }
+        );
+      } catch (err) {
+        reject(new JSBundleProviderError(`Couldn't load JSBundle from ${this.bundleUrl}`, err))
+        cleanUp();
+      }
+    })
   }
 }
 
@@ -102,14 +129,16 @@ export class AnyJSBundleProvider implements JSBundleProvider {
     const errors: JSBundleProviderError[] = []
     for (const jsBundleProvider of this.jsBundleProviders) {
       try {
-        return await jsBundleProvider.getBundle()
+        const bundle = await jsBundleProvider.getBundle()
+        this.pickedJSBundleProvider = jsBundleProvider;
+        return bundle;
       } catch (err) {
         if (err instanceof JSBundleProviderError) {
           errors.push(err)
         }
       }
     }
-    throw new JSBundleProviderError("Any of the jsBundleProviders was able to load the bundle", errors)
+    throw new JSBundleProviderError("None of the jsBundleProviders was able to load the bundle", errors)
   }
 }
 
