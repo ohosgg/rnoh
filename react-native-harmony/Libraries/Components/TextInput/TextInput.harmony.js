@@ -30,7 +30,7 @@ import Text from 'react-native/Libraries/Text/Text';
 import TextAncestor from 'react-native/Libraries/Text/TextAncestor';
 import Platform from '../../Utilities/Platform';
 import useMergeRefs from 'react-native/Libraries/Utilities/useMergeRefs';
-import TextInputState from 'react-native/Libraries/Components/TextInput/TextInputState';
+import TextInputState from './TextInputState.harmony';
 import invariant from 'invariant';
 import nullthrows from 'nullthrows';
 import * as React from 'react';
