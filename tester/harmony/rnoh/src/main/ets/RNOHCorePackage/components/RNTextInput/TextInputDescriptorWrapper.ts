@@ -31,8 +31,10 @@ export class TextInputDescriptorWrapper extends ViewDescriptorWrapperBase<string
     return this.rawProps.fontFamily;
   }
 
-  public get fontSize(): number | undefined {
-    return this.rawProps.fontSize;
+  public get fontSize(): string | number | undefined {
+    const pixelUnit = this.rawProps.allowFontScaling ? 'fp' : 'vp';
+    const size = this.rawProps.fontSize;
+    return size ? `${size}${pixelUnit}` : size;
   }
 
   public get fontColor(): string {
