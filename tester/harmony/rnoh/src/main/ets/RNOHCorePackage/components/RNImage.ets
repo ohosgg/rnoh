@@ -148,8 +148,8 @@ export struct RNImage {
     )
   }
 
-  onLoad(event: ImageOnCompleteEvent) {
-    if (this.imageSource !== undefined) {
+  onLoad(event?: ImageOnCompleteEvent) {
+    if (this.imageSource !== undefined && event) {
       this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "load", {
         width: event.width,
         height: event.height,
@@ -158,7 +158,7 @@ export struct RNImage {
     }
   }
 
-  dispatchOnError(message: string) {
+  dispatchOnError(message?: string) {
     const errorMessage = message ? message : "Failed to load the image";
     this.ctx.rnInstance.emitComponentEvent(this.descriptor.tag, "error", errorMessage)
   }

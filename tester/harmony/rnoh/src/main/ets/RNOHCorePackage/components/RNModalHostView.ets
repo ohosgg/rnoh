@@ -72,7 +72,7 @@ struct ModalHostViewDialog {
       Stack() {
         if (this.ctx.rnInstance.isFeatureFlagEnabled("USE_BUILD_RN_COMPONENT")) {
           ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {
-            buildRNComponent(this.ctx, this.ctx.descriptorRegistry.findDescriptorWrapperByTag(childrenTag))
+            buildRNComponent(this.ctx, this.ctx.descriptorRegistry.findDescriptorWrapperByTag(childrenTag)!)
           }, (childrenTag: Tag) => childrenTag.toString())
         } else {
           ForEach(this.descriptor.childrenTags, (childrenTag: Tag) => {

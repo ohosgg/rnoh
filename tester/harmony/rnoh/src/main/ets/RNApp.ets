@@ -1,7 +1,6 @@
-import { CustomComponentBuilder } from './RNOHCorePackage'
-import { RNInstanceOptions } from './RNOH';
-import { RNInstance, JSBundleProvider, RNAbility, RNOHLogger } from './RNOH'
-import { RNSurface } from "./RNSurface"
+import { CustomComponentBuilder } from './RNOHCorePackage';
+import { JSBundleProvider, RNAbility, RNInstance, RNInstanceOptions, RNOHLogger } from './RNOH';
+import { RNSurface, SurfaceConfig2 } from './RNSurface';
 
 interface CustomRNInstance {
   rnInstance: RNInstance
@@ -110,7 +109,7 @@ export struct RNApp {
           surfaceConfig: {
             initialProps: this.initialProps ?? {},
             appKey: this.appKey,
-          },
+          } as SurfaceConfig2,
           buildCustomComponent: this.buildCustomComponent,
         })
       }

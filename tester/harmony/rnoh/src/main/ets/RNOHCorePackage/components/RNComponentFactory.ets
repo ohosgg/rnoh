@@ -77,7 +77,7 @@ export function buildRNComponent(ctx: RNComponentContext, descriptorWrapper: Des
      * RNScrollView displays Refresh component if PullToRefreshView is its direct parent.
      * Native Refresh component works correctly, only when a native Scroll is its direct child.
      */
-    buildRNComponent(ctx, ctx.descriptorRegistry.findDescriptorWrapperByTag(descriptorWrapper.childrenTags[0]))
+    buildRNComponent(ctx, ctx.descriptorRegistry.findDescriptorWrapperByTag(descriptorWrapper.childrenTags[0])!)
   }
   else if (ctx.rnInstance.getComponentNameFromDescriptorType(descriptorWrapper.type_) === "ScrollView") {
     RNScrollView({

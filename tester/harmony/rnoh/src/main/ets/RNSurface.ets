@@ -3,9 +3,9 @@ import { RNComponentFactory } from './RNOHCorePackage';
 import { Descriptor, DisplayMode, RNOHContext, RNOHLogger } from './RNOH';
 import {
   ViewBaseProps,
+  ViewDescriptorWrapper,
   ViewDescriptorWrapperBase,
-  ViewRawProps,
-  ViewDescriptorWrapper
+  ViewRawProps
 } from './RNOHCorePackage/components/RNViewBase';
 import { TouchDispatcher } from './RNOH/TouchDispatcher';
 import { SurfaceHandle, SurfaceProps } from './RNOH/SurfaceHandle';
@@ -14,16 +14,16 @@ interface RootViewState {}
 
 export type RootDescriptor = Descriptor<"RootView", ViewBaseProps, RootViewState, ViewRawProps>;
 
-interface SurfaceConfig1 {
+export interface SurfaceConfig {}
+
+export interface SurfaceConfig1 extends SurfaceConfig {
   surfaceHandle: SurfaceHandle
 }
 
-interface SurfaceConfig2 {
+export interface SurfaceConfig2 extends SurfaceConfig {
   appKey: string,
   initialProps: SurfaceProps,
 }
-
-type SurfaceConfig = SurfaceConfig1 | SurfaceConfig2
 
 @Component
 export struct RNSurface {

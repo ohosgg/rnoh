@@ -27,7 +27,7 @@ function parseSetTextAndSelectionCommandCallback(args: Object[]): SetTextAndSele
   }
 }
 
-function stringToAlignment(alignment: string) {
+function stringToAlignment(alignment?: string) {
   switch (alignment) {
     case "center":
       return TextAlign.Center
@@ -40,7 +40,7 @@ function stringToAlignment(alignment: string) {
   }
 }
 
-function stringToEnterKeyType(enterKeyType: string): EnterKeyType {
+function stringToEnterKeyType(enterKeyType?: string): EnterKeyType {
   switch (enterKeyType) {
     case "done":
       return EnterKeyType.Done
@@ -57,7 +57,7 @@ function stringToEnterKeyType(enterKeyType: string): EnterKeyType {
   }
 }
 
-function getInputType(keyboardType: string, secureTextEntry?: boolean): InputType {
+function getInputType(keyboardType?: string, secureTextEntry?: boolean): InputType {
   if (secureTextEntry) {
     return InputType.Password;
   }

@@ -1,8 +1,7 @@
-import { convertColorSegmentsToString } from '../../../RNOH/CppBridgeUtils'
-import { TextShadowProps } from './types';
-import { AttributedFragment, EllipsizeMode } from './types'
+import { convertColorSegmentsToString } from '../../../RNOH/CppBridgeUtils';
+import { EllipsizeMode, TextShadowProps } from './types';
 
-export function stringToAlignment(alignment: string) {
+export function stringToAlignment(alignment?: string) {
   switch (alignment) {
     case "center":
       return TextAlign.Center
@@ -68,7 +67,7 @@ export function stringToFontStyle(style: string | undefined): FontStyle {
   return FontStyle.Normal;
 }
 
-export function stringToTextTransform(textTransform: string) {
+export function stringToTextTransform(textTransform?: string) {
   switch (textTransform) {
     case "uppercase":
       return TextCase.UpperCase
@@ -86,14 +85,14 @@ export function ellipsizeModeToTextOverflow(ellipsizeMode: EllipsizeMode): TextO
   return TextOverflow.Ellipsis
 }
 
-export function getLetterSpacing(letterSpacing: number) {
+export function getLetterSpacing(letterSpacing?: number) {
   if (Number.isNaN(letterSpacing)) {
     return undefined
   }
   return letterSpacing
 }
 
-export function getMaxLines(maximumNumberOfLines: number) {
+export function getMaxLines(maximumNumberOfLines?: number) {
   return (maximumNumberOfLines ?? 0) > 0 ? maximumNumberOfLines : undefined
 }
 
@@ -110,7 +109,7 @@ export function getTextShadow(textShadowProps: TextShadowProps | undefined): Sha
   return result
 }
 
-export function capitalizeTextIfNecessary(text: string, textTransform: string): string {
+export function capitalizeTextIfNecessary(text: string, textTransform?: string): string {
   if (textTransform != 'capitalize') {
     return text
   }

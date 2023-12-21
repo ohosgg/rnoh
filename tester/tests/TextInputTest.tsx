@@ -264,10 +264,26 @@ export function TextInputTest() {
         </View>
       </TestCase>
       <TestCase modal itShould="render textinput with allowFontScaling">
-        <TextInputWithText style={styles.textInput} allowFontScaling defaultValue='Scaled' />
-        <TextInputWithText style={styles.textInput} allowFontScaling={false} defaultValue='Not scaled' />
-        <TextInputWithText style={[styles.textInput, { fontSize: 40 }]} allowFontScaling={true} defaultValue='Scaled big' />
-        <TextInputWithText style={[styles.textInput, { fontSize: 40 }]} allowFontScaling={false} defaultValue='Not scaled big' />
+        <TextInputWithText
+          style={styles.textInput}
+          allowFontScaling
+          defaultValue="Scaled"
+        />
+        <TextInputWithText
+          style={styles.textInput}
+          allowFontScaling={false}
+          defaultValue="Not scaled"
+        />
+        <TextInputWithText
+          style={[styles.textInput, {fontSize: 40}]}
+          allowFontScaling={true}
+          defaultValue="Scaled big"
+        />
+        <TextInputWithText
+          style={[styles.textInput, {fontSize: 40}]}
+          allowFontScaling={false}
+          defaultValue="Not scaled big"
+        />
       </TestCase>
       <TestCase itShould="show textInput with padding" modal>
         <View style={{width: 300, height: 200}}>

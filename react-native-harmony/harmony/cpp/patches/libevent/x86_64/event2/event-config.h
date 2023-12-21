@@ -510,4 +510,8 @@
 /* Define to `int' if <sys/types.h> does not define. */
 #define EVENT__ssize_t ssize_t
 
+#define EVENT__HAVE_ARC4RANDOM_BUF 1
+
+#define EVENT__HAVE_ARC4RANDOM 1
+
 #endif /* \EVENT2_EVENT_CONFIG_H_INCLUDED_ */
