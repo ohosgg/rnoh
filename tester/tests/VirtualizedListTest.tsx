@@ -1,5 +1,11 @@
-import React, {useRef} from 'react';
-import {Text, TouchableOpacity, View, VirtualizedList} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  ViewabilityConfig,
+  VirtualizedList,
+} from 'react-native';
 import {TestCase, TestSuite} from '@rnoh/testerino';
 import {Button} from '../components';
 
@@ -162,6 +168,66 @@ export function VirtualizedListTest() {
           }}
         />
       </TestSuite>
+      <TestCase
+        modal
+        itShould="Click (call on ref.recordInteraction()) on button before first scroll should trigger onViewableItemsChanged and change the first two items background color to blue"
+        initialState={[]}
+        arrange={({state, setState}) => {
+          return (
+            <VirtualizedListRecordInteractionTest
+              state={state}
+              setState={setState}
+            />
+          );
+        }}
+        assert={({state, expect}) => {
+          expect(state).to.be.not.empty;
+          expect(state).to.be.an('array');
+          expect(state).to.have.lengthOf(2);
+        }}
+      />
+      <TestCase
+        modal
+        itShould="Slightly scroll should make the item that is visible in its entirety (100% of item is visible) - change background color to blue and top and bottom items (if visibile in more than or equal 20%) change background color to lightblue"
+        initialState={
+          {
+            firstThreshold: [],
+            secondThreshold: [],
+          } as IViewabilityConfigCallbackState
+        }
+        arrange={({state, setState}) => {
+          return (
+            <VirtualizedListTestViewabiliyConfigCallbackPairs
+              state={state}
+              setState={setState}
+            />
+          );
+        }}
+        assert={({state, expect}) => {
+          expect(state).to.be.an('object');
+          expect(state).to.have.all.keys('firstThreshold', 'secondThreshold');
+          expect(state.firstThreshold).to.be.an('array').that.has.lengthOf(1);
+          expect(state.secondThreshold).to.be.an('array').that.has.lengthOf(3);
+        }}
+      />
+      <TestCase
+        modal
+        itShould="Slightly scroll should make items (visible in its entirety) to change background color to blue after 2 seconds"
+        initialState={[]}
+        arrange={({state, setState}) => {
+          return (
+            <VirtualizedListViewabilityConfigViewTime
+              state={state}
+              setState={setState}
+            />
+          );
+        }}
+        assert={({state, expect}) => {
+          expect(state).to.be.not.empty;
+          expect(state).to.be.an('array');
+          expect(state).to.have.lengthOf(2);
+        }}
+      />
     </TestSuite>
   );
 }
@@ -405,5 +471,277 @@ function VirtualizedListGetScrollToEnd({
         onEndReached={() => setState(true)}
       />
     </>
+  );
+}
+
+export interface ViewToken<TItem> {
+  item: TItem;
+  key: string;
+  index: number | null;
+  isViewable: boolean;
+  section?: any | undefined;
+}
+
+type OnViewableItemsChangedType<TItem> = {
+  viewableItems: Array<ViewToken<TItem>>;
+  changed: Array<ViewToken<TItem>>;
+};
+
+const deafultViewabilityConfig: ViewabilityConfig = {
+  // Nothing is considered viewable until the user scrolls or `recordInteraction`
+  // is called after render.
+  waitForInteraction: true,
+
+  // minimum amount of time (in milliseconds) that an item must be physically viewable
+  // before the viewability callback will be fired
+  minimumViewTime: 100,
+
+  // viewAreaCoveragePercentThreshold: 100,
+  itemVisiblePercentThreshold: 70,
+};
+
+const MockedVideoPlayer = ({
+  itemId,
+  height,
+  playMockVideo,
+  prefetchMockVideo,
+}: {
+  height?: number;
+  itemId: string | number;
+  playMockVideo: boolean;
+  prefetchMockVideo?: boolean;
+}) => {
+  const backgroundPlayingColor = playMockVideo ? 'blue' : 'lightgray';
+  const backgroundPrefetchingColor = prefetchMockVideo
+    ? 'lightblue'
+    : 'lightgray';
+
+  return (
+    <View
+      style={{
+        height: height ?? 200,
+        backgroundColor: playMockVideo
+          ? backgroundPlayingColor
+          : backgroundPrefetchingColor,
+        borderWidth: 2,
+        marginBottom: 5,
+        justifyContent: 'center',
+      }}>
+      <Text style={{textAlign: 'center'}}>Item with id: {itemId}</Text>
+      <Text style={{textAlign: 'center'}}>Mocked Video Player</Text>
+      <Text style={{textAlign: 'center'}}>
+        {playMockVideo
+          ? 'Playing'
+          : prefetchMockVideo
+          ? 'Prefetching...'
+          : 'Waiting to be visible'}
+      </Text>
+    </View>
+  );
+};
+
+function VirtualizedListRecordInteractionTest({
+  state,
+  setState,
+}: {
+  state: string[];
+  setState: (state: any) => void;
+}) {
+  const [visibleItems, setVisibleItems] = useState<string[]>(state);
+
+  const ref = useRef<VirtualizedList<ItemData>>(null);
+
+  const handleOnPress = () => {
+    if (ref.current) {
+      ref.current.recordInteraction();
+    }
+  };
+
+  const onViewableItemsChanged = ({
+    viewableItems,
+  }: OnViewableItemsChangedType<ItemData>) => {
+    const newVisibleItems = viewableItems.map(
+      viewableItem => viewableItem.item.id,
+    );
+    setVisibleItems(newVisibleItems);
+    setState(newVisibleItems);
+  };
+
+  return (
+    <View style={{height: 600}}>
+      <View style={{marginBottom: 10}}>
+        <Button label="Record interaction" onPress={handleOnPress} />
+        <Text style={{padding: 10}}>
+          Visible Items are: {JSON.stringify(visibleItems)}
+        </Text>
+      </View>
+      <VirtualizedList
+        ref={ref}
+        style={{height: 128}}
+        getItem={getItem}
+        getItemCount={getItemCountVirtualized}
+        renderItem={({item}: {item: ItemData}) => (
+          <MockedVideoPlayer
+            itemId={item.id}
+            // yea, not sure about this casting either
+            playMockVideo={visibleItems.includes(item.id as never)}
+          />
+        )}
+        keyExtractor={(item: ItemData) => item.id}
+        viewabilityConfig={deafultViewabilityConfig}
+        onViewableItemsChanged={onViewableItemsChanged}
+      />
+    </View>
+  );
+}
+
+const firstViewabilityConfig: ViewabilityConfig = {
+  waitForInteraction: true,
+  minimumViewTime: 100,
+  itemVisiblePercentThreshold: 100,
+};
+
+const secondViewabilityConfig: ViewabilityConfig = {
+  waitForInteraction: true,
+  minimumViewTime: 100,
+  itemVisiblePercentThreshold: 20,
+};
+
+interface IViewabilityConfigCallbackState {
+  firstThreshold: string[];
+  secondThreshold: string[];
+}
+
+function VirtualizedListTestViewabiliyConfigCallbackPairs({
+  state = {firstThreshold: [], secondThreshold: []},
+  setState,
+}: {
+  state: IViewabilityConfigCallbackState;
+  setState: React.Dispatch<
+    React.SetStateAction<IViewabilityConfigCallbackState>
+  >;
+}) {
+  const [firstVisibleItems, setFirstVisibleItems] = useState<string[]>(
+    state.firstThreshold,
+  );
+  const [secondVisibleItems, setSecondVisibleItems] = useState<string[]>(
+    state.secondThreshold,
+  );
+
+  const viewabilityConfigCallbackPairs = [
+    {
+      viewabilityConfig: firstViewabilityConfig,
+      onViewableItemsChanged: ({
+        viewableItems,
+      }: OnViewableItemsChangedType<ItemData>) => {
+        const newFirstVisibleItems = viewableItems.map(
+          viewableItem => viewableItem.item.id,
+        );
+        setFirstVisibleItems(newFirstVisibleItems);
+        setState(prevState => ({
+          ...prevState,
+          firstThreshold: newFirstVisibleItems,
+        }));
+      },
+    },
+    {
+      viewabilityConfig: secondViewabilityConfig,
+      onViewableItemsChanged: ({
+        viewableItems,
+      }: OnViewableItemsChangedType<ItemData>) => {
+        const newSecondVisibleItems = viewableItems.map(
+          viewableItem => viewableItem.item.id,
+        );
+        setSecondVisibleItems(newSecondVisibleItems);
+        setState(prevState => ({
+          ...prevState,
+          secondThreshold: newSecondVisibleItems,
+        }));
+      },
+    },
+  ];
+
+  return (
+    <View style={{height: 600}}>
+      <View style={{marginBottom: 10}}>
+        <Text>
+          First threshold {firstViewabilityConfig.itemVisiblePercentThreshold}%{' '}
+          visible items are: {JSON.stringify(firstVisibleItems)}
+        </Text>
+        <Text>
+          second threshold {secondViewabilityConfig.itemVisiblePercentThreshold}
+          % visible items are: {JSON.stringify(secondVisibleItems)}
+        </Text>
+      </View>
+      <VirtualizedList
+        style={{height: 128}}
+        getItem={getItem}
+        getItemCount={getItemCountVirtualized}
+        renderItem={({item}: {item: ItemData}) => (
+          <MockedVideoPlayer
+            height={300}
+            itemId={item.id}
+            // yea, not sure about this casting either
+            playMockVideo={firstVisibleItems.includes(item.id as never)}
+            prefetchMockVideo={secondVisibleItems.includes(item.id as never)}
+          />
+        )}
+        keyExtractor={(item: ItemData) => item.id}
+        viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs}
+      />
+    </View>
+  );
+}
+
+const thirdViewabilityConfig: ViewabilityConfig = {
+  waitForInteraction: true,
+  minimumViewTime: 2000,
+  itemVisiblePercentThreshold: 100,
+};
+
+function VirtualizedListViewabilityConfigViewTime({
+  state,
+  setState,
+}: {
+  state: string[];
+  setState: (state: any) => void;
+}) {
+  const [visibleItems, setVisibleItems] = useState<string[]>(state);
+
+  const onViewableItemsChanged = ({
+    viewableItems,
+  }: OnViewableItemsChangedType<ItemData>) => {
+    const newVisibleItems = viewableItems.map(
+      viewableItem => viewableItem.item.id,
+    );
+
+    setVisibleItems(newVisibleItems);
+    setState(newVisibleItems);
+  };
+
+  return (
+    <View style={{height: 600}}>
+      <View style={{marginBottom: 10}}>
+        <Text style={{padding: 10}}>
+          Visible Items after {thirdViewabilityConfig.minimumViewTime}ms are:{' '}
+          {JSON.stringify(visibleItems)}
+        </Text>
+      </View>
+      <VirtualizedList
+        style={{height: 128}}
+        getItem={getItem}
+        getItemCount={getItemCountVirtualized}
+        renderItem={({item}: {item: ItemData}) => (
+          <MockedVideoPlayer
+            itemId={item.id}
+            // yea, not sure about this casting either
+            playMockVideo={visibleItems.includes(item.id as never)}
+          />
+        )}
+        keyExtractor={(item: ItemData) => item.id}
+        viewabilityConfig={thirdViewabilityConfig}
+        onViewableItemsChanged={onViewableItemsChanged}
+      />
+    </View>
   );
 }
