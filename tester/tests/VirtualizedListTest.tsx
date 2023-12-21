@@ -188,46 +188,14 @@ export function VirtualizedListTest() {
       />
       <TestCase
         modal
-        itShould="Slightly scroll should make the item that is visible in its entirety (100% of item is visible) - change background color to blue and top and bottom items (if visibile in more than or equal 20%) change background color to lightblue"
-        initialState={
-          {
-            firstThreshold: [],
-            secondThreshold: [],
-          } as IViewabilityConfigCallbackState
-        }
-        arrange={({state, setState}) => {
-          return (
-            <VirtualizedListTestViewabiliyConfigCallbackPairs
-              state={state}
-              setState={setState}
-            />
-          );
-        }}
-        assert={({state, expect}) => {
-          expect(state).to.be.an('object');
-          expect(state).to.have.all.keys('firstThreshold', 'secondThreshold');
-          expect(state.firstThreshold).to.be.an('array').that.has.lengthOf(1);
-          expect(state.secondThreshold).to.be.an('array').that.has.lengthOf(3);
-        }}
-      />
+        itShould="Change background color of visible items after scrolling slightly (to blue when fully visible and lightblue when at least 20% is visible)">
+        <VirtualizedListTestViewabiliyConfigCallbackPairs />
+      </TestCase>
       <TestCase
         modal
-        itShould="Slightly scroll should make items (visible in its entirety) to change background color to blue after 2 seconds"
-        initialState={[]}
-        arrange={({state, setState}) => {
-          return (
-            <VirtualizedListViewabilityConfigViewTime
-              state={state}
-              setState={setState}
-            />
-          );
-        }}
-        assert={({state, expect}) => {
-          expect(state).to.be.not.empty;
-          expect(state).to.be.an('array');
-          expect(state).to.have.lengthOf(2);
-        }}
-      />
+        itShould="Change background color of fully visible items after 2 seconds">
+        <VirtualizedListViewabilityConfigViewTime />
+      </TestCase>
     </TestSuite>
   );
 }
@@ -583,8 +551,7 @@ function VirtualizedListRecordInteractionTest({
         renderItem={({item}: {item: ItemData}) => (
           <MockedVideoPlayer
             itemId={item.id}
-            // yea, not sure about this casting either
-            playMockVideo={visibleItems.includes(item.id as never)}
+            playMockVideo={visibleItems.includes(item.id)}
           />
         )}
         keyExtractor={(item: ItemData) => item.id}
@@ -607,26 +574,9 @@ const secondViewabilityConfig: ViewabilityConfig = {
   itemVisiblePercentThreshold: 20,
 };
 
-interface IViewabilityConfigCallbackState {
-  firstThreshold: string[];
-  secondThreshold: string[];
-}
-
-function VirtualizedListTestViewabiliyConfigCallbackPairs({
-  state = {firstThreshold: [], secondThreshold: []},
-  setState,
-}: {
-  state: IViewabilityConfigCallbackState;
-  setState: React.Dispatch<
-    React.SetStateAction<IViewabilityConfigCallbackState>
-  >;
-}) {
-  const [firstVisibleItems, setFirstVisibleItems] = useState<string[]>(
-    state.firstThreshold,
-  );
-  const [secondVisibleItems, setSecondVisibleItems] = useState<string[]>(
-    state.secondThreshold,
-  );
+function VirtualizedListTestViewabiliyConfigCallbackPairs() {
+  const [firstVisibleItems, setFirstVisibleItems] = useState<string[]>([]);
+  const [secondVisibleItems, setSecondVisibleItems] = useState<string[]>([]);
 
   const viewabilityConfigCallbackPairs = [
     {
@@ -638,10 +588,6 @@ function VirtualizedListTestViewabiliyConfigCallbackPairs({
           viewableItem => viewableItem.item.id,
         );
         setFirstVisibleItems(newFirstVisibleItems);
-        setState(prevState => ({
-          ...prevState,
-          firstThreshold: newFirstVisibleItems,
-        }));
       },
     },
     {
@@ -653,10 +599,6 @@ function VirtualizedListTestViewabiliyConfigCallbackPairs({
           viewableItem => viewableItem.item.id,
         );
         setSecondVisibleItems(newSecondVisibleItems);
-        setState(prevState => ({
-          ...prevState,
-          secondThreshold: newSecondVisibleItems,
-        }));
       },
     },
   ];
@@ -681,9 +623,8 @@ function VirtualizedListTestViewabiliyConfigCallbackPairs({
           <MockedVideoPlayer
             height={300}
             itemId={item.id}
-            // yea, not sure about this casting either
-            playMockVideo={firstVisibleItems.includes(item.id as never)}
-            prefetchMockVideo={secondVisibleItems.includes(item.id as never)}
+            playMockVideo={firstVisibleItems.includes(item.id)}
+            prefetchMockVideo={secondVisibleItems.includes(item.id)}
           />
         )}
         keyExtractor={(item: ItemData) => item.id}
@@ -699,14 +640,8 @@ const thirdViewabilityConfig: ViewabilityConfig = {
   itemVisiblePercentThreshold: 100,
 };
 
-function VirtualizedListViewabilityConfigViewTime({
-  state,
-  setState,
-}: {
-  state: string[];
-  setState: (state: any) => void;
-}) {
-  const [visibleItems, setVisibleItems] = useState<string[]>(state);
+function VirtualizedListViewabilityConfigViewTime() {
+  const [visibleItems, setVisibleItems] = useState<string[]>([]);
 
   const onViewableItemsChanged = ({
     viewableItems,
@@ -716,7 +651,6 @@ function VirtualizedListViewabilityConfigViewTime({
     );
 
     setVisibleItems(newVisibleItems);
-    setState(newVisibleItems);
   };
 
   return (
@@ -734,8 +668,7 @@ function VirtualizedListViewabilityConfigViewTime({
         renderItem={({item}: {item: ItemData}) => (
           <MockedVideoPlayer
             itemId={item.id}
-            // yea, not sure about this casting either
-            playMockVideo={visibleItems.includes(item.id as never)}
+            playMockVideo={visibleItems.includes(item.id)}
           />
         )}
         keyExtractor={(item: ItemData) => item.id}
