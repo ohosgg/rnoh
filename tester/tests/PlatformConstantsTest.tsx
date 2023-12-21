@@ -13,7 +13,7 @@ export function PlatformConstantsTest() {
       <TestCase
         itShould="specify platform version"
         fn={({expect}) => {
-          expect(Platform.Version).to.include('OpenHarmony');
+          expect(Platform.Version.toString().split('.').length - 1).to.be.eq(3);
         }}
       />
       <TestCase
