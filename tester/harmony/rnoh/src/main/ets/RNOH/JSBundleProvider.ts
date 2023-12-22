@@ -61,6 +61,10 @@ export class ResourceJSBundleProvider extends JSBundleProvider {
 
 
 export class MetroJSBundleProvider extends JSBundleProvider {
+  static fromServerIp(ip: string, port: number = 8081, appKeys: string[] = []): MetroJSBundleProvider {
+    return new MetroJSBundleProvider(`http://${ip}:${port}/index.bundle?platform=harmony&dev=true&minify=false`, appKeys)
+  }
+
   constructor(private bundleUrl: string = "http://localhost:8081/index.bundle?platform=harmony&dev=true&minify=false", private appKeys: string[] = []) {
     super()
   }

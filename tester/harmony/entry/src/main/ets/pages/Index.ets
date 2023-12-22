@@ -10,6 +10,7 @@ import {
 import { SampleView, SAMPLE_VIEW_TYPE, PropsDisplayer } from "rnoh-sample-package"
 import font from '@ohos.font';
 import { createRNPackages } from '../RNPackagesFactory'
+import { METRO_SERVER_IP } from "../codegen/MetroHostConstants"
 
 @Builder
 export function CustomComponentBuilder(ctx: ComponentBuilderContext) {
@@ -80,8 +81,7 @@ struct Index {
           },
           jsBundleProvider: new TraceJSBundleProviderDecorator(
             new AnyJSBundleProvider([
-              // NOTE: When running an app on a physical device, "localhost" can't be used to access Metro server. The device needs to connect to the Metro server over Wi-Fi.
-              new MetroJSBundleProvider(),
+              MetroJSBundleProvider.fromServerIp(METRO_SERVER_IP),
               new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'hermes_bundle.hbc'),
               new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'bundle.harmony.js')]),
             this.rnAbility.getLogger()),

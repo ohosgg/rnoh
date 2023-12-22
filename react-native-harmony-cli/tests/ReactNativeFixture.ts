@@ -24,6 +24,14 @@ export class ReactNativeFixture {
     ).stdout;
   }
 
+  createMetroHostConstantsHarmony(args: { output: string }) {
+    return execaCommandSync(
+      `react-native create-metro-host-constants-harmony --output ${this.useCwd(
+        args.output
+      )}`
+    ).stdout;
+  }
+
   private useCwd(relPath: string) {
     return pathUtils.join(this.cwd, relPath);
   }
