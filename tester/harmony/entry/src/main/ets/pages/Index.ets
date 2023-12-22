@@ -78,10 +78,13 @@ struct Index {
           onSetUp: (rnInstance) => {
             rnInstance.enableFeatureFlag("ENABLE_RN_INSTANCE_CLEAN_UP")
           },
-          jsBundleProvider: new TraceJSBundleProviderDecorator(new AnyJSBundleProvider([
-            new MetroJSBundleProvider(),
-            new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'hermes_bundle.hbc'),
-            new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'bundle.harmony.js')]), this.rnAbility.getLogger()),
+          jsBundleProvider: new TraceJSBundleProviderDecorator(
+            new AnyJSBundleProvider([
+              // NOTE: When running an app on a physical device, "localhost" can't be used to access Metro server. The device needs to connect to the Metro server over Wi-Fi.
+              new MetroJSBundleProvider(),
+              new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'hermes_bundle.hbc'),
+              new ResourceJSBundleProvider(this.rnAbility.context.resourceManager, 'bundle.harmony.js')]),
+            this.rnAbility.getLogger()),
         })
       }
     }

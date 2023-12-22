@@ -1,14 +1,25 @@
 import type resmgr from "@ohos.resourceManager";
 import http from '@ohos.net.http';
-import util from '@ohos.util';
 import { RNOHLogger } from "./RNOHLogger"
+import urlUtils from "@ohos.url"
 
-export interface JSBundleProvider {
-  getURL(): string
+export interface HotReloadConfig {
+  bundleEntry: string,
+  host: string,
+  port: number | string,
+  scheme?: string,
+}
 
-  getBundle(): Promise<ArrayBuffer>
+export abstract class JSBundleProvider {
+  abstract getURL(): string
 
-  getAppKeys(): string[]
+  abstract getBundle(): Promise<ArrayBuffer>
+
+  abstract getAppKeys(): string[]
+
+  getHotReloadConfig(): HotReloadConfig | null {
+    return null
+  }
 }
 
 
@@ -19,8 +30,9 @@ export class JSBundleProviderError extends Error {
 }
 
 
-export class ResourceJSBundleProvider implements JSBundleProvider {
+export class ResourceJSBundleProvider extends JSBundleProvider {
   constructor(private resourceManager: resmgr.ResourceManager, private path: string = "bundle.harmony.js", private appKeys: string[] = []) {
+    super()
   }
 
   getURL() {
@@ -43,8 +55,9 @@ export class ResourceJSBundleProvider implements JSBundleProvider {
 }
 
 
-export class MetroJSBundleProvider implements JSBundleProvider {
+export class MetroJSBundleProvider extends JSBundleProvider {
   constructor(private bundleUrl: string = "http://localhost:8081/index.bundle?platform=harmony&dev=true&minify=false", private appKeys: string[] = []) {
+    super()
   }
 
   getAppKeys() {
@@ -53,6 +66,22 @@ export class MetroJSBundleProvider implements JSBundleProvider {
 
   getURL() {
     return this.bundleUrl
+  }
+
+  getHotReloadConfig(): HotReloadConfig | null {
+    const urlObj = urlUtils.URL.parseURL(this.getURL());
+    const pathParts = urlObj.pathname.split('/');
+    const bundleEntry = pathParts[pathParts.length - 1];
+    const port = urlObj.port ?? 8081;
+    const scheme = urlObj.protocol.slice(0, -1);
+
+    return {
+      bundleEntry,
+      host: urlObj.hostname,
+      port,
+      scheme,
+    }
+
   }
 
   async getBundle(): Promise<ArrayBuffer> {
@@ -104,10 +133,11 @@ export class MetroJSBundleProvider implements JSBundleProvider {
   }
 }
 
-export class AnyJSBundleProvider implements JSBundleProvider {
+export class AnyJSBundleProvider extends JSBundleProvider {
   private pickedJSBundleProvider: JSBundleProvider | undefined = undefined
 
   constructor(private jsBundleProviders: JSBundleProvider[]) {
+    super()
     if (jsBundleProviders.length === 0) {
       throw new JSBundleProviderError("Expected at least 1 JS bundle provider")
     }
@@ -140,11 +170,21 @@ export class AnyJSBundleProvider implements JSBundleProvider {
     }
     throw new JSBundleProviderError("None of the jsBundleProviders was able to load the bundle", errors)
   }
+
+  getHotReloadConfig(): HotReloadConfig | null {
+    if (this.pickedJSBundleProvider) {
+      return this.pickedJSBundleProvider.getHotReloadConfig()
+    }
+    return null
+
+  }
 }
 
-export class TraceJSBundleProviderDecorator implements JSBundleProvider {
+export class TraceJSBundleProviderDecorator extends JSBundleProvider {
   private logger: RNOHLogger
+
   constructor(private jsBundleProvider: JSBundleProvider, logger: RNOHLogger) {
+    super()
     this.logger = logger.clone('TraceJSBundleProviderDecorator')
   }
 
@@ -161,5 +201,9 @@ export class TraceJSBundleProviderDecorator implements JSBundleProvider {
 
   getAppKeys() {
     return this.jsBundleProvider.getAppKeys()
+  }
+
+  getHotReloadConfig(): HotReloadConfig {
+    return this.jsBundleProvider.getHotReloadConfig()
   }
 }

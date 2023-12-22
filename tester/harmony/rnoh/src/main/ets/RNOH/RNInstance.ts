@@ -323,6 +323,11 @@ export class RNInstanceImpl implements RNInstance {
       this.bundleExecutionStatusByBundleURL.set(bundleURL, "RUNNING")
       const jsBundle = await jsBundleProvider.getBundle()
       await this.napiBridge.loadScript(this.id, jsBundle, bundleURL)
+      const hotReloadConfig = jsBundleProvider.getHotReloadConfig()
+      if (hotReloadConfig) {
+        this.callRNFunction("HMRClient", "setup", ["harmony", hotReloadConfig.bundleEntry, hotReloadConfig.host, hotReloadConfig.port, true])
+        this.logger.info("Configured hot reloading")
+      }
       this.lifecycleState = LifecycleState.READY
       this.bundleExecutionStatusByBundleURL.set(bundleURL, "DONE")
       this.lifecycleEventEmitter.emit("JS_BUNDLE_EXECUTION_FINISH", {
