@@ -1,4 +1,4 @@
-import { RNPackage, TurboModulesFactory, DescriptorWrapperFactoryByDescriptorType } from '../RNOH/RNPackage';
+import { DescriptorWrapperFactoryByDescriptorType, RNPackage, TurboModulesFactory } from '../RNOH/RNPackage';
 import type { TurboModule, TurboModuleContext } from '../RNOH/TurboModule';
 import {
   AlertManagerTurboModule,
@@ -6,21 +6,23 @@ import {
   AppStateTurboModule,
   DeviceEventManagerTurboModule,
   DeviceInfoTurboModule,
+  DevMenuTurboModule,
+  DevSettingsTurboModule,
   ExceptionsManagerTurboModule,
+  I18nManagerTurboModule,
   ImageLoaderTurboModule,
   KeyboardObserverTurboModule,
   NativeAnimatedTurboModule,
   NetworkingTurboModule,
   PlatformConstantsTurboModule,
+  SafeAreaTurboModule,
   SourceCodeTurboModule,
   StatusBarTurboModule,
   TimingTurboModule,
-  WebSocketTurboModule,
-  SafeAreaTurboModule,
-  I18nManagerTurboModule
+  WebSocketTurboModule
 } from './turboModules';
 import { LinkingManagerTurboModule } from './turboModules/LinkingManagerTurboModule';
-import { ViewDescriptorWrapper } from "./components/ts"
+import { ViewDescriptorWrapper } from './components/ts';
 
 export class RNOHCorePackage extends RNPackage {
   createTurboModulesFactory(ctx: TurboModuleContext): TurboModulesFactory {
@@ -41,6 +43,8 @@ const TURBO_MODULE_CLASS_BY_NAME: Record<string, typeof TurboModule> = {
   [AppearanceTurboModule.NAME]: AppearanceTurboModule,
   [AppStateTurboModule.NAME]: AppStateTurboModule,
   [DeviceEventManagerTurboModule.NAME]: DeviceEventManagerTurboModule,
+  [DevSettingsTurboModule.NAME]: DevSettingsTurboModule,
+  [DevMenuTurboModule.NAME]: DevMenuTurboModule,
   [ExceptionsManagerTurboModule.NAME]: ExceptionsManagerTurboModule,
   [ImageLoaderTurboModule.NAME]: ImageLoaderTurboModule,
   [KeyboardObserverTurboModule.NAME]: KeyboardObserverTurboModule,

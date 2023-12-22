@@ -1,7 +1,8 @@
-import type resmgr from "@ohos.resourceManager";
+import type resmgr from '@ohos.resourceManager';
 import http from '@ohos.net.http';
-import { RNOHLogger } from "./RNOHLogger"
-import urlUtils from "@ohos.url"
+import { RNOHLogger } from './RNOHLogger';
+import urlUtils from '@ohos.url';
+import { JSPackagerClientConfig } from './JSPackagerClient';
 
 export interface HotReloadConfig {
   bundleEntry: string,
@@ -19,6 +20,10 @@ export abstract class JSBundleProvider {
 
   getHotReloadConfig(): HotReloadConfig | null {
     return null
+  }
+
+  getJSPackagerClientConfig(): JSPackagerClientConfig | null {
+    return null;
   }
 }
 
@@ -82,6 +87,16 @@ export class MetroJSBundleProvider extends JSBundleProvider {
       scheme,
     }
 
+  }
+
+  getJSPackagerClientConfig(): JSPackagerClientConfig | null {
+    const urlObj = urlUtils.URL.parseURL(this.getURL());
+    const port = urlObj.port ?? 8081;
+
+    return {
+      host: urlObj.hostname,
+      port,
+    }
   }
 
   async getBundle(): Promise<ArrayBuffer> {
@@ -178,6 +193,13 @@ export class AnyJSBundleProvider extends JSBundleProvider {
     return null
 
   }
+
+  getJSPackagerClientConfig(): JSPackagerClientConfig | null {
+    if (this.pickedJSBundleProvider) {
+      return this.pickedJSBundleProvider.getJSPackagerClientConfig();
+    }
+    return null;
+  }
 }
 
 export class TraceJSBundleProviderDecorator extends JSBundleProvider {
@@ -205,5 +227,9 @@ export class TraceJSBundleProviderDecorator extends JSBundleProvider {
 
   getHotReloadConfig(): HotReloadConfig {
     return this.jsBundleProvider.getHotReloadConfig()
+  }
+
+  getJSPackagerClientConfig(): JSPackagerClientConfig {
+    return this.jsBundleProvider.getJSPackagerClientConfig();
   }
 }

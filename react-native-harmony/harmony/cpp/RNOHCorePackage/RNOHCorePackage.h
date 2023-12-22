@@ -27,6 +27,8 @@
 #include "RNOHCorePackage/TurboModules/SafeAreaTurboModule.h"
 #include "RNOHCorePackage/TurboModules/Animated/NativeAnimatedTurboModule.h"
 #include "RNOHCorePackage/TurboModules/I18nManagerTurboModule.h"
+#include "RNOHCorePackage/TurboModules/DevSettingsTurboModule.h"
+#include "RNOHCorePackage/TurboModules/DevMenuTurboModule.h"
 #include "RNOHCorePackage/ComponentBinders/ViewComponentJSIBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ViewComponentNapiBinder.h"
 #include "RNOHCorePackage/ComponentBinders/ImageComponentJSIBinder.h"
@@ -93,6 +95,10 @@ class RNOHCoreTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
             return std::make_shared<SafeAreaTurboModule>(ctx, name);
         } else if (name == "I18nManager") {
             return std::make_shared<I18nManagerTurboModule>(ctx, name);
+        } else if (name == "DevSettings") {
+            return std::make_shared<DevSettingsTurboModule>(ctx, name);
+        } else if (name == "DevMenu") {
+            return std::make_shared<DevMenuTurboModule>(ctx, name);
         }
         return nullptr;
     };

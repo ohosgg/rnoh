@@ -72,7 +72,7 @@ export * as TurboModuleRegistry from 'react-native/Libraries/TurboModule/TurboMo
 export * from 'react-native/Libraries/Types/CoreEventTypes';
 export * from 'react-native/Libraries/Utilities/Appearance';
 export * from 'react-native/Libraries/Utilities/BackHandler';
-// export * from 'react-native/Libraries/Utilities/DevSettings';
+export * from 'react-native/Libraries/Utilities/DevSettings';
 export * from 'react-native/Libraries/Utilities/Dimensions';
 export * from 'react-native/Libraries/Utilities/PixelRatio';
 export * from '../Libraries/Utilities/Platform';

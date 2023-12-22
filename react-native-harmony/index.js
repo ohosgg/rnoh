@@ -24,6 +24,9 @@ module.exports = {
   get Button() {
     return require('./Libraries/Components/Button/Button');
   },
+  get DevSettings() {
+    return require('react-native/Libraries/Utilities/DevSettings');
+  },
   get Dimensions() {
     return require('react-native/Libraries/Utilities/Dimensions').default;
   },

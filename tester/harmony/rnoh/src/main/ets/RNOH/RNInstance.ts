@@ -1,6 +1,6 @@
 import type UIAbility from '@ohos.app.ability.UIAbility'
 import type common from '@ohos.app.ability.common'
-import { CommandDispatcher, RNComponentCommandHub, RNOHComponentCommand } from './RNComponentCommandHub'
+import { CommandDispatcher, RNComponentCommandHub } from './RNComponentCommandHub'
 import { DescriptorRegistry, DescriptorWrapperFactory } from './DescriptorRegistry'
 import { ComponentManagerRegistry } from './ComponentManagerRegistry'
 import { SurfaceHandle } from './SurfaceHandle'
@@ -15,7 +15,8 @@ import { JSBundleProviderError } from './JSBundleProvider'
 import type { Tag } from './DescriptorBase'
 import type { RNPackage, RNPackageContext } from './RNPackage'
 import type { TurboModule } from './TurboModule'
-import { ResponderLockDispatcher } from "./ResponderLockDispatcher"
+import { ResponderLockDispatcher } from './ResponderLockDispatcher'
+import { JSPackagerClient } from './JSPackagerClient'
 
 export type SurfaceContext = {
   width: number
@@ -142,6 +143,7 @@ export class RNInstanceImpl implements RNInstance {
   private surfaceHandles: Set<SurfaceHandle> = new Set()
   private responderLockDispatcher: ResponderLockDispatcher
   private isFeatureFlagEnabledByName = new Map<FeatureFlagName, boolean>()
+  private jsPackagerClient: JSPackagerClient
 
   /**
    * @deprecated
@@ -179,6 +181,7 @@ export class RNInstanceImpl implements RNInstance {
       this.napiBridge.destroyReactNativeInstance(this.id)
     }
     this.turboModuleProvider.onDestroy()
+    this.jsPackagerClient?.disconnect();
     stopTracing()
   }
 
@@ -327,6 +330,11 @@ export class RNInstanceImpl implements RNInstance {
       if (hotReloadConfig) {
         this.callRNFunction("HMRClient", "setup", ["harmony", hotReloadConfig.bundleEntry, hotReloadConfig.host, hotReloadConfig.port, true])
         this.logger.info("Configured hot reloading")
+      }
+      const jsPackagerClientConfig = jsBundleProvider.getJSPackagerClientConfig()
+      if (jsPackagerClientConfig) {
+        this.jsPackagerClient = new JSPackagerClient(this.logger, this);
+        this.jsPackagerClient.connectToMetroMessages(jsPackagerClientConfig);
       }
       this.lifecycleState = LifecycleState.READY
       this.bundleExecutionStatusByBundleURL.set(bundleURL, "DONE")
